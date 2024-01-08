@@ -1,4 +1,6 @@
-from rest_framework.permissions import IsAuthenticated
+import json
+from django.http import JsonResponse
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from .serializers import UserSerializer
 from .models import User
@@ -6,6 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import GoogleAccountSerializer
+from rest_framework.parsers import JSONParser
 
 
 class UserView(ModelViewSet):
@@ -15,16 +18,24 @@ class UserView(ModelViewSet):
     serializer_class = UserSerializer  # Corrigido para letra minúscula
     queryset = User.objects.all()
     
+    def get_permissions(self):
+        """
+        Define permissões personalizadas para diferentes métodos da view.
+        """
+        if self.action == 'create' or self.action == 'google_signup':
+            permission_classes = [AllowAny]
+        elif self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthenticated]  # Ou outra permissão padrão
+        return [permission() for permission in permission_classes]
+    
     @action(detail=False, methods=['post'], url_path='signup/googleaccount')
     def google_signup(self, request):
-        serializer = GoogleAccountSerializer(data=request.data)
-        if serializer.is_valid():
-            user_data = serializer.validated_data
-            user, created = User.objects.update_or_create(
-                google_id=user_data['google_id'],
-                defaults={'email': user_data['email'], 'username': user_data['name']}
-            )
-            
-            return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(request.POST)
+        user, status = User.objects.create_by_google(JSONParser().parse(request))
+        
+        if user is None:
+            print(status)
+            return JsonResponse({"status": "error", "message": status})
+        return Response({"status": "success", "user": UserSerializer(user).data})

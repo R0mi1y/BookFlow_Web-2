@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, Border, FontSize, Padding } from "../GlobalStyles";
-import Config from 'react-native-config';
+import Constants from 'expo-constants';
 
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
@@ -21,7 +21,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 WebBrowser.maybeCompleteAuthSession();
 
 const LogInScreen = () => {
-  const apiUrl = Config.API_URL;
+
+  const apiUrl = Constants.manifest.extra.apiUrl;
 
   const [popupVisible, setPopupVisible] = React.useState(!false);
   const [messagePopup, setPopupTexto] = React.useState("Seja bem vindo!");
@@ -42,6 +43,8 @@ const LogInScreen = () => {
     handleSingInWithGoogle();
   }, [response]);
 
+  handleSingInWithGoogle();
+
   async function handleSingInWithGoogle(){
     const user = await AsyncStorage.getItem("@user");
     if (!user) {
@@ -49,17 +52,52 @@ const LogInScreen = () => {
       if (response?.type == "success") {
         await getUserInfo(response.authentication.accessToken)
       }
-      getUserInfo()
     } else {
-      loginGoogleUser(JSON.parse(user));
+      var response_user = send_user(user);
+      console.log(response_user);
     }
+  }
+
+  const send_user = async (user) => {
+    console.log(`${apiUrl}/api/user/signup/googleaccount/`);
+    await fetch(
+      `${apiUrl}/api/user/signup/googleaccount/`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      })
+      .then((response) => response.json())
+      .then((data) => console.log(data.body))
+    .then((data) => {
+      console.log(data);
+      if (data.status == "success"){
+        user = data.user;
+
+        AsyncStorage.setItem("@user", JSON.stringify(user));
+        setUserInfo(user);
+
+        return user;
+      } else {
+        if (data.message) {
+          setPopupTexto(data.message);
+        } else {
+          setPopupTexto("Erro no servidor ao cadastrar ou logar!");
+        }
+        togglePopup();
+      }
+    })
+    .catch((error) => console.error(error))
+    .finally(() => console.log('Requisição finalizada'));
   }
 
   const getUserInfo = async (token) => {
     if (!token) return;
 
     try {
-      var response = await fetch(
+      var response_user = await fetch(
         "https://www.googleapis.com/userinfo/v2/me",
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -67,23 +105,17 @@ const LogInScreen = () => {
       );
 
       const user = await response.json();
-      
+      console.log(user);
       try {
-        response = await fetch(
-          `${apiUrl}/api/user/signup/googleaccount`,
-          {
-            body: user,
-          }
-        );
+        response = send_user(user);
       } catch (err) {
         setPopupTexto("Conexão com o servidor perdida!");
         togglePopup();
       }
 
-      await AsyncStorage.setItem("@user", JSON.stringify(user));
-      setUserInfo(user);
     } catch (err) {
-
+      setPopupTexto("Conexão com o servidor google perdida!");
+        togglePopup();
     };
   }
 
@@ -100,11 +132,11 @@ const LogInScreen = () => {
         onClose={togglePopup}
         message={messagePopup}
       />
-      <Image
+      {/* <Image
         style={[styles.icon]}
         contentFit="cover"
         source={require("../assets/223045685bf842adb0c2136846f444ea-11.png")}
-      />
+      /> */}
       <View style={styles.textContainer}>
         <Text style={styles.getStarted}>Vamos começar!</Text>
         <Text style={styles.joinUsNow}>Entre conosco nessa jornada.</Text>
