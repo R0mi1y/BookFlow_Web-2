@@ -1,0 +1,45 @@
+
+# Logs
+BookFlow-app/*.log
+BookFlow-app/npm-debug.log*
+BookFlow-app/yarn-debug.log*
+BookFlow-app/yarn-error.log*
+
+# Runtime data
+BookFlow-app/pids
+BookFlow-app/*.pid
+BookFlow-app/*.seed
+BookFlow-app/*.log
+
+# Directory used by npm for globally installed node modules
+BookFlow-app/node_modules
+
+# Yarn Integrity file
+BookFlow-app/.yarn-integrity
+
+# Environment secrets
+BookFlow-app/.env
+BookFlow-app/.env.local
+BookFlow-app/.env.*.local
+
+# MacOS
+BookFlow-app/.DS_Store
+
+# Windows
+BookFlow-app/Thumbs.db
+
+# Editor directories and files
+BookFlow-app/.vscode/
+BookFlow-app/.idea/
+BookFlow-app/*.swp
+BookFlow-app/*.swo
+BookFlow-app/*.swn
+
+# Expo OTA update
+BookFlow-app/.expo/
+BookFlow-app/.expo-shared/
+
+# Turtle
+BookFlow-app/turtle-build/
+ 
+.env/

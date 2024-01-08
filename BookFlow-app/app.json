@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "book_flow",
+    "slug": "book_flow",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bookflow"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.bookflow",
+      "config": {
+        "googleSignIn": {
+          "certificateHash": "26:31:30:D8:40:7E:70:92:53:E8:1F:20:AF:98:98:00:13:D1:95:43",
+          "expoClientId": "842894758664-481628oq82dna6jg90v2if1nn4rb411r.apps.googleusercontent.com"
+        }
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "bookflow"
+  },
+  "web": "expo start --web"
+}
