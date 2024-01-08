@@ -32,10 +32,13 @@ class UserView(ModelViewSet):
     
     @action(detail=False, methods=['post'], url_path='signup/googleaccount')
     def google_signup(self, request):
-        print(request.POST)
-        user, status = User.objects.create_by_google(JSONParser().parse(request))
         
+        if len(request.POST) > 0:
+            user, status = User.objects.create_by_google(request.POST)
+        else:
+            user, status = User.objects.create_by_google(request.data)
+            
         if user is None:
-            print(status)
             return JsonResponse({"status": "error", "message": status})
+        
         return Response({"status": "success", "user": UserSerializer(user).data})

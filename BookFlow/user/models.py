@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth.models import AbstractUser
 from django.db import IntegrityError, models
 from django.forms import ValidationError
@@ -9,19 +10,22 @@ from django.utils.crypto import get_random_string
 
 
 class UserManager(models.Manager):
-    def create_by_google(self, json):
-        user = User.objects.filter(email=json['email']).first()
+    def create_by_google(self, data):
+        if type(data) == str:
+            data = json.loads(data)
+        
+        user = User.objects.filter(email=data['email']).first()
 
         if user:
             return user, False 
         else:
             try:
                 new_user = User.objects.create(
-                    email=json['email'],
-                    username=json['name'],
-                    first_name=json['given_name'],
-                    last_name=json['family_name'],
-                    photo_url=json['picture'],
+                    email=data['email'],
+                    username=data['name'],
+                    first_name=data['given_name'],
+                    last_name=data['family_name'],
+                    photo_url=data['picture'],
                 )
                 
                 print("Creating new user")

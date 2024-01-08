@@ -55,11 +55,11 @@ const LogInScreen = () => {
     } else {
       var response_user = send_user(user);
       console.log(response_user);
+      if (response_user) navigation.navigate("SignUpScreen");
     }
   }
 
   const send_user = async (user) => {
-    console.log(`${apiUrl}/api/user/signup/googleaccount/`);
     await fetch(
       `${apiUrl}/api/user/signup/googleaccount/`,
       {
@@ -72,13 +72,12 @@ const LogInScreen = () => {
       .then((response) => response.json())
       .then((data) => console.log(data.body))
     .then((data) => {
-      console.log(data);
-      if (data.status == "success"){
+      if (data?.status == "success"){
         user = data.user;
 
         AsyncStorage.setItem("@user", JSON.stringify(user));
         setUserInfo(user);
-
+        
         return user;
       } else {
         if (data.message) {
@@ -87,6 +86,8 @@ const LogInScreen = () => {
           setPopupTexto("Erro no servidor ao cadastrar ou logar!");
         }
         togglePopup();
+
+        return false;
       }
     })
     .catch((error) => console.error(error))
