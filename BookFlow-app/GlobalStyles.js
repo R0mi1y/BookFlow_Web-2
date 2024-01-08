@@ -24,6 +24,7 @@ export const FontSize = {
   size_xs: 12,
   size_5xl: 24,
   size_29xl: 48,
+  size_42l: 40,
 };
 /* Colors */
 export const Color = {

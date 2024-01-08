@@ -63,8 +63,7 @@ const SignUpScreen = () => {
         <View style={[styles.top, styles.topLayout]}>
           <Text
             style={[styles.createAccount, styles.createAccountFlexBox]}
-          >{`Create
-Account`}</Text>
+          >{`Create Account`}</Text>
           <Pressable
             style={styles.goBack}
             onPress={() => navigation.navigate("LogInScreen")}
@@ -280,9 +279,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   createAccount: {
-    top: 42,
-    fontSize: FontSize.size_29xl,
-    lineHeight: 50,
+    top: 72,
+    fontSize: FontSize.size_42l,
+    lineHeight: 58,
     height: 115,
     color: Color.colorBlanchedalmond_100,
     left: 0,

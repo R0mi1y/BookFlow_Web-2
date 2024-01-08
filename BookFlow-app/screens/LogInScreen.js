@@ -127,7 +127,7 @@ const LogInScreen = () => {
       resizeMode="cover"
       source={require("../assets/androidlarge5.png")}
     >
-       <CustomPopup
+      <CustomPopup
         visible={popupVisible}
         onClose={togglePopup}
         message={messagePopup}
