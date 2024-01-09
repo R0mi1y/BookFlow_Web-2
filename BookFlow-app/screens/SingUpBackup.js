@@ -14,6 +14,7 @@ import { FontFamily, Color, FontSize, Padding, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 
 const SignUpScreen = () => {
+  
   const navigation = useNavigation();
   const [cTAContainerVisible, setCTAContainerVisible] = useState(false);
 
@@ -78,7 +79,14 @@ const SignUpScreen = () => {
         </View>
         <View style={styles.signUp}>
           <View style={[styles.checkbox, styles.checkboxLayout]}>
-          
+            <Text style={[styles.iAgreeToContainer, styles.checkboxLayout]}>
+              <Text style={styles.iAgreeToContainer1}>
+                <Text style={styles.iAgreeTo}>{`I agree to the `}</Text>
+                <Text style={styles.terms}>terms</Text>
+                <Text style={styles.iAgreeTo}>{` And `}</Text>
+                <Text style={styles.terms}>privacy policy</Text>
+              </Text>
+            </Text>
             <View style={[styles.bgWrapper, styles.bgLayout]}>
               <View style={[styles.bg, styles.bgBorder]} />
             </View>
