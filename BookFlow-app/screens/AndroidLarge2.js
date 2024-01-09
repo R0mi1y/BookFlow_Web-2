@@ -21,7 +21,7 @@ const AndroidLarge2 = () => {
       />
       <Pressable
         style={styles.brandLogo}
-        onPress={() => navigation.navigate("AndroidLarge1")}
+        onPress={() => navigation.navigate("HomeScreen")}
       >
         <Text style={[styles.l, styles.lTypo]}>Lé</Text>
         <Text style={[styles.libro, styles.libroPosition]}>Libro</Text>

@@ -6,7 +6,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import LogInScreen from "./screens/LogInScreen";
-import AndroidLarge1 from "./screens/AndroidLarge1";
+import HomeScreen from "./screens/HomeScreen";
 import FrameComponentSet from "./components/FrameComponentSet";
 import AndroidLarge2 from "./screens/AndroidLarge2";
 import AndroidLarge4 from "./screens/AndroidLarge4";
@@ -46,8 +46,8 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="AndroidLarge1"
-              component={AndroidLarge1}
+              name="HomeScreen"
+              component={HomeScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

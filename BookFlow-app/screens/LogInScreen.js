@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Button,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, Border, FontSize, Padding } from "../GlobalStyles";
@@ -21,7 +22,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 WebBrowser.maybeCompleteAuthSession();
 
 const LogInScreen = () => {
-
+  const [email, setEmail] = React.useState('');
+  const [pass, setPass] = React.useState('');
   const apiUrl = Constants.manifest.extra.apiUrl;
 
   const [popupVisible, setPopupVisible] = React.useState(!false);
@@ -45,6 +47,10 @@ const LogInScreen = () => {
 
   handleSingInWithGoogle();
 
+  const login = () => {
+
+  }
+
   async function handleSingInWithGoogle(){
     const user = await AsyncStorage.getItem("@user");
     if (!user) {
@@ -55,11 +61,11 @@ const LogInScreen = () => {
     } else {
       var response_user = send_user(user);
       console.log(response_user);
+      // if (response_user) navigation.navigate("HomeScreen");
     }
   }
 
   const send_user = async (user) => {
-    console.log(`${apiUrl}/api/user/signup/googleaccount/`);
     await fetch(
       `${apiUrl}/api/user/signup/googleaccount/`,
       {
@@ -71,14 +77,14 @@ const LogInScreen = () => {
       })
       .then((response) => response.json())
       .then((data) => console.log(data.body))
-    .then((data) => {
-      console.log(data);
-      if (data.status == "success"){
+      .then((data) => {
+      if (data?.status == "success"){
         user = data.user;
 
+        AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
         AsyncStorage.setItem("@user", JSON.stringify(user));
         setUserInfo(user);
-
+        
         return user;
       } else {
         if (data.message) {
@@ -87,6 +93,8 @@ const LogInScreen = () => {
           setPopupTexto("Erro no servidor ao cadastrar ou logar!");
         }
         togglePopup();
+
+        return false;
       }
     })
     .catch((error) => console.error(error))
@@ -142,11 +150,26 @@ const LogInScreen = () => {
         <Text style={styles.joinUsNow}>Entre conosco nessa jornada.</Text>
       </View>
       <View style={styles.buttonContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="E-mail"
+          placeholderTextColor="#d1d5db"
+          value={email}
+          onChangeText={text => setEmail(text)}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Senha"
+          placeholderTextColor="#d1d5db"
+          value={pass}
+          onChangeText={text => setPass(text)}
+          secureTextEntry // Isso oculta a senha enquanto o usuário digita
+        />
         <TouchableOpacity
-          onPress={() => navigation.navigate("SignUpScreen")}
+          onPress={() => login()}
           style={styles.createAccountButton}
         >
-          <Text style={[styles.createAccountbuttonText, styles.buttonText]}>Crie uma conta</Text>
+          <Text style={[styles.loginButton, styles.buttonText]}>Login</Text>
         </TouchableOpacity>
         <View style={{ height: 10 }} />
         <TouchableOpacity
@@ -154,6 +177,12 @@ const LogInScreen = () => {
           style={styles.googleButton}
         >
           <Text style={[styles.googleButtonbuttonText, styles.buttonText]}>Login com Google</Text>
+        </TouchableOpacity>
+        <View style={{ height: 10 }} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate("SignUpScreen")}
+        >
+          <Text style={[styles.createAccountbuttonText, styles.buttonText]}>Crie uma conta</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -212,6 +241,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     width: '100%',
+    marginTop: 40,
     textAlign: 'center',
   },
   buttonText: {
@@ -221,7 +251,20 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   createAccountbuttonText: {
+    color: Color.colorBeige_100,
+  },
+  loginButton: {
     color: '#50372d',
+  },
+  textInput: {
+    borderColor: 'white',
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+    padding: 10,
+    borderRadius: 5,
+    width: '100%',
+    marginBottom: 10, // Espaçamento entre os campos de entrada de texto
+    color: 'white', // Cor do texto dentro do campo
   },
 });
 

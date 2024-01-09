@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth.models import AbstractUser
 from django.db import IntegrityError, models
 from django.forms import ValidationError
@@ -9,19 +10,22 @@ from django.utils.crypto import get_random_string
 
 
 class UserManager(models.Manager):
-    def create_by_google(self, json):
-        user = User.objects.filter(email=json['email']).first()
+    def create_by_google(self, data):
+        if type(data) == str:
+            data = json.loads(data)
+        
+        user = User.objects.filter(email=data['email']).first()
 
         if user:
             return user, False 
         else:
             try:
                 new_user = User.objects.create(
-                    email=json['email'],
-                    username=json['name'],
-                    first_name=json['given_name'],
-                    last_name=json['family_name'],
-                    photo_url=json['picture'],
+                    email=data['email'],
+                    username=data['name'],
+                    first_name=data['given_name'],
+                    last_name=data['family_name'],
+                    photo_url=data['picture'],
                 )
                 
                 print("Creating new user")
@@ -60,15 +64,6 @@ class User(AbstractUser):
     wishlist = models.ManyToManyField(Book, related_name='user_wishlist', blank=True)
     
     objects = UserManager()
-    
-    
-    def save(self, *args, **kwargs):
-        # Se o google_id é fornecido e não tem uma senha, gera uma nova senha
-        if self.google_id and not self.password:
-            random_password = get_random_string(length=12)
-            self.password = make_password(random_password)
-
-        super(User, self).save(*args, **kwargs)
     
     def __str__(self):
         return self.username

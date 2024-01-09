@@ -10,7 +10,7 @@ const Frame = memo(({ onClose }) => {
   return (
     <Pressable
       style={[styles.popUpBgParent, styles.popLayout]}
-      onPress={() => navigation.navigate("AndroidLarge1")}
+      onPress={() => navigation.navigate("HomeScreen")}
     >
       <View style={[styles.popUpBg, styles.popLayout]} />
       <Text
