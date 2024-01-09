@@ -11,6 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Frame from "../components/Frame";
 import { FontFamily, Color, FontSize, Padding, Border } from "../GlobalStyles";
+import { TextInput } from "react-native-gesture-handler";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -23,130 +24,112 @@ const SignUpScreen = () => {
   const closeCTAContainer = useCallback(() => {
     setCTAContainerVisible(false);
   }, []);
+  
 
   return (
     <>
       <ImageBackground
-        style={styles.SignUpScreen}
+        style={styles.backgroundImage}
         resizeMode="cover"
         source={require("../assets/androidlarge5.png")}
       >
-        <View style={[styles.iosstatusBarblack, styles.batteryIconPosition]}>
-          <Image
-            style={styles.bgIcon}
-            contentFit="cover"
-            source={require("../assets/bg.png")}
-          />
-          <View style={[styles.rightSide, styles.sidePosition]}>
-            <Image
-              style={[styles.batteryIcon, styles.batteryIconPosition]}
-              contentFit="cover"
-              source={require("../assets/battery.png")}
-            />
-            <Image
-              style={styles.wifiIcon}
-              contentFit="cover"
-              source={require("../assets/wifi.png")}
-            />
-            <Image
-              style={styles.mobileSignalIcon}
-              contentFit="cover"
-              source={require("../assets/mobile-signal.png")}
-            />
+          <View style={[styles.containerlements]}>
+            <View style={[styles.top, styles.topLayout]}>
+              <Text
+                style={[styles.createAccount, styles.createAccountFlexBox]}
+              >{`Criar conta`}</Text>
+              
+              
+            </View>
+            <View style={styles.signUp}>
+              <View style={[styles.checkbox, styles.checkboxLayout]}>
+                <Text style={[styles.iAgreeTo]}>
+                        Aceito os termos e politicas
+                </Text>
+                
+                <View style={[styles.bgWrapper, styles.bgLayout]}>
+                  <View style={[styles.bg, styles.bgBorder]} />
+                </View>
+              </View>
+              <View style={styles.input}>
+                <View style={[styles.confirmPassword, styles.passwordLayout]}>
+                  <View style={styles.bg1} />
+                  <Image
+                    style={styles.hiddenIcon}
+                    contentFit="cover"
+                    source={require("../assets/hidden.png")}
+                  />
+                  <Text style={[styles.confirmPasswordTitle, styles.titleTypo]}>
+                    Confirm Password
+                  </Text>
+                  <TextInput
+                    style={[styles.exampleForPassword, styles.examplePosition]}
+                    placeholder="********"
+                    placeholderTextColor={Color.colorBlanchedalmond_100}
+                    secureTextEntry={true}
+                  />
+                </View>
+                <View style={[styles.password, styles.passwordLayout]}>
+                  <View style={styles.bg1} />
+                  <Image
+                    style={styles.hiddenIcon}
+                    contentFit="cover"
+                    source={require("../assets/hidden.png")}
+                  />
+                  <Text style={[styles.passwordTitle, styles.titleTypo]}>
+                    Senha
+                  </Text>
+                  <TextInput
+                    style={[styles.exampleForPassword, styles.examplePosition]}
+                    placeholder="********"
+                    placeholderTextColor={Color.colorBlanchedalmond_100}
+                    secureTextEntry={true}
+                  />
+                </View>
+                <View style={[styles.email, styles.passwordLayout]}>
+                  <View style={styles.bg1} />
+                  <TextInput
+                      style={styles.examplePosition}
+                      placeholder="exemplo@mail.com"
+                      placeholderTextColor={Color.colorBlanchedalmond_100}
+                  />
+                  <Text style={[styles.emailTitle, styles.titleTypo]}>Email</Text>
+                </View>
+              </View>
+            </View>
+            <Pressable
+              style={[styles.cta, styles.ctaPosition]}
+              onPress={openCTAContainer}
+            >
+              <Text style={[styles.createAccount1, styles.signUpWithTypo]}>
+                Criar conta
+              </Text>
+            </Pressable>
+            <View style={[styles.cta1, styles.ctaPosition]}>
+              <View style={styles.btnSignUpWithGoogle}>
+                <View style={styles.iconGoogleParent}>
+                  <Image
+                    style={styles.iconGoogle}
+                    contentFit="cover"
+                    source={require("../assets/icon--google.png")}
+                  />
+                  <Text style={[styles.signUpWith, styles.signUpWithTypo]}>
+                    Criar com Google
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
-          <Image
-            style={[styles.leftSideIcon, styles.sidePosition]}
-            contentFit="cover"
-            source={require("../assets/left-side2.png")}
-          />
-        </View>
-        <View style={[styles.top, styles.topLayout]}>
-          <Text
-            style={[styles.createAccount, styles.createAccountFlexBox]}
-          >{`Create
-Account`}</Text>
-          <Pressable
+        <Pressable
             style={styles.goBack}
             onPress={() => navigation.navigate("LogInScreen")}
-          >
-            <Image
-              style={styles.icon}
-              contentFit="cover"
-              source={require("../assets/go-back.png")}
-            />
-          </Pressable>
-        </View>
-        <View style={styles.signUp}>
-          <View style={[styles.checkbox, styles.checkboxLayout]}>
-            <Text style={[styles.iAgreeToContainer, styles.checkboxLayout]}>
-              <Text style={styles.iAgreeToContainer1}>
-                <Text style={styles.iAgreeTo}>{`I agree to the `}</Text>
-                <Text style={styles.terms}>terms</Text>
-                <Text style={styles.iAgreeTo}>{` And `}</Text>
-                <Text style={styles.terms}>privacy policy</Text>
-              </Text>
-            </Text>
-            <View style={[styles.bgWrapper, styles.bgLayout]}>
-              <View style={[styles.bg, styles.bgBorder]} />
-            </View>
-          </View>
-          <View style={styles.input}>
-            <View style={[styles.confirmPassword, styles.passwordLayout]}>
-              <View style={styles.bg1} />
-              <Image
-                style={styles.hiddenIcon}
-                contentFit="cover"
-                source={require("../assets/hidden.png")}
-              />
-              <Text style={[styles.confirmPasswordTitle, styles.titleTypo]}>
-                Confirm Password
-              </Text>
-            </View>
-            <View style={[styles.password, styles.passwordLayout]}>
-              <View style={styles.bg1} />
-              <Image
-                style={styles.hiddenIcon}
-                contentFit="cover"
-                source={require("../assets/hidden.png")}
-              />
-              <Text style={[styles.exampleForPassword, styles.examplePosition]}>
-                e.g. Examp!e2006
-              </Text>
-              <Text style={[styles.passwordTitle, styles.titleTypo]}>
-                Password
-              </Text>
-            </View>
-            <View style={[styles.email, styles.passwordLayout]}>
-              <View style={styles.bg1} />
-              <Text style={[styles.exampleForEmail, styles.examplePosition]}>
-                e.g. example@mail.com
-              </Text>
-              <Text style={[styles.emailTitle, styles.titleTypo]}>Email</Text>
-            </View>
-          </View>
-        </View>
-        <Pressable
-          style={[styles.cta, styles.ctaPosition]}
-          onPress={openCTAContainer}
-        >
-          <Text style={[styles.createAccount1, styles.signUpWithTypo]}>
-            Create account
-          </Text>
+          >       
+          <Image
+            style={styles.icon}
+            contentFit="cover"
+            source={require("../assets/go-back.png")}
+          />
         </Pressable>
-        <View style={[styles.cta1, styles.ctaPosition]}>
-          <View style={styles.btnSignUpWithGoogle}>
-            <View style={styles.iconGoogleParent}>
-              <Image
-                style={styles.iconGoogle}
-                contentFit="cover"
-                source={require("../assets/icon--google.png")}
-              />
-              <Text style={[styles.signUpWith, styles.signUpWithTypo]}>
-                Sign Up with Google
-              </Text>
-            </View>
-          </View>
-        </View>
       </ImageBackground>
 
       <Modal animationType="fade" transparent visible={cTAContainerVisible}>
@@ -163,6 +146,12 @@ Account`}</Text>
 };
 
 const styles = StyleSheet.create({
+
+  containerlements: {
+    flex: 1,
+    right: 179,
+  },
+
   batteryIconPosition: {
     right: 0,
     top: 0,
@@ -178,8 +167,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   createAccountFlexBox: {
-    alignItems: "center",
-    display: "flex",
     fontFamily: FontFamily.rosarivoRegular,
     textAlign: "left",
   },
@@ -211,18 +198,15 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     textAlign: "left",
     color: Color.colorBlanchedalmond_100,
-    left: 0,
-    top: 0,
     position: "absolute",
   },
   examplePosition: {
     color: Color.colorBeige_100,
     left: 15,
-    top: 43,
+    top: 39,
     fontSize: FontSize.size_base,
     textAlign: "left",
     fontFamily: FontFamily.rosarivoRegular,
-    position: "absolute",
   },
   ctaPosition: {
     paddingBottom: Padding.p_smi,
@@ -279,20 +263,25 @@ const styles = StyleSheet.create({
     height: 44,
     overflow: "hidden",
   },
-  createAccount: {
-    top: 42,
-    fontSize: FontSize.size_29xl,
-    lineHeight: 50,
-    height: 115,
-    color: Color.colorBlanchedalmond_100,
-    left: 0,
-    width: 298,
-    position: "absolute",
-  },
-  icon: {
-    height: "100%",
-    width: "100%",
-  },
+createAccount: {
+  top: 70,
+  fontSize: FontSize.size_29xl,
+  // lineHeight: 50, // Remova ou ajuste esta linha
+  height: 115,
+  color: Color.colorBlanchedalmond_100,
+  left: 15,
+  width: 298,
+  position: "absolute",
+},
+
+icon: {
+  height: 20, 
+  width: 20, 
+  position: 'absolute',
+  top: 80, 
+  left: 40, 
+},
+
   goBack: {
     width: 14,
     height: 24,
@@ -306,7 +295,11 @@ const styles = StyleSheet.create({
     height: 157,
   },
   iAgreeTo: {
-    color: Color.colorBlanchedalmond_100,
+    top: 11,
+    left: 30,
+    color: Color.colorBeige_100,
+    fontSize: FontSize.size_base,
+    fontFamily: FontFamily.rosarivoRegular,
   },
   terms: {
     textDecoration: "underline",
@@ -470,6 +463,11 @@ const styles = StyleSheet.create({
     height: 800,
     overflow: "hidden",
     width: "100%",
+  },
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
