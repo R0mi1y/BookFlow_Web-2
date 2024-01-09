@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Pressable, Text, View, Modal } from "react-native";
+import {  ScrollView, StyleSheet, Pressable, Text, View, Modal } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
@@ -19,8 +19,10 @@ const AndroidLarge1 = () => {
   }, []);
 
   return (
-    <>
+    <ScrollView>
       <View style={[styles.androidLarge1, styles.iconLayout]}>
+
+        {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
         <Pressable
           style={[styles.phlist, styles.phlistLayout]}
           onPress={openPhlistIcon}
@@ -36,15 +38,17 @@ const AndroidLarge1 = () => {
           contentFit="cover"
           source={require("../assets/epsearch.png")}
         />
-        <View style={styles.groupParent}>
+        {/* ------------------------------------- */}
+
+        {/* CARROSSEL COMEÇA AQUI */}
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.groupParent}>
           <View style={styles.rectangleLayout1}>
             <Image
               style={styles.groupChild}
               contentFit="cover"
               source={require("../assets/rectangle-3.png")}
             />
-            <Text style={[styles.cienciaFiccion, styles.textFlexBox]}>{`CIENCIA
-FICCION`}</Text>
+            <Text style={[styles.cienciaFiccion, styles.textFlexBox]}>{`CIENCIA FICCION`}</Text>
             <Text style={[styles.coleccin, styles.coleccinTypo]}>
               •colección•
             </Text>
@@ -98,42 +102,52 @@ FICCION`}</Text>
               •colección•
             </Text>
           </View>
-        </View>
+        </ScrollView>
+        {/*-----------------------------------------------*/}
+
+        {/* TITULO DA HOME */}
         <View style={styles.brandLogo}>
           <Text style={[styles.l, styles.lTypo]}>Lé</Text>
           <Text style={styles.libro}>Libro</Text>
         </View>
+        {/*----------------*/}
+        
+        {/* NAV-BAR HOME */}
         <View style={styles.instanceParent}>
-          <View style={styles.autoresWrapper}>
-            <Text style={[styles.autores, styles.autoresTypo]}>Autores</Text>
-          </View>
-          <View style={[styles.autoresContainer, styles.frameBorder]}>
-            <Text style={[styles.autores, styles.autoresTypo]}>
-              Audiolibros
-            </Text>
-          </View>
-          <View style={[styles.autoresFrame, styles.frameBorder]}>
-            <Text style={[styles.autores, styles.autoresTypo]}>Cuentos</Text>
-          </View>
-          <View style={[styles.frameView, styles.frameBorder]}>
-            <Text style={[styles.autores, styles.autoresTypo]}>
-              Diccionarios
-            </Text>
-          </View>
-          <View style={[styles.autoresWrapper1, styles.frameBorder]}>
-            <Text style={[styles.autores, styles.autoresTypo]}>Novelas</Text>
-          </View>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <View style={styles.autoresWrapper}>
+              <Text style={[styles.autores, styles.autoresTypo]}>Autores</Text>
+            </View>
+            <View style={[styles.autoresContainer, styles.frameBorder]}>
+              <Text style={[styles.autores, styles.autoresTypo]}>
+                Audiolibros
+              </Text>
+            </View>
+            <View style={[styles.autoresFrame, styles.frameBorder]}>
+              <Text style={[styles.autores, styles.autoresTypo]}>Cuentos</Text>
+            </View>
+            <View style={[styles.frameView, styles.frameBorder]}>
+              <Text style={[styles.autores, styles.autoresTypo]}>
+                Diccionarios
+              </Text>
+            </View>
+            <View style={[styles.autoresWrapper1, styles.frameBorder]}>
+              <Text style={[styles.autores, styles.autoresTypo]}>Novelas</Text>
+            </View>
+          </ScrollView>
         </View>
+        {/*--------------------------*/}
+
         <Text style={styles.miBiblioteca}>Mi biblioteca</Text>
         <Image
           style={[styles.vectorIcon, styles.iconGroupLayout]}
           contentFit="cover"
           source={require("../assets/vector.png")}
         />
+        {/* ESSA MERDA É O MENU LATERAL */}
         <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
           <View style={[styles.rectangleView, styles.rectangleLayout]} />
-          <Text style={[styles.iniciarSesin, styles.textTypo]}>{`Iniciar
-Sesión`}</Text>
+          <Text style={[styles.iniciarSesin, styles.textTypo]}>{`Iniciar Sesión`}</Text>
           <Image
             style={[styles.octiconperson24, styles.batteryIconLayout]}
             contentFit="cover"
@@ -141,15 +155,13 @@ Sesión`}</Text>
           />
         </View>
         <MisFavoritosContainer
-          userFavorites={`Mis
-Favoritos`}
+          userFavorites={`Mis Favoritos`}
           showSolarstarOutlineIcon
           propLeft={133}
           propLeft1={13}
         />
         <MisFavoritosContainer
-          userFavorites={`Mi
-Historial`}
+          userFavorites={`Mi Historial`}
           showSolarstarOutlineIcon={false}
           propLeft={245}
           propLeft1={14}
@@ -169,8 +181,7 @@ Historial`}
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -196,8 +207,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -223,8 +233,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -250,8 +259,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -282,8 +290,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -309,8 +316,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -336,8 +342,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -363,8 +368,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -395,8 +399,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -422,8 +425,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -449,8 +451,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -476,8 +477,7 @@ Novela`}</Text>
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{`Pachinko
-Novela`}</Text>
+              >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>2017</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
@@ -496,7 +496,8 @@ Novela`}</Text>
             </View>
           </View>
         </View>
-        <View style={styles.iosstatusBarblack}>
+
+        {/* <View style={styles.iosstatusBarblack}>
           <Image
             style={[styles.bgIcon, styles.iconGroupLayout]}
             contentFit="cover"
@@ -524,7 +525,7 @@ Novela`}</Text>
             contentFit="cover"
             source={require("../assets/left-side.png")}
           />
-        </View>
+        </View> */}
       </View>
 
       <Modal animationType="fade" transparent visible={phlistIconVisible}>
@@ -533,7 +534,7 @@ Novela`}</Text>
           <AndroidLarge3 onClose={closePhlistIcon} />
         </View>
       </Modal>
-    </>
+    </ScrollView>
   );
 };
 
@@ -662,7 +663,7 @@ const styles = StyleSheet.create({
     width: 25,
   },
   epsearchIcon: {
-    left: 310,
+    left: 340,
     overflow: "hidden",
   },
   groupChild: {
@@ -739,7 +740,7 @@ const styles = StyleSheet.create({
     top: 186,
     flexDirection: "row",
     width: 309,
-    left: 26,
+    left: 36,
     position: "absolute",
   },
   l: {
@@ -763,7 +764,7 @@ const styles = StyleSheet.create({
   },
   brandLogo: {
     top: 49,
-    left: 109,
+    left: 129,
     width: 144,
     height: 52,
     position: "absolute",
@@ -804,7 +805,7 @@ const styles = StyleSheet.create({
   instanceParent: {
     top: 120,
     width: 322,
-    left: 22,
+    left: 32,
     flexDirection: "row",
     position: "absolute",
   },
@@ -983,15 +984,15 @@ const styles = StyleSheet.create({
     width: 28,
     height: 11,
   },
-  iosstatusBarblack: {
-    right: 1,
-    left: 1,
-    height: 44,
-    top: 0,
-    position: "absolute",
-    overflow: "hidden",
-    backgroundColor: Color.colorGray_200,
-  },
+  // iosstatusBarblack: {
+  //   right: 1,
+  //   left: 1,
+  //   height: 44,
+  //   top: 0,
+  //   position: "absolute",
+  //   overflow: "hidden",
+  //   backgroundColor: Color.colorGray_200,
+  // },
   androidLarge1: {
     flex: 1,
     height: 1410,
