@@ -65,15 +65,6 @@ class User(AbstractUser):
     
     objects = UserManager()
     
-    
-    def save(self, *args, **kwargs):
-        # Se o google_id é fornecido e não tem uma senha, gera uma nova senha
-        if self.google_id and not self.password:
-            random_password = get_random_string(length=12)
-            self.password = make_password(random_password)
-
-        super(User, self).save(*args, **kwargs)
-    
     def __str__(self):
         return self.username
 

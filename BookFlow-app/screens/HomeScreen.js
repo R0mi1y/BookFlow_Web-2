@@ -5,8 +5,11 @@ import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AndroidLarge1 = () => {
+
+const HomeScreen = () => {
+  const user = AsyncStorage.getItem("@user");
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
   const navigation = useNavigation();
 
@@ -20,7 +23,7 @@ const AndroidLarge1 = () => {
 
   return (
     <>
-      <View style={[styles.androidLarge1, styles.iconLayout]}>
+      <View style={[styles.homeScreen, styles.iconLayout]}>
         <Pressable
           style={[styles.phlist, styles.phlistLayout]}
           onPress={openPhlistIcon}
@@ -130,16 +133,6 @@ FICCION`}</Text>
           contentFit="cover"
           source={require("../assets/vector.png")}
         />
-        <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
-          <View style={[styles.rectangleView, styles.rectangleLayout]} />
-          <Text style={[styles.iniciarSesin, styles.textTypo]}>{`Iniciar
-Sesión`}</Text>
-          <Image
-            style={[styles.octiconperson24, styles.batteryIconLayout]}
-            contentFit="cover"
-            source={require("../assets/octiconperson24.png")}
-          />
-        </View>
         <MisFavoritosContainer
           userFavorites={`Mis
 Favoritos`}
@@ -496,35 +489,6 @@ Novela`}</Text>
             </View>
           </View>
         </View>
-        <View style={styles.iosstatusBarblack}>
-          <Image
-            style={[styles.bgIcon, styles.iconGroupLayout]}
-            contentFit="cover"
-            source={require("../assets/bg.png")}
-          />
-          <View style={[styles.rightSide, styles.sidePosition]}>
-            <Image
-              style={[styles.batteryIcon, styles.batteryIconLayout]}
-              contentFit="cover"
-              source={require("../assets/battery.png")}
-            />
-            <Image
-              style={styles.wifiIcon}
-              contentFit="cover"
-              source={require("../assets/wifi.png")}
-            />
-            <Image
-              style={styles.mobileSignalIcon}
-              contentFit="cover"
-              source={require("../assets/mobile-signal.png")}
-            />
-          </View>
-          <Image
-            style={[styles.leftSideIcon, styles.sidePosition]}
-            contentFit="cover"
-            source={require("../assets/left-side.png")}
-          />
-        </View>
       </View>
 
       <Modal animationType="fade" transparent visible={phlistIconVisible}>
@@ -541,12 +505,6 @@ const styles = StyleSheet.create({
   iconLayout: {
     width: "100%",
     overflow: "hidden",
-  },
-  phlistLayout: {
-    height: 25,
-    width: 25,
-    top: 62,
-    position: "absolute",
   },
   textFlexBox: {
     textAlign: "left",
@@ -660,6 +618,7 @@ const styles = StyleSheet.create({
     left: 26,
     height: 25,
     width: 25,
+    top: 25,
   },
   epsearchIcon: {
     left: 310,
@@ -992,7 +951,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
   },
-  androidLarge1: {
+  homeScreen: {
     flex: 1,
     height: 1410,
     overflow: "hidden",
@@ -1000,4 +959,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AndroidLarge1;
+export default HomeScreen;
