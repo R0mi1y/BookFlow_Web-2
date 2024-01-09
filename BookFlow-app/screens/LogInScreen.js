@@ -22,11 +22,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 WebBrowser.maybeCompleteAuthSession();
 
 const LogInScreen = () => {
+  // AsyncStorage.removeItem("@user");
   const [email, setEmail] = React.useState('');
   const [pass, setPass] = React.useState('');
   const apiUrl = Constants.manifest.extra.apiUrl;
 
-  const [popupVisible, setPopupVisible] = React.useState(!false);
+  const [popupVisible, setPopupVisible] = React.useState(false);
   const [messagePopup, setPopupTexto] = React.useState("Seja bem vindo!");
 
   const togglePopup = () => {
@@ -45,10 +46,37 @@ const LogInScreen = () => {
     handleSingInWithGoogle();
   }, [response]);
 
-  handleSingInWithGoogle();
 
   const login = () => {
+    fetch(
+      `${apiUrl}/api/user/login/`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: `{"email": "${email}", "password": "${pass}"}`,
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.status == "success"){
+          AsyncStorage.setItem("@refresh_token", JSON.stringify(data["refresh_token"]));
+          AsyncStorage.setItem("@user", JSON.stringify(data['user']));
+          setUserInfo(data['user']);
 
+          navigation.navigate("HomeScreen");
+        } else {
+          if (data?.message ?? false) {
+            setPopupTexto(data?.message);
+          } else {
+            setPopupTexto("Erro no servidor ao cadastrar ou logar!");
+          }
+          togglePopup();
+        }
+      })
+      .catch((error) => console.error("1º fetch erro:" + error))
+      .finally(() => console.log('Requisição finalizada'));
   }
 
   async function handleSingInWithGoogle(){
@@ -59,47 +87,56 @@ const LogInScreen = () => {
         await getUserInfo(response.authentication.accessToken)
       }
     } else {
-      var response_user = send_user(user);
-      console.log(response_user);
-      // if (response_user) navigation.navigate("HomeScreen");
+      send_user(user);
     }
   }
 
   const send_user = async (user) => {
-    await fetch(
-      `${apiUrl}/api/user/signup/googleaccount/`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      })
-      .then((response) => response.json())
-      .then((data) => console.log(data.body))
-      .then((data) => {
-      if (data?.status == "success"){
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/user/signup/googleaccount/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // body: {},
+          body: JSON.stringify(user),
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      if (data?.status === "success") {
         user = data.user;
-
+  
         AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
         AsyncStorage.setItem("@user", JSON.stringify(user));
         setUserInfo(user);
         
+        navigation.navigate("HomeScreen");
         return user;
       } else {
-        if (data.message) {
+        if (data?.message) {
           setPopupTexto(data.message);
         } else {
-          setPopupTexto("Erro no servidor ao cadastrar ou logar!");
+          setPopupTexto("Erro ao logar!");
         }
         togglePopup();
-
+  
         return false;
       }
-    })
-    .catch((error) => console.error(error))
-    .finally(() => console.log('Requisição finalizada'));
-  }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      // setPopupTexto("Erro ao logar!");
+      // togglePopup();
+      return false;
+    }
+  };
 
   const getUserInfo = async (token) => {
     if (!token) return;
@@ -112,18 +149,13 @@ const LogInScreen = () => {
         }
       );
 
-      const user = await response.json();
+      const user = await response_user.json();
       console.log(user);
-      try {
-        response = send_user(user);
-      } catch (err) {
-        setPopupTexto("Conexão com o servidor perdida!");
-        togglePopup();
-      }
+      response = send_user(user);
 
     } catch (err) {
-      setPopupTexto("Conexão com o servidor google perdida!");
-        togglePopup();
+      console.log("Conexão com o servidor google perdida!");
+      togglePopup();
     };
   }
 

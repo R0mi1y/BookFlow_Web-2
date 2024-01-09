@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import GoogleAccountSerializer
 from rest_framework.parsers import JSONParser
+from django.contrib.auth.hashers import check_password
 
 
 class UserView(ModelViewSet):
@@ -24,7 +25,8 @@ class UserView(ModelViewSet):
         """
         Define permissões personalizadas para diferentes métodos da view.
         """
-        if self.action == 'create' or self.action == 'google_signup':
+        alow = ['login', 'create', 'google_signup']
+        if self.action in alow:
             permission_classes = [AllowAny]
         elif self.action == 'list' or self.action == 'retrieve':
             permission_classes = [IsAuthenticated]
@@ -44,14 +46,20 @@ class UserView(ModelViewSet):
             print('data')
             
         if user is None:
-            return JsonResponse({"status": "error", "message": status})
+            return JsonResponse({
+                "status": "error", 
+                "message": status
+            })
         
         user_json = UserSerializer(user).data
-        user_json["refresh_token"] = str(RefreshToken.for_user(user))
-        
-        print(str(RefreshToken.for_user(user)))
-        
-        return Response({"status": "success", "user": user_json})
+        refresh_token = str(RefreshToken.for_user(user))
+        data = {
+            "status": "success", 
+            "user": user_json, 
+            "refresh_token": refresh_token
+        }
+        print(data)
+        return Response(data)
     
     
     @action(detail=False, methods=['post'], url_path='login')
@@ -64,7 +72,15 @@ class UserView(ModelViewSet):
             data = request.data
             print('data')
         
+        print(data)
         
-        # user_json = UserSerializer(user).data
-        # user_json["refresh_token"] = RefreshToken.for_user(user)
-        # return Response({"status": "success", "user": user_json})
+        user = User.objects.filter(email=data['email']).first()
+        if user:
+            if check_password(password=data["password"], encoded=user.password):
+                user_json = UserSerializer(user).data
+                refresh_token = str(RefreshToken.for_user(user))
+                return Response({"status": "success", "user": user_json, "refresh_token": refresh_token})
+            else:
+                return JsonResponse({"status": "error", "message": "Senha incorreta!"})
+        else:
+            return JsonResponse({"status": "error", "message": "Email incorreto!"})

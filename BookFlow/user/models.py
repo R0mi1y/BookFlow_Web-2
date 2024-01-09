@@ -5,8 +5,8 @@ from django.forms import ValidationError
 from book.models import Book
 from django.utils.translation import gettext as _
 import re
-from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
+from django.contrib.auth.hashers import make_password
 
 
 class UserManager(models.Manager):
@@ -19,6 +19,8 @@ class UserManager(models.Manager):
         if user:
             return user, False 
         else:
+            if User.objects.filter(username=data['name']).first():
+                data['name'] += get_random_string(4)
             try:
                 new_user = User.objects.create(
                     email=data['email'],
@@ -64,6 +66,14 @@ class User(AbstractUser):
     wishlist = models.ManyToManyField(Book, related_name='user_wishlist', blank=True)
     
     objects = UserManager()
+    
+    def save(self, *args, **kwargs):
+        # Se o google_id é fornecido e não tem uma senha, gera uma nova senha
+        if self.google_id and not self.password:
+            random_password = get_random_string(length=12)
+            self.password = make_password(random_password)
+
+        super(User, self).save(*args, **kwargs)
     
     def __str__(self):
         return self.username
