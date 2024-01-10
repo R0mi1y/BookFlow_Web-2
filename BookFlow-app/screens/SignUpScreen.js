@@ -128,7 +128,25 @@ const SignUpScreen = () => {
   }
 
   const signUp = () => {
-    var user = fetch("")
+    if (pass !== confirmPass) {
+      togglePopup("A senha e a confirmação precisam ser iguais!");
+      return;
+    }
+
+    try {
+      const response = fetch(
+        `${apiUrl}/api/user/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({password:pass}),
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (

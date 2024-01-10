@@ -10,7 +10,6 @@ import HomeScreen from "./screens/HomeScreen";
 import FrameComponentSet from "./components/FrameComponentSet";
 import SplashScreen from "./screens/SplashScreen";
 import AndroidLarge2 from "./screens/AndroidLarge2";
-import AndroidLarge4 from "./screens/AndroidLarge4";
 import SignUpScreen from "./screens/SignUpScreen";
 import RegisterBook from "./screens/RegisterBook";
 import Frame from "./components/Frame";
@@ -65,11 +64,6 @@ const App = () => {
             <Stack.Screen
               name="AndroidLarge2"
               component={AndroidLarge2}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="AndroidLarge4"
-              component={AndroidLarge4}
               options={{ headerShown: false }}
             />
             <Stack.Screen

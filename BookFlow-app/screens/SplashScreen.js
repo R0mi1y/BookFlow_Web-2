@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Color, FontFamily, FontSize } from "../GlobalStyles";
 
 
 const SplashScreen = ({ navigation }) => {
