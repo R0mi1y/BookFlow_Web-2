@@ -48,9 +48,9 @@ const HomeScreen = () => {
               contentFit="cover"
               source={require("../assets/rectangle-3.png")}
             />
-            <Text style={[styles.cienciaFiccion, styles.textFlexBox]}>{`CIENCIA FICCION`}</Text>
+            <Text style={[styles.cienciaFiccion, styles.textFlexBox]}>{`Ficção Científica`}</Text>
             <Text style={[styles.coleccin, styles.coleccinTypo]}>
-              •colección•
+            •Coleção•
             </Text>
           </View>
           <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
@@ -59,9 +59,9 @@ const HomeScreen = () => {
               contentFit="cover"
               source={require("../assets/rectangle-5.png")}
             />
-            <Text style={[styles.crimen, styles.crimenTypo]}>CRIMEN</Text>
+            <Text style={[styles.crimen, styles.crimenTypo]}>Criminal</Text>
             <Text style={[styles.coleccin1, styles.coleccinTypo]}>
-              •colección•
+            •Coleção•
             </Text>
           </View>
           <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
@@ -72,7 +72,7 @@ const HomeScreen = () => {
             />
             <Text style={[styles.aventura, styles.textFlexBox]}>Aventura</Text>
             <Text style={[styles.coleccin2, styles.coleccinTypo]}>
-              •colección•
+              •Coleção•
             </Text>
           </View>
           <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
@@ -83,7 +83,7 @@ const HomeScreen = () => {
             />
             <Text style={[styles.biografia, styles.crimenTypo]}>BIOGRAFIA</Text>
             <Text style={[styles.coleccin3, styles.coleccinTypo]}>
-              •colección•
+              •Coleção•
             </Text>
           </View>
           <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
@@ -99,7 +99,7 @@ const HomeScreen = () => {
             />
             <Text style={styles.infantil}>Infantil</Text>
             <Text style={[styles.coleccin4, styles.coleccinTypo]}>
-              •colección•
+              •Coleção•
             </Text>
           </View>
         </ScrollView>
@@ -107,8 +107,8 @@ const HomeScreen = () => {
 
         {/* TITULO DA HOME */}
         <View style={styles.brandLogo}>
-          <Text style={[styles.l, styles.lTypo]}>Lé</Text>
-          <Text style={styles.libro}>Libro</Text>
+          <Text style={[styles.l, styles.lTypo]}>Book</Text>
+          <Text style={styles.libro}>Flow</Text>
         </View>
         {/*----------------*/}
         
@@ -120,58 +120,60 @@ const HomeScreen = () => {
             </View>
             <View style={[styles.autoresContainer, styles.frameBorder]}>
               <Text style={[styles.autores, styles.autoresTypo]}>
-                Audiolibros
+                Gêneros
               </Text>
             </View>
             <View style={[styles.autoresFrame, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Cuentos</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>Editora</Text>
             </View>
             <View style={[styles.frameView, styles.frameBorder]}>
               <Text style={[styles.autores, styles.autoresTypo]}>
-                Diccionarios
+                Populares
               </Text>
             </View>
             <View style={[styles.autoresWrapper1, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Novelas</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>Ano de Publicação</Text>
             </View>
           </ScrollView>
         </View>
         {/*--------------------------*/}
 
-        <Text style={styles.miBiblioteca}>Mi biblioteca</Text>
+        <Text style={styles.miBiblioteca}>Minha biblioteca</Text>
         <Image
           style={[styles.vectorIcon, styles.iconGroupLayout]}
           contentFit="cover"
-          source={require("../assets/vector.png")}
+          source={require("../assets/lista_books.png")}
         />
         {/* ESSA MERDA É O MENU LATERAL */}
         <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
           <View style={[styles.rectangleView, styles.rectangleLayout]} />
-          <Text style={[styles.iniciarSesin, styles.textTypo]}>{`Iniciar Sesión`}</Text>
+          <Text style={[styles.iniciarSesin, styles.textTypo]}>{`Iniciar Empréstimo`}</Text>
           <Image
             style={[styles.octiconperson24, styles.batteryIconLayout]}
             contentFit="cover"
-            source={require("../assets/octiconperson24.png")}
+            source={require("../assets/book_aberto.png")}
           />
         </View>
+
+        
         <MisFavoritosContainer
-          userFavorites={`Mis Favoritos`}
+          userFavorites={`Livros\nEmprestados`}
           showSolarstarOutlineIcon
-          propLeft={133}
-          propLeft1={13}
+          propLeft={137}
+          propLeft1={9}
         />
         <MisFavoritosContainer
-          userFavorites={`Mi Historial`}
+          userFavorites={`Meus\nLivros`}
           showSolarstarOutlineIcon={false}
-          propLeft={245}
-          propLeft1={14}
+          propLeft={262}
+          propLeft1={30}
         />
         <View style={styles.scrol1}>
           <Text style={styles.audiolibrosTypo}>Audiolibros</Text>
           <View style={styles.groupContainer}>
             <Pressable
               style={styles.groupLayout}
-              onPress={() => navigation.navigate("AndroidLarge2")}
+              onPress={() => navigation.navigate("RegisterBook")}
             >
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -603,7 +605,7 @@ const styles = StyleSheet.create({
   },
   rectangleLayout: {
     height: 105,
-    width: 95,
+    width: 110,
     position: "absolute",
   },
   textTypo: {
@@ -822,12 +824,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   vectorIcon: {
-    height: "1.61%",
-    width: "6.11%",
+    height: "2.61%",
+    width: "11.11%",
     top: "31.77%",
     right: "15.56%",
     bottom: "66.62%",
-    left: "78.33%",
+    left: "76%",
   },
   rectangleView: {
     backgroundColor: Color.colorDimgray,
@@ -838,22 +840,23 @@ const styles = StyleSheet.create({
   },
   iniciarSesin: {
     top: 19,
-    lineHeight: 18,
+    lineHeight: 20,
     textAlign: "center",
     color: Color.colorBlanchedalmond_100,
     fontFamily: FontFamily.rosarivoRegular,
-    left: 22,
+    left: 10,
   },
   octiconperson24: {
-    left: 35,
-    height: 24,
+    left: 45,
+    height: 37,
     top: 62,
-    width: 24,
+    width: 54,
+    
     overflow: "hidden",
   },
   rectangleParent2: {
     top: 385,
-    left: 21,
+    left: 17,
   },
   groupChild3: {
     borderRadius: 13,

@@ -38,7 +38,7 @@ const MisFavoritosContainer = memo(
           <Image
             style={styles.octiconperson24}
             contentFit="cover"
-            source={require("../assets/solarstaroutline.png")}
+            source={require("../assets/books_vetor.png")}
           />
         )}
       </View>
@@ -49,7 +49,7 @@ const MisFavoritosContainer = memo(
 const styles = StyleSheet.create({
   groupChildLayout: {
     height: 105,
-    width: 95,
+    width: 115,
     position: "absolute",
   },
   groupChild: {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     top: 19,
     left: 13,
     fontSize: FontSize.size_base,
-    lineHeight: 18,
+    lineHeight: 20,
     fontFamily: FontFamily.rosarivoRegular,
     color: Color.colorBlanchedalmond_100,
     textAlign: "center",
@@ -70,9 +70,9 @@ const styles = StyleSheet.create({
   },
   octiconperson24: {
     top: 62,
-    left: 35,
-    width: 24,
-    height: 24,
+    left: 40,
+    width: 35,
+    height: 35,
     overflow: "hidden",
     position: "absolute",
   },

@@ -11,6 +11,7 @@ import FrameComponentSet from "./components/FrameComponentSet";
 import AndroidLarge2 from "./screens/AndroidLarge2";
 import AndroidLarge4 from "./screens/AndroidLarge4";
 import SignUpScreen from "./screens/SignUpScreen";
+import RegisterBook from "./screens/RegisterBook";
 import Frame from "./components/Frame";
 import AndroidLarge3 from "./components/AndroidLarge3";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -48,6 +49,11 @@ const App = () => {
             <Stack.Screen
               name="HomeScreen"
               component={HomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="RegisterBook"
+              component={RegisterBook}
               options={{ headerShown: false }}
             />
             <Stack.Screen
