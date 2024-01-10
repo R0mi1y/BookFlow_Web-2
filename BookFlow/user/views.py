@@ -75,7 +75,7 @@ class UserView(ModelViewSet):
         
         print(data)
         
-        user = User.objects.filter(email=data['email']).first()
+        user = User.objects.filter(email=data['email'].lower()).first()
         if user:
             if check_password(password=data["password"], encoded=user.password):
                 user_json = UserSerializer(user).data

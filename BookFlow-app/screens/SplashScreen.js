@@ -9,7 +9,7 @@ const SplashScreen = ({ navigation }) => {
         const fetchData = async () => {
           try {
             await AsyncStorage.removeItem("@user");
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            // await new Promise(resolve => setTimeout(resolve, 3000));
             const user = await AsyncStorage.getItem("@user");
     
             if (user !== null) {

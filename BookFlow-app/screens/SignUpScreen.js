@@ -28,6 +28,8 @@ const SignUpScreen = () => {
   const [email, setEmail] = React.useState('');
   const [pass, setPass] = React.useState('');
   const [confirmPass, setConfirmPass] = React.useState('');
+  const [name, setName] = React.useState('');
+
   const apiUrl = Constants.manifest.extra.apiUrl;
   const navigation = useNavigation();
   const [cTAContainerVisible, setCTAContainerVisible] = useState(false);
@@ -127,23 +129,75 @@ const SignUpScreen = () => {
     };
   }
 
+  const getRefreshToken = () => {
+    fetch(
+      `${apiUrl}/api/token/`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({password:pass, email:email, username:name}),
+      }
+    ).then((json) => json.json())
+    .then((data) => {
+      console.log(data);
+      if("refresh" in data){
+        AsyncStorage.setItem("@refresh_token", JSON.stringify(data["refresh"]));
+        navigation.navigate("HomeScreen");
+      } else {
+        console.log("Falha ao obter refresh token!");
+        console.log(JSON.stringify({password:pass, email:email, username:name}));
+        navigation.navigate("LogInScreen");
+        togglePopup("Falha ao obter refresh token!\nFaça login");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   const signUp = () => {
-    if (pass !== confirmPass) {
+    togglePopup("Loading");
+    if (pass == '' || email == '') {
+      togglePopup();
+      togglePopup("Todos os campos devem ser preenchidos!");
+      return;
+    } else if (pass !== confirmPass) {
+      togglePopup();
       togglePopup("A senha e a confirmação precisam ser iguais!");
       return;
     }
-
     try {
-      const response = fetch(
+      fetch(
         `${apiUrl}/api/user/`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({password:pass}),
+          body: JSON.stringify({password:pass, email:email, username:name}),
         }
-      );
+      ).then((json) => json.json())
+      .then((data) => {
+        if ("id" in data) {
+          AsyncStorage.setItem("@user", JSON.stringify(data));
+
+          getRefreshToken();
+        } else {
+          let message = "";
+
+          data_array = Object.entries(data);
+          data_array.forEach(element => {
+            message += "\n\n";
+            message += element[1];
+          });
+          togglePopup(message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     } catch (err) {
       console.error(err);
     }
@@ -179,8 +233,8 @@ const SignUpScreen = () => {
               style={styles.textInput}
               placeholder="Nome"
               placeholderTextColor="#d1d5db"
-              value={email}
-              onChangeText={text => setEmail(text)}
+              value={name}
+              onChangeText={text => setName(text)}
               multiline={false}
             />
           </View>
@@ -221,7 +275,7 @@ const SignUpScreen = () => {
           </View>
 
           <TouchableOpacity
-            onPress={() => {return}}
+            onPress={() => signUp()}
             style={styles.createAccountButton}
           >
             <Text style={[styles.loginButton, styles.buttonText]}>Criar conta</Text>
