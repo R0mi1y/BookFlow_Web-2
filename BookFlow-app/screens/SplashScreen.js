@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff', // Cor de fundo da tela de carregamento
+    backgroundColor: Color.colorGray_200,
   },
   logo: {
     width: 600,
