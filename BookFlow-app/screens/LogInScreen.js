@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Image } from 'expo-image';
 import CustomPopup from '../components/CustomPopup';
 import {
   StyleSheet,
   View,
   Text,
   ImageBackground,
+  Image,
   Button,
   TouchableOpacity,
   TextInput,
@@ -50,6 +50,7 @@ const LogInScreen = () => {
 
 
   const login = () => {
+    console.log(`${apiUrl}/api/user/login/`);
     fetch(
       `${apiUrl}/api/user/login/`,
       {
@@ -306,11 +307,12 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 1,
     backgroundColor: 'transparent',
-    padding: 10,
-    borderRadius: 5,
-    height: 40, // Altura desejada para os campos
+    height: 45,
     marginBottom: 10,
-    color: 'white',
+    borderRadius: 10,
+    paddingLeft: 15,
+    color: Color.colorBeige_100,
+    fontFamily: FontFamily.rosarivoRegular,
   },
   label: {
     color: 'white',

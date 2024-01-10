@@ -1,14 +1,30 @@
 import React, { useState, useCallback } from "react";
-import { Image } from "expo-image";
-import {  ScrollView, StyleSheet, Pressable, Text, View, Modal } from "react-native";
+// import { Image } from "expo-image";
+import {  ScrollView, StyleSheet, Pressable, Text, View, Modal, Image } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const HomeScreen = () => {
-  const [phlistIconVisible, setPhlistIconVisible] = useState(false);
   const navigation = useNavigation();
+
+  AsyncStorage.getItem("@user")
+    .then((user) => {
+      if (user !== null) {
+        
+      } else {
+        navigation.navigate("LogInScreen");
+      }
+    })
+    .catch((error) => {
+      console.log("Error lendo o Assync Storage: " + error);
+      navigation.navigate("LogInScreen");
+    });
+
+  const [phlistIconVisible, setPhlistIconVisible] = useState(false);
 
   const openPhlistIcon = useCallback(() => {
     setPhlistIconVisible(true);

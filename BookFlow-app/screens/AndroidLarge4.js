@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Image } from "expo-image";
-import { StyleSheet, View, Pressable } from "react-native";
+// import { Image } from "expo-image";
+import { StyleSheet, View, Pressable, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color } from "../GlobalStyles";
 

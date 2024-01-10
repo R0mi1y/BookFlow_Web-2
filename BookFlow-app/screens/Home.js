@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { Image } from "expo-image";
-import {  ScrollView, StyleSheet, Pressable, Text, View, Modal } from "react-native";
+// import { Image } from "expo-image";
+import {  ScrollView, StyleSheet, Pressable, Text, View, Modal, Image } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";

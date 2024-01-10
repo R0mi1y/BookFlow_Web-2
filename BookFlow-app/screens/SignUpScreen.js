@@ -1,11 +1,13 @@
 import React, { useState, useCallback } from "react";
-import { Image } from "expo-image";
+// import { Image } from "expo-image";
+// import ImagePicker as  from 'react-native-image-picker';
 import {
   StyleSheet,
   View,
   Text,
   Pressable,
   ImageBackground,
+  Image,
   Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -18,15 +20,23 @@ import * as Google from "expo-auth-session/providers/google"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-
+import CustomPopup from '../components/CustomPopup';
 
 
 const SignUpScreen = () => {
+  const [popupVisible, setPopupVisible] = React.useState(false);
+  const [messagePopup, setPopupTexto] = React.useState("");
+
   const [email, setEmail] = React.useState('');
   const [pass, setPass] = React.useState('');
+  const [confirmPass, setConfirmPass] = React.useState('');
   const apiUrl = Constants.manifest.extra.apiUrl;
   const navigation = useNavigation();
   const [cTAContainerVisible, setCTAContainerVisible] = useState(false);
+
+  const togglePopup = () => {
+    setPopupVisible(!popupVisible);
+  };
 
   const openCTAContainer = useCallback(() => {
     setCTAContainerVisible(true);
@@ -43,8 +53,99 @@ const SignUpScreen = () => {
     webClientId: "842894758664-t5fusntv19irac1qoq3dskv0ljecchgn.apps.googleusercontent.com",
     expoClientId: "842894758664-v1rbiib3kghprffpqr5u1kc25svb6hkf.apps.googleusercontent.com"
   });
+
+  React.useEffect(() => {
+    handleSingInWithGoogle();
+  }, [response]);
+
+  async function handleSingInWithGoogle() {
+    const user = await AsyncStorage.getItem("@user");
+    if (!user) {
+      if (!response) return;
+      if (response?.type == "success") {
+        await getUserInfo(response.authentication.accessToken)
+      }
+    } else {
+      send_user(user);
+    }
+  }
+
+  const send_user = async (user) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/user/signup/googleaccount/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // body: {},
+          body: JSON.stringify(user),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data?.status === "success") {
+        user = data.user;
+
+        AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
+        AsyncStorage.setItem("@user", JSON.stringify(user));
+        setUserInfo(user);
+
+        navigation.navigate("HomeScreen");
+        return user;
+      } else {
+        if (data?.message) {
+          setPopupTexto(data.message);
+        } else {
+          setPopupTexto("Erro ao logar!");
+        }
+        togglePopup();
+
+        return false;
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      // setPopupTexto("Erro ao logar!");
+      // togglePopup();
+      return false;
+    }
+  };
+
+  const getUserInfo = async (token) => {
+    if (!token) return;
+
+    try {
+      var response_user = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const user = await response_user.json();
+      console.log(user);
+      response = send_user(user);
+
+    } catch (err) {
+      console.log("Conexão com o servidor google perdida!");
+      togglePopup();
+    };
+  }
+  
+
   return (
     <>
+    <CustomPopup
+          visible={popupVisible}
+          onClose={togglePopup}
+          message={messagePopup}
+        />
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}
@@ -103,8 +204,8 @@ const SignUpScreen = () => {
               style={styles.textInput}
               placeholder="Confirmar senha"
               placeholderTextColor="#d1d5db"
-              value={pass}
-              onChangeText={text => setPass(text)}
+              value={confirmPass}
+              onChangeText={text => setConfirmPass(text)}
               secureTextEntry
             />
           </View>
@@ -478,13 +579,13 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 1,
     backgroundColor: 'transparent',
-    padding: 10,
-    borderRadius: 5,
-    height: 40, // Altura desejada para os campos
+    borderRadius: 10,
+    height: 45,
     marginBottom: 10,
-    color: 'white',
+    paddingLeft: 15,
+    color: Color.colorBeige_100,
+    fontFamily: FontFamily.rosarivoRegular,
   },
-
 
   textContainer: {
     width: "90%",

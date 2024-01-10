@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Image } from "expo-image";
+// import { Image } from "expo-image";
 import {
   StyleSheet,
   View,
@@ -7,6 +7,7 @@ import {
   Pressable,
   ImageBackground,
   Modal,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Frame from "../components/Frame";
