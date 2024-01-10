@@ -1,11 +1,18 @@
 import React, { useState, useCallback } from "react";
-import {  ScrollView, StyleSheet, Pressable, Text, View, Modal, Image } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Pressable,
+  Text,
+  View,
+  Modal,
+  Image,
+} from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -23,7 +30,6 @@ const HomeScreen = () => {
   return (
     <ScrollView>
       <View style={[styles.homeScreen, styles.iconLayout]}>
-
         {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
         <Pressable
           style={[styles.phlist, styles.phlistLayout]}
@@ -43,16 +49,22 @@ const HomeScreen = () => {
         {/* ------------------------------------- */}
 
         {/* CARROSSEL COMEÇA AQUI */}
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.groupParent}>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.groupParent}
+        >
           <View style={styles.rectangleLayout1}>
             <Image
               style={styles.groupChild}
               contentFit="cover"
               source={require("../assets/rectangle-3.png")}
             />
-            <Text style={[styles.cienciaFiccion, styles.textFlexBox]}>{`Ficção Científica`}</Text>
+            <Text
+              style={[styles.cienciaFiccion, styles.textFlexBox]}
+            >{`Ficção Científica`}</Text>
             <Text style={[styles.coleccin, styles.coleccinTypo]}>
-            •Coleção•
+              •Coleção•
             </Text>
           </View>
           <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
@@ -63,7 +75,7 @@ const HomeScreen = () => {
             />
             <Text style={[styles.crimen, styles.crimenTypo]}>Criminal</Text>
             <Text style={[styles.coleccin1, styles.coleccinTypo]}>
-            •Coleção•
+              •Coleção•
             </Text>
           </View>
           <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
@@ -113,7 +125,7 @@ const HomeScreen = () => {
           <Text style={styles.libro}>Flow</Text>
         </View>
         {/*----------------*/}
-        
+
         {/* NAV-BAR HOME */}
         <View style={styles.instanceParent}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -121,9 +133,7 @@ const HomeScreen = () => {
               <Text style={[styles.autores, styles.autoresTypo]}>Autores</Text>
             </View>
             <View style={[styles.autoresContainer, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Gêneros
-              </Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>Gêneros</Text>
             </View>
             <View style={[styles.autoresFrame, styles.frameBorder]}>
               <Text style={[styles.autores, styles.autoresTypo]}>Editora</Text>
@@ -134,7 +144,9 @@ const HomeScreen = () => {
               </Text>
             </View>
             <View style={[styles.autoresWrapper1, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Ano de Publicação</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>
+                Ano de Publicação
+              </Text>
             </View>
           </ScrollView>
         </View>
@@ -149,7 +161,9 @@ const HomeScreen = () => {
         {/* ESSA MERDA É O MENU LATERAL */}
         <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
           <View style={[styles.rectangleView, styles.rectangleLayout]} />
-          <Text style={[styles.iniciarSesin, styles.textTypo]}>{`Iniciar Empréstimo`}</Text>
+          <Text
+            style={[styles.iniciarSesin, styles.textTypo]}
+          >{`Iniciar Empréstimo`}</Text>
           <Image
             style={[styles.octiconperson24, styles.batteryIconLayout]}
             contentFit="cover"
@@ -157,27 +171,36 @@ const HomeScreen = () => {
           />
         </View>
 
-        
         <MisFavoritosContainer
           userFavorites={`Livros\nEmprestados`}
           showSolarstarOutlineIcon
-          propLeft={137}
+          propLeft={147}
           propLeft1={9}
         />
         <MisFavoritosContainer
           userFavorites={`Meus\nLivros`}
           showSolarstarOutlineIcon={false}
-          propLeft={262}
-          propLeft1={30}
+          propLeft={282}
+          propLeft1={34}
         />
+
         <View style={styles.scrol1}>
-          <Text style={styles.audiolibrosTypo}>Audiolibros</Text>
+
+            {/* GRUPO 1 DE LIVROS */}
+
+          <Text style={styles.audiolibrosTypo}>Recentes</Text>
+
           <View style={styles.groupContainer}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} > 
             <Pressable
               style={styles.groupLayout}
               onPress={() => navigation.navigate("RegisterBook")}
             >
+              {/* LIVRO 1 */}
+
               <View style={[styles.groupChild3, styles.groupLayout]} />
+
+
               <Image
                 style={[styles.groupChild4, styles.groupChildLayout1]}
                 contentFit="cover"
@@ -187,12 +210,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -202,6 +225,10 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </Pressable>
+            
+
+            {/* LIVRO 2 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -213,12 +240,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -228,6 +255,11 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+          
+
+              {/* LIVRO 3 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -239,12 +271,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -254,6 +286,9 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+              {/* LIVRO 4 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -265,12 +300,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -280,12 +315,22 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+            </ScrollView>
+
           </View>
+
+        {/* GRUPO 2 */}
+
           <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
-            Agregados recientemente
+            Pendentes
           </Text>
           <View style={styles.groupContainer}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
             <View style={styles.groupLayout}>
+
+              {/* LIVRO 1 */}
+
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
                 style={[styles.groupChild4, styles.groupChildLayout1]}
@@ -296,12 +341,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -311,6 +356,9 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+              {/* LIVRO 2 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -322,12 +370,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -337,6 +385,9 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+            {/* LIVRO 3 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -348,12 +399,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -363,6 +414,9 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+            {/* LIVRO 4 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -374,12 +428,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -389,12 +443,23 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+            </ScrollView>
           </View>
+
+          {/* GRUPO 3 */}
+
           <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
             Recomendados
           </Text>
+          
           <View style={styles.groupContainer}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
+
             <View style={styles.groupLayout}>
+
+              {/* LIVRO 1 */}
+
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
                 style={[styles.groupChild4, styles.groupChildLayout1]}
@@ -405,12 +470,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -420,6 +485,9 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+            {/* LIVRO 2 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -431,12 +499,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>Status</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -446,6 +514,9 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+              {/* LIVRO 3 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -457,12 +528,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -472,6 +543,9 @@ const HomeScreen = () => {
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
             </View>
+
+            {/* LIVRO 4 */}
+
             <View style={[styles.rectangleParent3, styles.groupLayout]}>
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
@@ -483,12 +557,12 @@ const HomeScreen = () => {
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
-              <Text style={[styles.text, styles.textTypo]}>2017</Text>
+              <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
-                source={require("../assets/group.png")}
+                source={require("../assets/mais.png")}
               />
               <View style={styles.groupChild7} />
               <Image
@@ -497,39 +571,44 @@ const HomeScreen = () => {
                 source={require("../assets/group-102.png")}
               />
               <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
+              
             </View>
+          </ScrollView>
           </View>
         </View>
+           
+        
 
         {/* <View style={styles.iosstatusBarblack}>
           <Image
             style={[styles.bgIcon, styles.iconGroupLayout]}
             contentFit="cover"
             source={require("../assets/bg.png")}
-          />
-          <View style={[styles.rightSide, styles.sidePosition]}>
+            />
+            <View style={[styles.rightSide, styles.sidePosition]}>
             <Image
               style={[styles.batteryIcon, styles.batteryIconLayout]}
               contentFit="cover"
               source={require("../assets/battery.png")}
             />
             <Image
-              style={styles.wifiIcon}
-              contentFit="cover"
-              source={require("../assets/wifi.png")}
+            style={styles.wifiIcon}
+            contentFit="cover"
+            source={require("../assets/wifi.png")}
             />
             <Image
               style={styles.mobileSignalIcon}
               contentFit="cover"
               source={require("../assets/mobile-signal.png")}
-            />
-          </View>
-          <Image
-            style={[styles.leftSideIcon, styles.sidePosition]}
-            contentFit="cover"
-            source={require("../assets/left-side.png")}
-          />
-        </View> */}
+              />
+              </View>
+              <Image
+              style={[styles.leftSideIcon, styles.sidePosition]}
+              contentFit="cover"
+              source={require("../assets/left-side.png")}
+              />
+            </View> */}
+            
       </View>
 
       <Modal animationType="fade" transparent visible={phlistIconVisible}>
@@ -667,7 +746,7 @@ const styles = StyleSheet.create({
     width: 25,
   },
   epsearchIcon: {
-    left: 340,
+    left: 360,
     overflow: "hidden",
   },
   groupChild: {
@@ -744,7 +823,7 @@ const styles = StyleSheet.create({
     top: 186,
     flexDirection: "row",
     width: 309,
-    left: 36,
+    left: 50,
     position: "absolute",
   },
   l: {
@@ -768,7 +847,7 @@ const styles = StyleSheet.create({
   },
   brandLogo: {
     top: 49,
-    left: 129,
+    left: 140,
     width: 144,
     height: 52,
     position: "absolute",
@@ -809,7 +888,7 @@ const styles = StyleSheet.create({
   instanceParent: {
     top: 120,
     width: 322,
-    left: 32,
+    left: 43,
     flexDirection: "row",
     position: "absolute",
   },
@@ -831,7 +910,7 @@ const styles = StyleSheet.create({
     top: "31.77%",
     right: "15.56%",
     bottom: "66.62%",
-    left: "76%",
+    left: "77%",
   },
   rectangleView: {
     backgroundColor: Color.colorDimgray,
@@ -849,11 +928,11 @@ const styles = StyleSheet.create({
     left: 10,
   },
   octiconperson24: {
-    left: 45,
+    left: 48,
     height: 37,
     top: 62,
     width: 54,
-    
+
     overflow: "hidden",
   },
   rectangleParent2: {
@@ -892,9 +971,9 @@ const styles = StyleSheet.create({
   },
   text: {
     top: 190,
-    left: 24,
-    fontFamily: FontFamily.openSansSemiBold,
-    width: 38,
+    left: 19,
+    fontFamily: FontFamily.openSansRegular,
+    width: 100,
     height: 18,
     lineHeight: 18,
     textAlign: "left",
@@ -907,12 +986,12 @@ const styles = StyleSheet.create({
     width: 39,
   },
   groupIcon: {
-    height: "6.57%",
-    width: "14.37%",
-    top: "82.61%",
+    height: "9.37%",
+    width: "15.37%",
+    top: "81.61%",
     right: "16.74%",
     bottom: "10.83%",
-    left: "68.89%",
+    left: "69%",
   },
   groupChild7: {
     borderTopLeftRadius: Border.br_mini,
@@ -946,16 +1025,18 @@ const styles = StyleSheet.create({
     marginLeft: 19,
   },
   groupContainer: {
-    width: 295,
     marginTop: 12,
+    marginRight: 20,
     flexDirection: "row",
+  
   },
+
   agregadosRecientemente: {
     marginTop: 12,
   },
   scrol1: {
     top: 518,
-    width: 343,
+    width: "100%",
     left: 21,
     position: "absolute",
   },
