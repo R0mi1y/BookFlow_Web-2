@@ -17,6 +17,8 @@ import Constants from 'expo-constants';
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { KeyboardAvoidingView, Platform } from 'react-native';
+
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -60,7 +62,7 @@ const LogInScreen = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        if (data?.status == "success"){
+        if (data?.status == "success") {
           AsyncStorage.setItem("@refresh_token", JSON.stringify(data["refresh_token"]));
           AsyncStorage.setItem("@user", JSON.stringify(data['user']));
           setUserInfo(data['user']);
@@ -79,7 +81,7 @@ const LogInScreen = () => {
       .finally(() => console.log('Requisição finalizada'));
   }
 
-  async function handleSingInWithGoogle(){
+  async function handleSingInWithGoogle() {
     const user = await AsyncStorage.getItem("@user");
     if (!user) {
       if (!response) return;
@@ -104,20 +106,20 @@ const LogInScreen = () => {
           body: JSON.stringify(user),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`Erro na requisição: ${response.status}`);
       }
-  
+
       const data = await response.json();
-  
+
       if (data?.status === "success") {
         user = data.user;
-  
+
         AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
         AsyncStorage.setItem("@user", JSON.stringify(user));
         setUserInfo(user);
-        
+
         navigation.navigate("HomeScreen");
         return user;
       } else {
@@ -127,7 +129,7 @@ const LogInScreen = () => {
           setPopupTexto("Erro ao logar!");
         }
         togglePopup();
-  
+
         return false;
       }
     } catch (error) {
@@ -162,62 +164,74 @@ const LogInScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <ImageBackground
-      style={styles.backgroundImage}
-      resizeMode="cover"
-      source={require("../assets/androidlarge5.png")}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
     >
-      <CustomPopup
-        visible={popupVisible}
-        onClose={togglePopup}
-        message={messagePopup}
-      />
-      {/* <Image
-        style={[styles.icon]}
-        contentFit="cover"
-        source={require("../assets/223045685bf842adb0c2136846f444ea-11.png")}
-      /> */}
-      <View style={styles.textContainer}>
-        <Text style={styles.getStarted}>Vamos começar!</Text>
-        <Text style={styles.joinUsNow}>Entre conosco nessa jornada.</Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="E-mail"
-          placeholderTextColor="#d1d5db"
-          value={email}
-          onChangeText={text => setEmail(text)}
+      <ImageBackground
+        style={styles.backgroundImage}
+        resizeMode="cover"
+        source={require("../assets/androidlarge5.png")}
+      >
+        <CustomPopup
+          visible={popupVisible}
+          onClose={togglePopup}
+          message={messagePopup}
         />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Senha"
-          placeholderTextColor="#d1d5db"
-          value={pass}
-          onChangeText={text => setPass(text)}
-          secureTextEntry // Isso oculta a senha enquanto o usuário digita
-        />
-        <TouchableOpacity
-          onPress={() => login()}
-          style={styles.createAccountButton}
-        >
-          <Text style={[styles.loginButton, styles.buttonText]}>Login</Text>
-        </TouchableOpacity>
-        <View style={{ height: 10 }} />
-        <TouchableOpacity
-          onPress={() => promptAsync()}
-          style={styles.googleButton}
-        >
-          <Text style={[styles.googleButtonbuttonText, styles.buttonText]}>Login com Google</Text>
-        </TouchableOpacity>
-        <View style={{ height: 10 }} />
-        <TouchableOpacity
-          onPress={() => navigation.navigate("SignUpScreen")}
-        >
-          <Text style={[styles.createAccountbuttonText, styles.buttonText]}>Crie uma conta</Text>
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+        {/* <Image
+          style={[styles.icon]}
+          contentFit="cover"
+          source={require("../assets/223045685bf842adb0c2136846f444ea-11.png")}
+        /> */}
+        <View style={styles.textContainer}>
+          <Text style={styles.getStarted}>Vamos começar!</Text>
+          <Text style={styles.joinUsNow}>Entre conosco nessa jornada.</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.label}>E-mail</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="E-mail"
+              placeholderTextColor="#d1d5db"
+              value={email}
+              onChangeText={text => setEmail(text)}
+            />
+          </View>
+
+          <View style={styles.fieldContainer}>
+            <Text style={styles.label}>Senha</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Senha"
+              placeholderTextColor="#d1d5db"
+              value={pass}
+              onChangeText={text => setPass(text)}
+              secureTextEntry
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => login()}
+            style={styles.createAccountButton}
+          >
+            <Text style={[styles.loginButton, styles.buttonText]}>Login</Text>
+          </TouchableOpacity>
+          <View style={{ height: 10 }} />
+          <TouchableOpacity
+            onPress={() => promptAsync()}
+            style={styles.googleButton}
+          >
+            <Text style={[styles.googleButtonbuttonText, styles.buttonText]}>Login com Google</Text>
+          </TouchableOpacity>
+          <View style={{ height: 10 }} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("SignUpScreen")}
+          >
+            <Text style={[styles.createAccountbuttonText, styles.buttonText]}>Crie uma conta</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -294,9 +308,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     padding: 10,
     borderRadius: 5,
-    width: '100%',
-    marginBottom: 10, // Espaçamento entre os campos de entrada de texto
-    color: 'white', // Cor do texto dentro do campo
+    height: 40, // Altura desejada para os campos
+    marginBottom: 10,
+    color: 'white',
+  },
+  label: {
+    color: 'white',
+    marginBottom: 5,
+  },
+  fieldContainer: {
+    marginBottom: 16,
+    width: '80%',
   },
 });
 

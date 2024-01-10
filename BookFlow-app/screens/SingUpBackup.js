@@ -12,19 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 import Frame from "../components/Frame";
 import { FontFamily, Color, FontSize, Padding, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
-import Constants from 'expo-constants';
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google"
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { TouchableOpacity } from 'react-native';
-import { KeyboardAvoidingView, Platform } from 'react-native';
-
-
 
 const SignUpScreen = () => {
-  const [email, setEmail] = React.useState('');
-  const [pass, setPass] = React.useState('');
-  const apiUrl = Constants.manifest.extra.apiUrl;
+  
   const navigation = useNavigation();
   const [cTAContainerVisible, setCTAContainerVisible] = useState(false);
 
@@ -36,105 +26,128 @@ const SignUpScreen = () => {
     setCTAContainerVisible(false);
   }, []);
 
-  const [userInfo, setUserInfo] = React.useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: "842894758664-481628oq82dna6jg90v2if1nn4rb411r.apps.googleusercontent.com",
-    iosClientId: "842894758664-5lvro06b7p49mtbpgr563v9fd5fsd1eq.apps.googleusercontent.com",
-    webClientId: "842894758664-t5fusntv19irac1qoq3dskv0ljecchgn.apps.googleusercontent.com",
-    expoClientId: "842894758664-v1rbiib3kghprffpqr5u1kc25svb6hkf.apps.googleusercontent.com"
-  });
   return (
     <>
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}
-    >
       <ImageBackground
         style={styles.backgroundImage}
         resizeMode="cover"
         source={require("../assets/androidlarge5.png")}
       >
-        <View style={[styles.containerlements]}>
-
-
+        <View style={[styles.iosstatusBarblack, styles.batteryIconPosition]}>
+          <Image
+            style={styles.bgIcon}
+            contentFit="cover"
+            source={require("../assets/bg.png")}
+          />
+          <View style={[styles.rightSide, styles.sidePosition]}>
+            <Image
+              style={[styles.batteryIcon, styles.batteryIconPosition]}
+              contentFit="cover"
+              source={require("../assets/battery.png")}
+            />
+            <Image
+              style={styles.wifiIcon}
+              contentFit="cover"
+              source={require("../assets/wifi.png")}
+            />
+            <Image
+              style={styles.mobileSignalIcon}
+              contentFit="cover"
+              source={require("../assets/mobile-signal.png")}
+            />
+          </View>
+          <Image
+            style={[styles.leftSideIcon, styles.sidePosition]}
+            contentFit="cover"
+            source={require("../assets/left-side2.png")}
+          />
+        </View>
+        <View style={[styles.top, styles.topLayout]}>
           <Text
             style={[styles.createAccount, styles.createAccountFlexBox]}
-          >{`Criar conta`}
-          </Text>
-
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Nome</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Nome"
-              placeholderTextColor="#d1d5db"
-              value={email}
-              onChangeText={text => setEmail(text)}
-              multiline={false}
-            />
-          </View>
-
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>E-mail</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="E-mail"
-              placeholderTextColor="#d1d5db"
-              value={email}
-              onChangeText={text => setEmail(text)}
-            />
-          </View>
-
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Senha</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Senha"
-              placeholderTextColor="#d1d5db"
-              value={pass}
-              onChangeText={text => setPass(text)}
-              secureTextEntry
-            />
-          </View>
-
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Confirmar senha</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Confirmar senha"
-              placeholderTextColor="#d1d5db"
-              value={pass}
-              onChangeText={text => setPass(text)}
-              secureTextEntry
-            />
-          </View>
-
-          <TouchableOpacity
-            onPress={openCTAContainer}
-            style={styles.createAccountButton}
+          >{`Criar conta`}</Text>
+          <Pressable
+            style={styles.goBack}
+            onPress={() => navigation.navigate("LogInScreen")}
           >
-            <Text style={[styles.loginButton, styles.buttonText]}>Criar conta</Text>
-          </TouchableOpacity>
-          <View style={{ height: 10 }} />
-          <TouchableOpacity
-            onPress={() => promptAsync()}
-            style={styles.googleButton}
-          >
-            <Text style={[styles.googleButtonbuttonText, styles.buttonText]}>Criar conta com Google</Text>
-          </TouchableOpacity>
-          <View style={{ height: 10 }} />
-
+            <Image
+              style={styles.icon}
+              contentFit="cover"
+              source={require("../assets/go-back.png")}
+            />
+          </Pressable>
+        </View>
+        <View style={styles.signUp}>
+          <View style={[styles.checkbox, styles.checkboxLayout]}>
+            <Text style={[styles.iAgreeToContainer, styles.checkboxLayout]}>
+              <Text style={styles.iAgreeToContainer1}>
+                <Text style={styles.iAgreeTo}>{`I agree to the `}</Text>
+                <Text style={styles.terms}>terms</Text>
+                <Text style={styles.iAgreeTo}>{` And `}</Text>
+                <Text style={styles.terms}>privacy policy</Text>
+              </Text>
+            </Text>
+            <View style={[styles.bgWrapper, styles.bgLayout]}>
+              <View style={[styles.bg, styles.bgBorder]} />
+            </View>
+          </View>
+          <View style={styles.input}>
+            <View style={[styles.confirmPassword, styles.passwordLayout]}>
+              <View style={styles.bg1} />
+              <Image
+                style={styles.hiddenIcon}
+                contentFit="cover"
+                source={require("../assets/hidden.png")}
+              />
+              <Text style={[styles.confirmPasswordTitle, styles.titleTypo]}>
+                Confirm Password
+              </Text>
+            </View>
+            <View style={[styles.password, styles.passwordLayout]}>
+              <View style={styles.bg1} />
+              <Image
+                style={styles.hiddenIcon}
+                contentFit="cover"
+                source={require("../assets/hidden.png")}
+              />
+              <TextInput style={[styles.exampleForPassword, styles.examplePosition]}>
+                e.g. Examp!e2006
+              </TextInput>
+              <Text style={[styles.passwordTitle, styles.titleTypo]}>
+                Password
+              </Text>
+            </View>
+            <View style={[styles.email, styles.passwordLayout]}>
+              <View style={styles.bg1} />
+              <Text style={[styles.exampleForEmail, styles.examplePosition]}>
+                e.g. example@mail.com
+              </Text>
+              <Text style={[styles.emailTitle, styles.titleTypo]}>Email</Text>
+            </View>
+          </View>
         </View>
         <Pressable
-          style={styles.goBack}
-          onPress={() => navigation.navigate("LogInScreen")}
+          style={[styles.cta, styles.ctaPosition]}
+          onPress={openCTAContainer}
         >
-          <Image
-            style={styles.icon}
-            contentFit="cover"
-            source={require("../assets/go-back.png")}
-          />
+          <Text style={[styles.createAccount1, styles.signUpWithTypo]}>
+            Criar conta
+          </Text>
         </Pressable>
+        <View style={[styles.cta1, styles.ctaPosition]}>
+          <View style={styles.btnSignUpWithGoogle}>
+            <View style={styles.iconGoogleParent}>
+              <Image
+                style={styles.iconGoogle}
+                contentFit="cover"
+                source={require("../assets/icon--google.png")}
+              />
+              <Text style={[styles.signUpWith, styles.signUpWithTypo]}>
+                Sign Up with Google
+              </Text>
+            </View>
+          </View>
+        </View>
       </ImageBackground>
 
       <Modal animationType="fade" transparent visible={cTAContainerVisible}>
@@ -146,19 +159,11 @@ const SignUpScreen = () => {
           <Frame onClose={closeCTAContainer} />
         </View>
       </Modal>
-    </KeyboardAvoidingView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-
-  containerlements: {
-    alignItems: 'center',
-    width: '80%',
-    marginVertical: 10,
-  },
-
   batteryIconPosition: {
     right: 0,
     top: 0,
@@ -174,6 +179,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   createAccountFlexBox: {
+    alignItems: "center",
+    display: "flex",
     fontFamily: FontFamily.rosarivoRegular,
     textAlign: "left",
   },
@@ -205,15 +212,18 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     textAlign: "left",
     color: Color.colorBlanchedalmond_100,
+    left: 0,
+    top: 0,
     position: "absolute",
   },
   examplePosition: {
     color: Color.colorBeige_100,
     left: 15,
-    top: 39,
+    top: 43,
     fontSize: FontSize.size_base,
     textAlign: "left",
     fontFamily: FontFamily.rosarivoRegular,
+    position: "absolute",
   },
   ctaPosition: {
     paddingBottom: Padding.p_smi,
@@ -271,21 +281,20 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   createAccount: {
-    color: Color.colorBeige_100,
-    fontFamily: FontFamily.rosarivoRegular,
+    top: 90,
     fontSize: FontSize.size_29xl,
-    marginBottom: 10,
+    // lineHeight: 50, // Remova ou ajuste esta linha
+    height: 115,
+    color: Color.colorBlanchedalmond_100,
+    left: 0,
+    width: 298,
+    position: "absolute",
   },
-
-
+  
   icon: {
-    height: 20,
-    width: 20,
-    position: 'absolute',
-    top: 80,
-    left: 40,
+    height: "100%",
+    width: "100%",
   },
-
   goBack: {
     width: 14,
     height: 24,
@@ -299,11 +308,7 @@ const styles = StyleSheet.create({
     height: 157,
   },
   iAgreeTo: {
-    top: 11,
-    left: 30,
-    color: Color.colorBeige_100,
-    fontSize: FontSize.size_base,
-    fontFamily: FontFamily.rosarivoRegular,
+    color: Color.colorBlanchedalmond_100,
   },
   terms: {
     textDecoration: "underline",
@@ -473,83 +478,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  textInput: {
-    borderColor: 'white',
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-    padding: 10,
-    borderRadius: 5,
-    height: 40, // Altura desejada para os campos
-    marginBottom: 10,
-    color: 'white',
-  },
-
-
-  textContainer: {
-    width: "90%",
-    display: "flex",
-    alignItems: 'flex-start', // Assegurando alinhamento à esquerda
-    justifyContent: 'center',
-    marginLeft: "5%",
-  },
-  getStarted: {
-    color: Color.colorBeige_100,
-    fontFamily: FontFamily.rosarivoRegular,
-    fontSize: FontSize.size_29xl,
-    marginBottom: 10,
-  },
-  joinUsNow: {
-    color: Color.colorBeige_100,
-    fontFamily: FontFamily.rosarivoRegular,
-    fontSize: 26,
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    width: '80%',
-    marginVertical: 10,
-  },
-  googleButton: {
-    borderColor: 'white',
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-    padding: 10,
-    borderRadius: 5,
-    width: '100%',
-  },
-  createAccountButton: {
-    borderColor: 'white',
-    borderWidth: 1,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-    width: '100%',
-    marginTop: 40,
-    textAlign: 'center',
-  },
-  buttonText: {
-    textAlign: 'center',
-  },
-  googleButtonbuttonText: {
-    color: 'white',
-  },
-  createAccountbuttonText: {
-    color: Color.colorBeige_100,
-  },
-  loginButton: {
-    color: '#50372d',
-  },
-  fieldContainer: {
-    marginBottom: 16,
-    width: '80%',
-  },
-  label: {
-    color:'white',
-    marginBottom: 5,
-  },
-  
-
 });
 
 export default SignUpScreen;
