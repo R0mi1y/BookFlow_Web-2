@@ -3,7 +3,6 @@ export const FontFamily = {
   rosarivoRegular: "Rosarivo-Regular",
   openSansSemiBold: "OpenSans-SemiBold",
   plusJakartaSansLight: "PlusJakartaSans-Light",
-  jejuHallasan: "JejuHallasan",
   karantinaRegular: "Karantina-Regular",
   miniver: "Miniver",
   kameron: "Kameron",

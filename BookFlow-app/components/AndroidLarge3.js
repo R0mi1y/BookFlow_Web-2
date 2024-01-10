@@ -1,6 +1,5 @@
 import React, { memo } from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
-// import { Image } from "expo-image";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 
 const AndroidLarge3 = memo(({ onClose }) => {

@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-// import { Image } from "expo-image";
 import {  ScrollView, StyleSheet, Pressable, Text, View, Modal, Image } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
@@ -10,19 +9,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
-  AsyncStorage.getItem("@user")
-    .then((user) => {
-      if (user !== null) {
-        
-      } else {
-        navigation.navigate("LogInScreen");
-      }
-    })
-    .catch((error) => {
-      console.log("Error lendo o Assync Storage: " + error);
-      navigation.navigate("LogInScreen");
-    });
 
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
 
@@ -744,7 +730,7 @@ const styles = StyleSheet.create({
   infantil: {
     top: 59,
     left: 36,
-    fontFamily: FontFamily.jejuHallasan,
+    fontFamily: FontFamily.karantinaRegular,
     fontSize: FontSize.size_xl,
     textAlign: "left",
     color: Color.colorWhite,

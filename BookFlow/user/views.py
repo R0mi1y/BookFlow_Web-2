@@ -25,13 +25,14 @@ class UserView(ModelViewSet):
         """
         Define permissões personalizadas para diferentes métodos da view.
         """
-        alow = ['login', 'create', 'google_signup']
+        alow = ['login', 'create', 'google_signup', 'post']
         if self.action in alow:
             permission_classes = [AllowAny]
         elif self.action == 'list' or self.action == 'retrieve':
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAuthenticated]  # Ou outra permissão padrão
+            
         return [permission() for permission in permission_classes]
     
      

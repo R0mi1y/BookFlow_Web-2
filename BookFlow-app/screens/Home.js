@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-// import { Image } from "expo-image";
 import {  ScrollView, StyleSheet, Pressable, Text, View, Modal, Image } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
@@ -724,9 +723,9 @@ const styles = StyleSheet.create({
     left: 184,
   },
   infantil: {
+    fontFamily: FontFamily.karantinaRegular,
     top: 59,
     left: 36,
-    fontFamily: FontFamily.jejuHallasan,
     fontSize: FontSize.size_xl,
     textAlign: "left",
     color: Color.colorWhite,

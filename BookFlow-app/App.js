@@ -8,6 +8,7 @@ import { useFonts } from "expo-font";
 import LogInScreen from "./screens/LogInScreen";
 import HomeScreen from "./screens/HomeScreen";
 import FrameComponentSet from "./components/FrameComponentSet";
+import SplashScreen from "./screens/SplashScreen";
 import AndroidLarge2 from "./screens/AndroidLarge2";
 import AndroidLarge4 from "./screens/AndroidLarge4";
 import SignUpScreen from "./screens/SignUpScreen";
@@ -42,13 +43,18 @@ const App = () => {
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen
-              name="LogInScreen"
-              component={LogInScreen}
+              name="SplashScreen"
+              component={SplashScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="HomeScreen"
               component={HomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="LogInScreen"
+              component={LogInScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

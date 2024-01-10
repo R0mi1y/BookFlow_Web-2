@@ -20,11 +20,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KeyboardAvoidingView, Platform } from 'react-native';
 
 
-
 WebBrowser.maybeCompleteAuthSession();
 
 const LogInScreen = () => {
-  // AsyncStorage.removeItem("@user");
   const [email, setEmail] = React.useState('');
   const [pass, setPass] = React.useState('');
   const apiUrl = Constants.manifest.extra.apiUrl;
@@ -32,7 +30,8 @@ const LogInScreen = () => {
   const [popupVisible, setPopupVisible] = React.useState(false);
   const [messagePopup, setPopupTexto] = React.useState("Seja bem vindo!");
 
-  const togglePopup = () => {
+  const togglePopup = (message) => {
+    setPopupTexto(message);
     setPopupVisible(!popupVisible);
   };
 
@@ -71,11 +70,8 @@ const LogInScreen = () => {
           navigation.navigate("HomeScreen");
         } else {
           if (data?.message ?? false) {
-            setPopupTexto(data?.message);
-          } else {
-            setPopupTexto("Erro no servidor ao cadastrar ou logar!");
+            togglePopup(data?.message);
           }
-          togglePopup();
         }
       })
       .catch((error) => console.error("1º fetch erro:" + error))
@@ -83,15 +79,20 @@ const LogInScreen = () => {
   }
 
   async function handleSingInWithGoogle() {
-    const user = await AsyncStorage.getItem("@user");
-    if (!user) {
-      if (!response) return;
-      if (response?.type == "success") {
-        await getUserInfo(response.authentication.accessToken)
-      }
-    } else {
-      send_user(user);
-    }
+    const user = await AsyncStorage.getItem("@user")
+      .then((user) => {
+        if (!user) {
+          if (!response) return;
+          if (response?.type == "success") {
+            getUserInfo(response.authentication.accessToken)
+          }
+        } else {
+          send_user(user);
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 
   const send_user = async (user) => {
@@ -125,18 +126,13 @@ const LogInScreen = () => {
         return user;
       } else {
         if (data?.message) {
-          setPopupTexto(data.message);
-        } else {
-          setPopupTexto("Erro ao logar!");
+          togglePopup(data.message);
         }
-        togglePopup();
 
         return false;
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      // setPopupTexto("Erro ao logar!");
-      // togglePopup();
       return false;
     }
   };
@@ -158,7 +154,6 @@ const LogInScreen = () => {
 
     } catch (err) {
       console.log("Conexão com o servidor google perdida!");
-      togglePopup();
     };
   }
 
@@ -182,7 +177,7 @@ const LogInScreen = () => {
         {/* <Image
           style={[styles.icon]}
           contentFit="cover"
-          source={require("../assets/223045685bf842adb0c2136846f444ea-11.png")}
+          source={require("../assets/logo.png")}
         /> */}
         <View style={styles.textContainer}>
           <Text style={styles.getStarted}>Vamos começar!</Text>

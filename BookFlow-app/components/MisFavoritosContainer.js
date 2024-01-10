@@ -1,6 +1,5 @@
 import React, { useMemo, memo } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-// import { Image } from "expo-image";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
 
 const getStyleValue = (key, value) => {

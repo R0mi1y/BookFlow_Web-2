@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-// import { Image } from "expo-image";
 import {
   StyleSheet,
   View,

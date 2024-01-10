@@ -1,6 +1,5 @@
 import React, { memo } from "react";
 import { View, StyleSheet, Text, Pressable, Image } from "react-native";
-// import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Border, Color, FontSize } from "../GlobalStyles";
 

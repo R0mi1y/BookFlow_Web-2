@@ -1,5 +1,4 @@
 import * as React from "react";
-// import { Image } from "expo-image";
 import { StyleSheet, View, Pressable, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color } from "../GlobalStyles";
@@ -44,7 +43,7 @@ const AndroidLarge4 = () => {
       <Image
         style={styles.bf842adB0c2136846f444ea1Icon}
         contentFit="cover"
-        source={require("../assets/223045685bf842adb0c2136846f444ea-1.png")}
+        source={require("../assets/logo.png")}
       />
     </Pressable>
   );

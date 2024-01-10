@@ -14,8 +14,11 @@ class UserManager(models.Manager):
         if type(data) == str:
             data = json.loads(data)
         
-        user = User.objects.filter(email=data['email']).first()
-
+        if 'email' in data:
+            user = User.objects.filter(email=data['email']).first()
+        else:
+            return None, None
+        
         if user:
             return user, False 
         else:
@@ -54,7 +57,7 @@ class User(AbstractUser):
     photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
     photo_url = models.URLField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=15, null=True, blank=True)
-    account_type = models.CharField(max_length=255)
+    account_type = models.CharField(max_length=255, default="common_user")
     active = models.BooleanField(default=True)
     email = models.EmailField(_("email address"), blank=True, unique=True)
     biography = models.TextField(null=True, blank=True)

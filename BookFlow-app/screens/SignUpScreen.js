@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from "react";
-// import { Image } from "expo-image";
-// import ImagePicker as  from 'react-native-image-picker';
 import {
   StyleSheet,
   View,
@@ -34,17 +32,10 @@ const SignUpScreen = () => {
   const navigation = useNavigation();
   const [cTAContainerVisible, setCTAContainerVisible] = useState(false);
 
-  const togglePopup = () => {
+  const togglePopup = (message) => {
+    setPopupTexto(message);
     setPopupVisible(!popupVisible);
   };
-
-  const openCTAContainer = useCallback(() => {
-    setCTAContainerVisible(true);
-  }, []);
-
-  const closeCTAContainer = useCallback(() => {
-    setCTAContainerVisible(false);
-  }, []);
 
   const [userInfo, setUserInfo] = React.useState(null);
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -58,16 +49,20 @@ const SignUpScreen = () => {
     handleSingInWithGoogle();
   }, [response]);
 
-  async function handleSingInWithGoogle() {
-    const user = await AsyncStorage.getItem("@user");
-    if (!user) {
-      if (!response) return;
-      if (response?.type == "success") {
-        await getUserInfo(response.authentication.accessToken)
-      }
-    } else {
-      send_user(user);
-    }
+  function handleSingInWithGoogle() {
+    const user = AsyncStorage.getItem("@user")
+      .then((user) => {
+        if (!user) {
+          if (!response) return;
+          console.log(response);
+          if (response?.type == "success") {
+            getUserInfo(response.authentication.accessToken)
+          }
+        } else {
+          console.log(user);
+          send_user(user);
+        }
+      });
   }
 
   const send_user = async (user) => {
@@ -101,18 +96,13 @@ const SignUpScreen = () => {
         return user;
       } else {
         if (data?.message) {
-          setPopupTexto(data.message);
-        } else {
-          setPopupTexto("Erro ao logar!");
+          togglePopup(data.message);
         }
-        togglePopup();
 
         return false;
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      // setPopupTexto("Erro ao logar!");
-      // togglePopup();
       return false;
     }
   };
@@ -134,10 +124,12 @@ const SignUpScreen = () => {
 
     } catch (err) {
       console.log("Conexão com o servidor google perdida!");
-      togglePopup();
     };
   }
-  
+
+  const signUp = () => {
+    var user = fetch("")
+  }
 
   return (
     <>
@@ -211,7 +203,7 @@ const SignUpScreen = () => {
           </View>
 
           <TouchableOpacity
-            onPress={openCTAContainer}
+            onPress={() => {return}}
             style={styles.createAccountButton}
           >
             <Text style={[styles.loginButton, styles.buttonText]}>Criar conta</Text>
@@ -238,7 +230,7 @@ const SignUpScreen = () => {
         </Pressable>
       </ImageBackground>
 
-      <Modal animationType="fade" transparent visible={cTAContainerVisible}>
+      {/* <Modal animationType="fade" transparent visible={cTAContainerVisible}>
         <View style={styles.cTAContainerOverlay}>
           <Pressable
             style={styles.cTAContainerBg}
@@ -246,7 +238,7 @@ const SignUpScreen = () => {
           />
           <Frame onClose={closeCTAContainer} />
         </View>
-      </Modal>
+      </Modal> */}
     </KeyboardAvoidingView>
     </>
   );
