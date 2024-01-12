@@ -130,10 +130,10 @@ const ListBook = () => {
         <View style={styles.instanceParent}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={styles.autoresWrapper}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Autores</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>Meus livros</Text>
             </View>
             <View style={[styles.autoresContainer, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Gêneros</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>Pendentes</Text>
             </View>
             <View style={[styles.autoresFrame, styles.frameBorder]}>
               <Text style={[styles.autores, styles.autoresTypo]}>Editora</Text>
@@ -195,7 +195,7 @@ const ListBook = () => {
           {/* <Text style={styles.audiolibrosTypo}>Pendentes</Text> */}
 
           <View style={styles.groupContainer}>
-            <ScrollView vertical={true} showsalScrollIndicator={true}>
+            <ScrollView vertical={true} style={styles.scroll}>
               <Pressable
                 style={styles.groupLayout}
                 onPress={() => navigation.navigate("AndroidLarge2")}
@@ -251,13 +251,13 @@ const ListBook = () => {
                 source={require("../assets/mais.png")}
               /> */}
                 <View style={styles.groupChild7} />
-                <Image
+                {/* <Image
                   style={[styles.groupChild8, styles.iconGroupLayout]}
                   contentFit="cover"
                   source={require("../assets/group-102.png")}
                 />
                 <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
-              </View>
+              </View> */}
 
               {/* LIVRO 3 */}
               <View style={styles.container}>
@@ -291,8 +291,8 @@ const ListBook = () => {
 
 
               {/* LIVRO 4 */}
-              <View style={styles.container}>
-              <View style={[styles.rectangleParent3, styles.groupLayout]}>
+              
+              {/* <View style={[styles.rectangleParent3, styles.groupLayout, styles.groupContainer]}>
                 <View style={[styles.groupChild3, styles.groupLayout]} />
                 <Image
                   style={[styles.groupChild4, styles.groupChildLayout1]}
@@ -310,15 +310,15 @@ const ListBook = () => {
                 contentFit="cover"
                 source={require("../assets/mais.png")}
               /> */}
-                <View style={styles.groupChild7} />
+                {/* <View style={styles.groupChild7} />
                 <Image
                   style={[styles.groupChild8, styles.iconGroupLayout]}
                   contentFit="cover"
                   source={require("../assets/group-102.png")}
                 />
                 <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
-              </View>
-              </View>
+              </View> */} 
+    
             </ScrollView>
           </View>
         </View>
@@ -335,6 +335,7 @@ const ListBook = () => {
 };
 
 const styles = StyleSheet.create({
+
   container: {
     top:20,
   },
@@ -414,7 +415,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupLayout: {
-    height: 230,
+    height: 110,
     width: 370,
   },
   // groupChildLayout1: {
@@ -663,10 +664,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupChild4: {
-    height: 67,
-    top: 12,
-    left: 14,
-    width: 67,
+    height: 77,
+    top: 16,
+    left: 19,
+    width: 77,
     borderRadius: Border.br_mini,
     position: "absolute",
   },
@@ -697,7 +698,7 @@ const styles = StyleSheet.create({
     left: 12,
   },
   text: {
-    top: 7,
+    top: 70,
     left: 190,
     fontFamily: FontFamily.openSansRegular,
     width: 100,
