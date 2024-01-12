@@ -33,35 +33,6 @@ const SignUpScreen = () => {
         resizeMode="cover"
         source={require("../assets/androidlarge5.png")}
       >
-        <View style={[styles.iosstatusBarblack, styles.batteryIconPosition]}>
-          <Image
-            style={styles.bgIcon}
-            contentFit="cover"
-            source={require("../assets/bg.png")}
-          />
-          <View style={[styles.rightSide, styles.sidePosition]}>
-            <Image
-              style={[styles.batteryIcon, styles.batteryIconPosition]}
-              contentFit="cover"
-              source={require("../assets/battery.png")}
-            />
-            <Image
-              style={styles.wifiIcon}
-              contentFit="cover"
-              source={require("../assets/wifi.png")}
-            />
-            <Image
-              style={styles.mobileSignalIcon}
-              contentFit="cover"
-              source={require("../assets/mobile-signal.png")}
-            />
-          </View>
-          <Image
-            style={[styles.leftSideIcon, styles.sidePosition]}
-            contentFit="cover"
-            source={require("../assets/left-side2.png")}
-          />
-        </View>
         <View style={[styles.top, styles.topLayout]}>
           <Text
             style={[styles.createAccount, styles.createAccountFlexBox]}
