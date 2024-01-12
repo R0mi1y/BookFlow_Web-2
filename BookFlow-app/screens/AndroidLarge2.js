@@ -13,19 +13,19 @@ const AndroidLarge2 = () => {
         contentFit="cover"
         source={require("../assets/phlist.png")}
       />
-      <Image
+      {/* <Image
         style={[styles.epsearchIcon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/epsearch.png")}
-      />
+      /> */}
       <Pressable
         style={styles.brandLogo}
         onPress={() => navigation.navigate("HomeScreen")}
       >
-        <Text style={[styles.l, styles.lTypo]}>Lé</Text>
-        <Text style={[styles.libro, styles.libroPosition]}>Libro</Text>
+        <Text style={[styles.l, styles.lTypo]}>Book</Text>
+        <Text style={[styles.libro, styles.libroPosition]}>Flow</Text>
       </Pressable>
-      <View style={styles.iosstatusBarblack}>
+      {/* <View style={styles.iosstatusBarblack}>
         <Image
           style={styles.bgIcon}
           contentFit="cover"
@@ -53,7 +53,7 @@ const AndroidLarge2 = () => {
           contentFit="cover"
           source={require("../assets/left-side2.png")}
         />
-      </View>
+      </View> */}
       <Image
         style={styles.productImageIcon}
         contentFit="cover"
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 45,
     borderRadius: Border.br_3xs,
-    left: 29,
+    left: 55,
     width: 302,
     position: "absolute",
   },
@@ -177,13 +177,13 @@ const styles = StyleSheet.create({
     top: 9,
     fontSize: FontSize.size_11xl,
     color: Color.colorBlanchedalmond_400,
-    width: 39,
+    width: 100,
     height: 43,
     left: 0,
     position: "absolute",
   },
   libro: {
-    left: 39,
+    left: 75,
     fontSize: FontSize.size_23xl,
     width: 105,
     height: 50,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   },
   brandLogo: {
     top: 49,
-    left: 110,
+    left: 125,
     width: 144,
     height: 52,
     position: "absolute",
@@ -247,12 +247,12 @@ const styles = StyleSheet.create({
     top: 119,
     height: 336,
     width: 302,
-    left: 27,
+    left: 50,
     position: "absolute",
   },
   pachinko: {
     top: 482,
-    left: 113,
+    left: 133,
     fontSize: FontSize.size_5xl,
     lineHeight: 30,
     color: Color.colorWhite,
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   },
   minJinLee: {
     top: 512,
-    left: 136,
+    left: 156,
     lineHeight: 20,
     fontSize: FontSize.size_base,
     color: Color.colorBlanchedalmond_100,
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     top: 594,
     lineHeight: 17,
     height: 57,
-    left: 29,
+    left: 59,
     fontSize: FontSize.size_xs,
     width: 302,
   },
@@ -293,22 +293,22 @@ const styles = StyleSheet.create({
   },
   cuentoNovelaContainer: {
     top: 579,
-    left: 101,
+    left: 121,
     lineHeight: 15,
   },
   biuploadIcon: {
     top: 537,
-    left: 129,
+    left: 140,
     height: 24,
     width: 24,
     position: "absolute",
     overflow: "hidden",
   },
   solarstarOutlineIcon: {
-    left: 168,
+    left: 185,
   },
   iconoirpageFlip: {
-    left: 207,
+    left: 227,
   },
   cta: {
     top: 665,
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: "row",
     paddingHorizontal: 50,
-    paddingTop: 15,
+    paddingTop: 10,
     paddingBottom: Padding.p_smi,
   },
   irAlLibro: {
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
   },
   irAlLibroParent: {
     top: 675,
-    left: 127,
+    left: 155,
     width: 106,
     height: 25,
     position: "absolute",

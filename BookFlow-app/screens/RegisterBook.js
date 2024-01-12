@@ -13,19 +13,19 @@ const RegisterBook = () => {
         contentFit="cover"
         source={require("../assets/phlist.png")}
       />
-      <Image
+      {/* <Image
         style={[styles.epsearchIcon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/epsearch.png")}
-      />
+      /> */}
       <Pressable
         style={styles.brandLogo}
         onPress={() => navigation.navigate("HomeScreen")}
       >
-        <Text style={[styles.l, styles.lTypo]}>Lé</Text>
-        <Text style={[styles.libro, styles.libroPosition]}>Libro</Text>
+        <Text style={[styles.l, styles.lTypo]}>Livro</Text>
+        <Text style={[styles.libro, styles.libroPosition]}>Cadastre seu </Text>
       </Pressable>
-      <View style={styles.iosstatusBarblack}>
+      {/* <View style={styles.iosstatusBarblack}>
         <Image
           style={styles.bgIcon}
           contentFit="cover"
@@ -53,8 +53,8 @@ const RegisterBook = () => {
           contentFit="cover"
           source={require("../assets/left-side2.png")}
         />
-      </View>
-      <Image
+      </View> */}
+      {/* <Image
         style={styles.productImageIcon}
         contentFit="cover"
         source={require("../assets/product-image.png")}
@@ -87,16 +87,54 @@ const RegisterBook = () => {
         style={[styles.iconoirpageFlip, styles.iconoirpageFlipPosition]}
         contentFit="cover"
         source={require("../assets/iconoirpageflip.png")}
-      />
+      /> */}
+    
       <View style={[styles.cta, styles.ctaLayout]} />
       <View style={[styles.cta1, styles.ctaLayout]}>
         <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-          Contenido relacionado
+          Título do livro
         </Text>
       </View>
+
+      <View style={[styles.cta2, styles.ctaLayout]}>
+        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
+        Autor
+        </Text>
+      </View>
+
+      <View style={[styles.cta3, styles.ctaLayout]}>
+        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
+        Genêro
+        </Text>
+      </View>
+
+      <View style={[styles.cta4, styles.ctaLayout]}>
+        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
+        Resumo
+        </Text>
+      </View>
+
+      <View style={[styles.cta5, styles.ctaLayout]}>
+        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
+        Classificação ( Ex. 5,0)
+        </Text>
+      </View>
+
+      <View style={[styles.cta6, styles.ctaLayout]}>
+        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
+        Disponibilidade
+        </Text>
+      </View>
+
+      <View style={[styles.cta7, styles.ctaLayout]}>
+        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
+        Insira uma imagem 
+        </Text>
+      </View>
+
       <View style={styles.irAlLibroParent}>
         <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-          Ir al libro
+          Cadastrar
         </Text>
         <Image
           style={[styles.ionbookIcon, styles.lPosition]}
@@ -117,7 +155,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   lTypo: {
-    textAlign: "left",
+    textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
   },
   libroPosition: {
@@ -147,7 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 45,
     borderRadius: Border.br_3xs,
-    left: 29,
+    left: 49,
     width: 302,
     position: "absolute",
   },
@@ -174,26 +212,26 @@ const styles = StyleSheet.create({
     top: 62,
   },
   l: {
-    top: 9,
-    fontSize: FontSize.size_11xl,
+    top: 46,
+    fontSize: FontSize.size_29xl,
     color: Color.colorBlanchedalmond_400,
-    width: 39,
-    height: 43,
-    left: 0,
+    width: 250,
+    height: 50,
+    left: 70,
     position: "absolute",
   },
   libro: {
-    left: 39,
+    left: 37,
     fontSize: FontSize.size_23xl,
-    width: 105,
+    width: 350,
     height: 50,
     color: Color.colorBlanchedalmond_100,
-    textAlign: "left",
+    textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
   },
   brandLogo: {
     top: 49,
-    left: 110,
+    left: 10,
     width: 144,
     height: 52,
     position: "absolute",
@@ -311,7 +349,7 @@ const styles = StyleSheet.create({
     left: 207,
   },
   cta: {
-    top: 665,
+    top: 690,
     backgroundColor: Color.colorBlanchedalmond_100,
     shadowColor: "rgba(0, 0, 0, 0.15)",
     shadowOffset: {
@@ -326,13 +364,76 @@ const styles = StyleSheet.create({
     color: Color.colorBlanchedalmond_100,
   },
   cta1: {
-    top: 724,
+    top: 200,
     borderStyle: "solid",
     borderColor: Color.colorBlanchedalmond_100,
     borderWidth: 1,
     flexDirection: "row",
     paddingHorizontal: 50,
-    paddingTop: 15,
+    paddingTop: 10,
+    paddingBottom: Padding.p_smi,
+  },
+
+  cta2: {
+    top: 270,
+    borderStyle: "solid",
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+    flexDirection: "row",
+    paddingHorizontal: 50,
+    paddingTop: 10,
+    paddingBottom: Padding.p_smi,
+  },
+  cta3: {
+    top: 340,
+    borderStyle: "solid",
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+    flexDirection: "row",
+    paddingHorizontal: 50,
+    paddingTop: 10,
+    paddingBottom: Padding.p_smi,
+  },
+  cta4: {
+    top: 410,
+    borderStyle: "solid",
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+    flexDirection: "row",
+    paddingHorizontal: 50,
+    paddingTop: 10,
+    paddingBottom: Padding.p_smi,
+  },
+  cta5: {
+    top: 480,
+    borderStyle: "solid",
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+    flexDirection: "row",
+    paddingHorizontal: 50,
+    paddingTop: 10,
+    paddingBottom: Padding.p_smi,
+  },
+
+  cta6: {
+    top: 550,
+    borderStyle: "solid",
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+    flexDirection: "row",
+    paddingHorizontal: 50,
+    paddingTop: 10,
+    paddingBottom: Padding.p_smi,
+  },
+
+  cta7: {
+    top: 620,
+    borderStyle: "solid",
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+    flexDirection: "row",
+    paddingHorizontal: 50,
+    paddingTop: 10,
     paddingBottom: Padding.p_smi,
   },
   irAlLibro: {
@@ -350,8 +451,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   irAlLibroParent: {
-    top: 675,
-    left: 127,
+    top: 703,
+    left: 150,
     width: 106,
     height: 25,
     position: "absolute",
@@ -359,7 +460,7 @@ const styles = StyleSheet.create({
   RegisterBook: {
     flex: 1,
     width: "100%",
-    height: 800,
+    height: 900,
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
   },

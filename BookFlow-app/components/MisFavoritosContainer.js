@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   octiconperson24: {
     top: 62,
-    left: 40,
+    left: 38,
     width: 35,
     height: 35,
     overflow: "hidden",

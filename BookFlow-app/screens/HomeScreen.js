@@ -171,30 +171,40 @@ const HomeScreen = () => {
           />
         </View>
 
+        <Pressable
+        onPress={() => navigation.navigate("RegisterBook")}
+      >
         <MisFavoritosContainer
-          userFavorites={`Livros\nEmprestados`}
+          userFavorites={`Cadastrar\nLivros`}
           showSolarstarOutlineIcon
           propLeft={147}
-          propLeft1={9}
-        />
+          propLeft1={19}
+          />
+          </Pressable>
+
+          <Pressable
+        onPress={() => navigation.navigate("ListBook")}
+        >
         <MisFavoritosContainer
           userFavorites={`Meus\nLivros`}
           showSolarstarOutlineIcon={false}
           propLeft={282}
           propLeft1={34}
         />
+        </Pressable>
+        
 
         <View style={styles.scrol1}>
 
             {/* GRUPO 1 DE LIVROS */}
 
-          <Text style={styles.audiolibrosTypo}>Recentes</Text>
+          <Text style={styles.audiolibrosTypo}>Pendentes</Text>
 
           <View style={styles.groupContainer}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} > 
             <Pressable
               style={styles.groupLayout}
-              onPress={() => navigation.navigate("RegisterBook")}
+              onPress={() => navigation.navigate("AndroidLarge2")}
             >
               {/* LIVRO 1 */}
 
@@ -209,14 +219,15 @@ const HomeScreen = () => {
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
               >{`Pachinko Novela`}</Text>
+              
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -242,11 +253,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -273,11 +284,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -302,11 +313,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -323,7 +334,7 @@ const HomeScreen = () => {
         {/* GRUPO 2 */}
 
           <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
-            Pendentes
+            Meus Livros
           </Text>
           <View style={styles.groupContainer}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
@@ -343,11 +354,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -372,11 +383,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -401,11 +412,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -430,11 +441,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -450,7 +461,7 @@ const HomeScreen = () => {
           {/* GRUPO 3 */}
 
           <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
-            Recomendados
+            Favoritos
           </Text>
           
           <View style={styles.groupContainer}>
@@ -472,11 +483,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -501,11 +512,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>Status</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -530,11 +541,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -559,11 +570,11 @@ const HomeScreen = () => {
               <View style={[styles.groupChild5, styles.groupChildLayout]} />
               <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              <Image
+              {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
                 source={require("../assets/mais.png")}
-              />
+              /> */}
               <View style={styles.groupChild7} />
               <Image
                 style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -831,11 +842,11 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_11xl,
     color: Color.colorBlanchedalmond_400,
     height: 43,
-    width: 39,
+    width: 100,
     left: 0,
   },
   libro: {
-    left: 39,
+    left: 75,
     fontSize: FontSize.size_23xl,
     width: 105,
     height: 50,
@@ -847,7 +858,7 @@ const styles = StyleSheet.create({
   },
   brandLogo: {
     top: 49,
-    left: 140,
+    left: 115,
     width: 144,
     height: 52,
     position: "absolute",
@@ -958,10 +969,10 @@ const styles = StyleSheet.create({
     height: 35,
     lineHeight: 20,
     width: 111,
-    fontSize: FontSize.size_sm,
+    fontSize: FontSize.size_base,
     fontFamily: FontFamily.rosarivoRegular,
-    textAlign: "left",
-    color: Color.colorWhite,
+    textAlign: "center",
+    color: Color.colorBlanchedalmond_100,
     position: "absolute",
   },
   groupChild5: {
@@ -971,7 +982,7 @@ const styles = StyleSheet.create({
   },
   text: {
     top: 190,
-    left: 19,
+    left: 37,
     fontFamily: FontFamily.openSansRegular,
     width: 100,
     height: 18,
@@ -980,11 +991,11 @@ const styles = StyleSheet.create({
     color: Color.colorWhite,
     fontWeight: "600",
   },
-  groupChild6: {
-    left: 84,
-    backgroundColor: Color.colorBlanchedalmond_100,
-    width: 39,
-  },
+  // groupChild6: {
+  //   left: 84,
+  //   backgroundColor: Color.colorBlanchedalmond_100,
+  //   width: 39,
+  // },
   groupIcon: {
     height: "9.37%",
     width: "15.37%",
