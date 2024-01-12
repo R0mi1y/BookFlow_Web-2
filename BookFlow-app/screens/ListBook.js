@@ -256,8 +256,8 @@ const ListBook = () => {
                   contentFit="cover"
                   source={require("../assets/group-102.png")}
                 />
-                <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
-              </View> */}
+                <Text style={[styles.text1, styles.lTypo]}>4.5</Text>*/}
+              </View> 
 
               {/* LIVRO 3 */}
               <View style={styles.container}>

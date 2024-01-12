@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "book_flow",
-    "slug": "book_flow",
+    "slug": "bookflow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,16 +27,19 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.bookflow",
-      "config": {
-      }
+      "config": {}
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "scheme": "bookflow",
     "extra": {
-      "apiUrl": "http://192.168.1.104:8000"
-    }
+      "apiUrl": "http://45.137.192.3",
+      "eas": {
+        "projectId": "5ebb3e84-be2a-441f-9e61-9c756f4a3c91"
+      }
+    },
+    "owner": "nevesfg"
   },
   "web": "expo start --web"
 }
