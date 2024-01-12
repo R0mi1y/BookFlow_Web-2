@@ -168,6 +168,7 @@ const SignUpScreen = () => {
       togglePopup("A senha e a confirmação precisam ser iguais!");
       return;
     }
+    console.log(`${apiUrl}/api/user/`);
     try {
       fetch(
         `${apiUrl}/api/user/`,
@@ -192,6 +193,8 @@ const SignUpScreen = () => {
             message += "\n\n";
             message += element[1];
           });
+
+          togglePopup();
           togglePopup(message);
         }
       })
@@ -200,6 +203,8 @@ const SignUpScreen = () => {
       });
     } catch (err) {
       console.error(err);
+      togglePopup();
+      togglePopup("Falha no servidor");
     }
   }
 

@@ -25,35 +25,6 @@ const AndroidLarge2 = () => {
         <Text style={[styles.l, styles.lTypo]}>Book</Text>
         <Text style={[styles.libro, styles.libroPosition]}>Flow</Text>
       </Pressable>
-      {/* <View style={styles.iosstatusBarblack}>
-        <Image
-          style={styles.bgIcon}
-          contentFit="cover"
-          source={require("../assets/bg.png")}
-        />
-        <View style={[styles.rightSide, styles.sidePosition]}>
-          <Image
-            style={styles.batteryIcon}
-            contentFit="cover"
-            source={require("../assets/battery.png")}
-          />
-          <Image
-            style={styles.wifiIcon}
-            contentFit="cover"
-            source={require("../assets/wifi.png")}
-          />
-          <Image
-            style={styles.mobileSignalIcon}
-            contentFit="cover"
-            source={require("../assets/mobile-signal.png")}
-          />
-        </View>
-        <Image
-          style={[styles.leftSideIcon, styles.sidePosition]}
-          contentFit="cover"
-          source={require("../assets/left-side2.png")}
-        />
-      </View> */}
       <Image
         style={styles.productImageIcon}
         contentFit="cover"

@@ -495,36 +495,6 @@ const AndroidLarge1 = () => {
             </View>
           </View>
         </View>
-
-        {/* <View style={styles.iosstatusBarblack}>
-          <Image
-            style={[styles.bgIcon, styles.iconGroupLayout]}
-            contentFit="cover"
-            source={require("../assets/bg.png")}
-          />
-          <View style={[styles.rightSide, styles.sidePosition]}>
-            <Image
-              style={[styles.batteryIcon, styles.batteryIconLayout]}
-              contentFit="cover"
-              source={require("../assets/battery.png")}
-            />
-            <Image
-              style={styles.wifiIcon}
-              contentFit="cover"
-              source={require("../assets/wifi.png")}
-            />
-            <Image
-              style={styles.mobileSignalIcon}
-              contentFit="cover"
-              source={require("../assets/mobile-signal.png")}
-            />
-          </View>
-          <Image
-            style={[styles.leftSideIcon, styles.sidePosition]}
-            contentFit="cover"
-            source={require("../assets/left-side.png")}
-          />
-        </View> */}
       </View>
 
       <Modal animationType="fade" transparent visible={phlistIconVisible}>

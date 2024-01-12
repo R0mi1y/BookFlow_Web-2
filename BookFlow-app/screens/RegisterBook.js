@@ -25,69 +25,6 @@ const RegisterBook = () => {
         <Text style={[styles.l, styles.lTypo]}>Livro</Text>
         <Text style={[styles.libro, styles.libroPosition]}>Cadastre seu </Text>
       </Pressable>
-      {/* <View style={styles.iosstatusBarblack}>
-        <Image
-          style={styles.bgIcon}
-          contentFit="cover"
-          source={require("../assets/bg.png")}
-        />
-        <View style={[styles.rightSide, styles.sidePosition]}>
-          <Image
-            style={styles.batteryIcon}
-            contentFit="cover"
-            source={require("../assets/battery.png")}
-          />
-          <Image
-            style={styles.wifiIcon}
-            contentFit="cover"
-            source={require("../assets/wifi.png")}
-          />
-          <Image
-            style={styles.mobileSignalIcon}
-            contentFit="cover"
-            source={require("../assets/mobile-signal.png")}
-          />
-        </View>
-        <Image
-          style={[styles.leftSideIcon, styles.sidePosition]}
-          contentFit="cover"
-          source={require("../assets/left-side2.png")}
-        />
-      </View> */}
-      {/* <Image
-        style={styles.productImageIcon}
-        contentFit="cover"
-        source={require("../assets/product-image.png")}
-      />
-      <Text style={styles.pachinko}>CADASTRO</Text>
-      <Text style={styles.minJinLee}>Min Jin Lee</Text>
-      <Text style={[styles.aSingleEspressoContainer, styles.containerTypo]}>
-        <Text
-          style={styles.aSingleEspresso}
-        >{`A single espresso shot poured into hot foamy milk, with the surface topped with mildly sweetened cocoa powder and drizzled with scrumptious `}</Text>
-        <Text style={styles.text}>{`... `}</Text>
-        <Text style={styles.text}>
-          <Text style={styles.readMore1}>Read More</Text>
-        </Text>
-      </Text>
-      <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
-        <Text style={styles.cuentoNovela}>Cuento • Novela • Romance</Text>
-      </Text>
-      <Image
-        style={styles.biuploadIcon}
-        contentFit="cover"
-        source={require("../assets/biupload.png")}
-      />
-      <Image
-        style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
-        contentFit="cover"
-        source={require("../assets/solarstaroutline1.png")}
-      />
-      <Image
-        style={[styles.iconoirpageFlip, styles.iconoirpageFlipPosition]}
-        contentFit="cover"
-        source={require("../assets/iconoirpageflip.png")}
-      /> */}
     
       <View style={[styles.cta, styles.ctaLayout]} />
       <View style={[styles.cta1, styles.ctaLayout]}>
