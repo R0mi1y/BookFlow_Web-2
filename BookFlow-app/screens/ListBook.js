@@ -41,83 +41,6 @@ const ListBook = () => {
             source={require("../assets/phlist.png")}
           />
         </Pressable>
-        {/* <Image
-          style={[styles.epsearchIcon, styles.phlistLayout]}
-          contentFit="cover"
-          source={require("../assets/epsearch.png")}
-        /> */}
-        {/* ------------------------------------- */}
-
-        {/* CARROSSEL COMEÇA AQUI */}
-        {/* <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={styles.groupParent}
-        >
-          <View style={styles.rectangleLayout1}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-3.png")}
-            />
-            <Text
-              style={[styles.cienciaFiccion, styles.textFlexBox]}
-            >{`Ficção Científica`}</Text>
-            <Text style={[styles.coleccin, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-5.png")}
-            />
-            <Text style={[styles.crimen, styles.crimenTypo]}>Criminal</Text>
-            <Text style={[styles.coleccin1, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-4.png")}
-            />
-            <Text style={[styles.aventura, styles.textFlexBox]}>Aventura</Text>
-            <Text style={[styles.coleccin2, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-2.png")}
-            />
-            <Text style={[styles.biografia, styles.crimenTypo]}>BIOGRAFIA</Text>
-            <Text style={[styles.coleccin3, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-1.png")}
-            />
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-1.png")}
-            />
-            <Text style={styles.infantil}>Infantil</Text>
-            <Text style={[styles.coleccin4, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-        </ScrollView> */}
-        {/*-----------------------------------------------*/}
 
         {/* TITULO DA HOME */}
         <View style={styles.brandLogo}>
@@ -136,7 +59,7 @@ const ListBook = () => {
               <Text style={[styles.autores, styles.autoresTypo]}>Pendentes</Text>
             </View>
             <View style={[styles.autoresFrame, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Editora</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>Favoritos</Text>
             </View>
             <View style={[styles.frameView, styles.frameBorder]}>
               <Text style={[styles.autores, styles.autoresTypo]}>
@@ -145,57 +68,14 @@ const ListBook = () => {
             </View>
             <View style={[styles.autoresWrapper1, styles.frameBorder]}>
               <Text style={[styles.autores, styles.autoresTypo]}>
-                Ano de Publicação
+                Editora
               </Text>
             </View>
           </ScrollView>
         </View>
-        {/*--------------------------*/}
-
-        {/* <Text style={styles.miBiblioteca}>Minha biblioteca</Text>
-        <Image
-          style={[styles.vectorIcon, styles.iconGroupLayout]}
-          contentFit="cover"
-          source={require("../assets/lista_books.png")}
-        />
-        {/* ESSA MERDA É O MENU LATERAL */}
-        {/* <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
-          <View style={[styles.rectangleView, styles.rectangleLayout]} />
-          <Text
-            style={[styles.iniciarSesin, styles.textTypo]}
-          >{`Iniciar Empréstimo`}</Text>
-          <Image
-            style={[styles.octiconperson24, styles.batteryIconLayout]}
-            contentFit="cover"
-            source={require("../assets/book_aberto.png")}
-          />
-        </View> */} 
-
-        {/* <Pressable
-          style={styles.groupLayout}
-          onPress={() => navigation.navigate("RegisterBook")}
-        >
-          <MisFavoritosContainer
-            userFavorites={`Cadastrar\nLivros`}
-            showSolarstarOutlineIcon
-            propLeft={147}
-            propLeft1={19}
-          />
-        </Pressable>
-        <MisFavoritosContainer
-          userFavorites={`Meus\nLivros`}
-          showSolarstarOutlineIcon={false}
-          propLeft={282}
-          propLeft1={34}
-        /> */}
 
         <View style={styles.scrol1}>
-          {/* GRUPO 1 DE LIVROS */}
 
-          {/* <Text style={styles.audiolibrosTypo}>Pendentes</Text> */}
-
-          <View style={styles.groupContainer}>
-            <ScrollView vertical={true} style={styles.scroll}>
               <Pressable
                 style={styles.groupLayout}
                 onPress={() => navigation.navigate("AndroidLarge2")}
@@ -205,122 +85,83 @@ const ListBook = () => {
                 <View style={[styles.groupChild3, styles.groupLayout]} />
 
                 <Image
-                  style={[styles.groupChild4, styles.groupChildLayout1]}
+                  style={[styles.groupChild4]}
                   contentFit="cover"
                   source={require("../assets/rectangle-174.png")}
                 />
                 <Text
-                  style={[styles.pachinkoNovela, styles.groupChildLayout1]}
+                  style={[styles.pachinkoNovela]}
                 >{`Pachinko Novela`}</Text>
                 <Text style={styles.minJinLee}>{`Min Jin Lee`}</Text>
-                {/* <View style={[styles.groupChild5, styles.groupChildLayout]} /> */}
+
                 <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
-                <View style={[styles.groupChild6, styles.groupChildLayout]} />
-                {/* <Image
-                style={[styles.groupIcon, styles.iconGroupLayout]}
-                contentFit="cover"
-                source={require("../assets/mais.png")}
-              /> */}
-                {/* <View style={styles.groupChild7} />
-                <Image
-                  style={[styles.groupChild8, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/group-102.png")}
-                />
-                <Text style={[styles.text1, styles.lTypo]}>4.5</Text> */}
+           
+
               </Pressable>
 
               {/* LIVRO 2 */}
 
-              <View style={[styles.rectangleParent3, styles.groupLayout, styles.groupContainer]}>
+              <View style={styles.groupContainer}>
+            
+              <Pressable
+                style={styles.groupLayout}
+                onPress={() => navigation.navigate("AndroidLarge2")}
+              >
+                {/* LIVRO 1 */}
+
                 <View style={[styles.groupChild3, styles.groupLayout]} />
+
                 <Image
-                  style={[styles.groupChild4, styles.groupChildLayout1]}
+                  style={[styles.groupChild4]}
                   contentFit="cover"
                   source={require("../assets/rectangle-174.png")}
                 />
                 <Text
-                  style={[styles.pachinkoNovela, styles.groupChildLayout1]}
+                  style={[styles.pachinkoNovela]}
                 >{`Pachinko Novela`}</Text>
-                <View style={[styles.groupChild5, styles.groupChildLayout]} />
+                <Text style={styles.minJinLee}>{`Min Jin Lee`}</Text>
                 <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
                 <View style={[styles.groupChild6, styles.groupChildLayout]} />
-                {/* <Image
-                style={[styles.groupIcon, styles.iconGroupLayout]}
-                contentFit="cover"
-                source={require("../assets/mais.png")}
-              /> */}
-                <View style={styles.groupChild7} />
-                {/* <Image
-                  style={[styles.groupChild8, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/group-102.png")}
-                />
-                <Text style={[styles.text1, styles.lTypo]}>4.5</Text>*/}
-              </View> 
+
+              </Pressable>
 
               {/* LIVRO 3 */}
-              <View style={styles.container}>
-              <View style={[styles.rectangleParent3, styles.groupLayout, styles.groupContainer]}>
+              <View style={styles.groupContainer}>
+              <Pressable
+                style={styles.groupLayout}
+                onPress={() => navigation.navigate("AndroidLarge2")}
+              >
+                {/* LIVRO 1 */}
+
                 <View style={[styles.groupChild3, styles.groupLayout]} />
+
                 <Image
-                  style={[styles.groupChild4, styles.groupChildLayout1]}
+                  style={[styles.groupChild4]}
                   contentFit="cover"
                   source={require("../assets/rectangle-174.png")}
                 />
                 <Text
-                  style={[styles.pachinkoNovela, styles.groupChildLayout1]}
+                  style={[styles.pachinkoNovela]}
                 >{`Pachinko Novela`}</Text>
-                <View style={[styles.groupChild5, styles.groupChildLayout]} />
+                <Text style={styles.minJinLee}>{`Min Jin Lee`}</Text>
+
                 <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
                 <View style={[styles.groupChild6, styles.groupChildLayout]} />
-                {/* <Image
-                style={[styles.groupIcon, styles.iconGroupLayout]}
-                contentFit="cover"
-                source={require("../assets/mais.png")}
-              /> */}
-                <View style={styles.groupChild7} />
-                <Image
-                  style={[styles.groupChild8, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/group-102.png")}
-                />
-                <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
+
+              </Pressable>
               </View>
-              </View>
+              {/* LIVRO 3 */}
 
 
               {/* LIVRO 4 */}
-              
-              {/* <View style={[styles.rectangleParent3, styles.groupLayout, styles.groupContainer]}>
-                <View style={[styles.groupChild3, styles.groupLayout]} />
-                <Image
-                  style={[styles.groupChild4, styles.groupChildLayout1]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-174.png")}
-                />
-                <Text
-                  style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-                >{`Pachinko Novela`}</Text>
-                <View style={[styles.groupChild5, styles.groupChildLayout]} />
-                <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
-                <View style={[styles.groupChild6, styles.groupChildLayout]} />
-                {/* <Image
-                style={[styles.groupIcon, styles.iconGroupLayout]}
-                contentFit="cover"
-                source={require("../assets/mais.png")}
-              /> */}
-                {/* <View style={styles.groupChild7} />
-                <Image
-                  style={[styles.groupChild8, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/group-102.png")}
-                />
-                <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
-              </View> */} 
+
+
+
+              {/* LIVRO 4 */}
+
     
-            </ScrollView>
           </View>
+            {/* </ScrollView> */}
         </View>
       </View>
 
@@ -418,16 +259,12 @@ const styles = StyleSheet.create({
     height: 110,
     width: 370,
   },
-  // groupChildLayout1: {
-  //   width: 111,
-  //   left: 12,
+  // groupChildLayout: {
+  //   height: 39,
+  //   borderRadius: Border.br_xs,
+  //   top: 179,
+  //   position: "absolute",
   // },
-  groupChildLayout: {
-    height: 39,
-    borderRadius: Border.br_xs,
-    top: 179,
-    position: "absolute",
-  },
   audiolibrosTypo: {
     letterSpacing: 0.1,
     fontFamily: FontFamily.rosarivoRegular,
@@ -661,6 +498,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorGray_300,
     left: 0,
     top: 0,
+    end: 10,
     position: "absolute",
   },
   groupChild4: {
