@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   Image,
 } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
+import Constants from 'expo-constants';
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -25,6 +26,99 @@ const ListBook = () => {
 
   const closePhlistIcon = useCallback(() => {
     setPhlistIconVisible(false);
+  }, []);
+
+  const apiUrl = Constants.manifest.extra.apiUrl;
+  const [books, setBooks] = useState([]);
+
+  const getAccessToken = async () => {
+    try {
+      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+
+      if (!user) {
+        console.error("Couldn't find user");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      const refreshToken = user.refresh_token;
+
+      if (!refreshToken) {
+        console.error("Refresh token não encontrado");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      const response = await fetch(
+        `${apiUrl}/api/token/refresh/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            refresh: refreshToken,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error(`Erro na requisição de atualização do token: ${response.statusText}`);
+        return;
+      }
+
+      if (response.code === "token_not_valid") {
+        console.error("Invalid token: " + response.statusText);
+        navigation.navigate("LogInScreen");
+      }
+
+      const data = await response.json();
+
+      if (!('access' in data)) {
+        console.error("Resposta não contém o token de acesso");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      return data.access;
+
+    } catch (error) {
+      console.error("Erro ao obter o token de acesso", error);
+      navigation.navigate("LogInScreen");
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = await getAccessToken();
+
+        if (accessToken) {
+          const response = await fetch(`${apiUrl}/api/book/`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              "Authorization": 'Bearer ' + accessToken,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Erro ao buscar livros: ${response.status}`);
+          }
+
+          const data = await response.json();
+          setBooks(data);
+          console.log(data);
+        } else {
+          console.error("Falha ao obter AccessToken");
+        }
+      } catch (error) {
+        console.error('Erro ao buscar livros:', error.message);
+      }
+    };
+
+    fetchData();
+
   }, []);
 
   return (
@@ -75,93 +169,44 @@ const ListBook = () => {
         </View>
 
         <View style={styles.scrol1}>
+          {books.map((book) => (
+            <Pressable
+              style={styles.groupLayout}
+              onPress={() => navigation.navigate("AndroidLarge2", { bookId: book.id })}
+            >
+              {/* LIVRO 1 */}
 
-              <Pressable
-                style={styles.groupLayout}
-                onPress={() => navigation.navigate("AndroidLarge2")}
-              >
-                {/* LIVRO 1 */}
+              <View style={[styles.groupChild3, styles.groupLayout]} />
 
-                <View style={[styles.groupChild3, styles.groupLayout]} />
+              <Image
+                style={[styles.groupChild4, styles.groupChildLayout1]}
+                contentFit="cover"
+                source={require("../assets/rectangle-174.png")}
+              />
+              <Text
+                style={[styles.pachinkoNovela, styles.groupChildLayout1]}
+              >{book.title}</Text>
+              <Text style={styles.minJinLee}>{book.author}</Text>
+              {/* <View style={[styles.groupChild5, styles.groupChildLayout]} /> */}
+              <Text style={[styles.text, styles.textTypo]}>{book.genre}</Text>
+              <View style={[styles.groupChild6, styles.groupChildLayout]} />
+              {/* <Image
+            style={[styles.groupIcon, styles.iconGroupLayout]}
+            contentFit="cover"
+            source={require("../assets/mais.png")}
+          /> */}
+              {/* <View style={styles.groupChild7} />
+            <Image
+              style={[styles.groupChild8, styles.iconGroupLayout]}
+              contentFit="cover"
+              source={require("../assets/group-102.png")}
+            />
+            <Text style={[styles.text1, styles.lTypo]}>4.5</Text> */}
+            </Pressable>
+          ))}
+          {/* LIVRO 2 */}
 
-                <Image
-                  style={[styles.groupChild4]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-174.png")}
-                />
-                <Text
-                  style={[styles.pachinkoNovela]}
-                >{`Pachinko Novela`}</Text>
-                <Text style={styles.minJinLee}>{`Min Jin Lee`}</Text>
-
-                <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
-           
-
-              </Pressable>
-
-              {/* LIVRO 2 */}
-
-              <View style={styles.groupContainer}>
-            
-              <Pressable
-                style={styles.groupLayout}
-                onPress={() => navigation.navigate("AndroidLarge2")}
-              >
-                {/* LIVRO 1 */}
-
-                <View style={[styles.groupChild3, styles.groupLayout]} />
-
-                <Image
-                  style={[styles.groupChild4]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-174.png")}
-                />
-                <Text
-                  style={[styles.pachinkoNovela]}
-                >{`Pachinko Novela`}</Text>
-                <Text style={styles.minJinLee}>{`Min Jin Lee`}</Text>
-                <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
-                <View style={[styles.groupChild6, styles.groupChildLayout]} />
-
-              </Pressable>
-
-              {/* LIVRO 3 */}
-              <View style={styles.groupContainer}>
-              <Pressable
-                style={styles.groupLayout}
-                onPress={() => navigation.navigate("AndroidLarge2")}
-              >
-                {/* LIVRO 1 */}
-
-                <View style={[styles.groupChild3, styles.groupLayout]} />
-
-                <Image
-                  style={[styles.groupChild4]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-174.png")}
-                />
-                <Text
-                  style={[styles.pachinkoNovela]}
-                >{`Pachinko Novela`}</Text>
-                <Text style={styles.minJinLee}>{`Min Jin Lee`}</Text>
-
-                <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
-                <View style={[styles.groupChild6, styles.groupChildLayout]} />
-
-              </Pressable>
-              </View>
-              {/* LIVRO 3 */}
-
-
-              {/* LIVRO 4 */}
-
-
-
-              {/* LIVRO 4 */}
-
-    
-          </View>
-            {/* </ScrollView> */}
+          {/* </ScrollView> */}
         </View>
       </View>
 
@@ -178,7 +223,7 @@ const ListBook = () => {
 const styles = StyleSheet.create({
 
   container: {
-    top:20,
+    top: 20,
   },
   iconLayout: {
     width: "100%",
@@ -258,6 +303,7 @@ const styles = StyleSheet.create({
   groupLayout: {
     height: 110,
     width: 370,
+    marginBottom: 20,
   },
   // groupChildLayout: {
   //   height: 39,
@@ -588,16 +634,16 @@ const styles = StyleSheet.create({
     color: Color.colorWhite,
   },
   rectangleParent3: {
-    marginLeft:0,
+    marginLeft: 0,
   },
   groupContainer: {
     // marginTop: 12,
     // marginRight: 20,
     flexDirection: "column",
-    textAlign:"center",
+    textAlign: "center",
     top: 15,
   },
-  
+
   agregadosRecientemente: {
     marginTop: 12,
   },
@@ -605,7 +651,7 @@ const styles = StyleSheet.create({
     top: 180,
     width: "100%",
     left: 21,
-    height:"100%",
+    height: "100%",
     position: "absolute",
   },
   bgIcon: {

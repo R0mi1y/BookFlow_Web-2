@@ -1,10 +1,108 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from 'expo-constants';
 
-const AndroidLarge2 = () => {
+const AndroidLarge2 = ({ route }) => {
   const navigation = useNavigation();
+
+  const apiUrl = Constants.manifest.extra.apiUrl;
+  const [books, setBooks] = useState([]);
+
+  const getAccessToken = async () => {
+    try {
+      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+
+      if (!user) {
+        console.error("Couldn't find user");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      const refreshToken = user.refresh_token;
+
+      if (!refreshToken) {
+        console.error("Refresh token não encontrado");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      const response = await fetch(
+        `${apiUrl}/api/token/refresh/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            refresh: refreshToken,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error(`Erro na requisição de atualização do token: ${response.statusText}`);
+        return;
+      }
+
+      if (response.code === "token_not_valid") {
+        console.error("Invalid token: " + response.statusText);
+        navigation.navigate("LogInScreen");
+      }
+
+      const data = await response.json();
+
+      if (!('access' in data)) {
+        console.error("Resposta não contém o token de acesso");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      return data.access;
+
+    } catch (error) {
+      console.error("Erro ao obter o token de acesso", error);
+      navigation.navigate("LogInScreen");
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = await getAccessToken();
+
+        if (accessToken) {
+          const response = await fetch(`${apiUrl}/api/book/`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              "Authorization": 'Bearer ' + accessToken,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Erro ao buscar livros: ${response.status}`);
+          }
+
+          const data = await response.json();
+          setBooks(data);
+          console.log(data);
+        } else {
+          console.error("Falha ao obter AccessToken");
+        }
+      } catch (error) {
+        console.error('Erro ao buscar livros:', error.message);
+      }
+    };
+
+    fetchData();
+
+  }, []);
+
+  const { bookId } = route.params || {};
 
   return (
     <View style={styles.androidLarge2}>
@@ -30,19 +128,26 @@ const AndroidLarge2 = () => {
         contentFit="cover"
         source={require("../assets/product-image.png")}
       />
-      <Text style={styles.pachinko}>PACHINKO</Text>
-      <Text style={styles.minJinLee}>Min Jin Lee</Text>
+      <Text style={styles.pachinko}>{books.find(book => book.id === bookId)?.title}</Text>
+      <Text style={styles.minJinLee}>{books.find(book => book.id === bookId)?.author}</Text>
       <Text style={[styles.aSingleEspressoContainer, styles.containerTypo]}>
-        <Text
-          style={styles.aSingleEspresso}
-        >{`A single espresso shot poured into hot foamy milk, with the surface topped with mildly sweetened cocoa powder and drizzled with scrumptious `}</Text>
+
+        {/* Descrição do Livro */}
+
+        {books.filter(book => book.id === bookId).map(book => (
+
+          <Text key={book.id} style={styles.aSingleEspresso}>
+            {book.summary}
+          </Text>
+
+        ))}
         <Text style={styles.text}>{`... `}</Text>
         <Text style={styles.text}>
           <Text style={styles.readMore1}>Read More</Text>
         </Text>
       </Text>
       <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
-        <Text style={styles.cuentoNovela}>Cuento • Novela • Romance</Text>
+        <Text style={styles.cuentoNovela}>{books.find(book => book.id === bookId)?.genre}</Text>
       </Text>
       <Image
         style={styles.biuploadIcon}

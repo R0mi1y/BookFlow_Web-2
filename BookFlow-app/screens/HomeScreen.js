@@ -9,6 +9,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
+import Constants from 'expo-constants';
 import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
@@ -55,6 +56,127 @@ const HomeScreen = () => {
       clearInterval(timerRef.current);
     }
   };
+
+
+  const apiUrl = Constants.manifest.extra.apiUrl;
+  const [books, setBooks] = useState([]);
+
+  const getAccessToken = async () => {
+    try {
+      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+
+      if (!user) {
+        console.error("Couldn't find user");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      const refreshToken = user.refresh_token;
+
+      if (!refreshToken) {
+        console.error("Refresh token não encontrado");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      const response = await fetch(
+        `${apiUrl}/api/token/refresh/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            refresh: refreshToken,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error(`Erro na requisição de atualização do token: ${response.statusText}`);
+        return;
+      }
+
+      if (response.code === "token_not_valid") {
+        console.error("Invalid token: " + response.statusText);
+        navigation.navigate("LogInScreen");
+      }
+
+      const data = await response.json();
+
+      if (!('access' in data)) {
+        console.error("Resposta não contém o token de acesso");
+        navigation.navigate("LogInScreen");
+        return;
+      }
+
+      return data.access;
+
+    } catch (error) {
+      console.error("Erro ao obter o token de acesso", error);
+      navigation.navigate("LogInScreen");
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = await getAccessToken();
+
+        if (accessToken) {
+          const response = await fetch(`${apiUrl}/api/book/`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              "Authorization": 'Bearer ' + accessToken,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Erro ao buscar livros: ${response.status}`);
+          }
+
+          const data = await response.json();
+          setBooks(data);
+          console.log(data);
+        } else {
+          console.error("Falha ao obter AccessToken");
+        }
+      } catch (error) {
+        console.error('Erro ao buscar livros:', error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  const buscarLivros = () => {
+    fetch(`${apiUrl}/api/book/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": 'Bearer ' + getAccessToken()
+      },
+    })
+
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar livros: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Atualize o estado com os livros recebidos da API
+        setBooks(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar livros: teste', error.message);
+        // Lide com erros, exiba uma mensagem de erro, etc.
+      });
+  };
+
 
   return (
     <ScrollView>
@@ -205,72 +327,74 @@ const HomeScreen = () => {
         </View>
 
         <Pressable
-        onPress={() => navigation.navigate("RegisterBook")}
-      >
-        <MisFavoritosContainer
-          userFavorites={`Cadastrar\nLivros`}
-          showSolarstarOutlineIcon
-          propLeft={147}
-          propLeft1={19}
-          />
-          </Pressable>
-
-          <Pressable
-        onPress={() => navigation.navigate("ListBook")}
+          onPress={() => navigation.navigate("RegisterBook")}
         >
-        <MisFavoritosContainer
-          userFavorites={`Meus\nLivros`}
-          showSolarstarOutlineIcon={false}
-          propLeft={282}
-          propLeft1={34}
-        />
+          <MisFavoritosContainer
+            userFavorites={`Cadastrar\nLivros`}
+            showSolarstarOutlineIcon
+            propLeft={147}
+            propLeft1={19}
+          />
         </Pressable>
-        
+
+        <Pressable
+          onPress={() => navigation.navigate("ListBook")}
+        >
+          <MisFavoritosContainer
+            userFavorites={`Meus\nLivros`}
+            showSolarstarOutlineIcon={false}
+            propLeft={282}
+            propLeft1={34}
+          />
+        </Pressable>
+
 
         <View style={styles.scrol1}>
 
-            {/* GRUPO 1 LIVROS PENDENTES */}
+          {/* GRUPO 1 LIVROS PENDENTES */}
 
           <Text style={styles.audiolibrosTypo}>Pendentes</Text>
 
           <View style={styles.groupContainer}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} > 
-              <Pressable
-                style={styles.groupLayout}
-                onPress={() => navigation.navigate("AndroidLarge2")}
-              >
-                {/* LIVRO 1 */}
-                <View style={[styles.groupChild3, styles.groupLayout]} />
-                <Image
-                  style={[styles.groupChild4, styles.groupChildLayout1]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-174.png")}
-                />
-                <Text
-                  style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-                >{`Pachinko Novela`}</Text>
-                
-                <View style={[styles.groupChild5, styles.groupChildLayout]} />
-                <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
-                <View style={[styles.groupChild6, styles.groupChildLayout]} />
-                {/* <Image
-                  style={[styles.groupIcon, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/mais.png")}
-                /> */}
-                <View style={styles.groupChild7} />
-                <Image
-                  style={[styles.groupChild8, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/group-102.png")}
-                />
-                <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
-              </Pressable>
-            </ScrollView>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
+              {books.map((book) => (
+                <Pressable
+                  key={book.id}
+                  style={styles.groupLayout}
+                  onPress={() => navigation.navigate("DetalhesDoLivro", { bookId: book.id })}
+                >
+                  {/* LIVRO 1 */}
+                  <View style={[styles.groupChild3, styles.groupLayout]} />
+                  <Image
+                    style={[styles.groupChild4, styles.groupChildLayout1]}
+                    contentFit="cover"
+                    source={require("../assets/rectangle-174.png")}
+                  />
+                  <Text
+                    style={[styles.pachinkoNovela, styles.groupChildLayout1]}
+                  >{book.title}</Text>
 
+                  <View style={[styles.groupChild5, styles.groupChildLayout]} />
+                  <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
+                  <View style={[styles.groupChild6, styles.groupChildLayout]} />
+                  {/* <Image
+        style={[styles.groupIcon, styles.iconGroupLayout]}
+        contentFit="cover"
+        source={require("../assets/mais.png")}
+      /> */}
+                  <View style={styles.groupChild7} />
+                  <Image
+                    style={[styles.groupChild8, styles.iconGroupLayout]}
+                    contentFit="cover"
+                    source={require("../assets/group-102.png")}
+                  />
+                  <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
+                </Pressable>
+              ))}
+            </ScrollView>
           </View>
 
-        {/* GRUPO 2  MEUS LIVROS*/}
+          {/* GRUPO 2  MEUS LIVROS*/}
 
           <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
             Meus Livros
@@ -312,7 +436,7 @@ const HomeScreen = () => {
           <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
             Favoritos
           </Text>
-          
+
           <View style={styles.groupContainer}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
               <View style={styles.groupLayout}>
@@ -437,6 +561,7 @@ const styles = StyleSheet.create({
   groupLayout: {
     height: 230,
     width: 135,
+    marginRight: 20,
   },
   groupChildLayout1: {
     width: 111,
@@ -765,7 +890,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginRight: 20,
     flexDirection: "row",
-  
+
   },
 
   agregadosRecientemente: {
