@@ -5,26 +5,35 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 
 
 const SplashScreen = ({ navigation }) => {
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            await AsyncStorage.removeItem("@user");
-            // await new Promise(resolve => setTimeout(resolve, 3000));
-            const user = await AsyncStorage.getItem("@user");
-    
-            if (user !== null) {
-              navigation.navigate("HomeScreen");
-            } else {
-              navigation.navigate("LogInScreen");
-            }
-          } catch (error) {
-            console.log("Erro lendo o AsyncStorage: " + error);
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permissão negada para acessar a biblioteca de mídia');
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          await AsyncStorage.removeItem("@user");
+          // await new Promise(resolve => setTimeout(resolve, 3000));
+          const user = await AsyncStorage.getItem("@user");
+  
+          if (user !== null) {
+            navigation.navigate("HomeScreen");
+          } else {
             navigation.navigate("LogInScreen");
           }
-        };
-    
-        fetchData();
-      }, [navigation]);
+        } catch (error) {
+          console.log("Erro lendo o AsyncStorage: " + error);
+          navigation.navigate("LogInScreen");
+        }
+      };
+  
+      fetchData();
+    }, [navigation]);
 
   return (
     <View style={styles.container}>

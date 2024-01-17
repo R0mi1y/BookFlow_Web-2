@@ -7,7 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import LogInScreen from "./screens/LogInScreen";
 import HomeScreen from "./screens/HomeScreen";
-import FrameComponentSet from "./components/FrameComponentSet";
+import pickDocument from "./screens/teste";
 import SplashScreen from "./screens/SplashScreen";
 import AndroidLarge2 from "./screens/AndroidLarge2";
 import SignUpScreen from "./screens/SignUpScreen";
@@ -16,7 +16,6 @@ import ListBook from "./screens/ListBook";
 import Frame from "./components/Frame";
 import AndroidLarge3 from "./components/AndroidLarge3";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -42,6 +41,11 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="pickDocument"
+              component={pickDocument}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="SplashScreen"
               component={SplashScreen}
