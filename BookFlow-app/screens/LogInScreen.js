@@ -63,10 +63,12 @@ const LogInScreen = () => {
       .then((data) => {
         console.log(data);
         if (data?.status == "success") {
-          AsyncStorage.setItem("@refresh_token", JSON.stringify(data["refresh_token"]));
           AsyncStorage.setItem("@user", JSON.stringify(data['user']));
           setUserInfo(data['user']);
 
+          console.log();
+
+          // navigation.navigate("pickDocument");
           navigation.navigate("HomeScreen");
         } else {
           if (data?.message ?? false) {
@@ -81,6 +83,7 @@ const LogInScreen = () => {
   async function handleSingInWithGoogle() {
     const user = await AsyncStorage.getItem("@user")
       .then((user) => {
+        console.log(user);
         if (!user) {
           if (!response) return;
           if (response?.type == "success") {
@@ -104,7 +107,6 @@ const LogInScreen = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          // body: {},
           body: JSON.stringify(user),
         }
       );
@@ -118,10 +120,10 @@ const LogInScreen = () => {
       if (data?.status === "success") {
         user = data.user;
 
-        AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
         AsyncStorage.setItem("@user", JSON.stringify(user));
         setUserInfo(user);
 
+        // navigation.navigate("pickDocument");
         navigation.navigate("HomeScreen");
         return user;
       } else {

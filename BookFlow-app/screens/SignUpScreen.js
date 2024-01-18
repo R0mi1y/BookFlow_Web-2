@@ -56,7 +56,6 @@ const SignUpScreen = () => {
       .then((user) => {
         if (!user) {
           if (!response) return;
-          console.log(response);
           if (response?.type == "success") {
             getUserInfo(response.authentication.accessToken)
           }
@@ -153,7 +152,7 @@ const SignUpScreen = () => {
       }
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     });
   }
 
@@ -168,7 +167,7 @@ const SignUpScreen = () => {
       togglePopup("A senha e a confirmação precisam ser iguais!");
       return;
     }
-    console.log(`${apiUrl}/api/user/`);
+    console.error(`${apiUrl}/api/user/`);
     try {
       fetch(
         `${apiUrl}/api/user/`,
@@ -199,7 +198,7 @@ const SignUpScreen = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
     } catch (err) {
       console.error(err);

@@ -6,7 +6,7 @@ import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from 'expo-constants';
 
-const AndroidLarge2 = ({ route }) => {
+const BookDetailScreen = ({ route }) => {
   const navigation = useNavigation();
 
   const apiUrl = Constants.manifest.extra.apiUrl;
@@ -105,7 +105,7 @@ const AndroidLarge2 = ({ route }) => {
   const { bookId } = route.params || {};
 
   return (
-    <View style={styles.androidLarge2}>
+    <View style={styles.BookDetailScreen}>
       <Image
         style={[styles.phlistIcon, styles.iconLayout]}
         contentFit="cover"
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     height: 25,
     position: "absolute",
   },
-  androidLarge2: {
+  BookDetailScreen: {
     flex: 1,
     width: "100%",
     height: 800,
@@ -441,4 +441,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AndroidLarge2;
+export default BookDetailScreen;

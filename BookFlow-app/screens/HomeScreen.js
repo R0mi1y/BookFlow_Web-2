@@ -8,6 +8,9 @@ import {
   Modal,
   Image,
   Dimensions,
+  TextInput,
+  TouchableOpacity,
+  Button,
 } from "react-native";
 import Constants from 'expo-constants';
 import AndroidLarge3 from "../components/AndroidLarge3";
@@ -16,15 +19,30 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+
 
 const HomeScreen = () => {
+  const [searchCamp, setSearchCamp] = React.useState('');
+
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+  const handleSearchPress = () => {
+    setIsSearchVisible(true);
+    console.log(isSearchVisible);
+  };
+
+  const handleSearchClose = () => {
+    setIsSearchVisible(false);
+  };
+
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollViewRef = useRef(null);
   const timerRef = useRef(null);
 
-  const itemWidth = 328; // Substitua pela largura real do seu item
+  const itemWidth = screenWidth * 0.85; // Substitua pela largura real do seu item
   const itemCount = 5; // Número total de itens no carrossel
 
   const openPhlistIcon = useCallback(() => {
@@ -66,7 +84,7 @@ const HomeScreen = () => {
       const user = JSON.parse(await AsyncStorage.getItem("@user"));
 
       if (!user) {
-        console.error("Couldn't find user");
+        console.error("Usuário não encontrado");
         navigation.navigate("LogInScreen");
         return;
       }
@@ -74,6 +92,7 @@ const HomeScreen = () => {
       const refreshToken = user.refresh_token;
 
       if (!refreshToken) {
+        console.error(refreshToken);
         console.error("Refresh token não encontrado");
         navigation.navigate("LogInScreen");
         return;
@@ -117,6 +136,11 @@ const HomeScreen = () => {
       navigation.navigate("LogInScreen");
     }
   };
+
+  function search() {
+    handleSearchClose();
+    navigation.navigate("ListBook", { "dataToSend": "SEARCH", "search": searchCamp });
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -179,6 +203,36 @@ const HomeScreen = () => {
 
 
   return (
+    <>
+    <Modal
+      transparent={true}
+      animationType="slide"
+      visible={isSearchVisible}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            placeholder="Pesquisar..."
+            style={styles.searchInput}
+            value={searchCamp}
+            onChangeText={text => setSearchCamp(text)}
+          />
+          <Pressable onPress={search}>
+            <Image
+              style={[]}
+              contentFit="cover"
+              source={require("../assets/epsearch.png")}
+            />
+          </Pressable>
+          <TouchableOpacity
+            onPress={handleSearchClose}
+            style={styles.searchButton}
+          >
+            <Text style={styles.textButton}>Fechar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
     <ScrollView>
       <View style={[styles.homeScreen, styles.iconLayout]}>
         {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
@@ -192,11 +246,13 @@ const HomeScreen = () => {
             source={require("../assets/phlist.png")}
           />
         </Pressable>
-        <Image
-          style={[styles.epsearchIcon, styles.phlistLayout]}
-          contentFit="cover"
-          source={require("../assets/epsearch.png")}
-        />
+        <Pressable onPress={handleSearchPress}>
+          <Image
+            style={[styles.epsearchIcon, styles.phlistLayout]}
+            contentFit="cover"
+            source={require("../assets/epsearch.png")}
+          />
+        </Pressable>
         {/* ------------------------------------- */}
 
         {/* CARROSSEL COMEÇA AQUI */}
@@ -209,7 +265,7 @@ const HomeScreen = () => {
             setScrollPosition(event.nativeEvent.contentOffset.x);
           }}
         >
-          <View style={styles.rectangleLayout1}>
+          <View style={[styles.rectangleGroup, styles.rectangleLayout1, styles.firstCarrousel]}>
             <Image
               style={styles.groupChild}
               contentFit="cover"
@@ -338,7 +394,7 @@ const HomeScreen = () => {
         </Pressable>
 
         <Pressable
-          onPress={() => navigation.navigate("ListBook")}
+          onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
         >
           <MisFavoritosContainer
             userFavorites={`Meus\nLivros`}
@@ -361,7 +417,7 @@ const HomeScreen = () => {
                 <Pressable
                   key={book.id}
                   style={styles.groupLayout}
-                  onPress={() => navigation.navigate("DetalhesDoLivro", { bookId: book.id })}
+                  onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id })}
                 >
                   {/* LIVRO 1 */}
                   <View style={[styles.groupChild3, styles.groupLayout]} />
@@ -479,10 +535,48 @@ const HomeScreen = () => {
         </View>
       </Modal>
     </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  textButton: {
+    color: 'brown', 
+    textAlign: 'center', 
+    width:"100%",
+  },
+  searchButton: {
+    borderColor: 'brown',
+    borderWidth: 1,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 5,
+    width: '100%',
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Define um fundo escuro semi-transparente
+  },
+  searchContainer: {
+    width: '80%',
+    top: screenHeight * 0.05,
+    padding: 20,
+    backgroundColor: 'transparent',
+    // backgroundColor: 'white',
+    borderRadius: 10,
+  },
+  searchInput: {
+    borderColor: 'white',
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+    height: 45,
+    marginBottom: 10,
+    borderRadius: 10,
+    paddingLeft: 15,
+    color: Color.colorBeige_100,
+    fontFamily: FontFamily.rosarivoRegular,
+  },
   iconLayout: {
     width: "100%",
     overflow: "hidden",
@@ -507,7 +601,7 @@ const styles = StyleSheet.create({
   },
   rectangleLayout1: {
     height: 150,
-    width: 309,
+    width: screenWidth * 0.8,
   },
   crimenTypo: {
     letterSpacing: 2.8,
@@ -616,7 +710,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     height: 150,
-    width: 309,
+    width: "100%",
     position: "absolute",
   },
   cienciaFiccion: {
@@ -644,7 +738,10 @@ const styles = StyleSheet.create({
     left: 125,
   },
   rectangleGroup: {
-    marginLeft: 20,
+    marginLeft: screenWidth * 0.05,
+  },
+  firstCarrousel: {
+    marginLeft: screenWidth * 0.1,
   },
   aventura: {
     top: 50,
@@ -684,8 +781,7 @@ const styles = StyleSheet.create({
   groupParent: {
     top: 150,
     flexDirection: "row",
-    width: 309,
-    left: 50,
+    width: "100%",
     position: "absolute",
   },
   l: {

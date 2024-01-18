@@ -3,10 +3,12 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
+  TouchableOpacity,
   Text,
   View,
   Modal,
   Image,
+  Dimensions,
 } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import Constants from "expo-constants";
@@ -15,28 +17,29 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ListBook = () => {
+
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+
+const ListBook = ({ route }) => {
+  var receivedData = route.params?.dataToSend || 'NONE';
+  console.log(receivedData);
   const navigation = useNavigation();
-
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
-
   const openPhlistIcon = useCallback(() => {
     setPhlistIconVisible(true);
   }, []);
-
   const closePhlistIcon = useCallback(() => {
     setPhlistIconVisible(false);
   }, []);
-
   const apiUrl = Constants.manifest.extra.apiUrl;
   const [books, setBooks] = useState([]);
-
+  
   const getAccessToken = async () => {
     try {
       const user = JSON.parse(await AsyncStorage.getItem("@user"));
 
       if (!user) {
-        console.error("Couldn't find user");
+        console.error("Usuário não encontrado");
         navigation.navigate("LogInScreen");
         return;
       }
@@ -85,15 +88,27 @@ const ListBook = () => {
       navigation.navigate("LogInScreen");
     }
   };
-
-  useEffect(() => {
+  const getBooks = () => {
     const fetchData = async () => {
       try {
+        const user = JSON.parse(await AsyncStorage.getItem("@user"));
         const accessToken = await getAccessToken();
 
+        var url = `${apiUrl}/api/book/`;
+
         if (accessToken) {
-          const response = await fetch(`${apiUrl}/api/book/`, {
-            method: "GET",
+          if (receivedData == 'SEARCH') {
+            console.log(route.params);
+            var search = route.params?.search || '';
+
+            url += `?search=${search}`;
+          }
+          else if (receivedData != 'NONE') url += `user/${user.id}?filter=${receivedData}`;
+        
+          console.log(url);
+          
+          const response = await fetch(url, {
+            method: 'GET',
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + accessToken,
@@ -101,7 +116,7 @@ const ListBook = () => {
           });
 
           if (!response.ok) {
-            throw new Error(`Erro ao buscar livros: ${response.status}`);
+            throw new Error(`Erro ao buscar livros: ${response.text()}`);
           }
 
           const data = await response.json();
@@ -116,7 +131,16 @@ const ListBook = () => {
     };
 
     fetchData();
-  }, []);
+
+  }
+  useEffect(getBooks, []);
+
+  const changeScreen = (screen) => {
+    receivedData = screen;
+    navigation.navigate("ListBook", { dataToSend: screen });
+    setBooks([]);
+    getBooks();
+  }
 
   return (
     <ScrollView>
@@ -151,39 +175,30 @@ const ListBook = () => {
         {/* NAV-BAR HOME */}
         <View style={styles.instanceParent}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <View style={styles.autoresWrapper}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Meus livros
-              </Text>
-            </View>
-            <View style={[styles.autoresContainer, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Pendentes
-              </Text>
-            </View>
-            <View style={[styles.autoresFrame, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Favoritos
-              </Text>
-            </View>
-            <View style={[styles.frameView, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Populares
-              </Text>
-            </View>
-            <View style={[styles.autoresWrapper1, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Editora</Text>
-            </View>
+            <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.autoresWrapper, styles.frameBorder, receivedData == "MY_BOOKS" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "MY_BOOKS" ? styles.selected : null]}>Meus livros</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeScreen("PENDING")} style={[styles.autoresContainer, styles.frameBorder, receivedData == "PENDING" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "PENDING" ? styles.selected : null]}>Pendentes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeScreen("REGISTRED_BOOKS")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "REGISTRED_BOOKS" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "REGISTRED_BOOKS" ? styles.selected : null]}>Cadastrados por mim</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeScreen("POPULARS")} style={[styles.frameView, styles.frameBorder, receivedData == "POPULARS" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "POPULARS" ? styles.selected : null]}>Populares</Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
 
         <View style={styles.scrol1}>
           {books.map((book) => (
             <Pressable
+              key={book.id}
               style={styles.groupLayout}
-              onPress={() =>
-                navigation.navigate("AndroidLarge2", { bookId: book.id })
-              }
+              onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData })}
             >
               {/* LIVROS */}
               <Image
@@ -259,10 +274,22 @@ const styles = StyleSheet.create({
   },
   groupLayout: {
     height: 110,
-    width: 370,
-    marginBottom: 20,
+    width: "100%",
+    marginBottom: 15,
   },
-  bookInfoContainer: {
+  audiolibrosTypo: {
+    letterSpacing: 0.1,
+    fontFamily: FontFamily.rosarivoRegular,
+    fontSize: FontSize.size_xl,
+    textAlign: "left",
+    color: Color.colorWhite,
+  },
+  sidePosition: {
+    top: 17,
+    height: 11,
+    position: "absolute",
+  },
+  phlistIconOverlay: {
     flex: 1,
     marginLeft: 10,
     left: 99,
@@ -320,6 +347,10 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_sm,
     textAlign: "center",
   },
+  selected: {
+    backgroundColor: "white",
+    color: "black",
+  },
   autoresWrapper: {
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -348,8 +379,7 @@ const styles = StyleSheet.create({
   },
   instanceParent: {
     top: 120,
-    width: 322,
-    left: 43,
+    width: "100%",
     flexDirection: "row",
     position: "absolute",
   },
@@ -395,8 +425,8 @@ const styles = StyleSheet.create({
   },
   scrol1: {
     top: 180,
-    width: "100%",
-    left: 21,
+    width: screenWidth * 0.9,
+    margin: screenWidth * 0.05,
     height: "100%",
     position: "absolute",
   },
