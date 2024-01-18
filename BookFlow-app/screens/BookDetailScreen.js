@@ -5,6 +5,8 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from 'expo-constants';
+import starOutlineImage from "../assets/solarstaroutline.png";
+import starFilledImage from "../assets/solarstarfilled.png";
 
 const BookDetailScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -157,7 +159,7 @@ const BookDetailScreen = ({ route }) => {
       <Image
         style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
         contentFit="cover"
-        source={require("../assets/solarstaroutline1.png")}
+        source={books.find(book => book.id === bookId)?.is_in_wishlist ? starFilledImage : starOutlineImage}
       />
       <Image
         style={[styles.iconoirpageFlip, styles.iconoirpageFlipPosition]}
