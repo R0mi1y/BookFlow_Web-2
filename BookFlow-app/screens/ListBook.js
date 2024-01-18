@@ -8,6 +8,7 @@ import {
   View,
   Modal,
   Image,
+  Dimensions,
 } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import Constants from 'expo-constants';
@@ -16,12 +17,11 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+
 const ListBook = ({ route }) => {
-<<<<<<< HEAD
-  const receivedData = route.params?.dataToSend || 'No data received';
-=======
   var receivedData = route.params?.dataToSend || 'NONE';
->>>>>>> ce71156c (att)
   console.log(receivedData);
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
@@ -99,7 +99,13 @@ const ListBook = ({ route }) => {
         var url = `${apiUrl}/api/book/`;
 
         if (accessToken) {
-          if (receivedData != 'NONE') url += `user/${user.id}?filter=${receivedData}`;
+          if (receivedData == 'SEARCH') {
+            console.log(route.params);
+            var search = route.params?.search || '';
+
+            url += `?search=${search}`;
+          }
+          else if (receivedData != 'NONE') url += `user/${user.id}?filter=${receivedData}`;
         
           console.log(url);
           
@@ -110,8 +116,6 @@ const ListBook = ({ route }) => {
               "Authorization": 'Bearer ' + accessToken,
             },
           });
-
-          console.log(`${apiUrl}/api/book/user/${user.id}/`);
 
           if (!response.ok) {
             throw new Error(`Erro ao buscar livros: ${response.text()}`);
@@ -165,7 +169,7 @@ const ListBook = ({ route }) => {
         {/* NAV-BAR HOME */}
         <View style={styles.instanceParent}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.autoresWrapper, receivedData == "MY_BOOKS" ? styles.selected : null]}>
+            <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.autoresWrapper, styles.frameBorder, receivedData == "MY_BOOKS" ? styles.selected : null]}>
               <Text style={[styles.autores, styles.autoresTypo, receivedData == "MY_BOOKS" ? styles.selected : null]}>Meus livros</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => changeScreen("PENDING")} style={[styles.autoresContainer, styles.frameBorder, receivedData == "PENDING" ? styles.selected : null]}>
@@ -186,6 +190,7 @@ const ListBook = ({ route }) => {
         <View style={styles.scrol1}>
           {books.map((book) => (
             <Pressable
+              key={book.id}
               style={styles.groupLayout}
               onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData })}
             >
@@ -206,21 +211,6 @@ const ListBook = ({ route }) => {
               {/* <View style={[styles.groupChild5, styles.groupChildLayout]} /> */}
               <Text style={[styles.text, styles.textTypo]}>{book.genre}</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
-<<<<<<< HEAD
-              {/* <Image
-                style={[styles.groupIcon, styles.iconGroupLayout]}
-                contentFit="cover"
-                source={require("../assets/mais.png")}
-              /> */}
-              {/* <View style={styles.groupChild7} />
-            <Image
-              style={[styles.groupChild8, styles.iconGroupLayout]}
-              contentFit="cover"
-              source={require("../assets/group-102.png")}
-            />
-            <Text style={[styles.text1, styles.lTypo]}>4.5</Text> */}
-=======
->>>>>>> ce71156c (att)
             </Pressable>
           ))}
         </View>
@@ -312,21 +302,11 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     position: "absolute",
   },
-  batteryIconLayout: {
-    width: 24,
-    position: "absolute",
-  },
   groupLayout: {
     height: 110,
-    width: 370,
-    marginBottom: 20,
+    width: "100%",
+    marginBottom: 15,
   },
-  // groupChildLayout: {
-  //   height: 39,
-  //   borderRadius: Border.br_xs,
-  //   top: 179,
-  //   position: "absolute",
-  // },
   audiolibrosTypo: {
     letterSpacing: 0.1,
     fontFamily: FontFamily.rosarivoRegular,
@@ -668,8 +648,8 @@ const styles = StyleSheet.create({
   },
   scrol1: {
     top: 180,
-    width: "100%",
-    left: 21,
+    width: screenWidth * 0.9,
+    margin: screenWidth * 0.05,
     height: "100%",
     position: "absolute",
   },

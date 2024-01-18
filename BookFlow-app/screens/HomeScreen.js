@@ -8,6 +8,9 @@ import {
   Modal,
   Image,
   Dimensions,
+  TextInput,
+  TouchableOpacity,
+  Button,
 } from "react-native";
 import Constants from 'expo-constants';
 import AndroidLarge3 from "../components/AndroidLarge3";
@@ -20,6 +23,18 @@ const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 
 const HomeScreen = () => {
+  const [searchCamp, setSearchCamp] = React.useState('');
+
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+  const handleSearchPress = () => {
+    setIsSearchVisible(true);
+  };
+
+  const handleSearchClose = () => {
+    setIsSearchVisible(false);
+  };
+
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -121,6 +136,11 @@ const HomeScreen = () => {
     }
   };
 
+  function search() {
+    closePhlistIcon();
+    navigation.navigate("ListBook", { "dataToSend": "SEARCH", "search": searchCamp });
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -182,6 +202,36 @@ const HomeScreen = () => {
 
 
   return (
+    <>
+    <Modal
+        transparent={true}
+        animationType="slide"
+        visible={isSearchVisible}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.searchContainer}>
+            <TextInput
+              placeholder="Pesquisar..."
+              style={styles.searchInput}
+              value={searchCamp}
+              onChangeText={text => setSearchCamp(text)}
+            />
+            <Pressable onPress={search}>
+              <Image
+                style={[]}
+                contentFit="cover"
+                source={require("../assets/epsearch.png")}
+              />
+            </Pressable>
+            <TouchableOpacity
+              onPress={handleSearchClose}
+              style={styles.searchButton}
+            >
+              <Text style={styles.textButton}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     <ScrollView>
       <View style={[styles.homeScreen, styles.iconLayout]}>
         {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
@@ -195,11 +245,13 @@ const HomeScreen = () => {
             source={require("../assets/phlist.png")}
           />
         </Pressable>
-        <Image
-          style={[styles.epsearchIcon, styles.phlistLayout]}
-          contentFit="cover"
-          source={require("../assets/epsearch.png")}
-        />
+        <Pressable onPress={handleSearchPress}>
+          <Image
+            style={[styles.epsearchIcon, styles.phlistLayout]}
+            contentFit="cover"
+            source={require("../assets/epsearch.png")}
+          />
+        </Pressable>
         {/* ------------------------------------- */}
 
         {/* CARROSSEL COMEÇA AQUI */}
@@ -482,10 +534,48 @@ const HomeScreen = () => {
         </View>
       </Modal>
     </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  textButton: {
+    color: 'brown', 
+    textAlign: 'center', 
+    width:"100%",
+  },
+  searchButton: {
+    borderColor: 'brown',
+    borderWidth: 1,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 5,
+    width: '100%',
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Define um fundo escuro semi-transparente
+  },
+  searchContainer: {
+    width: '80%',
+    top: screenHeight * 0.05,
+    padding: 20,
+    backgroundColor: 'transparent',
+    // backgroundColor: 'white',
+    borderRadius: 10,
+  },
+  searchInput: {
+    borderColor: 'white',
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+    height: 45,
+    marginBottom: 10,
+    borderRadius: 10,
+    paddingLeft: 15,
+    color: Color.colorBeige_100,
+    fontFamily: FontFamily.rosarivoRegular,
+  },
   iconLayout: {
     width: "100%",
     overflow: "hidden",
