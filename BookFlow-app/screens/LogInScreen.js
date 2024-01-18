@@ -83,6 +83,7 @@ const LogInScreen = () => {
   async function handleSingInWithGoogle() {
     const user = await AsyncStorage.getItem("@user")
       .then((user) => {
+        console.log(user);
         if (!user) {
           if (!response) return;
           if (response?.type == "success") {

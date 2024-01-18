@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
+  TouchableOpacity,
   Text,
   View,
   Modal,
@@ -16,7 +17,11 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ListBook = ({ route }) => {
+<<<<<<< HEAD
   const receivedData = route.params?.dataToSend || 'No data received';
+=======
+  var receivedData = route.params?.dataToSend || 'NONE';
+>>>>>>> ce71156c (att)
   console.log(receivedData);
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
@@ -85,8 +90,7 @@ const ListBook = ({ route }) => {
       navigation.navigate("LogInScreen");
     }
   };
-
-  useEffect(() => {
+  const getBooks = () => {
     const fetchData = async () => {
       try {
         const user = JSON.parse(await AsyncStorage.getItem("@user"));
@@ -94,9 +98,11 @@ const ListBook = ({ route }) => {
 
         var url = `${apiUrl}/api/book/`;
 
-        if (receivedData == "MY_BOOKS") url += `user/${user.id}`;
-
         if (accessToken) {
+          if (receivedData != 'NONE') url += `user/${user.id}?filter=${receivedData}`;
+        
+          console.log(url);
+          
           const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -108,7 +114,7 @@ const ListBook = ({ route }) => {
           console.log(`${apiUrl}/api/book/user/${user.id}/`);
 
           if (!response.ok) {
-            throw new Error(`Erro ao buscar livros: ${response.status}`);
+            throw new Error(`Erro ao buscar livros: ${response.text()}`);
           }
 
           const data = await response.json();
@@ -124,7 +130,15 @@ const ListBook = ({ route }) => {
 
     fetchData();
 
-  }, []);
+  }
+  useEffect(getBooks, []);
+
+  const changeScreen = (screen) => {
+    receivedData = screen;
+    navigation.navigate("ListBook", { dataToSend: screen });
+    setBooks([]);
+    getBooks();
+  }
 
   return (
     <ScrollView>
@@ -151,25 +165,21 @@ const ListBook = ({ route }) => {
         {/* NAV-BAR HOME */}
         <View style={styles.instanceParent}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <View style={styles.autoresWrapper}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Meus livros</Text>
-            </View>
-            <View style={[styles.autoresContainer, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Pendentes</Text>
-            </View>
-            <View style={[styles.autoresFrame, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Favoritos</Text>
-            </View>
-            <View style={[styles.frameView, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Populares
-              </Text>
-            </View>
-            <View style={[styles.autoresWrapper1, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Editora
-              </Text>
-            </View>
+            <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.autoresWrapper, receivedData == "MY_BOOKS" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "MY_BOOKS" ? styles.selected : null]}>Meus livros</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeScreen("PENDING")} style={[styles.autoresContainer, styles.frameBorder, receivedData == "PENDING" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "PENDING" ? styles.selected : null]}>Pendentes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeScreen("REGISTRED_BOOKS")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "REGISTRED_BOOKS" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "REGISTRED_BOOKS" ? styles.selected : null]}>Cadastrados por mim</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeScreen("POPULARS")} style={[styles.frameView, styles.frameBorder, receivedData == "POPULARS" ? styles.selected : null]}>
+              <Text style={[styles.autores, styles.autoresTypo, receivedData == "POPULARS" ? styles.selected : null]}>Populares</Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
 
@@ -196,6 +206,7 @@ const ListBook = ({ route }) => {
               {/* <View style={[styles.groupChild5, styles.groupChildLayout]} /> */}
               <Text style={[styles.text, styles.textTypo]}>{book.genre}</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
+<<<<<<< HEAD
               {/* <Image
                 style={[styles.groupIcon, styles.iconGroupLayout]}
                 contentFit="cover"
@@ -208,11 +219,10 @@ const ListBook = ({ route }) => {
               source={require("../assets/group-102.png")}
             />
             <Text style={[styles.text1, styles.lTypo]}>4.5</Text> */}
+=======
+>>>>>>> ce71156c (att)
             </Pressable>
           ))}
-          {/* LIVRO 2 */}
-
-          {/* </ScrollView> */}
         </View>
       </View>
 
@@ -465,6 +475,10 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_sm,
     textAlign: "center",
   },
+  selected: {
+    backgroundColor: "white",
+    color: "black",
+  },
   autoresWrapper: {
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -493,8 +507,7 @@ const styles = StyleSheet.create({
   },
   instanceParent: {
     top: 120,
-    width: 322,
-    left: 43,
+    width: "100%",
     flexDirection: "row",
     position: "absolute",
   },

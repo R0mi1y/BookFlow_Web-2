@@ -16,6 +16,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -24,7 +26,7 @@ const HomeScreen = () => {
   const scrollViewRef = useRef(null);
   const timerRef = useRef(null);
 
-  const itemWidth = 328; // Substitua pela largura real do seu item
+  const itemWidth = screenWidth * 0.85; // Substitua pela largura real do seu item
   const itemCount = 5; // Número total de itens no carrossel
 
   const openPhlistIcon = useCallback(() => {
@@ -210,7 +212,7 @@ const HomeScreen = () => {
             setScrollPosition(event.nativeEvent.contentOffset.x);
           }}
         >
-          <View style={styles.rectangleLayout1}>
+          <View style={[styles.rectangleGroup, styles.rectangleLayout1, styles.firstCarrousel]}>
             <Image
               style={styles.groupChild}
               contentFit="cover"
@@ -508,7 +510,7 @@ const styles = StyleSheet.create({
   },
   rectangleLayout1: {
     height: 150,
-    width: 309,
+    width: screenWidth * 0.8,
   },
   crimenTypo: {
     letterSpacing: 2.8,
@@ -617,7 +619,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     height: 150,
-    width: 309,
+    width: "100%",
     position: "absolute",
   },
   cienciaFiccion: {
@@ -645,7 +647,10 @@ const styles = StyleSheet.create({
     left: 125,
   },
   rectangleGroup: {
-    marginLeft: 20,
+    marginLeft: screenWidth * 0.05,
+  },
+  firstCarrousel: {
+    marginLeft: screenWidth * 0.1,
   },
   aventura: {
     top: 50,
@@ -685,8 +690,7 @@ const styles = StyleSheet.create({
   groupParent: {
     top: 150,
     flexDirection: "row",
-    width: 309,
-    left: 50,
+    width: "100%",
     position: "absolute",
   },
   l: {
