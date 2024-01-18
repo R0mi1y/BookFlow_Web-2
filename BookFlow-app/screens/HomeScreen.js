@@ -29,6 +29,7 @@ const HomeScreen = () => {
 
   const handleSearchPress = () => {
     setIsSearchVisible(true);
+    console.log(isSearchVisible);
   };
 
   const handleSearchClose = () => {
@@ -137,7 +138,7 @@ const HomeScreen = () => {
   };
 
   function search() {
-    closePhlistIcon();
+    handleSearchClose();
     navigation.navigate("ListBook", { "dataToSend": "SEARCH", "search": searchCamp });
   }
 
@@ -204,34 +205,34 @@ const HomeScreen = () => {
   return (
     <>
     <Modal
-        transparent={true}
-        animationType="slide"
-        visible={isSearchVisible}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.searchContainer}>
-            <TextInput
-              placeholder="Pesquisar..."
-              style={styles.searchInput}
-              value={searchCamp}
-              onChangeText={text => setSearchCamp(text)}
+      transparent={true}
+      animationType="slide"
+      visible={isSearchVisible}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            placeholder="Pesquisar..."
+            style={styles.searchInput}
+            value={searchCamp}
+            onChangeText={text => setSearchCamp(text)}
+          />
+          <Pressable onPress={search}>
+            <Image
+              style={[]}
+              contentFit="cover"
+              source={require("../assets/epsearch.png")}
             />
-            <Pressable onPress={search}>
-              <Image
-                style={[]}
-                contentFit="cover"
-                source={require("../assets/epsearch.png")}
-              />
-            </Pressable>
-            <TouchableOpacity
-              onPress={handleSearchClose}
-              style={styles.searchButton}
-            >
-              <Text style={styles.textButton}>Fechar</Text>
-            </TouchableOpacity>
-          </View>
+          </Pressable>
+          <TouchableOpacity
+            onPress={handleSearchClose}
+            style={styles.searchButton}
+          >
+            <Text style={styles.textButton}>Fechar</Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
+      </View>
+    </Modal>
     <ScrollView>
       <View style={[styles.homeScreen, styles.iconLayout]}>
         {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
