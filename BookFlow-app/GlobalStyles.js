@@ -34,6 +34,7 @@ export const Color = {
   colorWhite: "#fff",
   colorDarkslategray: "rgba(65, 65, 65, 0.5)",
   colorBlanchedalmond_100: "#efe3c8",
+  colorBlanchedalmond_101: "rgba(239, 227, 200, 0.7)",
   colorBlanchedalmond_200: "rgba(239, 227, 200, 0.3)",
   colorBlanchedalmond_300: "rgba(239, 227, 200, 0.2)",
   colorBlanchedalmond_400: "rgba(239, 227, 200, 0.5)",

@@ -1,10 +1,131 @@
 import * as React from "react";
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
+import { useEffect, useState } from "react";
+import Constants from "expo-constants";
+import {
+  StyleSheet,
+  TextInput,
+  Text,
+  View,
+  Pressable,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RegisterBook = () => {
   const navigation = useNavigation();
+  const apiUrl = Constants.manifest.extra.apiUrl;
+
+  const [titulo, setTitulo] = useState("");
+  const [autor, setAutor] = useState("");
+  const [genero, setGenero] = useState("");
+  const [resumo, setResumo] = useState("");
+  const [imagem, setImagem] = useState("");
+
+  const getAccessToken = async () => {
+    try {
+      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+
+      if (!user) {
+        throw new Error("Couldn't find user");
+      }
+
+      const refreshToken = user.refresh_token;
+
+      if (!refreshToken) {
+        throw new Error("Refresh token não encontrado");
+      }
+
+      const response = await fetch(`${apiUrl}/api/token/refresh/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Erro na requisição de atualização do token: ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+
+      if ("access" in data) {
+        return data.access;
+      } else {
+        throw new Error("Resposta não contém o token de acesso");
+      }
+    } catch (error) {
+      throw new Error("Erro ao obter o token de acesso: " + error.message);
+    }
+  };
+
+  const send_book = async () => {
+    const accessToken = await getAccessToken();
+
+    const data = {
+      title: titulo,
+      author: autor,
+      genre: genero,
+      summary: resumo,
+    };
+
+    try {
+      const response = await fetch(`${apiUrl}/api/book/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + accessToken,
+        },
+        body: JSON.stringify(data),
+      });
+
+      // console.log(await response.text());
+
+      if (!response.ok) {
+        // Tentar analisar o corpo da resposta como JSON para obter detalhes específicos do erro
+        let errorMessage = "Erro na requisição";
+        try {
+          const errorData = await response.json();
+          if (errorData && errorData.error) {
+            errorMessage = errorData.error;
+          }
+        } catch (jsonError) {
+          // Imprimir a resposta completa em caso de erro de análise JSON
+          console.error(
+            "Resposta completa do servidor:",
+            await response.text()
+          );
+          console.error(
+            "Erro ao analisar o corpo JSON da resposta de erro",
+            jsonError
+          );
+        }
+
+        throw new Error(errorMessage);
+      }
+
+      const responseData = await response.json();
+
+      console.log(responseData);
+
+      if (responseData?.id != null) {
+        console.log("Livro cadastrado com sucesso:", responseData);
+        navigation.navigate("HomeScreen");
+      } else {
+        if (responseData?.message) {
+          console.error("Erro no cadastro:", responseData.message);
+        }
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   return (
     <View style={styles.RegisterBook}>
@@ -25,60 +146,62 @@ const RegisterBook = () => {
         <Text style={[styles.l, styles.lTypo]}>Livro</Text>
         <Text style={[styles.libro, styles.libroPosition]}>Cadastre seu </Text>
       </Pressable>
-    
+
       <View style={[styles.cta, styles.ctaLayout]} />
       <View style={[styles.cta1, styles.ctaLayout]}>
-        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-          Título do livro
-        </Text>
+        <TextInput
+          style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder=" Título "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={titulo}
+          onChangeText={(text) => setTitulo(text)}
+        />
       </View>
 
       <View style={[styles.cta2, styles.ctaLayout]}>
-        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-        Autor
-        </Text>
+        <TextInput
+          style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder="  Autor  "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={autor}
+          onChangeText={(text) => setAutor(text)}
+        />
       </View>
 
       <View style={[styles.cta3, styles.ctaLayout]}>
-        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-        Genêro
-        </Text>
+        <TextInput
+          style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder="  Genêro  "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={genero}
+          onChangeText={(text) => setGenero(text)}
+        />
       </View>
 
       <View style={[styles.cta4, styles.ctaLayout]}>
-        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-        Resumo
-        </Text>
+        <TextInput
+          style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder=" Resumo "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={resumo}
+          onChangeText={(text) => setResumo(text)}
+        />
       </View>
 
       <View style={[styles.cta5, styles.ctaLayout]}>
         <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-        Classificação ( Ex. 5,0)
+          Insira uma imagem
         </Text>
       </View>
 
-      <View style={[styles.cta6, styles.ctaLayout]}>
-        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-        Disponibilidade
-        </Text>
-      </View>
-
-      <View style={[styles.cta7, styles.ctaLayout]}>
-        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-        Insira uma imagem 
-        </Text>
-      </View>
-
-      <View style={styles.irAlLibroParent}>
-        <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-          Cadastrar
-        </Text>
+      <Pressable style={styles.irAlLibroParent} onPress={send_book}>
+        <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Cadastrar</Text>
         <Image
           style={[styles.ionbookIcon, styles.lPosition]}
           contentFit="cover"
           source={require("../assets/ionbook.png")}
         />
-      </View>
+      </Pressable>
     </View>
   );
 };
@@ -131,6 +254,13 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.openSansSemiBold,
     fontWeight: "600",
     fontSize: FontSize.size_base,
+  },
+  irAlLibroInput: {
+    textAlign: "center",
+    fontFamily: FontFamily.openSansSemiBold,
+    fontWeight: "600",
+    fontSize: FontSize.size_base,
+    color: Color.colorBlanchedalmond_100,
   },
   lPosition: {
     left: 0,
@@ -352,27 +482,27 @@ const styles = StyleSheet.create({
     paddingBottom: Padding.p_smi,
   },
 
-  cta6: {
-    top: 550,
-    borderStyle: "solid",
-    borderColor: Color.colorBlanchedalmond_100,
-    borderWidth: 1,
-    flexDirection: "row",
-    paddingHorizontal: 50,
-    paddingTop: 10,
-    paddingBottom: Padding.p_smi,
-  },
+  // cta6: {
+  //   top: 550,
+  //   borderStyle: "solid",
+  //   borderColor: Color.colorBlanchedalmond_100,
+  //   borderWidth: 1,
+  //   flexDirection: "row",
+  //   paddingHorizontal: 50,
+  //   paddingTop: 10,
+  //   paddingBottom: Padding.p_smi,
+  // },
 
-  cta7: {
-    top: 620,
-    borderStyle: "solid",
-    borderColor: Color.colorBlanchedalmond_100,
-    borderWidth: 1,
-    flexDirection: "row",
-    paddingHorizontal: 50,
-    paddingTop: 10,
-    paddingBottom: Padding.p_smi,
-  },
+  // cta7: {
+  //   top: 620,
+  //   borderStyle: "solid",
+  //   borderColor: Color.colorBlanchedalmond_100,
+  //   borderWidth: 1,
+  //   flexDirection: "row",
+  //   paddingHorizontal: 50,
+  //   paddingTop: 10,
+  //   paddingBottom: Padding.p_smi,
+  // },
   irAlLibro: {
     left: 20,
     color: Color.colorGray_100,
