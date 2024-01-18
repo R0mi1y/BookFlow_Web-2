@@ -9,7 +9,7 @@ import {
   Image,
 } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -49,21 +49,20 @@ const ListBook = () => {
         return;
       }
 
-      const response = await fetch(
-        `${apiUrl}/api/token/refresh/`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            refresh: refreshToken,
-          }),
-        }
-      );
+      const response = await fetch(`${apiUrl}/api/token/refresh/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
 
       if (!response.ok) {
-        console.error(`Erro na requisição de atualização do token: ${response.statusText}`);
+        console.error(
+          `Erro na requisição de atualização do token: ${response.statusText}`
+        );
         return;
       }
 
@@ -74,14 +73,13 @@ const ListBook = () => {
 
       const data = await response.json();
 
-      if (!('access' in data)) {
+      if (!("access" in data)) {
         console.error("Resposta não contém o token de acesso");
         navigation.navigate("LogInScreen");
         return;
       }
 
       return data.access;
-
     } catch (error) {
       console.error("Erro ao obter o token de acesso", error);
       navigation.navigate("LogInScreen");
@@ -95,10 +93,10 @@ const ListBook = () => {
 
         if (accessToken) {
           const response = await fetch(`${apiUrl}/api/book/`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
-              "Authorization": 'Bearer ' + accessToken,
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + accessToken,
             },
           });
 
@@ -113,12 +111,11 @@ const ListBook = () => {
           console.error("Falha ao obter AccessToken");
         }
       } catch (error) {
-        console.error('Erro ao buscar livros:', error.message);
+        console.error("Erro ao buscar livros:", error.message);
       }
     };
 
     fetchData();
-
   }, []);
 
   return (
@@ -129,6 +126,7 @@ const ListBook = () => {
           style={[styles.phlist, styles.phlistLayout]}
           onPress={openPhlistIcon}
         >
+          {/* ICON MENU */}
           <Image
             style={[styles.icon, styles.iconLayout]}
             contentFit="cover"
@@ -136,10 +134,17 @@ const ListBook = () => {
           />
         </Pressable>
 
+        {/* ICON BUSCA */}
+        <Image
+          style={[styles.epsearchIcon, styles.phlistLayout]}
+          contentFit="cover"
+          source={require("../assets/epsearch.png")}
+        />
+
         {/* TITULO DA HOME */}
         <View style={styles.brandLogo}>
           <Text style={[styles.l, styles.lTypo]}>Book</Text>
-          <Text style={styles.libro}>Flow</Text>
+          <Text style={styles.book}>Flow</Text>
         </View>
         {/*----------------*/}
 
@@ -147,13 +152,19 @@ const ListBook = () => {
         <View style={styles.instanceParent}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={styles.autoresWrapper}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Meus livros</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>
+                Meus livros
+              </Text>
             </View>
             <View style={[styles.autoresContainer, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Pendentes</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>
+                Pendentes
+              </Text>
             </View>
             <View style={[styles.autoresFrame, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Favoritos</Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>
+                Favoritos
+              </Text>
             </View>
             <View style={[styles.frameView, styles.frameBorder]}>
               <Text style={[styles.autores, styles.autoresTypo]}>
@@ -161,9 +172,7 @@ const ListBook = () => {
               </Text>
             </View>
             <View style={[styles.autoresWrapper1, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Editora
-              </Text>
+              <Text style={[styles.autores, styles.autoresTypo]}>Editora</Text>
             </View>
           </ScrollView>
         </View>
@@ -172,44 +181,34 @@ const ListBook = () => {
           {books.map((book) => (
             <Pressable
               style={styles.groupLayout}
-              onPress={() => navigation.navigate("AndroidLarge2", { bookId: book.id })}
+              onPress={() =>
+                navigation.navigate("AndroidLarge2", { bookId: book.id })
+              }
             >
-              {/* LIVRO 1 */}
-
-              <View style={[styles.groupChild3, styles.groupLayout]} />
-
+              {/* LIVROS */}
               <Image
                 style={[styles.groupChild4, styles.groupChildLayout1]}
                 contentFit="cover"
-                source={require("../assets/rectangle-174.png")}
+                source={{ uri:book.cover }}
+                defaultSource={require("../assets/rectangle-174.png")}
               />
-              <Text
-                style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-              >{book.title}</Text>
-              <Text style={styles.minJinLee}>{book.author}</Text>
-              {/* <View style={[styles.groupChild5, styles.groupChildLayout]} /> */}
-              <Text style={[styles.text, styles.textTypo]}>{book.genre}</Text>
-              <View style={[styles.groupChild6, styles.groupChildLayout]} />
-              {/* <Image
-            style={[styles.groupIcon, styles.iconGroupLayout]}
-            contentFit="cover"
-            source={require("../assets/mais.png")}
-          /> */}
-              {/* <View style={styles.groupChild7} />
-            <Image
-              style={[styles.groupChild8, styles.iconGroupLayout]}
-              contentFit="cover"
-              source={require("../assets/group-102.png")}
-            />
-            <Text style={[styles.text1, styles.lTypo]}>4.5</Text> */}
+              <View style={[styles.groupChild3, styles.groupLayout]}>
+                <View style={styles.bookInfoContainer}>
+                  <Text style={[styles.titleBook, styles.groupChildLayout1]}>
+                    {book.title.length > 20
+                      ? `${book.title.substring(0, 20)}...`
+                      : book.title}
+                  </Text>
+                  <Text style={styles.authorBook}>{book.author}</Text>
+                  <Text style={[styles.genre, styles.genreTypo]}>
+                    {book.genre.replace(/,/g, " •")}
+                  </Text>
+                </View>
+              </View>
             </Pressable>
           ))}
-          {/* LIVRO 2 */}
-
-          {/* </ScrollView> */}
         </View>
       </View>
-
       <Modal animationType="fade" transparent visible={phlistIconVisible}>
         <View style={styles.phlistIconOverlay}>
           <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
@@ -221,10 +220,6 @@ const ListBook = () => {
 };
 
 const styles = StyleSheet.create({
-
-  container: {
-    top: 20,
-  },
   iconLayout: {
     width: "100%",
     overflow: "hidden",
@@ -233,29 +228,6 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
     top: 62,
-    position: "absolute",
-  },
-  textFlexBox: {
-    textAlign: "left",
-    color: Color.colorWhite,
-  },
-  coleccinTypo: {
-    fontFamily: FontFamily.plusJakartaSansLight,
-    fontWeight: "300",
-    fontSize: FontSize.size_3xs,
-    textAlign: "left",
-    color: Color.colorWhite,
-    position: "absolute",
-  },
-  rectangleLayout1: {
-    height: 150,
-    width: 309,
-  },
-  crimenTypo: {
-    letterSpacing: 2.8,
-    fontSize: FontSize.size_21xl,
-    textAlign: "left",
-    color: Color.colorWhite,
     position: "absolute",
   },
   lTypo: {
@@ -281,23 +253,8 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     flexDirection: "row",
   },
-  iconGroupLayout: {
-    maxHeight: "100%",
-    maxWidth: "100%",
-    position: "absolute",
-    overflow: "hidden",
-  },
-  rectangleLayout: {
-    height: 105,
-    width: 110,
-    position: "absolute",
-  },
-  textTypo: {
+  genreTypo: {
     fontSize: FontSize.size_base,
-    position: "absolute",
-  },
-  batteryIconLayout: {
-    width: 24,
     position: "absolute",
   },
   groupLayout: {
@@ -305,36 +262,11 @@ const styles = StyleSheet.create({
     width: 370,
     marginBottom: 20,
   },
-  // groupChildLayout: {
-  //   height: 39,
-  //   borderRadius: Border.br_xs,
-  //   top: 179,
-  //   position: "absolute",
-  // },
-  audiolibrosTypo: {
-    letterSpacing: 0.1,
-    fontFamily: FontFamily.rosarivoRegular,
-    fontSize: FontSize.size_xl,
-    textAlign: "left",
-    color: Color.colorWhite,
-  },
-  sidePosition: {
-    top: 17,
-    height: 11,
-    position: "absolute",
-  },
-  phlistIconOverlay: {
+  bookInfoContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(113, 113, 113, 0.3)",
-  },
-  phlistIconBg: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    left: 0,
-    top: 0,
+    marginLeft: 10,
+    left: 99,
+    width: 250,
   },
   icon: {
     height: "100%",
@@ -349,81 +281,10 @@ const styles = StyleSheet.create({
     left: 360,
     overflow: "hidden",
   },
-  groupChild: {
-    borderRadius: Border.br_mini,
-    left: 0,
-    top: 0,
-    height: 150,
-    width: 309,
-    position: "absolute",
-  },
-  cienciaFiccion: {
-    top: 43,
-    fontFamily: FontFamily.kodchasanSemiBold,
-    fontWeight: "600",
-    color: Color.colorWhite,
-    lineHeight: 25,
-    letterSpacing: 1.8,
-    fontSize: FontSize.size_6xl,
-    position: "absolute",
-    left: 21,
-  },
-  coleccin: {
-    top: 27,
-    left: 50,
-  },
-  crimen: {
-    top: 35,
-    left: 71,
-    fontFamily: FontFamily.kameron,
-  },
-  coleccin1: {
-    top: 22,
-    left: 125,
-  },
-  rectangleGroup: {
-    marginLeft: 20,
-  },
-  aventura: {
-    top: 50,
-    left: 173,
-    fontFamily: FontFamily.miniver,
-    lineHeight: 25,
-    letterSpacing: 1.8,
-    fontSize: FontSize.size_6xl,
-    position: "absolute",
-  },
-  coleccin2: {
-    top: 34,
-    left: 197,
-  },
-  biografia: {
-    top: 101,
-    left: 154,
-    fontFamily: FontFamily.karantinaRegular,
-  },
-  coleccin3: {
-    top: 88,
-    left: 184,
-  },
-  infantil: {
-    top: 59,
-    left: 36,
-    fontFamily: FontFamily.karantinaRegular,
-    fontSize: FontSize.size_xl,
-    textAlign: "left",
-    color: Color.colorWhite,
-    position: "absolute",
-  },
-  coleccin4: {
-    top: 46,
-    left: 46,
-  },
-  groupParent: {
-    top: 186,
-    flexDirection: "row",
-    width: 309,
-    left: 50,
+  phlistLayout: {
+    height: 25,
+    width: 25,
+    top: 62,
     position: "absolute",
   },
   l: {
@@ -434,7 +295,7 @@ const styles = StyleSheet.create({
     width: 100,
     left: 0,
   },
-  libro: {
+  book: {
     left: 75,
     fontSize: FontSize.size_23xl,
     width: 105,
@@ -492,53 +353,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: "absolute",
   },
-  miBiblioteca: {
-    top: 354,
-    width: 170,
-    height: 20,
-    lineHeight: 20,
-    fontSize: FontSize.size_base,
-    left: 22,
-    fontFamily: FontFamily.rosarivoRegular,
-    textAlign: "left",
-    color: Color.colorWhite,
-    position: "absolute",
-  },
-  vectorIcon: {
-    height: "2.61%",
-    width: "11.11%",
-    top: "31.77%",
-    right: "15.56%",
-    bottom: "66.62%",
-    left: "77%",
-  },
-  rectangleView: {
-    backgroundColor: Color.colorDimgray,
-    borderRadius: Border.br_3xs,
-    width: 95,
-    left: 0,
-    top: 0,
-  },
-  iniciarSesin: {
-    top: 19,
-    lineHeight: 20,
-    textAlign: "center",
-    color: Color.colorBlanchedalmond_100,
-    fontFamily: FontFamily.rosarivoRegular,
-    left: 10,
-  },
-  octiconperson24: {
-    left: 48,
-    height: 37,
-    top: 62,
-    width: 54,
-
-    overflow: "hidden",
-  },
-  rectangleParent2: {
-    top: 385,
-    left: 17,
-  },
   groupChild3: {
     borderRadius: 13,
     backgroundColor: Color.colorGray_300,
@@ -555,97 +369,29 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_mini,
     position: "absolute",
   },
-  minJinLee: {
-    top: 45,
-    left: 176,
-    lineHeight: 20,
+  authorBook: {
+    top: 40,
     fontSize: FontSize.size_base,
     color: Color.colorWhite,
-    textAlign: "left",
+    alignSelf: "center",
     fontFamily: FontFamily.rosarivoRegular,
     position: "absolute",
   },
-  pachinkoNovela: {
-    top: 15,
-    left: 115,
-    height: 40,
-    width: 200,
+  titleBook: {
+    alignSelf: "center",
+    top: 12,
     fontSize: 20,
     fontFamily: FontFamily.rosarivoRegular,
-    textAlign: "center",
     color: Color.colorBlanchedalmond_100,
     position: "absolute",
   },
-  groupChild5: {
-    backgroundColor: Color.colorGray_400,
-    width: 111,
-    left: 12,
-  },
-  text: {
+  genre: {
     top: 70,
-    left: 190,
-    fontFamily: FontFamily.openSansRegular,
-    width: 100,
-    height: 18,
-    lineHeight: 18,
-    textAlign: "left",
+    fontFamily: FontFamily.rosarivoRegular,
+    alignSelf: "center",
+    lineHeight: 20,
     color: Color.colorWhite,
     fontWeight: "600",
-  },
-  // groupChild6: {
-  //   left: 84,
-  //   backgroundColor: Color.colorBlanchedalmond_100,
-  //   width: 39,
-  // },
-  groupIcon: {
-    height: "9.37%",
-    width: "15.37%",
-    top: "81.61%",
-    right: "16.74%",
-    bottom: "10.83%",
-    left: "69%",
-  },
-  groupChild7: {
-    borderTopLeftRadius: Border.br_mini,
-    borderBottomRightRadius: Border.br_mini,
-    borderBottomLeftRadius: Border.br_12xs,
-    backgroundColor: Color.colorDarkslategray,
-    width: 41,
-    left: 12,
-    top: 12,
-    height: 20,
-    position: "absolute",
-  },
-  groupChild8: {
-    height: "4.35%",
-    width: "7.78%",
-    top: "7.39%",
-    right: "78.89%",
-    bottom: "88.26%",
-    left: "13.33%",
-  },
-  text1: {
-    top: 13,
-    left: 33,
-    width: 13,
-    height: 14,
-    fontSize: FontSize.size_3xs,
-    fontFamily: FontFamily.rosarivoRegular,
-    color: Color.colorWhite,
-  },
-  rectangleParent3: {
-    marginLeft: 0,
-  },
-  groupContainer: {
-    // marginTop: 12,
-    // marginRight: 20,
-    flexDirection: "column",
-    textAlign: "center",
-    top: 15,
-  },
-
-  agregadosRecientemente: {
-    marginTop: 12,
   },
   scrol1: {
     top: 180,
@@ -654,45 +400,6 @@ const styles = StyleSheet.create({
     height: "100%",
     position: "absolute",
   },
-  bgIcon: {
-    top: -2,
-    right: 70,
-    bottom: 16,
-    left: 69,
-    display: "none",
-  },
-  batteryIcon: {
-    right: 0,
-    height: 11,
-    top: 0,
-  },
-  wifiIcon: {
-    width: 15,
-    height: 11,
-  },
-  mobileSignalIcon: {
-    width: 17,
-    height: 11,
-  },
-  rightSide: {
-    right: 15,
-    width: 67,
-    height: 11,
-  },
-  leftSideIcon: {
-    left: 34,
-    width: 28,
-    height: 11,
-  },
-  // iosstatusBarblack: {
-  //   right: 1,
-  //   left: 1,
-  //   height: 44,
-  //   top: 0,
-  //   position: "absolute",
-  //   overflow: "hidden",
-  //   backgroundColor: Color.colorGray_200,
-  // },
   listBook: {
     flex: 1,
     height: 1410,
