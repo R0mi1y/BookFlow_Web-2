@@ -9,7 +9,7 @@ import LogInScreen from "./screens/LogInScreen";
 import HomeScreen from "./screens/HomeScreen";
 import pickDocument from "./screens/teste";
 import SplashScreen from "./screens/SplashScreen";
-import AndroidLarge2 from "./screens/AndroidLarge2";
+import BookDetailScreen from "./screens/BookDetailScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import RegisterBook from "./screens/RegisterBook";
 import ListBook from "./screens/ListBook";
@@ -41,11 +41,11 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen
+            {/* <Stack.Screen
               name="pickDocument"
               component={pickDocument}
               options={{ headerShown: false }}
-            />
+            /> */}
             <Stack.Screen
               name="SplashScreen"
               component={SplashScreen}
@@ -72,8 +72,8 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="AndroidLarge2"
-              component={AndroidLarge2}
+              name="BookDetailScreen"
+              component={BookDetailScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

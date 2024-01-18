@@ -65,8 +65,11 @@ const LogInScreen = () => {
         if (data?.status == "success") {
           AsyncStorage.setItem("@user", JSON.stringify(data['user']));
           setUserInfo(data['user']);
+
           console.log();
-          navigation.goBack();
+
+          // navigation.navigate("pickDocument");
+          navigation.navigate("HomeScreen");
         } else {
           if (data?.message ?? false) {
             togglePopup(data?.message);
@@ -119,7 +122,8 @@ const LogInScreen = () => {
         AsyncStorage.setItem("@user", JSON.stringify(user));
         setUserInfo(user);
 
-        navigation.goBack();
+        // navigation.navigate("pickDocument");
+        navigation.navigate("HomeScreen");
         return user;
       } else {
         if (data?.message) {

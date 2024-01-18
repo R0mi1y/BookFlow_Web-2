@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "book_flow",
-    "slug": "bookflow",
+    "name": "book flow",
+    "slug": "book_flow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -34,12 +34,12 @@
     },
     "scheme": "bookflow",
     "extra": {
-      "apiUrl": "http://45.137.192.3",
+      "apiUrl": "http://89.117.75.69",
       "eas": {
-        "projectId": "5ebb3e84-be2a-441f-9e61-9c756f4a3c91"
+        "projectId": "1b18319f-92e7-4d30-927d-eb62eae6fee3"
       }
     },
-    "owner": "nevesfg"
+    "owner": "romily"
   },
   "web": "expo start --web"
 }

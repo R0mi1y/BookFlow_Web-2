@@ -66,7 +66,7 @@ const HomeScreen = () => {
       const user = JSON.parse(await AsyncStorage.getItem("@user"));
 
       if (!user) {
-        console.error("Couldn't find user");
+        console.error("Usuário não encontrado");
         navigation.navigate("LogInScreen");
         return;
       }
@@ -74,6 +74,7 @@ const HomeScreen = () => {
       const refreshToken = user.refresh_token;
 
       if (!refreshToken) {
+        console.error(refreshToken);
         console.error("Refresh token não encontrado");
         navigation.navigate("LogInScreen");
         return;
@@ -338,7 +339,7 @@ const HomeScreen = () => {
         </Pressable>
 
         <Pressable
-          onPress={() => navigation.navigate("ListBook")}
+          onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
         >
           <MisFavoritosContainer
             userFavorites={`Meus\nLivros`}
@@ -361,7 +362,7 @@ const HomeScreen = () => {
                 <Pressable
                   key={book.id}
                   style={styles.groupLayout}
-                  onPress={() => navigation.navigate("DetalhesDoLivro", { bookId: book.id })}
+                  onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id })}
                 >
                   {/* LIVRO 1 */}
                   <View style={[styles.groupChild3, styles.groupLayout]} />

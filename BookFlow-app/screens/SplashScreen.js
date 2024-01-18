@@ -5,14 +5,6 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 
 
 const SplashScreen = ({ navigation }) => {
-  useEffect(() => {
-    (async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permissão negada para acessar a biblioteca de mídia');
-      }
-    })();
-  }, []);
 
   useEffect(() => {
       const fetchData = async () => {
@@ -23,6 +15,7 @@ const SplashScreen = ({ navigation }) => {
   
           if (user !== null) {
             navigation.navigate("HomeScreen");
+            // navigation.navigate("pickDocument");
           } else {
             navigation.navigate("LogInScreen");
           }

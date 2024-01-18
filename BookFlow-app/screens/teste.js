@@ -57,6 +57,7 @@ export default function FilePickerComponent() {
             }
             
             const response = await fetch(
+                `${apiUrl}${book.cover}`,
                 `${apiUrl}/api/token/refresh/`,
                 {
                 method: 'POST',
@@ -70,7 +71,7 @@ export default function FilePickerComponent() {
             );
 
             if (!response.ok) {
-                console.error(`Erro na requisição de atualização do token: ${response.statusText}`);
+                console.error(`Erro na requisição de atualização do token: ${`${apiUrl}/api/token/refresh/`} :${response.statusText}`);
                 return;
             }
         
@@ -80,6 +81,7 @@ export default function FilePickerComponent() {
             }
     
             const data = await response.json();
+            console.log(data);
 
             if (!'access' in data) {
                 console.error("Resposta não contém o token de acesso");
@@ -106,8 +108,6 @@ export default function FilePickerComponent() {
             });
             getAccessToken()
                 .then((accessToken) => {
-                    console.log(accessToken);
-
                     axios.post(`${apiUrl}/api/book/cover/1/`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
@@ -115,7 +115,8 @@ export default function FilePickerComponent() {
                         },
                     })
                     .then((response) => {
-                        let data = response.data;  // Acesse os dados diretamente usando response.data
+                        console.log(`${apiUrl}/api/book/cover/1/`);
+                        let data = response.data;
                         console.log('Resposta do servidor Django:', data);
                     })
                     .catch((error) => {

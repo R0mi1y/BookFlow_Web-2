@@ -15,28 +15,26 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ListBook = () => {
+const ListBook = ({ route }) => {
+  const receivedData = route.params?.dataToSend || 'No data received';
+  console.log(receivedData);
   const navigation = useNavigation();
-
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
-
   const openPhlistIcon = useCallback(() => {
     setPhlistIconVisible(true);
   }, []);
-
   const closePhlistIcon = useCallback(() => {
     setPhlistIconVisible(false);
   }, []);
-
   const apiUrl = Constants.manifest.extra.apiUrl;
   const [books, setBooks] = useState([]);
-
+  
   const getAccessToken = async () => {
     try {
       const user = JSON.parse(await AsyncStorage.getItem("@user"));
 
       if (!user) {
-        console.error("Couldn't find user");
+        console.error("Usuário não encontrado");
         navigation.navigate("LogInScreen");
         return;
       }
@@ -91,16 +89,23 @@ const ListBook = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const user = JSON.parse(await AsyncStorage.getItem("@user"));
         const accessToken = await getAccessToken();
 
+        var url = `${apiUrl}/api/book/`;
+
+        if (receivedData == "MY_BOOKS") url += `user/${user.id}`;
+
         if (accessToken) {
-          const response = await fetch(`${apiUrl}/api/book/`, {
+          const response = await fetch(url, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
               "Authorization": 'Bearer ' + accessToken,
             },
           });
+
+          console.log(`${apiUrl}/api/book/user/${user.id}/`);
 
           if (!response.ok) {
             throw new Error(`Erro ao buscar livros: ${response.status}`);
@@ -172,7 +177,7 @@ const ListBook = () => {
           {books.map((book) => (
             <Pressable
               style={styles.groupLayout}
-              onPress={() => navigation.navigate("AndroidLarge2", { bookId: book.id })}
+              onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData })}
             >
               {/* LIVRO 1 */}
 
@@ -181,7 +186,8 @@ const ListBook = () => {
               <Image
                 style={[styles.groupChild4, styles.groupChildLayout1]}
                 contentFit="cover"
-                source={require("../assets/rectangle-174.png")}
+                source={{ uri: apiUrl + book.cover }}
+                defaultSource={require("../assets/rectangle-174.png")}
               />
               <Text
                 style={[styles.pachinkoNovela, styles.groupChildLayout1]}
@@ -191,10 +197,10 @@ const ListBook = () => {
               <Text style={[styles.text, styles.textTypo]}>{book.genre}</Text>
               <View style={[styles.groupChild6, styles.groupChildLayout]} />
               {/* <Image
-            style={[styles.groupIcon, styles.iconGroupLayout]}
-            contentFit="cover"
-            source={require("../assets/mais.png")}
-          /> */}
+                style={[styles.groupIcon, styles.iconGroupLayout]}
+                contentFit="cover"
+                source={require("../assets/mais.png")}
+              /> */}
               {/* <View style={styles.groupChild7} />
             <Image
               style={[styles.groupChild8, styles.iconGroupLayout]}

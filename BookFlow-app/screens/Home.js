@@ -170,7 +170,7 @@ const AndroidLarge1 = () => {
           <View style={styles.groupContainer}>
             <Pressable
               style={styles.groupLayout}
-              onPress={() => navigation.navigate("AndroidLarge2")}
+              onPress={() => navigation.navigate("BookDetailScreen")}
             >
               <View style={[styles.groupChild3, styles.groupLayout]} />
               <Image
