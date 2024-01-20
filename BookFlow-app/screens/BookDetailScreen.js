@@ -1,10 +1,17 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  Text,
+  View,
+  Pressable,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
 import starOutlineImage from "../assets/solarstaroutline.png";
 import starFilledImage from "../assets/solarstarfilled.png";
 
@@ -32,21 +39,20 @@ const BookDetailScreen = ({ route }) => {
         return;
       }
 
-      const response = await fetch(
-        `${apiUrl}/api/token/refresh/`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            refresh: refreshToken,
-          }),
-        }
-      );
+      const response = await fetch(`${apiUrl}/api/token/refresh/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
 
       if (!response.ok) {
-        console.error(`Erro na requisição de atualização do token: ${response.statusText}`);
+        console.error(
+          `Erro na requisição de atualização do token: ${response.statusText}`
+        );
         return;
       }
 
@@ -57,14 +63,13 @@ const BookDetailScreen = ({ route }) => {
 
       const data = await response.json();
 
-      if (!('access' in data)) {
+      if (!("access" in data)) {
         console.error("Resposta não contém o token de acesso");
         navigation.navigate("LogInScreen");
         return;
       }
 
       return data.access;
-
     } catch (error) {
       console.error("Erro ao obter o token de acesso", error);
       navigation.navigate("LogInScreen");
@@ -78,10 +83,10 @@ const BookDetailScreen = ({ route }) => {
 
         if (accessToken) {
           const response = await fetch(`${apiUrl}/api/book/`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
-              "Authorization": 'Bearer ' + accessToken,
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + accessToken,
             },
           });
 
@@ -96,97 +101,127 @@ const BookDetailScreen = ({ route }) => {
           console.error("Falha ao obter AccessToken");
         }
       } catch (error) {
-        console.error('Erro ao buscar livros:', error.message);
+        console.error("Erro ao buscar livros:", error.message);
       }
     };
 
     fetchData();
-
   }, []);
 
   const { bookId } = route.params || {};
 
   return (
-    <View style={styles.BookDetailScreen}>
-      <Image
-        style={[styles.phlistIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/phlist.png")}
-      />
-      {/* <Image
-        style={[styles.epsearchIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/epsearch.png")}
-      /> */}
-      <Pressable
-        style={styles.brandLogo}
-        onPress={() => navigation.navigate("HomeScreen")}
-      >
-        <Text style={[styles.l, styles.lTypo]}>Book</Text>
-        <Text style={[styles.libro, styles.libroPosition]}>Flow</Text>
-      </Pressable>
-      <Image
-        style={styles.productImageIcon}
-        contentFit="cover"
-        source={require("../assets/product-image.png")}
-      />
-      <Text style={styles.pachinko}>{books.find(book => book.id === bookId)?.title}</Text>
-      <Text style={styles.minJinLee}>{books.find(book => book.id === bookId)?.author}</Text>
-      <Text style={[styles.aSingleEspressoContainer, styles.containerTypo]}>
-
-        {/* Descrição do Livro */}
-
-        {books.filter(book => book.id === bookId).map(book => (
-
-          <Text key={book.id} style={styles.aSingleEspresso}>
-            {book.summary}
+    <ScrollView>
+      <View style={styles.BookDetailScreen}>
+        <Image
+          style={[styles.phlistIcon, styles.iconLayout]}
+          contentFit="cover"
+          source={require("../assets/phlist.png")}
+        />
+        <Pressable
+          style={styles.brandLogo}
+          onPress={() => navigation.navigate("HomeScreen")}
+        >
+          <Text style={[styles.l, styles.lTypo]}>Book</Text>
+          <Text style={[styles.libro, styles.libroPosition]}>Flow</Text>
+        </Pressable>
+        <Image
+          style={styles.productImageIcon}
+          contentFit="cover"
+          source={require("../assets/product-image.png")}
+        />
+        <View style={styles.title}>
+          <Text style={styles.pachinko}>
+            {books.find((book) => book.id === bookId)?.title}
+          </Text>
+        </View>
+        <View style={styles.viewWithBorder}>
+          <Text style={styles.minJinLee}>
+            {books.find((book) => book.id === bookId)?.author}
           </Text>
 
-        ))}
-        <Text style={styles.text}>{`... `}</Text>
-        <Text style={styles.text}>
-          <Text style={styles.readMore1}>Read More</Text>
-        </Text>
-      </Text>
-      <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
-        <Text style={styles.cuentoNovela}>{books.find(book => book.id === bookId)?.genre}</Text>
-      </Text>
-      <Image
-        style={styles.biuploadIcon}
-        contentFit="cover"
-        source={require("../assets/biupload.png")}
-      />
-      <Image
-        style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
-        contentFit="cover"
-        source={books.find(book => book.id === bookId)?.is_in_wishlist ? starFilledImage : starOutlineImage}
-      />
-      <Image
-        style={[styles.iconoirpageFlip, styles.iconoirpageFlipPosition]}
-        contentFit="cover"
-        source={require("../assets/iconoirpageflip.png")}
-      />
-      <View style={[styles.cta, styles.ctaLayout]} />
-      <View style={[styles.cta1, styles.ctaLayout]}>
-        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-          Contenido relacionado
-        </Text>
+          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo]}>
+            {/* Descrição do Livro */}
+
+            {books
+              .filter((book) => book.id === bookId)
+              .map((book) => (
+                <Text key={book.id} style={styles.aSingleEspresso}>
+                  {book.summary}
+                </Text>
+              ))}
+            <Text style={styles.text}>{`... `}</Text>
+            <Text style={styles.text}>
+              <Text style={styles.readMore1}>Read More</Text>
+            </Text>
+          </Text>
+
+          <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
+            <Text style={styles.cuentoNovela}>
+              {books
+                .find((book) => book.id === bookId)
+                ?.genre.replace(/,/g, " •")}
+            </Text>
+          </Text>
+          <Image
+            style={styles.biuploadIcon}
+            contentFit="cover"
+            source={require("../assets/biupload.png")}
+          />
+          <Image
+            style={[
+              styles.solarstarOutlineIcon,
+              styles.iconoirpageFlipPosition,
+            ]}
+            contentFit="cover"
+            source={
+              books.find((book) => book.id === bookId)?.is_in_wishlist
+                ? starFilledImage
+                : starOutlineImage
+            }
+          />
+          <Image
+            style={[styles.iconoirpageFlip, styles.iconoirpageFlipPosition]}
+            contentFit="cover"
+            source={require("../assets/iconoirpageflip.png")}
+          />
+          <View style={[styles.cta, styles.ctaLayout]} />
+          <View style={[styles.cta1, styles.ctaLayout]}>
+            <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
+              Contenido relacionado
+            </Text>
+          </View>
+          <View style={styles.irAlLibroParent}>
+            <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+              Ir al libro
+            </Text>
+            <Image
+              style={[styles.ionbookIcon, styles.lPosition]}
+              contentFit="cover"
+              source={require("../assets/ionbook.png")}
+            />
+          </View>
+        </View>
       </View>
-      <View style={styles.irAlLibroParent}>
-        <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-          Ir al libro
-        </Text>
-        <Image
-          style={[styles.ionbookIcon, styles.lPosition]}
-          contentFit="cover"
-          source={require("../assets/ionbook.png")}
-        />
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  title: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  summaryContainer: {
+    maxHeight: 250, // ou qualquer outra altura desejada
+  },
+  viewWithBorder: {
+    top: 475,
+    paddingTop: 5,
+    height: 590,
+    // borderWidth: 4, // Largura da borda
+    // borderColor: "black", // Cor da borda (neste caso, preto)
+  },
   iconLayout: {
     width: 25,
     top: 62,
@@ -208,36 +243,28 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   containerTypo: {
-    fontSize: FontSize.size_xs,
+    fontSize: FontSize.size_sm,
     color: Color.colorWhite,
-    textAlign: "left",
-    position: "absolute",
+    textAlign: "justify",
   },
   iconoirpageFlipPosition: {
-    top: 538,
     height: 24,
     width: 24,
-    position: "absolute",
     overflow: "hidden",
   },
   ctaLayout: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignSelf: "center",
     height: 45,
     borderRadius: Border.br_3xs,
-    left: 55,
     width: 302,
-    position: "absolute",
   },
   irAlLibroTypo: {
-    textAlign: "center",
     fontFamily: FontFamily.openSansSemiBold,
     fontWeight: "600",
     fontSize: FontSize.size_base,
   },
   lPosition: {
-    left: 0,
-    position: "absolute",
+    right: 10,
   },
   phlistIcon: {
     height: 25,
@@ -329,24 +356,20 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   pachinko: {
-    top: 482,
-    left: 133,
+    top: 475,
+    width: 300,
     fontSize: FontSize.size_5xl,
     lineHeight: 30,
     color: Color.colorWhite,
-    textAlign: "left",
+    textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
-    position: "absolute",
   },
   minJinLee: {
-    top: 512,
-    left: 156,
-    lineHeight: 20,
-    fontSize: FontSize.size_base,
+    lineHeight: 24,
+    fontSize: 18,
     color: Color.colorBlanchedalmond_100,
-    textAlign: "left",
+    textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
-    position: "absolute",
   },
   aSingleEspresso: {
     fontWeight: "300",
@@ -359,10 +382,10 @@ const styles = StyleSheet.create({
     textDecoration: "underline",
   },
   aSingleEspressoContainer: {
-    top: 594,
+    alignSelf: "center",
+    top: 10,
     lineHeight: 17,
-    height: 57,
-    left: 59,
+    // height: 100,
     fontSize: FontSize.size_xs,
     width: 302,
   },
@@ -370,26 +393,26 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.rosarivoRegular,
   },
   cuentoNovelaContainer: {
-    top: 579,
-    left: 121,
-    lineHeight: 15,
+    top: 20,
+    alignSelf: "center",
+    lineHeight: 22,
   },
   biuploadIcon: {
-    top: 537,
-    left: 140,
+    top: 45,
+    left: 157,
     height: 24,
     width: 24,
-    position: "absolute",
     overflow: "hidden",
   },
   solarstarOutlineIcon: {
-    left: 185,
+    top: 20,
+    left: 195,
   },
   iconoirpageFlip: {
     left: 227,
   },
   cta: {
-    top: 665,
+    top: 50,
     backgroundColor: Color.colorBlanchedalmond_100,
     shadowColor: "rgba(0, 0, 0, 0.15)",
     shadowOffset: {
@@ -404,7 +427,7 @@ const styles = StyleSheet.create({
     color: Color.colorBlanchedalmond_100,
   },
   cta1: {
-    top: 724,
+    top: 80,
     borderStyle: "solid",
     borderColor: Color.colorBlanchedalmond_100,
     borderWidth: 1,
@@ -417,27 +440,26 @@ const styles = StyleSheet.create({
     left: 20,
     color: Color.colorGray_100,
     width: 86,
-    top: 0,
+    top: -30,
     position: "absolute",
     height: 25,
   },
   ionbookIcon: {
-    top: 2,
+    top: -27,
     width: 20,
     height: 20,
     overflow: "hidden",
   },
   irAlLibroParent: {
-    top: 675,
-    left: 155,
+    top: 0,
+    alignSelf: "center",
     width: 106,
-    height: 25,
-    position: "absolute",
+    height: 55,
   },
   BookDetailScreen: {
     flex: 1,
     width: "100%",
-    height: 800,
+    height: 1200,
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
   },
