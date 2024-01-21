@@ -12,10 +12,14 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from 'expo-image-picker';
+
 
 const RegisterBook = () => {
   const navigation = useNavigation();
   const apiUrl = Constants.manifest.extra.apiUrl;
+
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
@@ -68,24 +72,29 @@ const RegisterBook = () => {
   const send_book = async () => {
     const accessToken = await getAccessToken();
 
-    const data = {
-      title: titulo,
-      author: autor,
-      genre: genero,
-      summary: resumo,
-    };
-
     try {
+      const formData = new FormData();
+      formData.append('file', {
+        uri: selectedImage,
+        type: 'image/jpeg', // Ajuste conforme o tipo de arquivo
+        name: 'cover.jpg',
+      });
+
+      formData.append('title', titulo);
+      formData.append('author', autor);
+      formData.append('summary', resumo);
+      formData.append('genre', genero);
+
       const response = await fetch(`${apiUrl}/api/book/`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'multipart/form-data',
           Authorization: "Bearer " + accessToken,
         },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
-      // console.log(await response.text());
+      console.log(formData);
 
       if (!response.ok) {
         // Tentar analisar o corpo da resposta como JSON para obter detalhes específicos do erro
@@ -112,8 +121,6 @@ const RegisterBook = () => {
 
       const responseData = await response.json();
 
-      console.log(responseData);
-
       if (responseData?.id != null) {
         console.log("Livro cadastrado com sucesso:", responseData);
         navigation.navigate("HomeScreen");
@@ -124,6 +131,30 @@ const RegisterBook = () => {
       }
     } catch (error) {
       console.error(error.message);
+    }
+  };
+
+  const pickDocument = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (status !== 'granted') {
+          console.error('Permissão negada para acessar a biblioteca de mídia');
+          return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          // aspect: [4, 3],
+          quality: 1,
+      });
+
+      if (!result.cancelled) {
+          setSelectedImage(result.uri);
+      }
+    } catch (err) {
+    console.error('Erro ao selecionar o documento:', err);
     }
   };
 
@@ -143,8 +174,8 @@ const RegisterBook = () => {
         style={styles.brandLogo}
         onPress={() => navigation.navigate("HomeScreen")}
       >
-        <Text style={[styles.l, styles.lTypo]}>Livro</Text>
         <Text style={[styles.libro, styles.libroPosition]}>Cadastre seu </Text>
+        <Text style={[styles.l, styles.lTypo]}>Livro</Text>
       </Pressable>
 
       <View style={[styles.cta, styles.ctaLayout]} />
@@ -189,10 +220,13 @@ const RegisterBook = () => {
       </View>
 
       <View style={[styles.cta5, styles.ctaLayout]}>
-        <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-          Insira uma imagem
-        </Text>
+        <Pressable
+        onPress={pickDocument}>
+          <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
+        </Pressable>
       </View>
+
+      <Image source={{ uri: selectedImage ? selectedImage : `${apiUrl}/static/img/default_cover.jpg` }} style={{ width: 200, height: 200 }} />
 
       <Pressable style={styles.irAlLibroParent} onPress={send_book}>
         <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Cadastrar</Text>

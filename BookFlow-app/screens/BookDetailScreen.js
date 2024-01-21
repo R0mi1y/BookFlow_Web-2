@@ -91,7 +91,7 @@ const BookDetailScreen = ({ route }) => {
           });
 
           if (!response.ok) {
-            throw new Error(`Erro ao buscar livros: ${response.status}`);
+            throw new Error(response.text());
           }
 
           const data = await response.json();

@@ -157,7 +157,7 @@ const HomeScreen = () => {
           });
 
           if (!response.ok) {
-            throw new Error(`Erro ao buscar livros: ${response.status}`);
+            throw new Error(response.text());
           }
 
           const data = await response.json();
@@ -186,7 +186,7 @@ const HomeScreen = () => {
 
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Erro ao buscar livros: ${response.status}`);
+          throw new Error(response.text());
         }
         return response.json();
       })

@@ -116,7 +116,7 @@ const ListBook = ({ route }) => {
           });
 
           if (!response.ok) {
-            throw new Error(`Erro ao buscar livros: ${response.text()}`);
+            throw new Error(response.text());
           }
 
           const data = await response.json();
@@ -184,9 +184,6 @@ const ListBook = ({ route }) => {
             <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
               <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => changeScreen("REGISTRED_BOOKS")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "REGISTRED_BOOKS" ? styles.selected : null]}>
-              <Text style={[styles.autores, styles.autoresTypo, receivedData == "REGISTRED_BOOKS" ? styles.selected : null]}>Cadastrados por mim</Text>
-            </TouchableOpacity>
             <TouchableOpacity onPress={() => changeScreen("POPULARS")} style={[styles.frameView, styles.frameBorder, receivedData == "POPULARS" ? styles.selected : null]}>
               <Text style={[styles.autores, styles.autoresTypo, receivedData == "POPULARS" ? styles.selected : null]}>Populares</Text>
             </TouchableOpacity>
@@ -201,13 +198,14 @@ const ListBook = ({ route }) => {
               onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData })}
             >
               {/* LIVROS */}
-              <Image
-                style={[styles.groupChild4, styles.groupChildLayout1]}
-                contentFit="cover"
-                source={{ uri:book.cover }}
-                defaultSource={require("../assets/rectangle-174.png")}
-              />
               <View style={[styles.groupChild3, styles.groupLayout]}>
+                <Image
+                  style={[styles.groupChild4, styles.groupChildLayout1]}
+                  resizeMode="cover"
+                  source={{
+                    uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
+                  }}
+                />
                 <View style={styles.bookInfoContainer}>
                   <Text style={[styles.titleBook, styles.groupChildLayout1]}>
                     {book.title.length > 20
@@ -235,6 +233,11 @@ const ListBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  bookInfoContainer: {
+    top: 12,
+    textAlign: "center",
+    width: "80%",
+  },
   iconLayout: {
     width: "100%",
     overflow: "hidden",
@@ -384,12 +387,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupChild3: {
-    borderRadius: 13,
     backgroundColor: Color.colorGray_300,
-    left: 0,
-    top: 0,
-    end: 10,
-    position: "absolute",
+    flexDirection: "row",
   },
   groupChild4: {
     height: 77,
@@ -397,7 +396,6 @@ const styles = StyleSheet.create({
     left: 19,
     width: 77,
     borderRadius: Border.br_mini,
-    position: "absolute",
   },
   authorBook: {
     top: 40,
@@ -409,11 +407,9 @@ const styles = StyleSheet.create({
   },
   titleBook: {
     alignSelf: "center",
-    top: 12,
     fontSize: 20,
     fontFamily: FontFamily.rosarivoRegular,
     color: Color.colorBlanchedalmond_100,
-    position: "absolute",
   },
   genre: {
     top: 70,
