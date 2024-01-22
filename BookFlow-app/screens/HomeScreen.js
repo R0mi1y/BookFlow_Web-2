@@ -236,25 +236,31 @@ const HomeScreen = () => {
     <ScrollView>
       <View style={[styles.homeScreen, styles.iconLayout]}>
         {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
-        <Pressable
-          style={[styles.phlist, styles.phlistLayout]}
-          onPress={openPhlistIcon}
-        >
-          <Image
-            style={[styles.icon, styles.iconLayout]}
-            contentFit="cover"
-            source={require("../assets/phlist.png")}
-          />
-        </Pressable>
-        <Pressable onPress={handleSearchPress}>
-          <Image
-            style={[styles.epsearchIcon, styles.phlistLayout]}
-            contentFit="cover"
-            source={require("../assets/epsearch.png")}
-          />
-        </Pressable>
-        {/* ------------------------------------- */}
+        <View style={[styles.topLayout]}>
+          <Pressable
+            onPress={openPhlistIcon}
+          >
+            <Image
+              style={[styles.icon, styles.iconLayout, styles.phlistLayout]}
+              contentFit="cover"
+              source={require("../assets/phlist.png")}
+            />
+          </Pressable>
 
+          <View style={styles.brandLogo}>
+            <Text style={[styles.l]}>Book</Text>
+            <Text style={styles.libro}>Flow</Text>
+          </View>
+          
+          <Pressable onPress={handleSearchPress}>
+            <Image
+              style={[styles.phlistLayout]}
+              contentFit="cover"
+              source={require("../assets/epsearch.png")}
+            />
+          </Pressable>
+        </View>
+        {/* ------------------------------------- */}
         {/* CARROSSEL COMEÇA AQUI */}
         <ScrollView
           ref={scrollViewRef}
@@ -317,25 +323,15 @@ const HomeScreen = () => {
               contentFit="cover"
               source={require("../assets/rectangle-1.png")}
             />
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-1.png")}
-            />
+            <View style={{ height: 120 }}/>
             <Text style={styles.infantil}>Infantil</Text>
+
             <Text style={[styles.coleccin4, styles.coleccinTypo]}>
               •Coleção•
             </Text>
           </View>
         </ScrollView>
         {/*-----------------------------------------------*/}
-
-        {/* TITULO DA HOME */}
-        <View style={styles.brandLogo}>
-          <Text style={[styles.l, styles.lTypo]}>Book</Text>
-          <Text style={styles.libro}>Flow</Text>
-        </View>
-        {/*----------------*/}
 
         {/* NAV-BAR HOME */}
         {/* <View style={styles.instanceParent}>
@@ -363,48 +359,41 @@ const HomeScreen = () => {
         </View> */}
         {/*--------------------------*/}
 
-        <Text style={styles.miBiblioteca}>Minha biblioteca</Text>
-        <Image
-          style={[styles.vectorIcon, styles.iconGroupLayout]}
-          contentFit="cover"
-          source={require("../assets/lista_books.png")}
-        />
         {/* ESSA MERDA É O MENU LATERAL */}
-        <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
+        {/* <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
           <View style={[styles.rectangleView, styles.rectangleLayout]} />
-          <Text
-            style={[styles.iniciarSesin, styles.textTypo]}
-          >{`Iniciar Empréstimo`}</Text>
-          <Image
-            style={[styles.octiconperson24, styles.batteryIconLayout]}
-            contentFit="cover"
+            <Text
+              style={[styles.iniciarSesin, styles.textTypo]}
+            >
+              Iniciar Empréstimo
+            </Text>
+            <Image
+              style={[styles.octiconperson24, styles.batteryIconLayout]}
+              contentFit="cover"
+              source={require("../assets/book_aberto.png")}
+            />
+          </View> */}
+        <Text style={styles.miBiblioteca}>Minha biblioteca</Text>
+
+        <View style={styles.myBibSection}>
+          <MisFavoritosContainer
+            userFavorites={`Minha\nbiblioteca`}
+            showSolarstarOutlineIcon
+            source={require("../assets/lista_books.png")}
+          />
+          <MisFavoritosContainer
+            onPress={() => navigation.navigate("RegisterBook")}
+            userFavorites={`Cadastrar\nLivros`}
+            showSolarstarOutlineIcon
+            source={require("../assets/books_vetor.png")}
+          />
+          <MisFavoritosContainer
+            onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
+            userFavorites={`Meus\nLivros`}
+            showSolarstarOutlineIcon={false}
             source={require("../assets/book_aberto.png")}
           />
         </View>
-
-        <Pressable
-          onPress={() => navigation.navigate("RegisterBook")}
-        >
-          <MisFavoritosContainer
-            userFavorites={`Cadastrar\nLivros`}
-            showSolarstarOutlineIcon
-            propLeft={147}
-            propLeft1={19}
-          />
-        </Pressable>
-
-        <Pressable
-          onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
-        >
-          <MisFavoritosContainer
-            userFavorites={`Meus\nLivros`}
-            showSolarstarOutlineIcon={false}
-            propLeft={282}
-            propLeft1={34}
-          />
-        </Pressable>
-
-
         <View style={styles.scrol1}>
 
           {/* GRUPO 1 LIVROS PENDENTES */}
@@ -424,7 +413,9 @@ const HomeScreen = () => {
                   <Image
                     style={[styles.groupChild4, styles.groupChildLayout1]}
                     contentFit="cover"
-                    source={require("../assets/rectangle-174.png")}
+                    source={{
+                      uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
+                    }}
                   />
                   <Text
                     style={[styles.pachinkoNovela, styles.groupChildLayout1]}
@@ -540,6 +531,24 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  myBibSection:{
+    top: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: screenWidth * 0.05,
+    marginRight: screenWidth * 0.05,
+    marginBottom: 40,
+    width: screenWidth * 0.9,
+    height: 105,
+  },
+  topLayout: {
+    top: 20,
+    marginLeft: screenWidth * 0.05,
+    marginRight: screenWidth * 0.05,
+    width: screenWidth * 0.9,
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
   textButton: {
     color: 'brown', 
     textAlign: 'center', 
@@ -584,8 +593,7 @@ const styles = StyleSheet.create({
   phlistLayout: {
     height: 25,
     width: 25,
-    top: 62,
-    position: "absolute",
+    marginTop: 15,
   },
   textFlexBox: {
     textAlign: "left",
@@ -600,7 +608,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleLayout1: {
-    height: 150,
     width: screenWidth * 0.8,
   },
   crimenTypo: {
@@ -608,11 +615,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_21xl,
     textAlign: "left",
     color: Color.colorWhite,
-    position: "absolute",
-  },
-  lTypo: {
-    fontFamily: FontFamily.rosarivoRegular,
-    textAlign: "left",
     position: "absolute",
   },
   autoresTypo: {
@@ -642,14 +644,10 @@ const styles = StyleSheet.create({
   rectangleLayout: {
     height: 105,
     width: 110,
-    position: "absolute",
+    // position: "absolute",
   },
   textTypo: {
     fontSize: FontSize.size_base,
-    position: "absolute",
-  },
-  batteryIconLayout: {
-    width: 24,
     position: "absolute",
   },
   groupLayout: {
@@ -665,7 +663,6 @@ const styles = StyleSheet.create({
     height: 39,
     borderRadius: Border.br_xs,
     top: 179,
-    position: "absolute",
   },
   audiolibrosTypo: {
     letterSpacing: 0.1,
@@ -673,11 +670,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_xl,
     textAlign: "left",
     color: Color.colorWhite,
-  },
-  sidePosition: {
-    top: 17,
-    height: 11,
-    position: "absolute",
   },
   phlistIconOverlay: {
     flex: 1,
@@ -696,22 +688,13 @@ const styles = StyleSheet.create({
     height: "100%",
     overflow: "hidden",
   },
-  phlist: {
-    left: 26,
-    height: 25,
-    width: 25,
-  },
-  epsearchIcon: {
-    left: 360,
-    overflow: "hidden",
-  },
   groupChild: {
     borderRadius: Border.br_mini,
     left: 0,
     top: 0,
     height: 150,
     width: "100%",
-    position: "absolute",
+    // position: "absolute",
   },
   cienciaFiccion: {
     top: 43,
@@ -779,36 +762,24 @@ const styles = StyleSheet.create({
     left: 46,
   },
   groupParent: {
-    top: 150,
+    top: 80,
     flexDirection: "row",
     width: "100%",
-    position: "absolute",
+    // position: "absolute",
   },
   l: {
-    top: 9,
     fontSize: FontSize.size_11xl,
     color: Color.colorBlanchedalmond_400,
-    height: 43,
-    width: 100,
-    left: 0,
+    fontFamily: FontFamily.rosarivoRegular,
   },
   libro: {
-    left: 75,
     fontSize: FontSize.size_23xl,
-    width: 105,
-    height: 50,
     color: Color.colorBlanchedalmond_100,
     fontFamily: FontFamily.rosarivoRegular,
-    textAlign: "left",
-    top: 0,
-    position: "absolute",
   },
   brandLogo: {
-    top: 49,
-    left: 115,
-    width: 144,
-    height: 52,
-    position: "absolute",
+    flexDirection: "row",
+    alignItems: "center"
   },
   autores: {
     width: 88,
@@ -851,7 +822,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   miBiblioteca: {
-    top: 354,
     width: 170,
     height: 20,
     lineHeight: 20,
@@ -860,7 +830,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.rosarivoRegular,
     textAlign: "left",
     color: Color.colorWhite,
-    position: "absolute",
+    // position: "absolute",
   },
   vectorIcon: {
     height: "2.61%",
@@ -993,10 +963,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   scrol1: {
-    top: 518,
     width: "100%",
     left: 21,
-    position: "absolute",
   },
   bgIcon: {
     top: -2,
@@ -1038,8 +1006,10 @@ const styles = StyleSheet.create({
   //   backgroundColor: Color.colorGray_200,
   // },
   homeScreen: {
+    // display:"flex",
+    top: 0,
     flex: 1,
-    height: 1410,
+    flexDirection: "column",
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
   },

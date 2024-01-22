@@ -64,10 +64,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     position: "absolute",
   },
-  rectangleParent: {
-    top: 385,
-    left: 133,
-  },
 });
 
 export default MisFavoritosContainer;
