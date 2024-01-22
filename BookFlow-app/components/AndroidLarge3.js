@@ -27,6 +27,11 @@ const AndroidLarge3 = memo(({ onClose }) => {
       <Text style={[styles.contctanos, styles.contctanosTypo]}>
         Contáctanos
       </Text>
+
+      <Text style={[ styles.contctanosTypo, styles.editbook]}>
+        Editar Livro
+      </Text>
+
       <View style={[styles.androidLarge3Child, styles.androidLayout]} />
       <View style={[styles.androidLarge3Item, styles.androidLayout]} />
       <View style={[styles.androidLarge3Inner, styles.androidLayout]} />
@@ -35,6 +40,9 @@ const AndroidLarge3 = memo(({ onClose }) => {
 });
 
 const styles = StyleSheet.create({
+  editbook:{
+    top: 254,
+  },
   octiconpersonLayout: {
     height: 24,
     width: 24,
@@ -46,7 +54,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.colorBlanchedalmond_100,
     fontFamily: FontFamily.rosarivoRegular,
-    lineHeight: 15,
+    lineHeight: 20,
     fontSize: FontSize.size_sm,
     left: 82,
     position: "absolute",

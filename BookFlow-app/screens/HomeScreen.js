@@ -378,6 +378,7 @@ const HomeScreen = () => {
 
         <View style={styles.myBibSection}>
           <MisFavoritosContainer
+          onPress={() => navigation.navigate("EditBook")}
             userFavorites={`Minha\nbiblioteca`}
             showSolarstarOutlineIcon
             source={require("../assets/lista_books.png")}
@@ -388,6 +389,7 @@ const HomeScreen = () => {
             showSolarstarOutlineIcon
             source={require("../assets/books_vetor.png")}
           />
+
           <MisFavoritosContainer
             onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
             userFavorites={`Meus\nLivros`}

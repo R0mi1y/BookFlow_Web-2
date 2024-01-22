@@ -15,7 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
 
 
-const RegisterBook = () => {
+const EditBook = () => {
   const navigation = useNavigation();
   const apiUrl = Constants.expoConfig.extra.apiUrl;
 
@@ -159,7 +159,7 @@ const RegisterBook = () => {
   };
 
   return (
-    <View style={styles.RegisterBook}>
+    <View style={styles.EditBook}>
       <Image
         style={[styles.phlistIcon, styles.iconLayout]}
         contentFit="cover"
@@ -174,7 +174,7 @@ const RegisterBook = () => {
         style={styles.brandLogo}
         onPress={() => navigation.navigate("HomeScreen")}
       >
-        <Text style={[styles.libro, styles.libroPosition]}>Cadastre seu </Text>
+        <Text style={[styles.libro, styles.libroPosition]}>Editar</Text>
         <Text style={[styles.l, styles.lTypo]}>Livro</Text>
       </Pressable>
 
@@ -275,13 +275,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   lTypo: {
+    top:-4,
     textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
   },
-  libroPosition: {
-    top: 0,
-    position: "absolute",
-  },
+  // libroPosition: {
+  //   top: 0,
+  //   position: "absolute",
+  // },
   sidePosition: {
     top: 17,
     height: 11,
@@ -338,25 +339,24 @@ const styles = StyleSheet.create({
     top: 62,
   },
   l: {
-    top: 46,
+    // top: 46,
     fontSize: FontSize.size_29xl,
     color: Color.colorBlanchedalmond_400,
     width: 250,
     height: 50,
-    left: 70,
+    left: 150,
     position: "absolute",
   },
   libro: {
-    left: 37,
+    left: 75,
     fontSize: FontSize.size_23xl,
     width: 350,
     height: 50,
     color: Color.colorBlanchedalmond_100,
-    textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
   },
   brandLogo: {
-    top: 49,
+    top: 75,
     left: 10,
     width: 144,
     height: 52,
@@ -563,7 +563,7 @@ const styles = StyleSheet.create({
     height: 25,
     position: "absolute",
   },
-  RegisterBook: {
+  EditBook: {
     flex: 1,
     width: "100%",
     height: 900,
@@ -572,4 +572,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterBook;
+export default EditBook;
