@@ -16,8 +16,8 @@ import Constants from 'expo-constants';
 
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KeyboardAvoidingView, Platform } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -63,7 +63,7 @@ const LogInScreen = () => {
       .then((data) => {
         console.log(data);
         if (data?.status == "success") {
-          AsyncStorage.setItem("@user", JSON.stringify(data['user']));
+          SecureStore.setItemAsync("user", JSON.stringify(data['user']));
           setUserInfo(data['user']);
 
           console.log();
@@ -81,7 +81,7 @@ const LogInScreen = () => {
   }
 
   async function handleSingInWithGoogle() {
-    const user = await AsyncStorage.getItem("@user")
+    const user = await SecureStore.getItemAsync("user")
       .then((user) => {
         console.log(user);
         if (!user) {
@@ -120,7 +120,7 @@ const LogInScreen = () => {
       if (data?.status === "success") {
         user = data.user;
 
-        AsyncStorage.setItem("@user", JSON.stringify(user));
+        await SecureStore.setItemAsync("user", JSON.stringify(user));
         setUserInfo(user);
 
         // navigation.navigate("pickDocument");

@@ -15,10 +15,10 @@ import { TextInput } from "react-native-gesture-handler";
 import Constants from 'expo-constants';
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import CustomPopup from '../components/CustomPopup';
+import * as SecureStore from 'expo-secure-store';
 
 
 const SignUpScreen = () => {
@@ -54,7 +54,7 @@ const SignUpScreen = () => {
   }, [response]);
 
   function handleSingInWithGoogle() {
-    const user = AsyncStorage.getItem("@user")
+    const user = SecureStore.getItemAsync("user")
       .then((user) => {
         if (!user) {
           if (!response) return;
@@ -91,8 +91,7 @@ const SignUpScreen = () => {
       if (data?.status === "success") {
         user = data.user;
 
-        AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
-        AsyncStorage.setItem("@user", JSON.stringify(user));
+        await SecureStore.setItemAsync("user", JSON.stringify(user));
         setUserInfo(user);
 
         navigation.navigate("HomeScreen");
@@ -144,7 +143,6 @@ const SignUpScreen = () => {
     .then((data) => {
       console.log(data);
       if("refresh" in data){
-        AsyncStorage.setItem("@refresh_token", JSON.stringify(data["refresh"]));
         navigation.navigate("HomeScreen");
       } else {
         console.log("Falha ao obter refresh token!");
@@ -183,7 +181,7 @@ const SignUpScreen = () => {
       ).then((json) => json.json())
       .then((data) => {
         if ("id" in data) {
-          AsyncStorage.setItem("@user", JSON.stringify(data));
+          SecureStore.setItemAsync("user", JSON.stringify(data));
 
           getRefreshToken();
         } else {

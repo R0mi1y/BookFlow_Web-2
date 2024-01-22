@@ -15,7 +15,7 @@ import Constants from "expo-constants";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
 
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
@@ -36,7 +36,7 @@ const ListBook = ({ route }) => {
   
   const getAccessToken = async () => {
     try {
-      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+      const user = JSON.parse(await SecureStore.getItemAsync("user"));
 
       if (!user) {
         console.error("Usuário não encontrado");
@@ -91,7 +91,7 @@ const ListBook = ({ route }) => {
   const getBooks = () => {
     const fetchData = async () => {
       try {
-        const user = JSON.parse(await AsyncStorage.getItem("@user"));
+        const user = JSON.parse(await SecureStore.getItemAsync("user"));
         const accessToken = await getAccessToken();
 
         var url = `${apiUrl}/api/book/`;

@@ -1,11 +1,13 @@
 import React, { useMemo, memo } from "react";
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import { StyleSheet, View, Text, Image, Pressable, Dimensions } from "react-native";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
 
 const getStyleValue = (key, value) => {
   if (value === undefined) return;
   return { [key]: value === "unset" ? undefined : value };
 };
+
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const MisFavoritosContainer = memo(
   ({ userFavorites, showSolarstarOutlineIcon, source, onPress }) => {

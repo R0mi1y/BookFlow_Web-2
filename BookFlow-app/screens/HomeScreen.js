@@ -17,12 +17,14 @@ import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
+
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 
 const HomeScreen = () => {
+
   const [searchCamp, setSearchCamp] = React.useState('');
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -75,13 +77,12 @@ const HomeScreen = () => {
     }
   };
 
-
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
 
   const getAccessToken = async () => {
     try {
-      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+      const user = JSON.parse(await SecureStore.getItemAsync("user"));
 
       if (!user) {
         console.error("Usuário não encontrado");

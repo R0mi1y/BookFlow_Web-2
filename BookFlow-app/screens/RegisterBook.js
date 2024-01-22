@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from 'expo-image-picker';
+import * as SecureStore from 'expo-secure-store';
 
 
 const RegisterBook = () => {
@@ -29,7 +29,7 @@ const RegisterBook = () => {
 
   const getAccessToken = async () => {
     try {
-      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+      const user = JSON.parse(await await SecureStore.getItemAsync("user"));
 
       if (!user) {
         throw new Error("Couldn't find user");

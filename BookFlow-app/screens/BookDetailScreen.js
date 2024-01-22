@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import starOutlineImage from "../assets/solarstaroutline.png";
 import starFilledImage from "../assets/solarstarfilled.png";
+import * as SecureStore from 'expo-secure-store';
+
 
 const BookDetailScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -24,7 +25,7 @@ const BookDetailScreen = ({ route }) => {
 
   const getAccessToken = async () => {
     try {
-      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+      const user = JSON.parse(await SecureStore.getItemAsync("user"));
 
       if (!user) {
         console.error("Couldn't find user");
