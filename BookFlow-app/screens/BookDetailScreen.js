@@ -20,6 +20,7 @@ const BookDetailScreen = ({ route }) => {
 
   const apiUrl = Constants.manifest.extra.apiUrl;
   const [books, setBooks] = useState([]);
+  const [showFullSummary, setShowFullSummary] = useState(false); 
 
   const getAccessToken = async () => {
     try {
@@ -110,6 +111,15 @@ const BookDetailScreen = ({ route }) => {
 
   const { bookId } = route.params || {};
 
+  const toggleShowFullSummary = () => {
+    setShowFullSummary(!showFullSummary);
+  };
+
+  const getLimitedSummary = (summary) => {
+    // Limite o texto a 300 caracteres
+    return summary.length > 90 ? summary.slice(0, 90) + "...    " : summary;
+  };
+
   return (
     <ScrollView>
       <View style={styles.BookDetailScreen}>
@@ -140,20 +150,21 @@ const BookDetailScreen = ({ route }) => {
             {books.find((book) => book.id === bookId)?.author}
           </Text>
 
-          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo]}>
+          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, , showFullSummary && { textAlign: 'justify' }]}>
             {/* Descrição do Livro */}
 
             {books
-              .filter((book) => book.id === bookId)
-              .map((book) => (
-                <Text key={book.id} style={styles.aSingleEspresso}>
-                  {book.summary}
-                </Text>
-              ))}
-            <Text style={styles.text}>{`... `}</Text>
-            <Text style={styles.text}>
-              <Text style={styles.readMore1}>Read More</Text>
-            </Text>
+            .filter((book) => book.id === bookId)
+            .map((book) => (
+              <Text key={book.id} style={styles.aSingleEspresso}>
+                {showFullSummary ? book.summary : getLimitedSummary(book.summary)}
+              </Text>
+            ))}
+          {books.find((book) => book.id === bookId)?.summary.length > 90 && (
+            <Pressable onPress={toggleShowFullSummary}>
+              <Text style={[styles.readMore1]}>{showFullSummary ? "Leia Menos" : "Leia Mais"}</Text>
+            </Pressable>
+          )}
           </Text>
 
           <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
@@ -186,14 +197,14 @@ const BookDetailScreen = ({ route }) => {
             source={require("../assets/iconoirpageflip.png")}
           />
           <View style={[styles.cta, styles.ctaLayout]} />
-          <View style={[styles.cta1, styles.ctaLayout]}>
+          {/* <View style={[styles.cta1, styles.ctaLayout]}>
             <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
               Contenido relacionado
             </Text>
-          </View>
+          </View> */}
           <View style={styles.irAlLibroParent}>
             <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-              Ir al libro
+              Emprestar Livro
             </Text>
             <Image
               style={[styles.ionbookIcon, styles.lPosition]}
@@ -216,9 +227,9 @@ const styles = StyleSheet.create({
     maxHeight: 250, // ou qualquer outra altura desejada
   },
   viewWithBorder: {
-    top: 475,
+    top: 482,
     paddingTop: 5,
-    height: 590,
+    // height: 550,
     // borderWidth: 4, // Largura da borda
     // borderColor: "black", // Cor da borda (neste caso, preto)
   },
@@ -245,7 +256,7 @@ const styles = StyleSheet.create({
   containerTypo: {
     fontSize: FontSize.size_sm,
     color: Color.colorWhite,
-    textAlign: "justify",
+    textAlign: "center",
   },
   iconoirpageFlipPosition: {
     height: 24,
@@ -264,7 +275,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   lPosition: {
-    right: 10,
+    right: 15,
   },
   phlistIcon: {
     height: 25,
@@ -377,9 +388,14 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: FontFamily.openSansRegular,
+    
   },
   readMore1: {
     textDecoration: "underline",
+    color: '#FFF',
+    fontFamily: 'Open Sans',
+    fontSize: 12,
+    textDecorationLine: 'underline',
   },
   aSingleEspressoContainer: {
     alignSelf: "center",
@@ -403,16 +419,18 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     overflow: "hidden",
+
   },
   solarstarOutlineIcon: {
     top: 20,
     left: 195,
   },
   iconoirpageFlip: {
-    left: 227,
+    left: 233,
+    top:-4,
   },
   cta: {
-    top: 50,
+    top: 35,
     backgroundColor: Color.colorBlanchedalmond_100,
     shadowColor: "rgba(0, 0, 0, 0.15)",
     shadowOffset: {
@@ -437,9 +455,9 @@ const styles = StyleSheet.create({
     paddingBottom: Padding.p_smi,
   },
   irAlLibro: {
-    left: 20,
+    left: 10,
     color: Color.colorGray_100,
-    width: 86,
+    width: 250,
     top: -30,
     position: "absolute",
     height: 25,
@@ -451,7 +469,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   irAlLibroParent: {
-    top: 0,
+    top:30,
     alignSelf: "center",
     width: 106,
     height: 55,
