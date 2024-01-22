@@ -278,7 +278,8 @@ const styles = StyleSheet.create({
   groupLayout: {
     height: 110,
     width: "100%",
-    marginBottom: 15,
+    marginBottom: 22,
+    borderRadius: Border.br_3xs,
   },
   audiolibrosTypo: {
     letterSpacing: 0.1,
@@ -398,9 +399,9 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_mini,
   },
   authorBook: {
-    top: 40,
+    top: 30,
     fontSize: FontSize.size_base,
-    color: Color.colorWhite,
+    color: Color.colorBlanchedalmond_100,
     alignSelf: "center",
     fontFamily: FontFamily.rosarivoRegular,
     position: "absolute",
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
     color: Color.colorBlanchedalmond_100,
   },
   genre: {
-    top: 70,
+    top: 55,
     fontFamily: FontFamily.rosarivoRegular,
     alignSelf: "center",
     lineHeight: 20,
