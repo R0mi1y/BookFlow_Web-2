@@ -18,7 +18,7 @@ import starFilledImage from "../assets/solarstarfilled.png";
 const BookDetailScreen = ({ route }) => {
   const navigation = useNavigation();
 
-  const apiUrl = Constants.manifest.extra.apiUrl;
+  const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
   const [showFullSummary, setShowFullSummary] = useState(false); 
 

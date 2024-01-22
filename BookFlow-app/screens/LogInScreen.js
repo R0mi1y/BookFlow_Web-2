@@ -25,7 +25,7 @@ WebBrowser.maybeCompleteAuthSession();
 const LogInScreen = () => {
   const [email, setEmail] = React.useState('');
   const [pass, setPass] = React.useState('');
-  const apiUrl = Constants.manifest.extra.apiUrl;
+  const apiUrl = Constants.expoConfig.extra.apiUrl;
 
   const [popupVisible, setPopupVisible] = React.useState(false);
   const [messagePopup, setPopupTexto] = React.useState("Seja bem vindo!");

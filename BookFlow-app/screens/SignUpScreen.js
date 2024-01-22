@@ -25,19 +25,21 @@ const SignUpScreen = () => {
   const [popupVisible, setPopupVisible] = React.useState(false);
   const [messagePopup, setPopupTexto] = React.useState("");
 
+  const togglePopup = (message) => {
+    if (message != null) setPopupVisible(true);
+    else setPopupVisible(false);
+    setPopupTexto(message);
+  };
+
   const [email, setEmail] = React.useState('');
   const [pass, setPass] = React.useState('');
   const [confirmPass, setConfirmPass] = React.useState('');
   const [name, setName] = React.useState('');
 
-  const apiUrl = Constants.manifest.extra.apiUrl;
+  const apiUrl = Constants.expoConfig.extra.apiUrl;
   const navigation = useNavigation();
   const [cTAContainerVisible, setCTAContainerVisible] = useState(false);
 
-  const togglePopup = (message) => {
-    setPopupTexto(message);
-    setPopupVisible(!popupVisible);
-  };
 
   const [userInfo, setUserInfo] = React.useState(null);
   const [request, response, promptAsync] = Google.useAuthRequest({

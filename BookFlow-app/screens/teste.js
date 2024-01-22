@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function FilePickerComponent() {
     const [selectedImage, setSelectedImage] = useState(null);
-    const apiUrl = Constants.manifest.extra.apiUrl;
+    const apiUrl = Constants.expoConfig.extra.apiUrl;
     const navigation = useNavigation();
 
     const pickDocument = async () => {

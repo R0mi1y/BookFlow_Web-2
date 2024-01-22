@@ -31,7 +31,7 @@ const ListBook = ({ route }) => {
   const closePhlistIcon = useCallback(() => {
     setPhlistIconVisible(false);
   }, []);
-  const apiUrl = Constants.manifest.extra.apiUrl;
+  const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
   
   const getAccessToken = async () => {

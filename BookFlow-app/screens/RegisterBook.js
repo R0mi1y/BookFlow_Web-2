@@ -17,7 +17,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 const RegisterBook = () => {
   const navigation = useNavigation();
-  const apiUrl = Constants.manifest.extra.apiUrl;
+  const apiUrl = Constants.expoConfig.extra.apiUrl;
 
   const [selectedImage, setSelectedImage] = useState(null);
 

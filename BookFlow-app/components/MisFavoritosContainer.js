@@ -1,46 +1,36 @@
 import React, { useMemo, memo } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
 
 const getStyleValue = (key, value) => {
   if (value === undefined) return;
   return { [key]: value === "unset" ? undefined : value };
 };
+
 const MisFavoritosContainer = memo(
-  ({ userFavorites, showSolarstarOutlineIcon, propLeft, propLeft1 }) => {
-    const groupViewStyle = useMemo(() => {
-      return {
-        ...getStyleValue("left", propLeft),
-      };
-    }, [propLeft]);
-
-    const misFavoritosStyle = useMemo(() => {
-      return {
-        ...getStyleValue("left", propLeft1),
-      };
-    }, [propLeft1]);
-
+  ({ userFavorites, showSolarstarOutlineIcon, source, onPress }) => {
     return (
-      <View
-        style={[
-          styles.rectangleParent,
-          styles.groupChildLayout,
-          groupViewStyle,
-        ]}
-      >
-        <View style={[styles.groupChild, styles.groupChildLayout]} />
-        <Text style={[styles.misFavoritos, misFavoritosStyle]}>
-          {userFavorites}
-        </Text>
-        <View style={styles.octiconperson24} />
-        {showSolarstarOutlineIcon && (
-          <Image
-            style={styles.octiconperson24}
-            contentFit="cover"
-            source={require("../assets/books_vetor.png")}
-          />
-        )}
-      </View>
+      <Pressable onPress={onPress}>
+        <View
+          style={[
+            styles.rectangleParent,
+            styles.groupChildLayout,
+          ]}
+        >
+          <View style={[styles.groupChild, styles.groupChildLayout]} />
+          <Text style={[styles.misFavoritos]}>
+            {userFavorites}
+          </Text>
+          <View style={styles.octiconperson24} />
+          {showSolarstarOutlineIcon && (
+            <Image
+              style={styles.octiconperson24}
+              contentFit="cover"
+              source={source}
+            />
+          )}
+        </View>
+      </Pressable>
     );
   }
 );
@@ -49,7 +39,6 @@ const styles = StyleSheet.create({
   groupChildLayout: {
     height: 105,
     width: 115,
-    position: "absolute",
   },
   groupChild: {
     top: 0,
