@@ -18,6 +18,8 @@ import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import * as SecureStore from 'expo-secure-store';
+import starOutlineImage from "../assets/solarstaroutline.png";
+import starFilledImage from "../assets/solarstarfilled.png";
 
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
@@ -40,7 +42,7 @@ const HomeScreen = () => {
 
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [ , setScrollPosition] = useState(0);
   const scrollViewRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -202,6 +204,8 @@ const HomeScreen = () => {
       });
   };
 
+  console.log(screenWidth);
+  console.log(styles.myBibSection.width);
 
   return (
     <>
@@ -220,7 +224,6 @@ const HomeScreen = () => {
           />
           <Pressable onPress={search}>
             <Image
-              style={[]}
               contentFit="cover"
               source={require("../assets/epsearch.png")}
             />
@@ -375,11 +378,20 @@ const HomeScreen = () => {
             />
           </View> */}
         <Text style={styles.miBiblioteca}>Minha biblioteca</Text>
-
-        <View style={styles.myBibSection}>
+      {/* <ScrollView
+            ref={scrollViewRef}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={styles.groupParent}
+            onMomentumScrollEnd={(event) => {
+            setScrollPosition(event.nativeEvent.contentOffset.x);
+          }}
+        > */}
+        <ScrollView
+          horizontal
+        >
           <MisFavoritosContainer
-          onPress={() => navigation.navigate("EditBook")}
-            userFavorites={`Minha\nbiblioteca`}
+            userFavorites={`Fazer\nempréstimo`}
             showSolarstarOutlineIcon
             source={require("../assets/lista_books.png")}
           />
@@ -393,10 +405,16 @@ const HomeScreen = () => {
           <MisFavoritosContainer
             onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
             userFavorites={`Meus\nLivros`}
-            showSolarstarOutlineIcon={false}
+            showSolarstarOutlineIcon
             source={require("../assets/book_aberto.png")}
           />
-        </View>
+          <MisFavoritosContainer
+            onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
+            userFavorites={`Empréstimos`}
+            showSolarstarOutlineIcon
+            source={require("../assets/lista_de_livros.png")}
+          />
+        </ScrollView>
         <View style={styles.scrol1}>
 
           {/* GRUPO 1 LIVROS PENDENTES */}
@@ -417,7 +435,7 @@ const HomeScreen = () => {
                     style={[styles.groupChild4, styles.groupChildLayout1]}
                     contentFit="cover"
                     source={{
-                      uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
+                      uri: (book.cover ? book.cover : apiUrl + "/static/img/default_cover.jpg"),
                     }}
                   />
                   <Text
@@ -436,7 +454,11 @@ const HomeScreen = () => {
                   <Image
                     style={[styles.groupChild8, styles.iconGroupLayout]}
                     contentFit="cover"
-                    source={require("../assets/group-102.png")}
+                    source={
+                      book?.is_in_wishlist
+                      ? starFilledImage
+                      : starOutlineImage
+                    }
                   />
                   <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
                 </Pressable>
@@ -537,15 +559,15 @@ const styles = StyleSheet.create({
   myBibSection:{
     top: 20,
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginLeft: screenWidth * 0.05,
-    marginRight: screenWidth * 0.05,
+    // justifyContent: "space-between",
+    paddingLeft: screenWidth * 0.05,
+    paddingRight: screenWidth * 0.05,
     marginBottom: 40,
-    width: screenWidth * 0.9,
+    width: (screenWidth * 0.28 + 10) * 4,
     height: 105,
   },
   topLayout: {
-    top: 20,
+    top: 40,
     marginLeft: screenWidth * 0.05,
     marginRight: screenWidth * 0.05,
     width: screenWidth * 0.9,

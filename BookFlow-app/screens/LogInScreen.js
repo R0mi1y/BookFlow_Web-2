@@ -31,8 +31,9 @@ const LogInScreen = () => {
   const [messagePopup, setPopupTexto] = React.useState("Seja bem vindo!");
 
   const togglePopup = (message) => {
+    if (message != null) setPopupVisible(true);
+    else setPopupVisible(false);
     setPopupTexto(message);
-    setPopupVisible(!popupVisible);
   };
 
   const [userInfo, setUserInfo] = React.useState(null);
@@ -173,7 +174,7 @@ const LogInScreen = () => {
       >
         <CustomPopup
           visible={popupVisible}
-          onClose={togglePopup}
+          onClose={() => {togglePopup(null)}}
           message={messagePopup}
         />
         {/* <Image
