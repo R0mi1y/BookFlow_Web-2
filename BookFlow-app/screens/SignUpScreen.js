@@ -159,11 +159,9 @@ const SignUpScreen = () => {
   const signUp = () => {
     togglePopup("Loading");
     if (pass == '' || email == '') {
-      togglePopup();
       togglePopup("Todos os campos devem ser preenchidos!");
       return;
     } else if (pass !== confirmPass) {
-      togglePopup();
       togglePopup("A senha e a confirmação precisam ser iguais!");
       return;
     }
@@ -193,7 +191,6 @@ const SignUpScreen = () => {
             message += element[1];
           });
 
-          togglePopup();
           togglePopup(message);
         }
       })
@@ -202,7 +199,6 @@ const SignUpScreen = () => {
       });
     } catch (err) {
       console.error(err);
-      togglePopup();
       togglePopup("Falha no servidor");
     }
   }
@@ -210,10 +206,10 @@ const SignUpScreen = () => {
   return (
     <>
     <CustomPopup
-          visible={popupVisible}
-          onClose={togglePopup}
-          message={messagePopup}
-        />
+      visible={popupVisible}
+      onClose={() => {togglePopup(null)}}
+      message={messagePopup}
+    />
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}

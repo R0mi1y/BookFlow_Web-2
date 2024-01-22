@@ -12,17 +12,20 @@ import {
 } from "react-native";
 import AndroidLarge3 from "../components/AndroidLarge3";
 import Constants from "expo-constants";
-import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import * as SecureStore from 'expo-secure-store';
+import CustomPopup from '../components/CustomPopup';
 
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const ListBook = ({ route }) => {
   var receivedData = route.params?.dataToSend || 'NONE';
-  console.log(receivedData);
+
+  const [popupVisible, setPopupVisible] = React.useState(true);
+  const [messagePopup, setPopupTexto] = React.useState("Loading");
+
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
   const openPhlistIcon = useCallback(() => {
@@ -34,6 +37,12 @@ const ListBook = ({ route }) => {
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
   
+  const togglePopup = (message) => {
+    if (message != null) setPopupVisible(true);
+    else setPopupVisible(false);
+    setPopupTexto(message);
+  };
+
   const getAccessToken = async () => {
     try {
       const user = JSON.parse(await SecureStore.getItemAsync("user"));
@@ -121,6 +130,7 @@ const ListBook = ({ route }) => {
 
           const data = await response.json();
           setBooks(data);
+          togglePopup();
           console.log(data);
         } else {
           console.error("Falha ao obter AccessToken");
@@ -136,6 +146,7 @@ const ListBook = ({ route }) => {
   useEffect(getBooks, []);
 
   const changeScreen = (screen) => {
+    togglePopup("Loading");
     receivedData = screen;
     navigation.navigate("ListBook", { dataToSend: screen });
     setBooks([]);
@@ -143,92 +154,99 @@ const ListBook = ({ route }) => {
   }
 
   return (
-    <ScrollView>
-      <View style={[styles.listBook, styles.iconLayout]}>
-        {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
-        <Pressable
-          style={[styles.phlist, styles.phlistLayout]}
-          onPress={openPhlistIcon}
-        >
-          {/* ICON MENU */}
+    <>
+      <CustomPopup
+        visible={popupVisible}
+        onClose={() => {togglePopup(null)}}
+        message={messagePopup}
+      />
+      <ScrollView>
+        <View style={[styles.listBook, styles.iconLayout]}>
+          {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
+          <Pressable
+            style={[styles.phlist, styles.phlistLayout]}
+            onPress={openPhlistIcon}
+          >
+            {/* ICON MENU */}
+            <Image
+              style={[styles.icon, styles.iconLayout]}
+              contentFit="cover"
+              source={require("../assets/phlist.png")}
+            />
+          </Pressable>
+
+          {/* ICON BUSCA */}
           <Image
-            style={[styles.icon, styles.iconLayout]}
+            style={[styles.epsearchIcon, styles.phlistLayout]}
             contentFit="cover"
-            source={require("../assets/phlist.png")}
+            source={require("../assets/epsearch.png")}
           />
-        </Pressable>
 
-        {/* ICON BUSCA */}
-        <Image
-          style={[styles.epsearchIcon, styles.phlistLayout]}
-          contentFit="cover"
-          source={require("../assets/epsearch.png")}
-        />
+          {/* TITULO DA HOME */}
+          <View style={styles.brandLogo}>
+            <Text style={[styles.l, styles.lTypo]}>Book</Text>
+            <Text style={styles.book}>Flow</Text>
+          </View>
+          {/*----------------*/}
 
-        {/* TITULO DA HOME */}
-        <View style={styles.brandLogo}>
-          <Text style={[styles.l, styles.lTypo]}>Book</Text>
-          <Text style={styles.book}>Flow</Text>
-        </View>
-        {/*----------------*/}
+          {/* NAV-BAR HOME */}
+          <View style={styles.instanceParent}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.autoresWrapper, styles.frameBorder, receivedData == "MY_BOOKS" ? styles.selected : null]}>
+                <Text style={[styles.autores, styles.autoresTypo, receivedData == "MY_BOOKS" ? styles.selected : null]}>Meus livros</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => changeScreen("PENDING")} style={[styles.autoresContainer, styles.frameBorder, receivedData == "PENDING" ? styles.selected : null]}>
+                <Text style={[styles.autores, styles.autoresTypo, receivedData == "PENDING" ? styles.selected : null]}>Pendentes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
+                <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => changeScreen("POPULARS")} style={[styles.frameView, styles.frameBorder, receivedData == "POPULARS" ? styles.selected : null]}>
+                <Text style={[styles.autores, styles.autoresTypo, receivedData == "POPULARS" ? styles.selected : null]}>Populares</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
 
-        {/* NAV-BAR HOME */}
-        <View style={styles.instanceParent}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.autoresWrapper, styles.frameBorder, receivedData == "MY_BOOKS" ? styles.selected : null]}>
-              <Text style={[styles.autores, styles.autoresTypo, receivedData == "MY_BOOKS" ? styles.selected : null]}>Meus livros</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => changeScreen("PENDING")} style={[styles.autoresContainer, styles.frameBorder, receivedData == "PENDING" ? styles.selected : null]}>
-              <Text style={[styles.autores, styles.autoresTypo, receivedData == "PENDING" ? styles.selected : null]}>Pendentes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
-              <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => changeScreen("POPULARS")} style={[styles.frameView, styles.frameBorder, receivedData == "POPULARS" ? styles.selected : null]}>
-              <Text style={[styles.autores, styles.autoresTypo, receivedData == "POPULARS" ? styles.selected : null]}>Populares</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
-
-        <View style={styles.scrol1}>
-          {books.map((book) => (
-            <Pressable
-              key={book.id}
-              style={styles.groupLayout}
-              onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData })}
-            >
-              {/* LIVROS */}
-              <View style={[styles.groupChild3, styles.groupLayout]}>
-                <Image
-                  style={[styles.groupChild4, styles.groupChildLayout1]}
-                  resizeMode="cover"
-                  source={{
-                    uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
-                  }}
-                />
-                <View style={styles.bookInfoContainer}>
-                  <Text style={[styles.titleBook, styles.groupChildLayout1]}>
-                    {book.title.length > 20
-                      ? `${book.title.substring(0, 20)}...`
-                      : book.title}
-                  </Text>
-                  <Text style={styles.authorBook}>{book.author}</Text>
-                  <Text style={[styles.genre, styles.genreTypo]}>
-                    {book.genre.replace(/,/g, " •")}
-                  </Text>
+          <View style={styles.scrol1}>
+            {books.map((book) => (
+              <Pressable
+                key={book.id}
+                style={styles.groupLayout}
+                onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData })}
+              >
+                {/* LIVROS */}
+                <View style={[styles.groupChild3, styles.groupLayout]}>
+                  <Image
+                    style={[styles.groupChild4, styles.groupChildLayout1]}
+                    resizeMode="cover"
+                    source={{
+                      uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
+                    }}
+                  />
+                  <View style={styles.bookInfoContainer}>
+                    <Text style={[styles.titleBook, styles.groupChildLayout1]}>
+                      {book.title.length > 20
+                        ? `${book.title.substring(0, 20)}...`
+                        : book.title}
+                    </Text>
+                    <Text style={styles.authorBook}>{book.author}</Text>
+                    <Text style={[styles.genre, styles.genreTypo]}>
+                      {book.genre.replace(/,/g, " •")}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </Pressable>
-          ))}
+              </Pressable>
+            ))}
+          </View>
         </View>
-      </View>
-      <Modal animationType="fade" transparent visible={phlistIconVisible}>
-        <View style={styles.phlistIconOverlay}>
-          <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
-          <AndroidLarge3 onClose={closePhlistIcon} />
-        </View>
-      </Modal>
-    </ScrollView>
+        <Modal animationType="fade" transparent visible={phlistIconVisible}>
+          <View style={styles.phlistIconOverlay}>
+            <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
+            <AndroidLarge3 onClose={closePhlistIcon} />
+          </View>
+        </Modal>
+      </ScrollView>
+    </>
   );
 };
 

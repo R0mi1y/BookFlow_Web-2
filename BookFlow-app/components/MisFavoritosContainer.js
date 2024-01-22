@@ -15,7 +15,6 @@ const MisFavoritosContainer = memo(
       <Pressable onPress={onPress}>
         <View
           style={[
-            styles.rectangleParent,
             styles.groupChildLayout,
           ]}
         >
@@ -40,7 +39,10 @@ const MisFavoritosContainer = memo(
 const styles = StyleSheet.create({
   groupChildLayout: {
     height: 105,
-    width: 115,
+    width: screenWidth * 0.28,
+    alignItems: "center",
+    marginRight: 5,
+    marginLeft: 5,
   },
   groupChild: {
     top: 0,
@@ -50,7 +52,6 @@ const styles = StyleSheet.create({
   },
   misFavoritos: {
     top: 19,
-    left: 13,
     fontSize: FontSize.size_base,
     lineHeight: 20,
     fontFamily: FontFamily.rosarivoRegular,
