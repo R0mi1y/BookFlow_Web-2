@@ -1,8 +1,14 @@
 import React, { memo } from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import { useNavigation } from "@react-navigation/native";
 
 const AndroidLarge3 = memo(({ onClose }) => {
+
+  
+  const navigation = useNavigation();
+
+
   return (
     <View style={styles.androidLarge3}>
       <Image
@@ -20,18 +26,16 @@ const AndroidLarge3 = memo(({ onClose }) => {
         contentFit="cover"
         source={require("../assets/octiconperson242.png")}
       />
-      <Text style={styles.iniciarSesin}>Iniciar Sesión</Text>
+      
+      <Text style={styles.iniciarSesin} onPress={() => navigation.navigate("Profile")}>Editar Perfil</Text>
+     
+
       <Text style={[styles.configuracin, styles.contctanosTypo]}>
         Configuración
       </Text>
       <Text style={[styles.contctanos, styles.contctanosTypo]}>
         Contáctanos
       </Text>
-
-      <Text style={[ styles.contctanosTypo, styles.editbook]}>
-        Editar Livro
-      </Text>
-
       <View style={[styles.androidLarge3Child, styles.androidLayout]} />
       <View style={[styles.androidLarge3Item, styles.androidLayout]} />
       <View style={[styles.androidLarge3Inner, styles.androidLayout]} />
@@ -40,9 +44,6 @@ const AndroidLarge3 = memo(({ onClose }) => {
 });
 
 const styles = StyleSheet.create({
-  editbook:{
-    top: 254,
-  },
   octiconpersonLayout: {
     height: 24,
     width: 24,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: Color.colorBlanchedalmond_100,
     fontFamily: FontFamily.rosarivoRegular,
-    lineHeight: 15,
+    lineHeight: 20,
     fontSize: FontSize.size_sm,
     left: 82,
     position: "absolute",
@@ -104,8 +105,9 @@ const styles = StyleSheet.create({
   },
   androidLarge3: {
     backgroundColor: "#27181d",
-    width: 288,
-    height: 800,
+    right:50,
+    width: 300,
+    height: "100%",
     maxWidth: "100%",
     maxHeight: "100%",
     overflow: "hidden",
