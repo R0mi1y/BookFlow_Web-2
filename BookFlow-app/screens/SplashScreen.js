@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import * as SecureStore from 'expo-secure-store';
 
 
 const SplashScreen = ({ navigation }) => {
@@ -9,18 +9,21 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
       const fetchData = async () => {
         try {
-          await AsyncStorage.removeItem("@user");
-          // await new Promise(resolve => setTimeout(resolve, 3000));
-          const user = await AsyncStorage.getItem("@user");
+          const user = await await SecureStore.getItemAsync("user");
   
           if (user !== null) {
-            navigation.navigate("HomeScreen");
-            // navigation.navigate("pickDocument");
+            nameScreen = "HomeScreen";
           } else {
-            navigation.navigate("LogInScreen");
+            nameScreen = "LogInScreen";
           }
+
+          navigation.reset({
+            index: 0,
+            routes: [{ name: nameScreen }],
+          });
+
         } catch (error) {
-          console.log("Erro lendo o AsyncStorage: " + error);
+          console.log("Erro lendo o SecureStore: " + error);
           navigation.navigate("LogInScreen");
         }
       };

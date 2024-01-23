@@ -15,10 +15,10 @@ import { TextInput } from "react-native-gesture-handler";
 import Constants from 'expo-constants';
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import CustomPopup from '../components/CustomPopup';
+import * as SecureStore from 'expo-secure-store';
 
 
 const SignUpScreen = () => {
@@ -54,7 +54,7 @@ const SignUpScreen = () => {
   }, [response]);
 
   function handleSingInWithGoogle() {
-    const user = AsyncStorage.getItem("@user")
+    const user = SecureStore.getItemAsync("user")
       .then((user) => {
         if (!user) {
           if (!response) return;
@@ -91,8 +91,7 @@ const SignUpScreen = () => {
       if (data?.status === "success") {
         user = data.user;
 
-        AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
-        AsyncStorage.setItem("@user", JSON.stringify(user));
+        await SecureStore.setItemAsync("user", JSON.stringify(user));
         setUserInfo(user);
 
         navigation.navigate("HomeScreen");
@@ -144,7 +143,6 @@ const SignUpScreen = () => {
     .then((data) => {
       console.log(data);
       if("refresh" in data){
-        AsyncStorage.setItem("@refresh_token", JSON.stringify(data["refresh"]));
         navigation.navigate("HomeScreen");
       } else {
         console.log("Falha ao obter refresh token!");
@@ -161,11 +159,9 @@ const SignUpScreen = () => {
   const signUp = () => {
     togglePopup("Loading");
     if (pass == '' || email == '') {
-      togglePopup();
       togglePopup("Todos os campos devem ser preenchidos!");
       return;
     } else if (pass !== confirmPass) {
-      togglePopup();
       togglePopup("A senha e a confirmação precisam ser iguais!");
       return;
     }
@@ -183,7 +179,7 @@ const SignUpScreen = () => {
       ).then((json) => json.json())
       .then((data) => {
         if ("id" in data) {
-          AsyncStorage.setItem("@user", JSON.stringify(data));
+          SecureStore.setItemAsync("user", JSON.stringify(data));
 
           getRefreshToken();
         } else {
@@ -195,7 +191,6 @@ const SignUpScreen = () => {
             message += element[1];
           });
 
-          togglePopup();
           togglePopup(message);
         }
       })
@@ -204,7 +199,6 @@ const SignUpScreen = () => {
       });
     } catch (err) {
       console.error(err);
-      togglePopup();
       togglePopup("Falha no servidor");
     }
   }
@@ -212,10 +206,10 @@ const SignUpScreen = () => {
   return (
     <>
     <CustomPopup
-          visible={popupVisible}
-          onClose={togglePopup}
-          message={messagePopup}
-        />
+      visible={popupVisible}
+      onClose={() => {togglePopup(null)}}
+      message={messagePopup}
+    />
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}

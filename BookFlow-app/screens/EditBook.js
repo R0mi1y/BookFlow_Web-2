@@ -13,51 +13,23 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
-import CustomPopup from '../components/CustomPopup';
-import axios from 'axios';
 
 
-const RegisterBook = ({ route }) => {
-  const book = route.params?.book || null;
-  
+const EditBook = () => {
   const navigation = useNavigation();
   const apiUrl = Constants.expoConfig.extra.apiUrl;
 
-  const [popupVisible, setPopupVisible] = React.useState(false);
-  const [messagePopup, setPopupTexto] = React.useState("");
-
-  const togglePopup = (message=null) => {
-    if (message != null) {
-      setPopupTexto(message);
-      setPopupVisible(true);
-    }
-    else setPopupVisible(false);
-  };
-
-  var user = null;
-
-  const [selectedImage, setSelectedImage] = useState(`${apiUrl}/static/img/default_cover.jpg`);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
   const [genero, setGenero] = useState("");
   const [resumo, setResumo] = useState("");
-  const [hasImagem, setHasImagem] = useState(false);
-  const [registering, setRegistering] = useState(false);
-
-  useEffect(() => {
-    if (book) {
-      setTitulo(book.title);
-      setAutor(book.author);
-      setGenero(book.genre);
-      setResumo(book.summary);
-      setSelectedImage(book.cover ?? apiUrl + "/static/img/default_cover.jpg");
-    }
-  }, []);
+  const [imagem, setImagem] = useState("");
 
   const getAccessToken = async () => {
     try {
-      user = JSON.parse(await SecureStore.getItemAsync("user"));
+      const user = JSON.parse(await await SecureStore.getItemAsync("user"));
 
       if (!user) {
         throw new Error("Couldn't find user");
@@ -98,76 +70,67 @@ const RegisterBook = ({ route }) => {
   };
 
   const send_book = async () => {
-    if (titulo == '' || resumo == '' || autor == '' || genero == '') {
-      togglePopup("Preencha todos os campos!");
-      return;
-    }
-
-    togglePopup("Loading");
-    if (registering) return;
-    setRegistering(true);
-    
     const accessToken = await getAccessToken();
 
     try {
       const formData = new FormData();
-      if (hasImagem) {
-        formData.append('cover', {
-          uri: selectedImage,
-          type: 'image/jpeg', // Ajuste conforme o tipo de arquivo
-          name: 'cover.jpg',
-        });
-      }
+      formData.append('file', {
+        uri: selectedImage,
+        type: 'image/jpeg', // Ajuste conforme o tipo de arquivo
+        name: 'cover.jpg',
+      });
 
       formData.append('title', titulo);
       formData.append('author', autor);
       formData.append('summary', resumo);
       formData.append('genre', genero);
-      formData.append('owner', user.id);
-      formData.append('cover', "");
 
-      var response;
+      const response = await fetch(`${apiUrl}/api/book/`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: "Bearer " + accessToken,
+        },
+        body: formData,
+      });
 
-      if (book) {
-        response = await axios.put(`${apiUrl}/api/book/${book.id}/`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: "Bearer " + accessToken,
-          },
-        });
-      } else {
-        response = await axios.post(`${apiUrl}/api/book/`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: "Bearer " + accessToken,
-          },
-        });
-      }
+      console.log(formData);
 
-      console.log(response.data);
-      togglePopup();
-
-      if (response.data?.id != null) {
-        console.log("Livro cadastrado com sucesso: ", response.data);
-        togglePopup("Livro cadastrado com sucesso!");
-
-        if (book) {
-          navigation.goBack();
-        } else {
-          navigation.navigate("HomeScreen", { message: ["Livro cadastrado com sucesso!"] });
+      if (!response.ok) {
+        // Tentar analisar o corpo da resposta como JSON para obter detalhes específicos do erro
+        let errorMessage = "Erro na requisição";
+        try {
+          const errorData = await response.json();
+          if (errorData && errorData.error) {
+            errorMessage = errorData.error;
+          }
+        } catch (jsonError) {
+          // Imprimir a resposta completa em caso de erro de análise JSON
+          console.error(
+            "Resposta completa do servidor:",
+            await response.text()
+          );
+          console.error(
+            "Erro ao analisar o corpo JSON da resposta de erro",
+            jsonError
+          );
         }
 
+        throw new Error(errorMessage);
+      }
+
+      const responseData = await response.json();
+
+      if (responseData?.id != null) {
+        console.log("Livro cadastrado com sucesso:", responseData);
+        navigation.navigate("HomeScreen");
       } else {
-        if (response.data?.message) {
-          console.error("Erro no cadastro:", response.data.message);
+        if (responseData?.message) {
+          console.error("Erro no cadastro:", responseData.message);
         }
       }
     } catch (error) {
-      console.error(error.response);
-      console.error(error);
-      togglePopup("Erro, tente novamente mais tarde!");
-    } finally {
-      setRegistering(false);
+      console.error(error.message);
     }
   };
 
@@ -188,10 +151,7 @@ const RegisterBook = ({ route }) => {
       });
 
       if (!result.cancelled) {
-        setSelectedImage(result.assets[0].uri);
-        console.log(result.assets[0].uri);
-        console.log(selectedImage);
-        setHasImagem(true);
+          setSelectedImage(result.uri);
       }
     } catch (err) {
     console.error('Erro ao selecionar o documento:', err);
@@ -199,95 +159,88 @@ const RegisterBook = ({ route }) => {
   };
 
   return (
-    <>
-      <CustomPopup
-        visible={popupVisible}
-        onClose={() => {togglePopup(null)}}
-        message={messagePopup}
+    <View style={styles.EditBook}>
+      <Image
+        style={[styles.phlistIcon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/phlist.png")}
       />
-      <View style={styles.RegisterBook}>
-        <Image
-          style={[styles.phlistIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/phlist.png")}
+      {/* <Image
+        style={[styles.epsearchIcon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/epsearch.png")}
+      /> */}
+      <Pressable
+        style={styles.brandLogo}
+        onPress={() => navigation.navigate("HomeScreen")}
+      >
+        <Text style={[styles.libro, styles.libroPosition]}>Editar</Text>
+        <Text style={[styles.l, styles.lTypo]}>Livro</Text>
+      </Pressable>
+
+      <View style={[styles.cta, styles.ctaLayout]} />
+      <View style={[styles.cta1, styles.ctaLayout]}>
+        <TextInput
+          style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder=" Título "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={titulo}
+          onChangeText={(text) => setTitulo(text)}
         />
-        {/* <Image
-          style={[styles.epsearchIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/epsearch.png")}
-        /> */}
+      </View>
+
+      <View style={[styles.cta2, styles.ctaLayout]}>
+        <TextInput
+          style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder="  Autor  "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={autor}
+          onChangeText={(text) => setAutor(text)}
+        />
+      </View>
+
+      <View style={[styles.cta3, styles.ctaLayout]}>
+        <TextInput
+          style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder="  Genêro  "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={genero}
+          onChangeText={(text) => setGenero(text)}
+        />
+      </View>
+
+      <View style={[styles.cta4, styles.ctaLayout]}>
+        <TextInput
+          style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder=" Resumo "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={resumo}
+          onChangeText={(text) => setResumo(text)}
+        />
+      </View>
+
+      <View style={[styles.cta5, styles.ctaLayout]}>
         <Pressable
-          style={styles.brandLogo}
-          onPress={() => navigation.navigate("HomeScreen")}
-        >
-          <Text style={[styles.libro, styles.libroPosition]}>Cadastre seu </Text>
-          <Text style={[styles.l, styles.lTypo]}>Livro</Text>
-        </Pressable>
-
-        <View style={[styles.cta, styles.ctaLayout]} />
-        <View style={[styles.cta1, styles.ctaLayout]}>
-          <TextInput
-            style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
-            placeholder=" Título "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={titulo}
-            onChangeText={(text) => setTitulo(text)}
-          />
-        </View>
-
-        <View style={[styles.cta2, styles.ctaLayout]}>
-          <TextInput
-            style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
-            placeholder="  Autor  "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={autor}
-            onChangeText={(text) => setAutor(text)}
-          />
-        </View>
-
-        <View style={[styles.cta3, styles.ctaLayout]}>
-          <TextInput
-            style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
-            placeholder="  Genêro  "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={genero}
-            onChangeText={(text) => setGenero(text)}
-          />
-        </View>
-
-        <View style={[styles.cta4, styles.ctaLayout]}>
-          <TextInput
-            style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
-            placeholder=" Resumo "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={resumo}
-            onChangeText={(text) => setResumo(text)}
-          />
-        </View>
-
-        <View style={[styles.cta5, styles.ctaLayout]}>
-          <Pressable
-          onPress={pickDocument}>
-            <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
-          </Pressable>
-        </View>
-
-        <View style={[styles.android1, styles.androidLayout]} />
-
-        <Image source={{ uri: selectedImage }} style={styles.imgBook} />
-        
-        <View style={[styles.android2, styles.androidLayout]} />
-
-        <Pressable style={styles.irAlLibroParent} onPress={send_book}>
-          <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>{ book ? "Editar" :  "Cadastrar" }</Text>
-          <Image
-            style={[styles.ionbookIcon, styles.lPosition]}
-            contentFit="cover"
-            source={require("../assets/ionbook.png")}
-          />
+        onPress={pickDocument}>
+          <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
         </Pressable>
       </View>
-    </>
+
+      <View style={[styles.android1, styles.androidLayout]} />
+
+      <Image source={{ uri: selectedImage ? selectedImage : `${apiUrl}/static/img/default_cover.jpg` }} style={styles.imgBook} />
+      
+      <View style={[styles.android2, styles.androidLayout]} />
+
+      <Pressable style={styles.irAlLibroParent} onPress={send_book}>
+        <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Cadastrar</Text>
+        <Image
+          style={[styles.ionbookIcon, styles.lPosition]}
+          contentFit="cover"
+          source={require("../assets/ionbook.png")}
+        />
+      </Pressable>
+    </View>
   );
 };
 
@@ -322,13 +275,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   lTypo: {
+    top:-4,
     textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
   },
-  libroPosition: {
-    top: 0,
-    position: "absolute",
-  },
+  // libroPosition: {
+  //   top: 0,
+  //   position: "absolute",
+  // },
   sidePosition: {
     top: 17,
     height: 11,
@@ -385,25 +339,24 @@ const styles = StyleSheet.create({
     top: 62,
   },
   l: {
-    top: 46,
+    // top: 46,
     fontSize: FontSize.size_29xl,
     color: Color.colorBlanchedalmond_400,
     width: 250,
     height: 50,
-    left: 70,
+    left: 150,
     position: "absolute",
   },
   libro: {
-    left: 37,
+    left: 75,
     fontSize: FontSize.size_23xl,
     width: 350,
     height: 50,
     color: Color.colorBlanchedalmond_100,
-    textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
   },
   brandLogo: {
-    top: 49,
+    top: 75,
     left: 10,
     width: 144,
     height: 52,
@@ -610,7 +563,7 @@ const styles = StyleSheet.create({
     height: 25,
     position: "absolute",
   },
-  RegisterBook: {
+  EditBook: {
     flex: 1,
     width: "100%",
     height: 900,
@@ -619,4 +572,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterBook;
+export default EditBook;

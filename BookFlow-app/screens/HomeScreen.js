@@ -17,12 +17,33 @@ import AndroidLarge3 from "../components/AndroidLarge3";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
+import starOutlineImage from "../assets/solarstaroutline.png";
+import starFilledImage from "../assets/solarstarfilled.png";
+import CustomPopup from '../components/CustomPopup';
+
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
+const HomeScreen = ({ route }) => {
+  const navigation = useNavigation();
+  const [messagePopup, setPopupTexto] = useState('');
+  const [popupVisible, setPopupVisible] = useState(false);
 
-const HomeScreen = () => {
+  const messageComing = route.params?.message[0] || '';
+
+  if (messageComing !== '') {
+    route.params?.message.pop();
+    setPopupTexto(messageComing);
+    setPopupVisible(true);
+  }
+
+  const togglePopup = (message) => {
+    if (message != null) setPopupVisible(true);
+    else setPopupVisible(false);
+    setPopupTexto(message);
+  };
+
   const [searchCamp, setSearchCamp] = React.useState('');
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -36,9 +57,8 @@ const HomeScreen = () => {
     setIsSearchVisible(false);
   };
 
-  const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [ , setScrollPosition] = useState(0);
   const scrollViewRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -75,13 +95,12 @@ const HomeScreen = () => {
     }
   };
 
-
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
 
   const getAccessToken = async () => {
     try {
-      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+      const user = JSON.parse(await SecureStore.getItemAsync("user"));
 
       if (!user) {
         console.error("Usuário não encontrado");
@@ -162,7 +181,6 @@ const HomeScreen = () => {
 
           const data = await response.json();
           setBooks(data);
-          console.log(data);
         } else {
           console.error("Falha ao obter AccessToken");
         }
@@ -201,234 +219,297 @@ const HomeScreen = () => {
       });
   };
 
-
   return (
     <>
-    <Modal
-      transparent={true}
-      animationType="slide"
-      visible={isSearchVisible}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.searchContainer}>
-          <TextInput
-            placeholder="Pesquisar..."
-            style={styles.searchInput}
-            value={searchCamp}
-            onChangeText={text => setSearchCamp(text)}
-          />
-          <Pressable onPress={search}>
-            <Image
-              style={[]}
-              contentFit="cover"
-              source={require("../assets/epsearch.png")}
+      <CustomPopup
+        visible={popupVisible}
+        onClose={() => {togglePopup(null)}}
+        message={messagePopup}
+      />
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={isSearchVisible}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.searchContainer}>
+            <TextInput
+              placeholder="Pesquisar..."
+              style={styles.searchInput}
+              value={searchCamp}
+              onChangeText={text => setSearchCamp(text)}
             />
-          </Pressable>
-          <TouchableOpacity
-            onPress={handleSearchClose}
-            style={styles.searchButton}
-          >
-            <Text style={styles.textButton}>Fechar</Text>
-          </TouchableOpacity>
+            <Pressable onPress={search}>
+              <Image
+                contentFit="cover"
+                source={require("../assets/epsearch.png")}
+              />
+            </Pressable>
+            <TouchableOpacity
+              onPress={handleSearchClose}
+              style={styles.searchButton}
+            >
+              <Text style={styles.textButton}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </Modal>
-    <ScrollView>
-      <View style={[styles.homeScreen, styles.iconLayout]}>
-        {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
-        <View style={[styles.topLayout]}>
-          <Pressable
-            onPress={openPhlistIcon}
+      </Modal>
+      <ScrollView>
+        <View style={[styles.homeScreen, styles.iconLayout]}>
+          {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
+          <View style={[styles.topLayout]}>
+            <Pressable
+              onPress={openPhlistIcon}
+            >
+              <Image
+                style={[styles.icon, styles.iconLayout, styles.phlistLayout]}
+                contentFit="cover"
+                source={require("../assets/phlist.png")}
+              />
+            </Pressable>
+
+            <View style={styles.brandLogo}>
+              <Text style={[styles.l]}>Book</Text>
+              <Text style={styles.libro}>Flow</Text>
+            </View>
+            
+            <Pressable onPress={handleSearchPress}>
+              <Image
+                style={[styles.phlistLayout]}
+                contentFit="cover"
+                source={require("../assets/epsearch.png")}
+              />
+            </Pressable>
+          </View>
+          {/* ------------------------------------- */}
+          {/* CARROSSEL COMEÇA AQUI */}
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={styles.groupParent}
+            onMomentumScrollEnd={(event) => {
+              setScrollPosition(event.nativeEvent.contentOffset.x);
+            }}
           >
-            <Image
-              style={[styles.icon, styles.iconLayout, styles.phlistLayout]}
-              contentFit="cover"
-              source={require("../assets/phlist.png")}
-            />
-          </Pressable>
-
-          <View style={styles.brandLogo}>
-            <Text style={[styles.l]}>Book</Text>
-            <Text style={styles.libro}>Flow</Text>
-          </View>
-          
-          <Pressable onPress={handleSearchPress}>
-            <Image
-              style={[styles.phlistLayout]}
-              contentFit="cover"
-              source={require("../assets/epsearch.png")}
-            />
-          </Pressable>
-        </View>
-        {/* ------------------------------------- */}
-        {/* CARROSSEL COMEÇA AQUI */}
-        <ScrollView
-          ref={scrollViewRef}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={styles.groupParent}
-          onMomentumScrollEnd={(event) => {
-            setScrollPosition(event.nativeEvent.contentOffset.x);
-          }}
-        >
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1, styles.firstCarrousel]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-3.png")}
-            />
-            <Text
-              style={[styles.cienciaFiccion, styles.textFlexBox]}
-            >{`Ficção Científica`}</Text>
-            <Text style={[styles.coleccin, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-5.png")}
-            />
-            <Text style={[styles.crimen, styles.crimenTypo]}>Criminal</Text>
-            <Text style={[styles.coleccin1, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-4.png")}
-            />
-            <Text style={[styles.aventura, styles.textFlexBox]}>Aventura</Text>
-            <Text style={[styles.coleccin2, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-2.png")}
-            />
-            <Text style={[styles.biografia, styles.crimenTypo]}>BIOGRAFIA</Text>
-            <Text style={[styles.coleccin3, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-          <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
-            <Image
-              style={styles.groupChild}
-              contentFit="cover"
-              source={require("../assets/rectangle-1.png")}
-            />
-            <View style={{ height: 120 }}/>
-            <Text style={styles.infantil}>Infantil</Text>
-
-            <Text style={[styles.coleccin4, styles.coleccinTypo]}>
-              •Coleção•
-            </Text>
-          </View>
-        </ScrollView>
-        {/*-----------------------------------------------*/}
-
-        {/* NAV-BAR HOME */}
-        {/* <View style={styles.instanceParent}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <View style={styles.autoresWrapper}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Autores</Text>
-            </View>
-            <View style={[styles.autoresContainer, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Gêneros</Text>
-            </View>
-            <View style={[styles.autoresFrame, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>Editora</Text>
-            </View>
-            <View style={[styles.frameView, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Populares
+            <View style={[styles.rectangleGroup, styles.rectangleLayout1, styles.firstCarrousel]}>
+              <Image
+                style={styles.groupChild}
+                contentFit="cover"
+                source={require("../assets/rectangle-3.png")}
+              />
+              <Text
+                style={[styles.cienciaFiccion, styles.textFlexBox]}
+              >{`Ficção Científica`}</Text>
+              <Text style={[styles.coleccin, styles.coleccinTypo]}>
+                •Coleção•
               </Text>
             </View>
-            <View style={[styles.autoresWrapper1, styles.frameBorder]}>
-              <Text style={[styles.autores, styles.autoresTypo]}>
-                Ano de Publicação
+            <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
+              <Image
+                style={styles.groupChild}
+                contentFit="cover"
+                source={require("../assets/rectangle-5.png")}
+              />
+              <Text style={[styles.crimen, styles.crimenTypo]}>Criminal</Text>
+              <Text style={[styles.coleccin1, styles.coleccinTypo]}>
+                •Coleção•
+              </Text>
+            </View>
+            <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
+              <Image
+                style={styles.groupChild}
+                contentFit="cover"
+                source={require("../assets/rectangle-4.png")}
+              />
+              <Text style={[styles.aventura, styles.textFlexBox]}>Aventura</Text>
+              <Text style={[styles.coleccin2, styles.coleccinTypo]}>
+                •Coleção•
+              </Text>
+            </View>
+            <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
+              <Image
+                style={styles.groupChild}
+                contentFit="cover"
+                source={require("../assets/rectangle-2.png")}
+              />
+              <Text style={[styles.biografia, styles.crimenTypo]}>BIOGRAFIA</Text>
+              <Text style={[styles.coleccin3, styles.coleccinTypo]}>
+                •Coleção•
+              </Text>
+            </View>
+            <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
+              <Image
+                style={styles.groupChild}
+                contentFit="cover"
+                source={require("../assets/rectangle-1.png")}
+              />
+              <View style={{ height: 120 }}/>
+              <Text style={styles.infantil}>Infantil</Text>
+
+              <Text style={[styles.coleccin4, styles.coleccinTypo]}>
+                •Coleção•
               </Text>
             </View>
           </ScrollView>
-        </View> */}
-        {/*--------------------------*/}
+          {/*-----------------------------------------------*/}
 
-        {/* ESSA MERDA É O MENU LATERAL */}
-        {/* <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
-          <View style={[styles.rectangleView, styles.rectangleLayout]} />
-            <Text
-              style={[styles.iniciarSesin, styles.textTypo]}
-            >
-              Iniciar Empréstimo
-            </Text>
-            <Image
-              style={[styles.octiconperson24, styles.batteryIconLayout]}
-              contentFit="cover"
+          {/* NAV-BAR HOME */}
+          {/* <View style={styles.instanceParent}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <View style={styles.autoresWrapper}>
+                <Text style={[styles.autores, styles.autoresTypo]}>Autores</Text>
+              </View>
+              <View style={[styles.autoresContainer, styles.frameBorder]}>
+                <Text style={[styles.autores, styles.autoresTypo]}>Gêneros</Text>
+              </View>
+              <View style={[styles.autoresFrame, styles.frameBorder]}>
+                <Text style={[styles.autores, styles.autoresTypo]}>Editora</Text>
+              </View>
+              <View style={[styles.frameView, styles.frameBorder]}>
+                <Text style={[styles.autores, styles.autoresTypo]}>
+                  Populares
+                </Text>
+              </View>
+              <View style={[styles.autoresWrapper1, styles.frameBorder]}>
+                <Text style={[styles.autores, styles.autoresTypo]}>
+                  Ano de Publicação
+                </Text>
+              </View>
+            </ScrollView>
+          </View> */}
+          {/*--------------------------*/}
+
+          {/* ESSA MERDA É O MENU LATERAL */}
+          {/* <View style={[styles.rectangleParent2, styles.rectangleLayout]}>
+            <View style={[styles.rectangleView, styles.rectangleLayout]} />
+              <Text
+                style={[styles.iniciarSesin, styles.textTypo]}
+              >
+                Iniciar Empréstimo
+              </Text>
+              <Image
+                style={[styles.octiconperson24, styles.batteryIconLayout]}
+                contentFit="cover"
+                source={require("../assets/book_aberto.png")}
+              />
+            </View> */}
+          <Text style={styles.miBiblioteca}>Minha biblioteca</Text>
+        {/* <ScrollView
+              ref={scrollViewRef}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              style={styles.groupParent}
+              onMomentumScrollEnd={(event) => {
+              setScrollPosition(event.nativeEvent.contentOffset.x);
+            }}
+          > */}
+          <ScrollView
+            horizontal
+          >
+            <MisFavoritosContainer
+              userFavorites={`Fazer\nempréstimo`}
+              showSolarstarOutlineIcon
+              source={require("../assets/lista_books.png")}
+            />
+            <MisFavoritosContainer
+              onPress={() => navigation.navigate("RegisterBook")}
+              userFavorites={`Cadastrar\nLivros`}
+              showSolarstarOutlineIcon
+              source={require("../assets/books_vetor.png")}
+            />
+
+            <MisFavoritosContainer
+              onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
+              userFavorites={`Meus\nLivros`}
+              showSolarstarOutlineIcon
               source={require("../assets/book_aberto.png")}
             />
-          </View> */}
-        <Text style={styles.miBiblioteca}>Minha biblioteca</Text>
+            <MisFavoritosContainer
+              onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
+              userFavorites={`Empréstimos`}
+              showSolarstarOutlineIcon
+              source={require("../assets/lista_de_livros.png")}
+            />
+          </ScrollView>
+          <View style={styles.scrol1}>
 
-        <View style={styles.myBibSection}>
-          <MisFavoritosContainer
-            userFavorites={`Minha\nbiblioteca`}
-            showSolarstarOutlineIcon
-            source={require("../assets/lista_books.png")}
-          />
-          <MisFavoritosContainer
-            onPress={() => navigation.navigate("RegisterBook")}
-            userFavorites={`Cadastrar\nLivros`}
-            showSolarstarOutlineIcon
-            source={require("../assets/books_vetor.png")}
-          />
-          <MisFavoritosContainer
-            onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
-            userFavorites={`Meus\nLivros`}
-            showSolarstarOutlineIcon={false}
-            source={require("../assets/book_aberto.png")}
-          />
-        </View>
-        <View style={styles.scrol1}>
+            {/* GRUPO 1 LIVROS PENDENTES */}
 
-          {/* GRUPO 1 LIVROS PENDENTES */}
+            <Text style={styles.audiolibrosTypo}>Pendentes</Text>
 
-          <Text style={styles.audiolibrosTypo}>Pendentes</Text>
+            <View style={styles.groupContainer}>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
+                {books.map((book) => (
+                  <Pressable
+                    key={book.id}
+                    style={styles.groupLayout}
+                    onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id })}
+                  >
+                    {/* LIVRO 1 */}
+                    <View style={[styles.groupChild3, styles.groupLayout]} />
+                    <Image
+                      style={[styles.groupChild4, styles.groupChildLayout1]}
+                      contentFit="cover"
+                      source={{
+                        uri: (book.cover ? book.cover : apiUrl + "/static/img/default_cover.jpg"),
+                      }}
+                    />
+                    <Text
+                      style={[styles.pachinkoNovela, styles.groupChildLayout1]}
+                    >{book.title}</Text>
 
-          <View style={styles.groupContainer}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
-              {books.map((book) => (
-                <Pressable
-                  key={book.id}
-                  style={styles.groupLayout}
-                  onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id })}
-                >
+                    <View style={[styles.groupChild5, styles.groupChildLayout]} />
+                    <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
+                    <View style={[styles.groupChild6, styles.groupChildLayout]} />
+                    {/* <Image
+          style={[styles.groupIcon, styles.iconGroupLayout]}
+          contentFit="cover"
+          source={require("../assets/mais.png")}
+        /> */}
+                    <View style={styles.groupChild7} />
+                    <Image
+                      style={[styles.groupChild8, styles.iconGroupLayout]}
+                      contentFit="cover"
+                      source={
+                        book?.is_in_wishlist
+                        ? starFilledImage
+                        : starOutlineImage
+                      }
+                    />
+                    <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+
+            {/* GRUPO 2  MEUS LIVROS*/}
+
+            <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
+              Meus Livros
+            </Text>
+            <View style={styles.groupContainer}>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
+                <View style={styles.groupLayout}>
+
                   {/* LIVRO 1 */}
                   <View style={[styles.groupChild3, styles.groupLayout]} />
                   <Image
                     style={[styles.groupChild4, styles.groupChildLayout1]}
                     contentFit="cover"
-                    source={{
-                      uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
-                    }}
+                    source={require("../assets/rectangle-174.png")}
                   />
                   <Text
                     style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-                  >{book.title}</Text>
-
+                  >{`Pachinko Novela`}</Text>
                   <View style={[styles.groupChild5, styles.groupChildLayout]} />
                   <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
                   <View style={[styles.groupChild6, styles.groupChildLayout]} />
                   {/* <Image
-        style={[styles.groupIcon, styles.iconGroupLayout]}
-        contentFit="cover"
-        source={require("../assets/mais.png")}
-      /> */}
+                    style={[styles.groupIcon, styles.iconGroupLayout]}
+                    contentFit="cover"
+                    source={require("../assets/mais.png")}
+                  /> */}
                   <View style={styles.groupChild7} />
                   <Image
                     style={[styles.groupChild8, styles.iconGroupLayout]}
@@ -436,96 +517,57 @@ const HomeScreen = () => {
                     source={require("../assets/group-102.png")}
                   />
                   <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </View>
+                </View>
+              </ScrollView>
+            </View>
 
-          {/* GRUPO 2  MEUS LIVROS*/}
+            {/* GRUPO 3 FAVORITOS  */}
+            <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
+              Favoritos
+            </Text>
 
-          <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
-            Meus Livros
-          </Text>
-          <View style={styles.groupContainer}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
-              <View style={styles.groupLayout}>
+            <View style={styles.groupContainer}>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
+                <View style={styles.groupLayout}>
 
-                {/* LIVRO 1 */}
-                <View style={[styles.groupChild3, styles.groupLayout]} />
-                <Image
-                  style={[styles.groupChild4, styles.groupChildLayout1]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-174.png")}
-                />
-                <Text
-                  style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-                >{`Pachinko Novela`}</Text>
-                <View style={[styles.groupChild5, styles.groupChildLayout]} />
-                <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
-                <View style={[styles.groupChild6, styles.groupChildLayout]} />
-                {/* <Image
-                  style={[styles.groupIcon, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/mais.png")}
-                /> */}
-                <View style={styles.groupChild7} />
-                <Image
-                  style={[styles.groupChild8, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/group-102.png")}
-                />
-                <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
-              </View>
-            </ScrollView>
-          </View>
-
-          {/* GRUPO 3 FAVORITOS  */}
-          <Text style={[styles.agregadosRecientemente, styles.audiolibrosTypo]}>
-            Favoritos
-          </Text>
-
-          <View style={styles.groupContainer}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} >
-              <View style={styles.groupLayout}>
-
-                {/* LIVRO 1 */}
-                <View style={[styles.groupChild3, styles.groupLayout]} />
-                <Image
-                  style={[styles.groupChild4, styles.groupChildLayout1]}
-                  contentFit="cover"
-                  source={require("../assets/rectangle-174.png")}
-                />
-                <Text
-                  style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-                >{`Pachinko Novela`}</Text>
-                <View style={[styles.groupChild5, styles.groupChildLayout]} />
-                <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
-                <View style={[styles.groupChild6, styles.groupChildLayout]} />
-                {/* <Image
-                  style={[styles.groupIcon, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/mais.png")}
-                /> */}
-                <View style={styles.groupChild7} />
-                <Image
-                  style={[styles.groupChild8, styles.iconGroupLayout]}
-                  contentFit="cover"
-                  source={require("../assets/group-102.png")}
-                />
-                <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
-              </View>
-            </ScrollView>
+                  {/* LIVRO 1 */}
+                  <View style={[styles.groupChild3, styles.groupLayout]} />
+                  <Image
+                    style={[styles.groupChild4, styles.groupChildLayout1]}
+                    contentFit="cover"
+                    source={require("../assets/rectangle-174.png")}
+                  />
+                  <Text
+                    style={[styles.pachinkoNovela, styles.groupChildLayout1]}
+                  >{`Pachinko Novela`}</Text>
+                  <View style={[styles.groupChild5, styles.groupChildLayout]} />
+                  <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
+                  <View style={[styles.groupChild6, styles.groupChildLayout]} />
+                  {/* <Image
+                    style={[styles.groupIcon, styles.iconGroupLayout]}
+                    contentFit="cover"
+                    source={require("../assets/mais.png")}
+                  /> */}
+                  <View style={styles.groupChild7} />
+                  <Image
+                    style={[styles.groupChild8, styles.iconGroupLayout]}
+                    contentFit="cover"
+                    source={require("../assets/group-102.png")}
+                  />
+                  <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
+                </View>
+              </ScrollView>
+            </View>
           </View>
         </View>
-      </View>
 
-      <Modal animationType="fade" transparent visible={phlistIconVisible}>
-        <View style={styles.phlistIconOverlay}>
-          <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
-          <AndroidLarge3 onClose={closePhlistIcon} />
-        </View>
-      </Modal>
-    </ScrollView>
+        <Modal animationType="fade" transparent visible={phlistIconVisible}>
+          <View style={styles.phlistIconOverlay}>
+            <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
+            <AndroidLarge3 onClose={closePhlistIcon} />
+          </View>
+        </Modal>
+      </ScrollView>
     </>
   );
 };
@@ -534,15 +576,15 @@ const styles = StyleSheet.create({
   myBibSection:{
     top: 20,
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginLeft: screenWidth * 0.05,
-    marginRight: screenWidth * 0.05,
+    // justifyContent: "space-between",
+    paddingLeft: screenWidth * 0.05,
+    paddingRight: screenWidth * 0.05,
     marginBottom: 40,
-    width: screenWidth * 0.9,
+    width: (screenWidth * 0.28 + 10) * 4,
     height: 105,
   },
   topLayout: {
-    top: 20,
+    top: 40,
     marginLeft: screenWidth * 0.05,
     marginRight: screenWidth * 0.05,
     width: screenWidth * 0.9,
