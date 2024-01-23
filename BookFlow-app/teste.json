@@ -1,0 +1,46 @@
+[{
+    "author": "um ai",
+    "availability": false,
+    "cover": "/media/book_cover/cover_AvIOqUq.jpg",
+    "genre": "ação, comédia, animação",
+    "id": 1,
+    "is_in_wishlist": false,
+    "owner": 5,
+    "rating": "10.00",
+    "summary": "um gato lutando contra um lobo",
+    "title": "Gato de botas"
+}, 
+{
+    "author": "não lembro",
+    "availability": false,
+    "cover": "/media/book_cover/cover_W5lPyf3.jpg",
+    "genre": "animation, fairy tail",
+    "id": 3,
+    "is_in_wishlist": false,
+    "owner": 5,
+    "rating": "10.00",
+    "summary": "um principe e uma rapoza",
+    "title": "Pequeno Príncip"
+}, {
+    "author": "A1",
+    "availability": false,
+    "cover": "/media/book_cover/cover.jpg",
+    "genre": "G1",
+    "id": 52,
+    "is_in_wishlist": false,
+    "owner": 5,
+    "rating": "0.00",
+    "summary": "R1",
+    "title": "T1"
+}, {
+    "author": "J. R. R. Tolkien",
+    "availability": false,
+    "cover": null,
+    "genre": "Romance, Fantasia, Épico",
+    "id": 22,
+    "is_in_wishlist": false,
+    "owner": 5,
+    "rating": "0.00",
+    "summary": "O Hobbit conta a história de Bilbo Bolseiro, que já aos 50 anos, se envolve numa aventura rumo à Montanha Solitária, por influência de Gandalf e junto com os anãos que, liderados por Thorin Escudo de Carvalho, desejam reaver sua morada e seu tesouro escondido sob a Montanha Solitária.",
+    "title": "O Hobbit"
+}]

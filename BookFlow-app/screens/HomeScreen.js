@@ -5,12 +5,8 @@ import {
   Pressable,
   Text,
   View,
-  Modal,
   Image,
   Dimensions,
-  TextInput,
-  TouchableOpacity,
-  Button,
 } from "react-native";
 import Constants from 'expo-constants';
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
@@ -74,7 +70,12 @@ const HomeScreen = ({ route }) => {
   };
 
   const apiUrl = Constants.expoConfig.extra.apiUrl;
-  const [books, setBooks] = useState([]);
+
+  const [sections, setSections] = useState([
+    { title: 'Todos', filter: 'ALL', books: [] },
+    { title: 'Pendentes', filter: 'PENDING', books: [] },
+    { title: 'Favoritos', filter: 'WISHLIST', books: [] },
+  ]);
 
   const getAccessToken = async () => {
     try {
@@ -149,18 +150,20 @@ const HomeScreen = ({ route }) => {
     }
   };
 
-  const sections = [
-    { title: 'Pendentes', filter: 'is_pending' },
-    { title: 'Favoritos', filter: 'is_favorite' },
-  ];
 
   useEffect(() => {
-    const fetchData = async () => {
+    
+    const fetchData = async (section, i) => {
+      const user = JSON.parse(await SecureStore.getItemAsync("user"));
       try {
         const accessToken = await getAccessToken();
 
         if (accessToken) {
-          const response = await fetch(`${apiUrl}/api/book/`, {
+          var url = `${apiUrl}/api/book/user/${user.id}?filter=${section}`;
+
+          console.log(url);
+
+          const response = await fetch(url, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -169,11 +172,18 @@ const HomeScreen = ({ route }) => {
           });
 
           if (!response.ok) {
-            throw new Error(response.text());
+            throw new Error(await response.text());
           }
 
           const data = await response.json();
-          setBooks(data);
+          
+          var s = sections;
+          
+          s[i].books = data;
+
+          setSections(s);
+          
+          console.log(s[i].books);
         } else {
           navigation.reset({
             index: 0,
@@ -182,11 +192,16 @@ const HomeScreen = ({ route }) => {
           console.error("Falha ao obter AccessToken");
         }
       } catch (error) {
+        console.error('Erro ooooooooooooooooooooooooooooooooo orrE');
+        console.error(error.message);
         console.error('Erro ao buscar livros:', error.message);
       }
     };
 
-    fetchData();
+    sections.map((section, i) => {
+      fetchData(section.filter, i);
+      console.log(i);
+    });
   }, []);
 
   return (
@@ -316,8 +331,11 @@ const HomeScreen = ({ route }) => {
                 <Text style={styles.audiolibrosTypo}>{section.title}</Text>
 
                 <View style={styles.groupContainer}>
-                  <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={styles.scrollBooks}>
-                    {books.map((book) => (
+                  <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.scrollBooks}>
+                  {section.books.length === 0 ? (
+                    <Text style={[styles.audiolibrosTypo, {fontSize: 15}]}>Nenhum livro disponível nesta seção</Text>
+                        ) : 
+                      section.books.map((book) => (
                       <Pressable
                         key={book.id}
                         style={styles.groupLayout}
@@ -329,7 +347,7 @@ const HomeScreen = ({ route }) => {
                           style={[styles.groupChild4, styles.groupChildLayout1]}
                           contentFit="cover"
                           source={{
-                            uri: (book.cover ? book.cover : apiUrl + "/static/img/default_cover.jpg"),
+                            uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
                           }}
                         />
                         <Text
