@@ -10,7 +10,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import AndroidLarge3 from "../components/AndroidLarge3";
+import Menu from "../components/Menu";
 import Constants from "expo-constants";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -243,7 +243,7 @@ const ListBook = ({ route }) => {
         <Modal animationType="fade" transparent visible={phlistIconVisible}>
           <View style={styles.phlistIconOverlay}>
             <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
-            <AndroidLarge3 onClose={closePhlistIcon} />
+            <Menu onClose={closePhlistIcon} />
           </View>
         </Modal>
       </ScrollView>

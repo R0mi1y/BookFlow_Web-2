@@ -13,7 +13,7 @@ import {
   Button,
 } from "react-native";
 import Constants from 'expo-constants';
-import AndroidLarge3 from "../components/AndroidLarge3";
+import Menu from "../components/Menu";
 import MisFavoritosContainer from "../components/MisFavoritosContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -240,7 +240,7 @@ const HomeScreen = ({ route }) => {
               onChangeText={text => setSearchCamp(text)}
             />
             <Pressable onPress={search}>
-              <Image
+              <Image 
                 contentFit="cover"
                 source={require("../assets/epsearch.png")}
               />
@@ -564,7 +564,7 @@ const HomeScreen = ({ route }) => {
         <Modal animationType="fade" transparent visible={phlistIconVisible}>
           <View style={styles.phlistIconOverlay}>
             <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
-            <AndroidLarge3 onClose={closePhlistIcon} />
+            <Menu onClose={closePhlistIcon} />
           </View>
         </Modal>
       </ScrollView>
