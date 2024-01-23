@@ -5617,10 +5617,10 @@
     "compare-urls" "^2.0.0"
     "url" "^0.11.0"
 
-"expo@*", "expo@^49.0.7 || ^50.0.0-0", "expo@^50.0.0":
-  "integrity" "sha512-nHb/ACe+vVm8lKkKj3LIWgypQI9oGSe9aNSzeJhT3/sBW/KIrnaSMgjs0WujqEJ85xMiXt7EQlwIFIdtBW82jg=="
-  "resolved" "https://registry.npmjs.org/expo/-/expo-50.0.2.tgz"
-  "version" "50.0.2"
+expo@*, "expo@^49.0.7 || ^50.0.0-0", expo@^50.0.2:
+  version "50.0.2"
+  resolved "https://registry.npmjs.org/expo/-/expo-50.0.2.tgz"
+  integrity sha512-nHb/ACe+vVm8lKkKj3LIWgypQI9oGSe9aNSzeJhT3/sBW/KIrnaSMgjs0WujqEJ85xMiXt7EQlwIFIdtBW82jg==
   dependencies:
     "@babel/runtime" "^7.20.0"
     "@expo/cli" "0.17.1"
@@ -6031,15 +6031,15 @@
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
-"function-bind@^1.1.1", "function-bind@^1.1.2":
-  "integrity" "sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA=="
-  "resolved" "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz"
-  "version" "1.1.2"
+function-bind@^1.1.1, function-bind@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz"
+  integrity sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==
 
-"function.prototype.name@^1.1.5", "function.prototype.name@^1.1.6":
-  "integrity" "sha512-Z5kx79swU5P27WEayXM1tBi5Ze/lbIyiNgU3qyXUOf9b2rgXYyF9Dy9Cx+IQv/Lc8WCG6L82zwUPpSS9hGehIg=="
-  "resolved" "https://registry.npmjs.org/function.prototype.name/-/function.prototype.name-1.1.6.tgz"
-  "version" "1.1.6"
+function.prototype.name@^1.1.5, function.prototype.name@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.npmjs.org/function.prototype.name/-/function.prototype.name-1.1.6.tgz"
+  integrity sha512-Z5kx79swU5P27WEayXM1tBi5Ze/lbIyiNgU3qyXUOf9b2rgXYyF9Dy9Cx+IQv/Lc8WCG6L82zwUPpSS9hGehIg==
   dependencies:
     "call-bind" "^1.0.2"
     "define-properties" "^1.2.0"
@@ -7763,15 +7763,15 @@
     "debug" "^2.6.9"
     "marky" "^1.2.2"
 
-"lightningcss-win32-x64-msvc@1.19.0":
-  "integrity" "sha512-C+VuUTeSUOAaBZZOPT7Etn/agx/MatzJzGRkeV+zEABmPuntv1zihncsi+AyGmjkkzq3wVedEy7h0/4S84mUtg=="
-  "resolved" "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.19.0.tgz"
-  "version" "1.19.0"
+lightningcss-win32-x64-msvc@1.19.0:
+  version "1.19.0"
+  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.19.0.tgz"
+  integrity sha512-C+VuUTeSUOAaBZZOPT7Etn/agx/MatzJzGRkeV+zEABmPuntv1zihncsi+AyGmjkkzq3wVedEy7h0/4S84mUtg==
 
-"lightningcss@~1.19.0":
-  "integrity" "sha512-yV5UR7og+Og7lQC+70DA7a8ta1uiOPnWPJfxa0wnxylev5qfo4P+4iMpzWAdYWOca4jdNQZii+bDL/l+4hUXIA=="
-  "resolved" "https://registry.npmjs.org/lightningcss/-/lightningcss-1.19.0.tgz"
-  "version" "1.19.0"
+lightningcss@~1.19.0:
+  version "1.19.0"
+  resolved "https://registry.npmjs.org/lightningcss/-/lightningcss-1.19.0.tgz"
+  integrity sha512-yV5UR7og+Og7lQC+70DA7a8ta1uiOPnWPJfxa0wnxylev5qfo4P+4iMpzWAdYWOca4jdNQZii+bDL/l+4hUXIA==
   dependencies:
     "detect-libc" "^1.0.3"
   optionalDependencies:
@@ -9640,10 +9640,10 @@
     "color" "^3.1.2"
     "use-latest-callback" "^0.1.5"
 
-"react-native-reanimated@>= 1.0.0", "react-native-reanimated@~3.6.0":
-  "integrity" "sha512-F4vG9Yf9PKmE3GaWtVGUpzj3SM6YY2cx1yRHCwiMd1uY7W0gU017LfcVUorboJnj0y5QZqEriEK1Usq2Y8YZqg=="
-  "resolved" "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.6.1.tgz"
-  "version" "3.6.1"
+react-native-reanimated@~3.6.0:
+  version "3.6.1"
+  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.6.1.tgz"
+  integrity sha512-F4vG9Yf9PKmE3GaWtVGUpzj3SM6YY2cx1yRHCwiMd1uY7W0gU017LfcVUorboJnj0y5QZqEriEK1Usq2Y8YZqg==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"

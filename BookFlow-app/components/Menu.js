@@ -1,13 +1,13 @@
 import React, { memo } from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 
+
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+
 const Menu = memo(({ onClose }) => {
-
-  
   const navigation = useNavigation();
-
 
   return (
     <View style={styles.Menu}>
@@ -104,6 +104,10 @@ const styles = StyleSheet.create({
     top: 233,
   },
   Menu: {
+    position: 'absolute',
+    top:0,
+    left:0,
+
     backgroundColor: "#27181d",
     right:60,
     width: 300,

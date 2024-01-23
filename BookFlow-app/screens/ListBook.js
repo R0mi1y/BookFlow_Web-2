@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import * as SecureStore from 'expo-secure-store';
 import CustomPopup from '../components/CustomPopup';
+import TopComponent from '../components/topComponent';
 
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
@@ -51,7 +52,10 @@ const ListBook = ({ route }) => {
       
       if (!user) {
         console.error("Usuário não encontrado");
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
         return;
       }
 
@@ -59,7 +63,10 @@ const ListBook = ({ route }) => {
 
       if (!refreshToken) {
         console.error("Refresh token não encontrado");
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
         return;
       }
 
@@ -82,23 +89,34 @@ const ListBook = ({ route }) => {
 
       if (response.code === "token_not_valid") {
         console.error("Invalid token: " + response.statusText);
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
       }
 
       const data = await response.json();
 
       if (!("access" in data)) {
         console.error("Resposta não contém o token de acesso");
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
         return;
       }
 
       return data.access;
     } catch (error) {
       console.error("Erro ao obter o token de acesso", error);
-      navigation.navigate("LogInScreen");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "LogInScreen" }],
+      });
     }
   };
+
+
   const getBooks = () => {
     const fetchData = async () => {
       try {
@@ -134,6 +152,10 @@ const ListBook = ({ route }) => {
           setBooks(data);
           togglePopup();
         } else {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "LogInScreen" }],
+          });
           console.error("Falha ao obter AccessToken");
         }
       } catch (error) {
@@ -162,33 +184,13 @@ const ListBook = ({ route }) => {
         message={messagePopup}
       />
       <ScrollView>
-        <View style={[styles.listBook, styles.iconLayout, {height: (screenHeight * 0.3) + (books.length) * 132}]}>
+        <View style={[styles.listBook, styles.iconLayout, { height: ((screenHeight * 0.3) + (books.length) * 132) < screenHeight * 1.3 ? screenHeight : ((screenHeight * 0.3) + (books.length) * 132) }]}>
           {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
-          <Pressable
-            style={[styles.phlist, styles.phlistLayout]}
-            onPress={openPhlistIcon}
-          >
-            {/* ICON MENU */}
-            <Image
-              style={[styles.icon, styles.iconLayout]}
-              contentFit="cover"
-              source={require("../assets/phlist.png")}
-            />
-          </Pressable>
-
-          {/* ICON BUSCA */}
-          <Image
-            style={[styles.epsearchIcon, styles.phlistLayout]}
-            contentFit="cover"
-            source={require("../assets/epsearch.png")}
+          <TopComponent
+            middle={() => {
+              navigation.navigate("HomeScreen");
+            }}
           />
-
-          {/* TITULO DA HOME */}
-          <View style={styles.brandLogo}>
-            <Text style={[styles.l, styles.lTypo]}>Book</Text>
-            <Text style={styles.book}>Flow</Text>
-          </View>
-          {/*----------------*/}
 
           {/* NAV-BAR HOME */}
           <View style={styles.instanceParent}>
