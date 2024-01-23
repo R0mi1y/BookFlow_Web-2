@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import starOutlineImage from "../assets/solarstaroutline.png";
 import starFilledImage from "../assets/solarstarfilled.png";
+import * as SecureStore from 'expo-secure-store';
+
 
 const BookDetailScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -24,7 +25,7 @@ const BookDetailScreen = ({ route }) => {
 
   const getAccessToken = async () => {
     try {
-      const user = JSON.parse(await AsyncStorage.getItem("@user"));
+      const user = JSON.parse(await SecureStore.getItemAsync("user"));
 
       if (!user) {
         console.error("Couldn't find user");
@@ -109,7 +110,7 @@ const BookDetailScreen = ({ route }) => {
     fetchData();
   }, []);
 
-  const { bookId } = route.params || {};
+  const { bookId, owner, fromScreen } = route.params || {};
 
   const toggleShowFullSummary = () => {
     setShowFullSummary(!showFullSummary);
@@ -138,7 +139,9 @@ const BookDetailScreen = ({ route }) => {
         <Image
           style={styles.productImageIcon}
           contentFit="cover"
-          source={require("../assets/product-image.png")}
+          source={{
+            uri: ((books.find((book) => book.id === bookId)?.cover) ? books.find((book) => book.id === bookId)?.cover : apiUrl + "/static/img/default_cover.jpg"),
+          }}
         />
         <View style={styles.title}>
           <Text style={styles.pachinko}>
@@ -196,22 +199,22 @@ const BookDetailScreen = ({ route }) => {
             contentFit="cover"
             source={require("../assets/iconoirpageflip.png")}
           />
-          <View style={[styles.cta, styles.ctaLayout]} />
-          {/* <View style={[styles.cta1, styles.ctaLayout]}>
-            <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>
-              Contenido relacionado
-            </Text>
-          </View> */}
-          <View style={styles.irAlLibroParent}>
-            <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-              Emprestar Livro
-            </Text>
-            <Image
-              style={[styles.ionbookIcon, styles.lPosition]}
-              contentFit="cover"
-              source={require("../assets/ionbook.png")}
-            />
-          </View>
+          <Pressable
+            onPress={ owner ? () => navigation.navigate("RegisterBook", { book: books.find((book) => book.id === bookId) }) : () => {
+            }}
+          >
+            <View style={[styles.cta, styles.ctaLayout]}/>
+            <View style={styles.irAlLibroParent}>
+              <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+                {owner ? "Editar livro" : "Emprestar Livro"}
+              </Text>
+              <Image
+                style={[styles.ionbookIcon, styles.lPosition]}
+                contentFit="cover"
+                source={require("../assets/ionbook.png")}
+              />
+            </View>
+          </Pressable>
         </View>
       </View>
     </ScrollView>
@@ -365,6 +368,7 @@ const styles = StyleSheet.create({
     width: 302,
     left: 50,
     position: "absolute",
+    borderRadius: Border.br_mini,
   },
   pachinko: {
     top: 475,

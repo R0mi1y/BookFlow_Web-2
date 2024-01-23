@@ -12,9 +12,11 @@ import SplashScreen from "./screens/SplashScreen";
 import BookDetailScreen from "./screens/BookDetailScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import RegisterBook from "./screens/RegisterBook";
+import EditBook from "./screens/EditBook";
 import ListBook from "./screens/ListBook";
+import Profile from "./screens/Profile";
 import Frame from "./components/Frame";
-import AndroidLarge3 from "./components/AndroidLarge3";
+import Menu from "./components/Menu";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const App = () => {
@@ -67,6 +69,16 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="Profile"
+              component={Profile}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="EditBook"
+              component={EditBook}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="ListBook"
               component={ListBook}
               options={{ headerShown: false }}
@@ -87,8 +99,8 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="AndroidLarge3"
-              component={AndroidLarge3}
+              name="Menu"
+              component={Menu}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

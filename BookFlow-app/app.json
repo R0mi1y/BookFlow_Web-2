@@ -39,7 +39,10 @@
         "projectId": "1b18319f-92e7-4d30-927d-eb62eae6fee3"
       }
     },
-    "owner": "romily"
+    "owner": "romily",
+    "plugins": [
+      "expo-secure-store"
+    ]
   },
   "web": "expo start --web"
 }

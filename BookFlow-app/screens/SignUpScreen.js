@@ -1,24 +1,24 @@
-  import React, { useState, useCallback } from "react";
-  import {
-    StyleSheet,
-    View,
-    Text,
-    Pressable,
-    ImageBackground,
-    Image,
-    Modal,
-  } from "react-native";
-  import { useNavigation } from "@react-navigation/native";
-  import Frame from "../components/Frame";
-  import { FontFamily, Color, FontSize, Padding, Border } from "../GlobalStyles";
-  import { TextInput } from "react-native";
-  import Constants from 'expo-constants';
-  import * as WebBrowser from "expo-web-browser";
-  import * as Google from "expo-auth-session/providers/google"
-  import AsyncStorage from "@react-native-async-storage/async-storage";
-  import { TouchableOpacity } from 'react-native';
-  import { KeyboardAvoidingView, Platform } from 'react-native';
-  import CustomPopup from '../components/CustomPopup';
+import React, { useState, useCallback } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  ImageBackground,
+  Image,
+  Modal,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Frame from "../components/Frame";
+import { FontFamily, Color, FontSize, Padding, Border } from "../GlobalStyles";
+import { TextInput } from "react-native";
+import Constants from 'expo-constants';
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
+import CustomPopup from '../components/CustomPopup';
 
 
   const SignUpScreen = () => {
@@ -53,20 +53,20 @@
       handleSingInWithGoogle();
     }, [response]);
 
-    function handleSingInWithGoogle() {
-      const user = AsyncStorage.getItem("@user")
-        .then((user) => {
-          if (!user) {
-            if (!response) return;
-            if (response?.type == "success") {
-              getUserInfo(response.authentication.accessToken)
-            }
-          } else {
-            console.log(user);
-            send_user(user);
+  function handleSingInWithGoogle() {
+    const user = AsyncStorage.getItem("@user")
+      .then((user) => {
+        if (!user) {
+          if (!response) return;
+          if (response?.type == "success") {
+            getUserInfo(response.authentication.accessToken)
           }
-        });
-    }
+        } else {
+          console.log(user);
+          send_user(user);
+        }
+      });
+  }
 
     const send_user = async (user) => {
       try {
@@ -91,9 +91,9 @@
         if (data?.status === "success") {
           user = data.user;
 
-          AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
-          AsyncStorage.setItem("@user", JSON.stringify(user));
-          setUserInfo(user);
+        AsyncStorage.setItem("@refresh_token", JSON.stringify(user["refresh_token"]));
+        AsyncStorage.setItem("@user", JSON.stringify(user));
+        setUserInfo(user);
 
           navigation.navigate("HomeScreen");
           return user;
@@ -130,9 +130,49 @@
       };
     }
 
-    const getRefreshToken = () => {
+  const getRefreshToken = () => {
+    fetch(
+      `${apiUrl}/api/token/`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({password:pass, email:email, username:name}),
+      }
+    ).then((json) => json.json())
+    .then((data) => {
+      console.log(data);
+      if("refresh" in data){
+        AsyncStorage.setItem("@refresh_token", JSON.stringify(data["refresh"]));
+        navigation.navigate("HomeScreen");
+      } else {
+        console.log("Falha ao obter refresh token!");
+        console.log(JSON.stringify({password:pass, email:email, username:name}));
+        navigation.navigate("LogInScreen");
+        togglePopup("Falha ao obter refresh token!\nFaça login");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  }
+
+  const signUp = () => {
+    togglePopup("Loading");
+    if (pass == '' || email == '') {
+      togglePopup();
+      togglePopup("Todos os campos devem ser preenchidos!");
+      return;
+    } else if (pass !== confirmPass) {
+      togglePopup();
+      togglePopup("A senha e a confirmação precisam ser iguais!");
+      return;
+    }
+    console.error(`${apiUrl}/api/user/`);
+    try {
       fetch(
-        `${apiUrl}/api/token/`,
+        `${apiUrl}/api/user/`,
         {
           method: 'POST',
           headers: {
@@ -142,48 +182,8 @@
         }
       ).then((json) => json.json())
       .then((data) => {
-        console.log(data);
-        if("refresh" in data){
-          AsyncStorage.setItem("@refresh_token", JSON.stringify(data["refresh"]));
-          navigation.navigate("HomeScreen");
-        } else {
-          console.log("Falha ao obter refresh token!");
-          console.log(JSON.stringify({password:pass, email:email, username:name}));
-          navigation.navigate("LogInScreen");
-          togglePopup("Falha ao obter refresh token!\nFaça login");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    }
-
-    const signUp = () => {
-      togglePopup("Loading");
-      if (pass == '' || email == '') {
-        togglePopup();
-        togglePopup("Todos os campos devem ser preenchidos!");
-        return;
-      } else if (pass !== confirmPass) {
-        togglePopup();
-        togglePopup("A senha e a confirmação precisam ser iguais!");
-        return;
-      }
-      console.error(`${apiUrl}/api/user/`);
-      try {
-        fetch(
-          `${apiUrl}/api/user/`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({password:pass, email:email, username:name}),
-          }
-        ).then((json) => json.json())
-        .then((data) => {
-          if ("id" in data) {
-            AsyncStorage.setItem("@user", JSON.stringify(data));
+        if ("id" in data) {
+          AsyncStorage.setItem("@user", JSON.stringify(data));
 
             getRefreshToken();
           } else {
@@ -195,38 +195,37 @@
               message += element[1];
             });
 
-            togglePopup();
-            togglePopup(message);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-      } catch (err) {
+          togglePopup();
+          togglePopup(message);
+        }
+      })
+      .catch((err) => {
         console.error(err);
-        togglePopup();
-        togglePopup("Falha no servidor");
-      }
+      });
+    } catch (err) {
+      console.error(err);
+      togglePopup();
+      togglePopup("Falha no servidor");
     }
+  }
 
-    return (
-      
-      <>
-      <CustomPopup
-            visible={popupVisible}
-            onClose={togglePopup}
-            message={messagePopup}
-          />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
+  return (
+    <>
+    <CustomPopup
+          visible={popupVisible}
+          onClose={togglePopup}
+          message={messagePopup}
+        />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      <ImageBackground
+        style={styles.backgroundImage}
+        resizeMode="cover"
+        source={require("../assets/androidlarge5.png")}
       >
-        <ImageBackground
-          style={styles.backgroundImage}
-          resizeMode="cover"
-          source={require("../assets/androidlarge5.png")}
-        >
-          <View style={[styles.containerlements]}>
+        <View style={[styles.containerlements]}>
 
 
             <Text

@@ -3,14 +3,14 @@ import { View, StyleSheet, Text, Image } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 
-const AndroidLarge3 = memo(({ onClose }) => {
+const Menu = memo(({ onClose }) => {
 
   
   const navigation = useNavigation();
 
 
   return (
-    <View style={styles.androidLarge3}>
+    <View style={styles.Menu}>
       <Image
         style={[styles.octiconperson24, styles.octiconpersonLayout]}
         contentFit="cover"
@@ -31,10 +31,10 @@ const AndroidLarge3 = memo(({ onClose }) => {
      
 
       <Text style={[styles.configuracin, styles.contctanosTypo]}>
-        Configuración
+        Configurações
       </Text>
       <Text style={[styles.contctanos, styles.contctanosTypo]}>
-        Contáctanos
+        Contatos
       </Text>
       <View style={[styles.androidLarge3Child, styles.androidLayout]} />
       <View style={[styles.androidLarge3Item, styles.androidLayout]} />
@@ -62,11 +62,11 @@ const styles = StyleSheet.create({
   },
   androidLayout: {
     height: 1,
-    width: 289,
+    width: 250,
     borderTopWidth: 0.5,
     borderColor: Color.colorBlanchedalmond_200,
     borderStyle: "solid",
-    left: 0,
+    alignSelf:"center",
     position: "absolute",
   },
   octiconperson24: {
@@ -103,15 +103,16 @@ const styles = StyleSheet.create({
   androidLarge3Inner: {
     top: 233,
   },
-  androidLarge3: {
+  Menu: {
     backgroundColor: "#27181d",
-    right:50,
+    right:60,
     width: 300,
     height: "100%",
     maxWidth: "100%",
     maxHeight: "100%",
     overflow: "hidden",
+    
   },
 });
 
-export default AndroidLarge3;
+export default Menu;

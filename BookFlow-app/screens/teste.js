@@ -3,8 +3,8 @@ import { View, Button, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import Constants from 'expo-constants';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import * as SecureStore from 'expo-secure-store';
 
 
 export default function FilePickerComponent() {
@@ -40,7 +40,7 @@ export default function FilePickerComponent() {
 
     async function getAccessToken() {
         try {
-            const user = JSON.parse(await AsyncStorage.getItem("@user"));
+            const user = JSON.parse(await await SecureStore.getItemAsync("user"));
             
             if (!user) {
                 console.error("Couldn't find user");
