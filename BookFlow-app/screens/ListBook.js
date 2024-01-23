@@ -25,6 +25,7 @@ const ListBook = ({ route }) => {
 
   const [popupVisible, setPopupVisible] = React.useState(true);
   const [messagePopup, setPopupTexto] = React.useState("Loading");
+  const [user, setUser] = React.useState(null);
 
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
@@ -46,7 +47,8 @@ const ListBook = ({ route }) => {
   const getAccessToken = async () => {
     try {
       const user = JSON.parse(await SecureStore.getItemAsync("user"));
-
+      setUser(user);
+      
       if (!user) {
         console.error("Usuário não encontrado");
         navigation.navigate("LogInScreen");
@@ -131,7 +133,6 @@ const ListBook = ({ route }) => {
           const data = await response.json();
           setBooks(data);
           togglePopup();
-          console.log(data);
         } else {
           console.error("Falha ao obter AccessToken");
         }
@@ -161,7 +162,7 @@ const ListBook = ({ route }) => {
         message={messagePopup}
       />
       <ScrollView>
-        <View style={[styles.listBook, styles.iconLayout]}>
+        <View style={[styles.listBook, styles.iconLayout, {height: (screenHeight * 0.3) + (books.length) * 132}]}>
           {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
           <Pressable
             style={[styles.phlist, styles.phlistLayout]}
@@ -212,7 +213,7 @@ const ListBook = ({ route }) => {
               <Pressable
                 key={book.id}
                 style={styles.groupLayout}
-                onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData })}
+                onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData, owner: book.owner == user.id })}
               >
                 {/* LIVROS */}
                 <View style={[styles.groupChild3, styles.groupLayout]}>
@@ -447,7 +448,6 @@ const styles = StyleSheet.create({
   },
   listBook: {
     flex: 1,
-    height: 1410,
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
   },

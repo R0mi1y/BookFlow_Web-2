@@ -17,7 +17,9 @@ import CustomPopup from '../components/CustomPopup';
 import axios from 'axios';
 
 
-const RegisterBook = () => {
+const RegisterBook = ({ route }) => {
+  const book = route.params?.book || null;
+  
   const navigation = useNavigation();
   const apiUrl = Constants.expoConfig.extra.apiUrl;
 
@@ -32,18 +34,30 @@ const RegisterBook = () => {
     else setPopupVisible(false);
   };
 
-  const [selectedImage, setSelectedImage] = useState(null);
+  var user = null;
+
+  const [selectedImage, setSelectedImage] = useState(`${apiUrl}/static/img/default_cover.jpg`);
 
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
   const [genero, setGenero] = useState("");
   const [resumo, setResumo] = useState("");
-  const [imagem, setImagem] = useState("");
+  const [hasImagem, setHasImagem] = useState(false);
   const [registering, setRegistering] = useState(false);
+
+  useEffect(() => {
+    if (book) {
+      setTitulo(book.title);
+      setAutor(book.author);
+      setGenero(book.genre);
+      setResumo(book.summary);
+      setSelectedImage(book.cover ?? apiUrl + "/static/img/default_cover.jpg");
+    }
+  }, []);
 
   const getAccessToken = async () => {
     try {
-      const user = JSON.parse(await await SecureStore.getItemAsync("user"));
+      user = JSON.parse(await SecureStore.getItemAsync("user"));
 
       if (!user) {
         throw new Error("Couldn't find user");
@@ -84,21 +98,21 @@ const RegisterBook = () => {
   };
 
   const send_book = async () => {
-    togglePopup("Loading");
-    if (registering) return;
-    setRegistering(true);
-
     if (titulo == '' || resumo == '' || autor == '' || genero == '') {
       togglePopup("Preencha todos os campos!");
       return;
     }
+
+    togglePopup("Loading");
+    if (registering) return;
+    setRegistering(true);
     
     const accessToken = await getAccessToken();
 
     try {
       const formData = new FormData();
-      if (selectedImage != null) {
-        formData.append('file', {
+      if (hasImagem) {
+        formData.append('cover', {
           uri: selectedImage,
           type: 'image/jpeg', // Ajuste conforme o tipo de arquivo
           name: 'cover.jpg',
@@ -109,59 +123,51 @@ const RegisterBook = () => {
       formData.append('author', autor);
       formData.append('summary', resumo);
       formData.append('genre', genero);
+      formData.append('owner', user.id);
+      formData.append('cover', "");
 
-      const response = await axios.post(`${apiUrl}/api/book/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: "Bearer " + accessToken,
-        },
-      });
+      var response;
 
-      togglePopup();
-
-      console.log(await response.text());
-
-      if (!response.ok) {
-        // Tentar analisar o corpo da resposta como JSON para obter detalhes específicos do erro
-        let errorMessage = "Erro na requisição";
-        try {
-          const errorData = await response.json();
-          if (errorData && errorData.error) {
-            errorMessage = errorData.error;
-          }
-        } catch (jsonError) {
-          // Imprimir a resposta completa em caso de erro de análise JSON
-          console.error(
-            "Resposta completa do servidor:",
-            await response.text()
-          );
-          console.error(
-            "Erro ao analisar o corpo JSON da resposta de erro",
-            jsonError
-          );
-        }
-
-        throw new Error(errorMessage);
+      if (book) {
+        response = await axios.put(`${apiUrl}/api/book/${book.id}/`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: "Bearer " + accessToken,
+          },
+        });
+      } else {
+        response = await axios.post(`${apiUrl}/api/book/`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: "Bearer " + accessToken,
+          },
+        });
       }
 
-      const responseData = await response.json();
-      console.log(responseData);
+      console.log(response.data);
+      togglePopup();
 
-      if (responseData?.id != null) {
+      if (response.data?.id != null) {
+        console.log("Livro cadastrado com sucesso: ", response.data);
         togglePopup("Livro cadastrado com sucesso!");
-        console.log("Livro cadastrado com sucesso:", responseData);
-        navigation.navigate("HomeScreen");
+
+        if (book) {
+          navigation.goBack();
+        } else {
+          navigation.navigate("HomeScreen", { message: ["Livro cadastrado com sucesso!"] });
+        }
+
       } else {
-        if (responseData?.message) {
-          console.error("Erro no cadastro:", responseData.message);
+        if (response.data?.message) {
+          console.error("Erro no cadastro:", response.data.message);
         }
       }
     } catch (error) {
-      console.error(error.message);
       console.error(error.response);
       console.error(error);
-      setRegistering(false);
       togglePopup("Erro, tente novamente mais tarde!");
+    } finally {
+      setRegistering(false);
     }
   };
 
@@ -182,7 +188,10 @@ const RegisterBook = () => {
       });
 
       if (!result.cancelled) {
-          setSelectedImage(result.uri);
+        setSelectedImage(result.assets[0].uri);
+        console.log(result.assets[0].uri);
+        console.log(selectedImage);
+        setHasImagem(true);
       }
     } catch (err) {
     console.error('Erro ao selecionar o documento:', err);
@@ -256,17 +265,21 @@ const RegisterBook = () => {
           />
         </View>
 
-        <Pressable
-          onPress={pickDocument}
-          style={[styles.cta5, styles.ctaLayout]}
-        >
-          <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
-        </Pressable>
+        <View style={[styles.cta5, styles.ctaLayout]}>
+          <Pressable
+          onPress={pickDocument}>
+            <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
+          </Pressable>
+        </View>
 
-        <Image source={{ uri: selectedImage ? selectedImage : `${apiUrl}/static/img/default_cover.jpg` }} style={{ width: 200, height: 200 }} />
+        <View style={[styles.android1, styles.androidLayout]} />
 
-        <Pressable style={[styles.ctaLayout, styles.irAlLibroParent]} onPress={send_book}>
-          <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Cadastrar</Text>
+        <Image source={{ uri: selectedImage }} style={styles.imgBook} />
+        
+        <View style={[styles.android2, styles.androidLayout]} />
+
+        <Pressable style={styles.irAlLibroParent} onPress={send_book}>
+          <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>{ book ? "Editar" :  "Cadastrar" }</Text>
           <Image
             style={[styles.ionbookIcon, styles.lPosition]}
             contentFit="cover"
@@ -274,21 +287,6 @@ const RegisterBook = () => {
           />
         </Pressable>
       </View>
-
-      <View style={[styles.android1, styles.androidLayout]} />
-
-      <Image source={{ uri: selectedImage ? selectedImage : `${apiUrl}/static/img/default_cover.jpg` }} style={styles.imgBook} />
-      
-      <View style={[styles.android2, styles.androidLayout]} />
-
-      <Pressable style={styles.irAlLibroParent} onPress={send_book}>
-        <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Cadastrar</Text>
-        <Image
-          style={[styles.ionbookIcon, styles.lPosition]}
-          contentFit="cover"
-          source={require("../assets/ionbook.png")}
-        />
-      </Pressable>
     </>
   );
 };
