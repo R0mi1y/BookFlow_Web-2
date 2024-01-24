@@ -23,6 +23,8 @@ const BookDetailScreen = ({ route }) => {
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
   const [showFullSummary, setShowFullSummary] = useState(false); 
+  const [isFavorited, setIsFavorited] = useState(books.find((book) => book.id === bookId)?.is_in_wishlist
+  );
 
   const getAccessToken = async () => {
     try {
@@ -140,6 +142,37 @@ const BookDetailScreen = ({ route }) => {
     // Limite o texto a 300 caracteres
     return summary.length > 90 ? summary.slice(0, 90) + "...    " : summary;
   };
+
+  const toggleFavorite = async (bookId) => {
+  const url = `${apiUrl}/api/book/${bookId}/wishlist/`;
+  console.log(url);
+  try {
+    const accessToken = await getAccessToken();
+
+    if (accessToken) {
+      const response = await fetch(url,  {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + accessToken,
+        },
+      });
+      if (!response.ok) {
+        
+        throw new Error(await response.text());
+      }
+
+      setIsFavorited((prevIsFavorited) => !prevIsFavorited);
+      
+    } else {
+      console.error("Falha ao obter AccessToken");
+    }
+
+  } catch (error) {
+    console.error("Erro ao favoritar livro:", error.message);
+  }
+  };
+
   
   return (
     <ScrollView>
@@ -196,18 +229,13 @@ const BookDetailScreen = ({ route }) => {
             contentFit="cover"
             source={require("../assets/biupload.png")}
           />
-          <Image
-            style={[
-              styles.solarstarOutlineIcon,
-              styles.iconoirpageFlipPosition,
-            ]}
-            contentFit="cover"
-            source={
-              books.find((book) => book.id === bookId)?.is_in_wishlist
-                ? starFilledImage
-                : starOutlineImage
-            }
-          />
+          <Pressable onPress={() => toggleFavorite(bookId)}>
+            <Image
+              style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
+              contentFit="cover"
+              source={isFavorited ? starFilledImage : starOutlineImage}
+            />
+          </Pressable>
           <Image
             style={[styles.iconoirpageFlip, styles.iconoirpageFlipPosition]}
             contentFit="cover"
