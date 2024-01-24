@@ -1,14 +1,21 @@
 import * as React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 
 const Profile = () => {
+  const navigation = useNavigation();
+
 	return (
 		<View style={styles.telaUser}>
-			<Image
-				style={styles.materialSymbolsarrowBackIoIcon}
-				resizeMode="cover"
-				source={require("../assets/material-symbols_arrow-back-ios.png")}
-			/>
+      <Pressable
+      onPress={() => navigation.goBack()}>
+        <Image
+          style={styles.materialSymbolsarrowBackIoIcon}
+          resizeMode="cover"
+          source={require("../assets/material-symbols_arrow-back-ios.png")}
+        />
+      </Pressable>
 			<Text style={[styles.profile, styles.profileTypo]}>Profile</Text>
 
 			<View style={styles.containerImagem}>
