@@ -14,6 +14,7 @@ import Constants from "expo-constants";
 import starOutlineImage from "../assets/solarstaroutline.png";
 import starFilledImage from "../assets/solarstarfilled.png";
 import * as SecureStore from 'expo-secure-store';
+import TopComponent from '../components/topComponent';
 
 
 const BookDetailScreen = ({ route }) => {
@@ -29,7 +30,10 @@ const BookDetailScreen = ({ route }) => {
 
       if (!user) {
         console.error("Couldn't find user");
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
         return;
       }
 
@@ -37,7 +41,10 @@ const BookDetailScreen = ({ route }) => {
 
       if (!refreshToken) {
         console.error("Refresh token não encontrado");
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
         return;
       }
 
@@ -60,21 +67,30 @@ const BookDetailScreen = ({ route }) => {
 
       if (response.code === "token_not_valid") {
         console.error("Invalid token: " + response.statusText);
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
       }
 
       const data = await response.json();
 
       if (!("access" in data)) {
         console.error("Resposta não contém o token de acesso");
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
         return;
       }
 
       return data.access;
     } catch (error) {
       console.error("Erro ao obter o token de acesso", error);
-      navigation.navigate("LogInScreen");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "LogInScreen" }],
+      });
     }
   };
 
@@ -100,6 +116,10 @@ const BookDetailScreen = ({ route }) => {
           setBooks(data);
           console.log(data);
         } else {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "LogInScreen" }],
+          });
           console.error("Falha ao obter AccessToken");
         }
       } catch (error) {
@@ -120,22 +140,16 @@ const BookDetailScreen = ({ route }) => {
     // Limite o texto a 300 caracteres
     return summary.length > 90 ? summary.slice(0, 90) + "...    " : summary;
   };
-
+  
   return (
     <ScrollView>
       <View style={styles.BookDetailScreen}>
-        <Image
-          style={[styles.phlistIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/phlist.png")}
+        <TopComponent
+          middle={() => {
+            navigation.navigate("HomeScreen");
+          }}
         />
-        <Pressable
-          style={styles.brandLogo}
-          onPress={() => navigation.navigate("HomeScreen")}
-        >
-          <Text style={[styles.l, styles.lTypo]}>Book</Text>
-          <Text style={[styles.libro, styles.libroPosition]}>Flow</Text>
-        </Pressable>
+
         <Image
           style={styles.productImageIcon}
           contentFit="cover"

@@ -23,6 +23,8 @@ const SplashScreen = ({ navigation }) => {
           });
 
         } catch (error) {
+          console.log("Erro");
+
           console.log("Erro lendo o SecureStore: " + error);
           navigation.navigate("LogInScreen");
         }
