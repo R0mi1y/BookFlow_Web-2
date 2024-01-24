@@ -7,16 +7,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import LogInScreen from "./screens/LogInScreen";
 import HomeScreen from "./screens/HomeScreen";
-import pickDocument from "./screens/teste";
 import SplashScreen from "./screens/SplashScreen";
 import BookDetailScreen from "./screens/BookDetailScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import RegisterBook from "./screens/RegisterBook";
-import EditBook from "./screens/EditBook";
 import ListBook from "./screens/ListBook";
 import Profile from "./screens/Profile";
 import Frame from "./components/Frame";
-import Menu from "./components/Menu";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const App = () => {
@@ -43,11 +40,6 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            {/* <Stack.Screen
-              name="pickDocument"
-              component={pickDocument}
-              options={{ headerShown: false }}
-            /> */}
             <Stack.Screen
               name="SplashScreen"
               component={SplashScreen}
@@ -74,11 +66,6 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="EditBook"
-              component={EditBook}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
               name="ListBook"
               component={ListBook}
               options={{ headerShown: false }}
@@ -96,11 +83,6 @@ const App = () => {
             <Stack.Screen
               name="Frame"
               component={Frame}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Menu"
-              component={Menu}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

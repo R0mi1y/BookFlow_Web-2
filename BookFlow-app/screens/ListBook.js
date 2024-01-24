@@ -10,7 +10,6 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import Menu from "../components/Menu";
 import Constants from "expo-constants";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -242,12 +241,6 @@ const ListBook = ({ route }) => {
             ))}
           </View>
         </View>
-        <Modal animationType="fade" transparent visible={phlistIconVisible}>
-          <View style={styles.phlistIconOverlay}>
-            <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
-            <Menu onClose={closePhlistIcon} />
-          </View>
-        </Modal>
       </ScrollView>
     </>
   );
