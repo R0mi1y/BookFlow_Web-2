@@ -115,6 +115,7 @@ class BookView(viewsets.ModelViewSet):
             book.save()
             return Response({'status': 'Adicionado à lista de desejos'})
     
+    
     @action(detail=False, methods=['get'], url_path=r'user/(?P<id>\d+)')
     def get_by_user(self, request, id):
         filter_name = request.GET.get('filter')
