@@ -1,4 +1,4 @@
-from .models import User, BookUser
+from .models import User
 from rest_framework import serializers
 from django.db import IntegrityError
 from django.utils.translation import gettext_lazy as _
@@ -20,12 +20,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class BookUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = BookUser
-        fields = '__all__'
-        
         
 class GoogleAccountSerializer(serializers.ModelSerializer):
     google_id = serializers.CharField(source='id', max_length=255)
@@ -57,7 +51,6 @@ class GoogleAccountSerializer(serializers.ModelSerializer):
             if user:
                 return user
             else:
-                    
                 user = User.objects.create_user(
                     username=validated_data.get('google_id'),
                     email=validated_data.get('email'),

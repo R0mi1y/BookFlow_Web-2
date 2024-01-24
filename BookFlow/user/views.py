@@ -54,10 +54,10 @@ class UserView(ModelViewSet):
         
         user_json = UserSerializer(user).data
         refresh_token = str(RefreshToken.for_user(user))
+        user_json['refresh_token'] = refresh_token
         data = {
             "status": "success", 
             "user": user_json, 
-            "refresh_token": refresh_token
         }
         print(data)
         return Response(data)
@@ -80,7 +80,8 @@ class UserView(ModelViewSet):
             if check_password(password=data["password"], encoded=user.password):
                 user_json = UserSerializer(user).data
                 refresh_token = str(RefreshToken.for_user(user))
-                return Response({"status": "success", "user": user_json, "refresh_token": refresh_token})
+                user_json['refresh_token'] = refresh_token
+                return Response({"status": "success", "user": user_json})
             else:
                 return JsonResponse({"status": "error", "message": "Senha incorreta!"})
         else:
