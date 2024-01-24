@@ -4,11 +4,12 @@ from django.core.validators import MaxValueValidator
 
 
 class Book(models.Model):
-    cover = models.ImageField(upload_to='book_cover/', null=True, blank=True, default=None)
+    cover = models.ImageField(upload_to='book_cover/', null=True, default=None)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     genre = models.CharField(max_length=255)  # Usando CharField para armazenar gênero como uma string
     summary = models.TextField()
+    requirements_loan = models.TextField(null=True, default=None)
     is_in_wishlist = models.BooleanField(default=False) #talvez remover dps
     rating = models.DecimalField(max_digits=4, decimal_places=2, default=0, null=True, validators=[
         MaxValueValidator(10, message="Certifique-se de que a nota seja de no máximo 10")

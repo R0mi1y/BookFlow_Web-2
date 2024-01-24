@@ -40,7 +40,7 @@ class User(AbstractUser):
     
 
 # class Loan():
-#     status
-#     book
-#     user
+#     status = models.CharField(null=True, blank=True, max_length=25)
+#     book = models.ForeignKey(Book, null=True, blank=True, on_delete=models.CASCADE)
+#     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     
