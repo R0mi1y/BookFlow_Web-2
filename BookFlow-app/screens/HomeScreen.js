@@ -23,8 +23,8 @@ const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const HomeScreen = ({ route }) => {
   const navigation = useNavigation();
-  const [messagePopup, setPopupTexto] = useState('');
-  const [popupVisible, setPopupVisible] = useState(false);
+  const [messagePopup, setPopupTexto] = useState('Loading');
+  const [popupVisible, setPopupVisible] = useState(true);
 
   const messageComing = route.params?.message[0] || '';
 
@@ -152,7 +152,6 @@ const HomeScreen = ({ route }) => {
 
 
   useEffect(() => {
-    
     const fetchData = async (section, i) => {
       const user = JSON.parse(await SecureStore.getItemAsync("user"));
       try {
@@ -184,6 +183,8 @@ const HomeScreen = ({ route }) => {
           setSections(s);
           
           console.log(s[i].books);
+
+          if (sections.length -1 == i) togglePopup();
         } else {
           navigation.reset({
             index: 0,
@@ -192,7 +193,7 @@ const HomeScreen = ({ route }) => {
           console.error("Falha ao obter AccessToken");
         }
       } catch (error) {
-        console.error('Erro ooooooooooooooooooooooooooooooooo orrE');
+        fetchData(section, i);
         console.error(error.message);
         console.error('Erro ao buscar livros:', error.message);
       }
@@ -202,6 +203,7 @@ const HomeScreen = ({ route }) => {
       fetchData(section.filter, i);
       console.log(i);
     });
+
   }, []);
 
   return (

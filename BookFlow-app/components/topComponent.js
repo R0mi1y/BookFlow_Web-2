@@ -6,7 +6,7 @@ import React, { memo, useState, useCallback } from "react";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
-const TopComponent = memo(({ middle }) => {
+const TopComponent = memo(({ middle, text1="Book", text2="Flow", searchBtn=true }) => {
 
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
@@ -50,6 +50,7 @@ const TopComponent = memo(({ middle }) => {
               value={searchCamp}
               onChangeText={text => setSearchCamp(text)}
             />
+            
             <Pressable onPress={search}>
               <Image
                 contentFit="cover"
@@ -80,18 +81,18 @@ const TopComponent = memo(({ middle }) => {
           onPress={middle}
         >
           <View style={styles.brandLogo}>
-            <Text style={[styles.l]}>Book</Text>
-            <Text style={styles.libro}>Flow</Text>
+            <Text style={[styles.l]}>{text1}</Text>
+            <Text style={styles.libro}>{text2}</Text>
           </View>
         </Pressable>
-
+        {!searchBtn ? (<View style={[styles.phlistLayout]}></View>) : (
         <Pressable onPress={handleSearchPress}>
           <Image
             style={[styles.phlistLayout]}
             contentFit="cover"
             source={require("../assets/epsearch.png")}
           />
-        </Pressable>
+        </Pressable>)}
       </View>
       <Modal animationType="fade" transparent visible={phlistIconVisible}>
         <View style={styles.phlistIconOverlay}>
@@ -265,7 +266,8 @@ const styles = StyleSheet.create({
     marginRight: screenWidth * 0.05,
     width: screenWidth * 0.9,
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    // backgroundColor:"blue",
   },
   iconLayout: {
     width: "100%",
@@ -292,7 +294,9 @@ const styles = StyleSheet.create({
   },
   brandLogo: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    width: screenWidth * 0.5,
+    justifyContent: 'center',
   },
   text: {
     top: 190,

@@ -15,6 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
 import CustomPopup from '../components/CustomPopup';
 import axios from 'axios';
+import TopComponent from '../components/topComponent';
 
 
 const RegisterBook = ({ route }) => {
@@ -206,23 +207,14 @@ const RegisterBook = ({ route }) => {
         message={messagePopup}
       />
       <View style={styles.RegisterBook}>
-        <Image
-          style={[styles.phlistIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/phlist.png")}
+        <TopComponent
+          middle={() => {
+            navigation.navigate("HomeScreen");
+          }}
+          searchBtn={false}
+          text1="Cadastro"
+          text2="Livro"
         />
-        {/* <Image
-          style={[styles.epsearchIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/epsearch.png")}
-        /> */}
-        <Pressable
-          style={styles.brandLogo}
-          onPress={() => navigation.navigate("HomeScreen")}
-        >
-          <Text style={[styles.libro, styles.libroPosition]}>Cadastre seu </Text>
-          <Text style={[styles.l, styles.lTypo]}>Livro</Text>
-        </Pressable>
 
         <View style={[styles.cta, styles.ctaLayout]} />
         <View style={[styles.cta1, styles.ctaLayout]}>
@@ -311,7 +303,7 @@ const styles = StyleSheet.create({
     width: 111,
     height: 111,
     borderRadius: Border.br_mini,
-    top:190,
+    top:130,
     alignSelf:"center",
   },
   iconLayout: {

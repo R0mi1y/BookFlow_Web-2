@@ -30,7 +30,8 @@ const CustomPopup = ({ visible, onClose, message }) => {
         onRequestClose={onClose}
       >
         <View style={popup_styles.centeredView}>
-          <Animated.Image source={require('../assets/loading.png')} style={[popup_styles.square, { transform: [{ rotate }] }]} />
+          {/* <Animated.Image source={require('../assets/loading.png')} style={[popup_styles.square, { transform: [{ rotate }] }]} /> */}
+          <Animated.View style={[popup_styles.square, { transform: [{ rotate }] }]} />
         </View>
       </Modal>
     );
@@ -61,8 +62,11 @@ const CustomPopup = ({ visible, onClose, message }) => {
       alignItems: 'center',
     },
     square: {
-      width: 200,
-      height: 200,
+      width: 100,
+      height: 100,
+      backgroundColor: 'white', // Cor de fundo do quadrado
+      borderWidth: 1,
+      borderColor: 'black', // Cor da borda do quadrado (opcional)
     },
     centeredView: {
       flex: 1,
