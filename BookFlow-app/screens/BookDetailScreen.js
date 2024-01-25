@@ -23,8 +23,7 @@ const BookDetailScreen = ({ route }) => {
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
   const [showFullSummary, setShowFullSummary] = useState(false); 
-  const [isFavorited, setIsFavorited] = useState(books.find((book) => book.id === bookId)?.is_in_wishlist
-  );
+  const [showFullRequirementsLoan, setShowFullRequirementsLoan] = useState(false); 
 
   const getAccessToken = async () => {
     try {
@@ -96,6 +95,10 @@ const BookDetailScreen = ({ route }) => {
     }
   };
 
+  function requestBook(bookId) {
+
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -136,6 +139,9 @@ const BookDetailScreen = ({ route }) => {
 
   const toggleShowFullSummary = () => {
     setShowFullSummary(!showFullSummary);
+  };
+  const toggleShowFullRequirementsLoan = () => {
+    setShowFullRequirementsLoan(!showFullRequirementsLoan);
   };
 
   const getLimitedSummary = (summary) => {
@@ -200,7 +206,7 @@ const BookDetailScreen = ({ route }) => {
             {books.find((book) => book.id === bookId)?.author}
           </Text>
 
-          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, , showFullSummary && { textAlign: 'justify' }]}>
+          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullSummary && { textAlign: 'justify' }]}>
             {/* Descrição do Livro */}
 
             {books
@@ -215,6 +221,26 @@ const BookDetailScreen = ({ route }) => {
               <Text style={[styles.readMore1]}>{showFullSummary ? "Leia Menos" : "Leia Mais"}</Text>
             </Pressable>
           )}
+          </Text>
+
+          <View style={{height:20}}></View>
+
+          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullRequirementsLoan && { textAlign: 'justify' }]}>
+            {books
+            .filter((book) => book.id === bookId)
+            .map((book) => (
+              <Text key={book.id} style={styles.aSingleEspresso}>
+                {showFullRequirementsLoan ? book.requirements_loan : getLimitedSummary(book.requirements_loan)}
+              </Text>
+            ))}
+          {books.find((book) => book && book.id === bookId && book.requirements_loan)?.requirements_loan.length > 90 && (
+            <Pressable onPress={toggleShowFullRequirementsLoan}>
+              <Text style={[styles.readMore1]}>
+                {showFullRequirementsLoan ? "Leia Menos" : "Leia Mais"}
+              </Text>
+            </Pressable>
+          )}
+
           </Text>
 
           <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
@@ -245,6 +271,7 @@ const BookDetailScreen = ({ route }) => {
           </View>
           <Pressable
             onPress={ owner ? () => navigation.navigate("RegisterBook", { book: books.find((book) => book.id === bookId) }) : () => {
+              requestBook(bookId);
             }}
           >
             <View style={[styles.cta, styles.ctaLayout]}/>

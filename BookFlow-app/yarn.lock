@@ -31,6 +31,13 @@
     "@nicolo-ribaudo/chokidar-2" "2.1.8-no-fsevents.3"
     chokidar "^3.4.0"
 
+"@babel/code-frame@7.10.4", "@babel/code-frame@~7.10.4":
+  version "7.10.4"
+  resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.10.4.tgz"
+  integrity sha512-vG6SvB6oYEhvgisZNFRmRCUkLz11c7rp+tbNTynGqc6mS1d5ATd/sGyV6W0KZZnXRKMTzZDRgQT3Ou9jhpAfUg==
+  dependencies:
+    "@babel/highlight" "^7.10.4"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.22.13", "@babel/code-frame@^7.23.5":
   version "7.23.5"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.23.5.tgz"
@@ -38,20 +45,6 @@
   dependencies:
     "@babel/highlight" "^7.23.4"
     chalk "^2.4.2"
-
-"@babel/code-frame@~7.10.4":
-  version "7.10.4"
-  resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.10.4.tgz"
-  integrity sha512-vG6SvB6oYEhvgisZNFRmRCUkLz11c7rp+tbNTynGqc6mS1d5ATd/sGyV6W0KZZnXRKMTzZDRgQT3Ou9jhpAfUg==
-  dependencies:
-    "@babel/highlight" "^7.10.4"
-
-"@babel/code-frame@7.10.4":
-  version "7.10.4"
-  resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.10.4.tgz"
-  integrity sha512-vG6SvB6oYEhvgisZNFRmRCUkLz11c7rp+tbNTynGqc6mS1d5ATd/sGyV6W0KZZnXRKMTzZDRgQT3Ou9jhpAfUg==
-  dependencies:
-    "@babel/highlight" "^7.10.4"
 
 "@babel/compat-data@^7.20.5", "@babel/compat-data@^7.22.6", "@babel/compat-data@^7.23.3", "@babel/compat-data@^7.23.5":
   version "7.23.5"
@@ -1313,7 +1306,7 @@
     "@expo/osascript" "^2.0.31"
     "@expo/package-manager" "^1.1.1"
     "@expo/plist" "^0.1.0"
-    "@expo/prebuild-config" "6.7.3"
+    "@expo/prebuild-config" "6.7.4"
     "@expo/rudder-sdk-node" "1.1.1"
     "@expo/spawn-async" "1.5.0"
     "@expo/xcpretty" "^4.3.0"
@@ -1353,6 +1346,7 @@
     npm-package-arg "^7.0.0"
     open "^8.3.0"
     ora "3.4.0"
+    picomatch "^3.0.1"
     pretty-bytes "5.6.0"
     progress "2.0.3"
     prompts "^2.3.2"
@@ -1365,6 +1359,7 @@
     semver "^7.5.3"
     send "^0.18.0"
     slugify "^1.3.4"
+    source-map-support "~0.5.21"
     structured-headers "^0.4.1"
     tar "^6.0.5"
     temp-dir "^2.0.0"
@@ -1383,7 +1378,7 @@
     node-forge "^1.2.1"
     nullthrows "^1.1.1"
 
-"@expo/config-plugins@~7.8.0", "@expo/config-plugins@~7.8.2", "@expo/config-plugins@7.8.4":
+"@expo/config-plugins@7.8.4", "@expo/config-plugins@~7.8.0", "@expo/config-plugins@~7.8.2":
   version "7.8.4"
   resolved "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-7.8.4.tgz"
   integrity sha512-hv03HYxb/5kX8Gxv/BTI8TLc9L06WzqAfHRRXdbar4zkLcP2oTzvsLEF4/L/TIpD3rsnYa0KU42d0gWRxzPCJg==
@@ -1411,7 +1406,7 @@
   resolved "https://registry.npmjs.org/@expo/config-types/-/config-types-50.0.0.tgz"
   integrity sha512-0kkhIwXRT6EdFDwn+zTg9R2MZIAEYGn1MVkyRohAd+C9cXOb5RA8WLQi7vuxKF9m1SMtNAUrf0pO+ENK0+/KSw==
 
-"@expo/config@~8.5.0", "@expo/config@8.5.4":
+"@expo/config@8.5.4", "@expo/config@~8.5.0":
   version "8.5.4"
   resolved "https://registry.npmjs.org/@expo/config/-/config-8.5.4.tgz"
   integrity sha512-ggOLJPHGzJSJHVBC1LzwXwR6qUn8Mw7hkc5zEKRIdhFRuIQ6s2FE4eOvP87LrNfDF7eZGa6tJQYsiHSmZKG+8Q==
@@ -1504,6 +1499,22 @@
     semver "7.3.2"
     tempy "0.3.0"
 
+"@expo/image-utils@^0.4.0":
+  version "0.4.1"
+  resolved "https://registry.npmjs.org/@expo/image-utils/-/image-utils-0.4.1.tgz"
+  integrity sha512-EZb+VHSmw+a5s2hS9qksTcWylY0FDaIAVufcxoaRS9tHIXLjW5zcKW7Rhj9dSEbZbRVy9yXXdHKa3GQdUQIOFw==
+  dependencies:
+    "@expo/spawn-async" "1.5.0"
+    chalk "^4.0.0"
+    fs-extra "9.0.0"
+    getenv "^1.0.0"
+    jimp-compact "0.16.1"
+    node-fetch "^2.6.0"
+    parse-png "^2.1.0"
+    resolve-from "^5.0.0"
+    semver "7.3.2"
+    tempy "0.3.0"
+
 "@expo/json-file@^8.2.37", "@expo/json-file@~8.3.0":
   version "8.3.0"
   resolved "https://registry.npmjs.org/@expo/json-file/-/json-file-8.3.0.tgz"
@@ -1581,10 +1592,10 @@
     base64-js "^1.2.3"
     xmlbuilder "^14.0.0"
 
-"@expo/prebuild-config@6.7.3":
-  version "6.7.3"
-  resolved "https://registry.npmjs.org/@expo/prebuild-config/-/prebuild-config-6.7.3.tgz"
-  integrity sha512-jZIHzlnvdg4Gnln06XR9tvirL3hSp/Jh48COhLKs51vb3THCWumUytZBS4DSMdvGwf8btnaB01Zg00xQhSDBsA==
+"@expo/prebuild-config@6.7.4":
+  version "6.7.4"
+  resolved "https://registry.npmjs.org/@expo/prebuild-config/-/prebuild-config-6.7.4.tgz"
+  integrity sha512-x8EUdCa8DTMZ/dtEXjHAdlP+ljf6oSeSKNzhycXiHhpMSMG9jEhV28ocCwc6cKsjK5GziweEiHwvrj6+vsBlhA==
   dependencies:
     "@expo/config" "~8.5.0"
     "@expo/config-plugins" "~7.8.0"
@@ -1615,7 +1626,7 @@
   resolved "https://registry.npmjs.org/@expo/sdk-runtime-versions/-/sdk-runtime-versions-1.0.0.tgz"
   integrity sha512-Doz2bfiPndXYFPMRwPyGa1k5QaKDVpY806UJj570epIiMzWaYyCtobasyfC++qfIXVb5Ocy7r3tP9d62hAQ7IQ==
 
-"@expo/spawn-async@^1.5.0", "@expo/spawn-async@1.5.0":
+"@expo/spawn-async@1.5.0", "@expo/spawn-async@^1.5.0":
   version "1.5.0"
   resolved "https://registry.npmjs.org/@expo/spawn-async/-/spawn-async-1.5.0.tgz"
   integrity sha512-LB7jWkqrHo+5fJHNrLAFdimuSXQ2MQ4lA7SQW5bf/HbsXuV2VrT/jN/M8f/KoWt0uJMGN4k/j7Opx4AvOOxSew==
@@ -2003,7 +2014,7 @@
     "@nodelib/fs.stat" "2.0.5"
     run-parallel "^1.1.9"
 
-"@nodelib/fs.stat@^2.0.2", "@nodelib/fs.stat@2.0.5":
+"@nodelib/fs.stat@2.0.5", "@nodelib/fs.stat@^2.0.2":
   version "2.0.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.stat/-/fs.stat-2.0.5.tgz"
   integrity sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A==
@@ -5602,7 +5613,7 @@ expo-splash-screen@~0.26.3:
   resolved "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-0.26.3.tgz"
   integrity sha512-zV+2J/stwdirINrcs/d0BTVjKGUoZyN2j5vTp4H4dwWWU/gA0yAkzzh5eGHySg+yTqMSr7sPJkiyZh2Hek2vBQ==
   dependencies:
-    "@expo/prebuild-config" "6.7.3"
+    "@expo/prebuild-config" "6.7.4"
 
 expo-status-bar@~1.11.1:
   version "1.11.1"
@@ -5617,13 +5628,21 @@ expo-web-browser@~12.8.0, expo-web-browser@~12.8.1:
     compare-urls "^2.0.0"
     url "^0.11.0"
 
-expo@*, "expo@^49.0.7 || ^50.0.0-0", expo@^50.0.2:
-  version "50.0.2"
-  resolved "https://registry.npmjs.org/expo/-/expo-50.0.2.tgz"
-  integrity sha512-nHb/ACe+vVm8lKkKj3LIWgypQI9oGSe9aNSzeJhT3/sBW/KIrnaSMgjs0WujqEJ85xMiXt7EQlwIFIdtBW82jg==
+expo-web-browser@~12.8.2:
+  version "12.8.2"
+  resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-12.8.2.tgz#f34fb85c80031e0dddd4f9b9efd03cb60333b089"
+  integrity sha512-Mw8WoFMSADecNjtC4PZVsVj1/lYdxIAH1jOVV+F8v8SEWYxORWofoShfXg7oUxRLu0iUG8JETfO5y4m8+fOgdg==
+  dependencies:
+    compare-urls "^2.0.0"
+    url "^0.11.0"
+
+expo@^50.0.3:
+  version "50.0.3"
+  resolved "https://registry.npmjs.org/expo/-/expo-50.0.3.tgz"
+  integrity sha512-3Yk42YShkugC90S24Dbo0mhrq/N3Kfn30FscrjCk3o8ldXh9OdE5RhVi/mc5Cqp28nw5a4DfiGSDFs0mA0t2ng==
   dependencies:
     "@babel/runtime" "^7.20.0"
-    "@expo/cli" "0.17.1"
+    "@expo/cli" "0.17.2"
     "@expo/config" "8.5.4"
     "@expo/config-plugins" "7.8.4"
     "@expo/metro-config" "0.17.3"

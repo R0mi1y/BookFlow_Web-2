@@ -159,6 +159,7 @@ const ListBook = ({ route }) => {
         }
       } catch (error) {
         console.error("Erro ao buscar livros:", error.message);
+        fetchData();
       }
     };
 
@@ -189,6 +190,8 @@ const ListBook = ({ route }) => {
             middle={() => {
               navigation.navigate("HomeScreen");
             }}
+            text1="Liv"
+            text2="ros"
           />
 
           {/* NAV-BAR HOME */}
@@ -406,10 +409,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   groupChild4: {
-    height: 77,
-    top: 16,
-    left: 19,
-    width: 77,
+    height: "100%",
+    width: 100,
+    top: 0,
+    left: 0,
     borderRadius: Border.br_mini,
   },
   authorBook: {
