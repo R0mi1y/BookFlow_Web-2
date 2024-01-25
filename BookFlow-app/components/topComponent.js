@@ -103,15 +103,15 @@ const TopComponent = memo(({ middle }) => {
             source={require("../assets/octiconperson24.png")}
           />
           <Image
-            style={[styles.octiconperson241, styles.octiconpersonLayout]}
+            style={[styles.octiconperson241, styles.iconBell]}
             contentFit="cover"
-            source={require("../assets/octiconperson241.png")}
+            source={require("../assets/notification-bell.png")}
           />
-          <Image
+          {/* <Image
             style={[styles.octiconperson242, styles.octiconpersonLayout]}
             contentFit="cover"
             source={require("../assets/octiconperson242.png")}
-          />
+          /> */}
           
           <Text style={styles.iniciarSesin} onPress={() => {
             setPhlistIconVisible(false);
@@ -120,14 +120,31 @@ const TopComponent = memo(({ middle }) => {
         
 
           <Text style={[styles.configuracin, styles.contctanosTypo]}>
-            Configurações
+            Notificações
           </Text>
+          <Image
+            style={[styles.octiconperson242, styles.octicon]}
+            contentFit="cover"
+             source={require("../assets/lista_books.png")}
+          />
+
+      <Image
+            style={[styles.iconlogout, styles.octiconpersonLayout]}
+            contentFit="cover"
+             source={require("../assets/logout.png")}
+          />
+          
           <Text style={[styles.contctanos, styles.contctanosTypo]}>
-            Contatos
+            Meus Empréstimos
+          </Text>
+
+          <Text style={[styles.logout, styles.contctanosTypo]}>
+            Logout
           </Text>
           <View style={[styles.androidLarge3Child, styles.androidLayout]} />
           <View style={[styles.androidLarge3Item, styles.androidLayout]} />
           <View style={[styles.androidLarge3Inner, styles.androidLayout]} />
+          <View style={[styles.androidLargeLogout, styles.androidLayout]} />
         </View>
         </View>
       </Modal>
@@ -136,10 +153,31 @@ const TopComponent = memo(({ middle }) => {
 });
 
 const styles = StyleSheet.create({
+  logout:{
+  top:790,
+  },
+  iconlogout:{
+    top:768,
+    },
   octiconpersonLayout: {
     height: 24,
     width: 24,
     left: 36,
+    position: "absolute",
+    overflow: "hidden",
+  },
+
+  octicon: {
+    height: 25,
+    width: 29,
+    left: 35,
+    position: "absolute",
+    overflow: "hidden",
+  },
+  iconBell:{
+    height: 38,
+    width: 38,
+    left: 31,
     position: "absolute",
     overflow: "hidden",
   },
@@ -165,10 +203,13 @@ const styles = StyleSheet.create({
     top: 92,
   },
   octiconperson241: {
-    top: 144,
+    top: 138,
   },
   octiconperson242: {
     top: 196,
+  },
+  logout:{
+    top: 770,
   },
   iniciarSesin: {
     top: 99,
@@ -194,6 +235,9 @@ const styles = StyleSheet.create({
   },
   androidLarge3Inner: {
     top: 233,
+  },
+  androidLargeLogout:{
+    top: 799,
   },
   Menu: {
     position: 'absolute',

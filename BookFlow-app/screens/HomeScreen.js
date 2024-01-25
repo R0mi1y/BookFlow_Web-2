@@ -366,8 +366,7 @@ const HomeScreen = ({ route }) => {
                             ? starFilledImage
                             : starOutlineImage
                           }
-                        />
-                        <Text style={[styles.text1, styles.lTypo]}>4.5</Text>
+                        />  
                       </Pressable>
                     ))}
                   </ScrollView>

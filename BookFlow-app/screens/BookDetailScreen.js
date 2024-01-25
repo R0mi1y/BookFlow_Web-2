@@ -224,6 +224,7 @@ const BookDetailScreen = ({ route }) => {
                 ?.genre.replace(/,/g, " •")}
             </Text>
           </Text>
+          <View style={styles.contIcons}>
           <Image
             style={styles.biuploadIcon}
             contentFit="cover"
@@ -241,20 +242,21 @@ const BookDetailScreen = ({ route }) => {
             contentFit="cover"
             source={require("../assets/iconoirpageflip.png")}
           />
+          </View>
           <Pressable
             onPress={ owner ? () => navigation.navigate("RegisterBook", { book: books.find((book) => book.id === bookId) }) : () => {
             }}
           >
             <View style={[styles.cta, styles.ctaLayout]}/>
             <View style={styles.irAlLibroParent}>
-              <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-                {owner ? "Editar livro" : "Emprestar Livro"}
-              </Text>
               <Image
                 style={[styles.ionbookIcon, styles.lPosition]}
                 contentFit="cover"
                 source={require("../assets/ionbook.png")}
               />
+              <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+                {owner ? "Editar livro" : "Emprestar Livro"}
+              </Text>
             </View>
           </Pressable>
         </View>
@@ -277,6 +279,13 @@ const styles = StyleSheet.create({
     // height: 550,
     // borderWidth: 4, // Largura da borda
     // borderColor: "black", // Cor da borda (neste caso, preto)
+  },
+  contIcons:{
+  flexDirection: "row",
+  alignSelf:"center",
+  padding:10,
+  top:30,
+  marginBottom:20,
   },
   iconLayout: {
     width: 25,
@@ -320,7 +329,8 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   lPosition: {
-    right: 15,
+    right: 5,
+    top:3,
   },
   phlistIcon: {
     height: 25,
@@ -405,10 +415,10 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorGray_200,
   },
   productImageIcon: {
-    top: 119,
+    top: 159,
     height: 336,
     width: 302,
-    left: 50,
+    alignSelf:"center",
     position: "absolute",
     borderRadius: Border.br_mini,
   },
@@ -460,20 +470,19 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   biuploadIcon: {
-    top: 45,
-    left: 157,
+    // top: 45,
+    // left: 157,
     height: 24,
     width: 24,
     overflow: "hidden",
-
   },
   solarstarOutlineIcon: {
-    top: 20,
-    left: 195,
+    marginLeft:8,
+    marginRight:8,
   },
   iconoirpageFlip: {
-    left: 233,
-    top:-4,
+    // left: 233,
+    // top:-4,
   },
   cta: {
     top: 35,
@@ -501,24 +510,21 @@ const styles = StyleSheet.create({
     paddingBottom: Padding.p_smi,
   },
   irAlLibro: {
-    left: 10,
+    // left: 20,
     color: Color.colorGray_100,
-    width: 250,
-    top: -30,
-    position: "absolute",
+    
     height: 25,
   },
   ionbookIcon: {
-    top: -27,
+  
     width: 20,
     height: 20,
-    overflow: "hidden",
+   
   },
   irAlLibroParent: {
-    top:30,
-    alignSelf: "center",
-    width: 106,
-    height: 55,
+    flexDirection: "row",
+    alignSelf:"center",
+
   },
   BookDetailScreen: {
     flex: 1,
