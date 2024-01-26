@@ -128,15 +128,12 @@ const ListBook = ({ route }) => {
 
         if (accessToken) {
           if (receivedData == 'SEARCH') {
-            console.log(route.params);
             var search = route.params?.search || '';
 
             url += `?search=${search}`;
           }
           else if (receivedData != 'NONE') url += `user/${user.id}?filter=${receivedData}`;
         
-          console.log(url);
-          
           const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -166,7 +163,6 @@ const ListBook = ({ route }) => {
     };
 
     fetchData();
-
   }
   useEffect(getBooks, []);
 

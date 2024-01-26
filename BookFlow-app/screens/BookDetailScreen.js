@@ -110,8 +110,22 @@ const BookDetailScreen = ({ route }) => {
     }
   };
 
-  function requestBook(bookId) {
+  async function requestBook(bookId) {
+    try {
+      const accessToken = await getAccessToken();
 
+      if (accessToken) {
+        const response = await fetch(`${apiUrl}/api/book/${bookId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + accessToken,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao buscar livros:", error.message);
+    }
   }
 
   useEffect(() => {
@@ -138,6 +152,7 @@ const BookDetailScreen = ({ route }) => {
           data['requirements_loanLength'] = data.summary.lenth;
 
           await setBook(data);
+          setIsFavorited(data.is_in_wishlist ?? false)
 
           togglePopup();
           console.log(data);
@@ -169,33 +184,33 @@ const BookDetailScreen = ({ route }) => {
   };
 
   const toggleFavorite = async (bookId) => {
-  const url = `${apiUrl}/api/book/${bookId}/wishlist/`;
-  console.log(url);
-  try {
-    const accessToken = await getAccessToken();
+    const url = `${apiUrl}/api/book/${bookId}/wishlist/`;
+    console.log(url);
+    try {
+      const accessToken = await getAccessToken();
 
-    if (accessToken) {
-      const response = await fetch(url,  {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + accessToken,
-        },
-      });
-      if (!response.ok) {
+      if (accessToken) {
+        const response = await fetch(url,  {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + accessToken,
+          },
+        });
+        if (!response.ok) {
+          
+          throw new Error(await response.text());
+        }
+
+        setIsFavorited((prevIsFavorited) => !prevIsFavorited);
         
-        throw new Error(await response.text());
+      } else {
+        console.error("Falha ao obter AccessToken");
       }
 
-      setIsFavorited((prevIsFavorited) => !prevIsFavorited);
-      
-    } else {
-      console.error("Falha ao obter AccessToken");
+    } catch (error) {
+      console.error("Erro ao favoritar livro:", error.message);
     }
-
-  } catch (error) {
-    console.error("Erro ao favoritar livro:", error.message);
-  }
   };
 
   
@@ -213,6 +228,25 @@ const BookDetailScreen = ({ route }) => {
               navigation.navigate("HomeScreen");
             }}
           />
+          <View style={styles.iconsSection}>
+            {/* <Image
+              style={styles.biuploadIcon}
+              contentFit="cover"
+              source={require("../assets/biupload.png")}
+            /> */}
+            <Pressable onPress={() => toggleFavorite(bookId)}>
+              <Image
+                style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
+                contentFit="cover"
+                source={isFavorited ? starFilledImage : starOutlineImage}
+              />
+            </Pressable>
+            {/* <Image
+              style={[styles.iconoirpageFlipPosition]}
+              contentFit="cover"
+              source={require("../assets/iconoirpageflip.png")}
+            /> */}
+          </View>
 
           <Image
             style={styles.productImageIcon}
@@ -232,8 +266,6 @@ const BookDetailScreen = ({ route }) => {
             </Text>
 
             <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullSummary && { textAlign: 'justify' }]}>
-              {/* Descrição do Livro */}
-
               {
                 <Text key={book.id} style={styles.aSingleEspresso}>
                   {showFullSummary ? book.summary : getLimitedSummary(book.summary)}
@@ -269,33 +301,12 @@ const BookDetailScreen = ({ route }) => {
                 {book?.genre?.replace(/,/g, " •")}
               </Text>
             </Text>
-            <View style={styles.iconsSection}>
-              <Image
-                style={styles.biuploadIcon}
-                contentFit="cover"
-                source={require("../assets/biupload.png")}
-              />
-              <Pressable onPress={() => toggleFavorite(bookId)}>
-                <Image
-                  style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
-                  contentFit="cover"
-                  source={isFavorited ? starFilledImage : starOutlineImage}
-                />
-              </Pressable>
-              <Image
-                style={[styles.iconoirpageFlipPosition]}
-                contentFit="cover"
-                source={require("../assets/iconoirpageflip.png")}
-              />
-            </View>
             <Pressable
               onPress={ owner ? () => navigation.navigate("RegisterBook", { book: book }) : () => {
                 requestBook(bookId);
               }}
             >
-              <View style={[styles.cta, styles.ctaLayout]}/>
-              <View style={styles.irAlLibroParent}>
-                <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+              <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
                   {owner ? "Editar livro" : "Emprestar Livro"}
                 </Text>
                 <Image
@@ -304,6 +315,7 @@ const BookDetailScreen = ({ route }) => {
                   source={require("../assets/ionbook.png")}
                 />
               </View>
+                
             </Pressable>
           </View>
         </View>
@@ -314,11 +326,10 @@ const BookDetailScreen = ({ route }) => {
 
 const styles = StyleSheet.create({
   iconsSection: {
-    top: 25,
+    marginTop: 25,
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    // backgroundColor: "blue",
     justifyContent: "center"
 
   },
@@ -330,11 +341,8 @@ const styles = StyleSheet.create({
     maxHeight: 250, // ou qualquer outra altura desejada
   },
   viewWithBorder: {
-    top: 482,
+    marginTop: 32,
     paddingTop: 5,
-    // height: 550,
-    // borderWidth: 4, // Largura da borda
-    // borderColor: "black", // Cor da borda (neste caso, preto)
   },
   contIcons:{
   flexDirection: "row",
@@ -385,7 +393,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   lPosition: {
-    top:3,
+    marginTop:3,
   },
   phlistIcon: {
     height: 25,
@@ -470,15 +478,14 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorGray_200,
   },
   productImageIcon: {
-    top: 159,
-    height: 336,
+    marginTop: 15,
+    height: 302,
     width: 302,
     alignSelf:"center",
-    position: "absolute",
     borderRadius: Border.br_mini,
   },
   pachinko: {
-    top: 475,
+    marginTop: 25,
     width: 300,
     fontSize: FontSize.size_5xl,
     lineHeight: 30,
@@ -510,7 +517,7 @@ const styles = StyleSheet.create({
   },
   aSingleEspressoContainer: {
     alignSelf: "center",
-    top: 10,
+    marginTop: 10,
     lineHeight: 17,
     // height: 100,
     fontSize: FontSize.size_xs,
@@ -520,7 +527,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.rosarivoRegular,
   },
   cuentoNovelaContainer: {
-    top: 20,
+    marginTop: 20,
     alignSelf: "center",
     lineHeight: 22,
   },
@@ -536,7 +543,7 @@ const styles = StyleSheet.create({
   iconoirpageFlip: {
   },
   cta: {
-    top: 35,
+    marginTop: 15,
     backgroundColor: Color.colorBlanchedalmond_100,
     shadowColor: "rgba(0, 0, 0, 0.15)",
     shadowOffset: {
@@ -571,7 +578,8 @@ const styles = StyleSheet.create({
   },
   irAlLibroParent: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    alignItems: "center",
     flexDirection: "row",
     alignSelf:"center",
   },

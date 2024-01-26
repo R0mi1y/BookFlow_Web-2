@@ -36,6 +36,7 @@ const TopComponent = memo(({ middle, text1="Book", text2="Flow", searchBtn=true 
   }, []);
 
   return (
+    
     <>
       <Modal
         transparent={true}
@@ -129,7 +130,7 @@ const TopComponent = memo(({ middle, text1="Book", text2="Flow", searchBtn=true 
              source={require("../assets/lista_books.png")}
           />
 
-      <Image
+          <Image
             style={[styles.iconlogout, styles.octiconpersonLayout]}
             contentFit="cover"
              source={require("../assets/logout.png")}
@@ -155,11 +156,11 @@ const TopComponent = memo(({ middle, text1="Book", text2="Flow", searchBtn=true 
 
 const styles = StyleSheet.create({
   logout:{
-  top:790,
+    marginTop:790,
   },
   iconlogout:{
     top:768,
-    },
+  },
   octiconpersonLayout: {
     height: 24,
     width: 24,
@@ -305,13 +306,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.rosarivoRegular,
   },
   topLayout: {
-    top: 60,
+    marginTop: 60,
     marginLeft: screenWidth * 0.05,
     marginRight: screenWidth * 0.05,
     width: screenWidth * 0.9,
     flexDirection: "row",
     justifyContent: "space-between",
-    // backgroundColor:"blue",
   },
   iconLayout: {
     width: "100%",
