@@ -28,11 +28,11 @@ const RegisterBook = ({ route }) => {
   const [messagePopup, setPopupTexto] = React.useState("");
 
   const togglePopup = (message=null) => {
+    setPopupVisible(false);
     if (message != null) {
       setPopupTexto(message);
       setPopupVisible(true);
     }
-    else setPopupVisible(false);
   };
 
   var user = null;

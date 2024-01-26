@@ -30,10 +30,12 @@ const LogInScreen = () => {
   const [popupVisible, setPopupVisible] = React.useState(false);
   const [messagePopup, setPopupTexto] = React.useState("Seja bem vindo!");
 
-  const togglePopup = (message) => {
-    if (message != null) setPopupVisible(true);
-    else setPopupVisible(false);
-    setPopupTexto(message);
+  const togglePopup = (message=null) => {
+    setPopupVisible(false);
+    if (message != null) {
+      setPopupTexto(message);
+      setPopupVisible(true);
+    }
   };
 
   const [userInfo, setUserInfo] = React.useState(null);
@@ -50,7 +52,8 @@ const LogInScreen = () => {
 
 
   const login = () => {
-    console.log(`${apiUrl}/api/user/login/`);
+    togglePopup("Loading");
+    
     fetch(
       `${apiUrl}/api/user/login/`,
       {
@@ -67,8 +70,6 @@ const LogInScreen = () => {
           SecureStore.setItemAsync("user", JSON.stringify(data['user']));
           setUserInfo(data['user']);
 
-          console.log();
-
           // navigation.navigate("pickDocument");
           navigation.navigate("HomeScreen");
         } else {
@@ -82,7 +83,7 @@ const LogInScreen = () => {
   }
 
   async function handleSingInWithGoogle() {
-    const user = await SecureStore.getItemAsync("user")
+    SecureStore.getItemAsync("user")
       .then((user) => {
         console.log(user);
         if (!user) {
@@ -120,7 +121,6 @@ const LogInScreen = () => {
 
       if (data?.status === "success") {
         user = data.user;
-
         await SecureStore.setItemAsync("user", JSON.stringify(user));
         setUserInfo(user);
 

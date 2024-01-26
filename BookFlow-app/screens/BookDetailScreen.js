@@ -15,15 +15,30 @@ import starOutlineImage from "../assets/solarstaroutline.png";
 import starFilledImage from "../assets/solarstarfilled.png";
 import * as SecureStore from 'expo-secure-store';
 import TopComponent from '../components/topComponent';
+import CustomPopup from '../components/CustomPopup';
 
 
 const BookDetailScreen = ({ route }) => {
   const navigation = useNavigation();
 
   const apiUrl = Constants.expoConfig.extra.apiUrl;
-  const [books, setBooks] = useState([]);
+  const [book, setBook] = useState([]);
   const [showFullSummary, setShowFullSummary] = useState(false); 
   const [showFullRequirementsLoan, setShowFullRequirementsLoan] = useState(false); 
+  const [isFavorited, setIsFavorited] = useState(false); 
+
+  const [messagePopup, setPopupTexto] = useState('Loading');
+  const [popupVisible, setPopupVisible] = useState(true);
+
+  const { bookId, owner, fromScreen } = route.params || {};
+
+  const togglePopup = (message=null) => {
+    setPopupVisible(false);
+    if (message != null) {
+      setPopupTexto(message);
+      setPopupVisible(true);
+    }
+  };
 
   const getAccessToken = async () => {
     try {
@@ -105,7 +120,7 @@ const BookDetailScreen = ({ route }) => {
         const accessToken = await getAccessToken();
 
         if (accessToken) {
-          const response = await fetch(`${apiUrl}/api/book/`, {
+          const response = await fetch(`${apiUrl}/api/book/${bookId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -117,8 +132,14 @@ const BookDetailScreen = ({ route }) => {
             throw new Error(response.text());
           }
 
-          const data = await response.json();
-          setBooks(data);
+          var data = await response.json();
+
+          data['summaryLength'] = data.summary.lenth;
+          data['requirements_loanLength'] = data.summary.lenth;
+
+          await setBook(data);
+
+          togglePopup();
           console.log(data);
         } else {
           navigation.reset({
@@ -135,8 +156,6 @@ const BookDetailScreen = ({ route }) => {
     fetchData();
   }, []);
 
-  const { bookId, owner, fromScreen } = route.params || {};
-
   const toggleShowFullSummary = () => {
     setShowFullSummary(!showFullSummary);
   };
@@ -146,7 +165,7 @@ const BookDetailScreen = ({ route }) => {
 
   const getLimitedSummary = (summary) => {
     // Limite o texto a 300 caracteres
-    return summary.length > 90 ? summary.slice(0, 90) + "...    " : summary;
+    return summary?.length && summary?.length > 90 ? summary.slice(0, 90) + "...    " : summary;
   };
 
   const toggleFavorite = async (bookId) => {
@@ -181,118 +200,128 @@ const BookDetailScreen = ({ route }) => {
 
   
   return (
-    <ScrollView>
-      <View style={styles.BookDetailScreen}>
-        <TopComponent
-          middle={() => {
-            navigation.navigate("HomeScreen");
-          }}
-        />
-
-        <Image
-          style={styles.productImageIcon}
-          contentFit="cover"
-          source={{
-            uri: ((books.find((book) => book.id === bookId)?.cover) ? books.find((book) => book.id === bookId)?.cover : apiUrl + "/static/img/default_cover.jpg"),
-          }}
-        />
-        <View style={styles.title}>
-          <Text style={styles.pachinko}>
-            {books.find((book) => book.id === bookId)?.title}
-          </Text>
-        </View>
-        <View style={styles.viewWithBorder}>
-          <Text style={styles.minJinLee}>
-            {books.find((book) => book.id === bookId)?.author}
-          </Text>
-
-          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullSummary && { textAlign: 'justify' }]}>
-            {/* Descrição do Livro */}
-
-            {books
-            .filter((book) => book.id === bookId)
-            .map((book) => (
-              <Text key={book.id} style={styles.aSingleEspresso}>
-                {showFullSummary ? book.summary : getLimitedSummary(book.summary)}
-              </Text>
-            ))}
-          {books.find((book) => book.id === bookId)?.summary.length > 90 && (
-            <Pressable onPress={toggleShowFullSummary}>
-              <Text style={[styles.readMore1]}>{showFullSummary ? "Leia Menos" : "Leia Mais"}</Text>
-            </Pressable>
-          )}
-          </Text>
-
-          <View style={{height:20}}></View>
-
-          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullRequirementsLoan && { textAlign: 'justify' }]}>
-            {books
-            .filter((book) => book.id === bookId)
-            .map((book) => (
-              <Text key={book.id} style={styles.aSingleEspresso}>
-                {showFullRequirementsLoan ? book.requirements_loan : getLimitedSummary(book.requirements_loan)}
-              </Text>
-            ))}
-          {books.find((book) => book && book.id === bookId && book.requirements_loan)?.requirements_loan.length > 90 && (
-            <Pressable onPress={toggleShowFullRequirementsLoan}>
-              <Text style={[styles.readMore1]}>
-                {showFullRequirementsLoan ? "Leia Menos" : "Leia Mais"}
-              </Text>
-            </Pressable>
-          )}
-
-          </Text>
-
-          <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
-            <Text style={styles.cuentoNovela}>
-              {books
-                .find((book) => book.id === bookId)
-                ?.genre.replace(/,/g, " •")}
-            </Text>
-          </Text>
-          <View style={styles.contIcons}>
-          <Image
-            style={styles.biuploadIcon}
-            contentFit="cover"
-            source={require("../assets/biupload.png")}
-          />
-          <Pressable onPress={() => toggleFavorite(bookId)}>
-            <Image
-              style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
-              contentFit="cover"
-              source={isFavorited ? starFilledImage : starOutlineImage}
-            />
-          </Pressable>
-          <Image
-            style={[styles.iconoirpageFlip, styles.iconoirpageFlipPosition]}
-            contentFit="cover"
-            source={require("../assets/iconoirpageflip.png")}
-          />
-          </View>
-          <Pressable
-            onPress={ owner ? () => navigation.navigate("RegisterBook", { book: books.find((book) => book.id === bookId) }) : () => {
-              requestBook(bookId);
+    <>
+      <CustomPopup
+        visible={popupVisible}
+        onClose={() => {togglePopup(null)}}
+        message={messagePopup}
+      />
+      <ScrollView>
+        <View style={styles.BookDetailScreen}>
+          <TopComponent
+            middle={() => {
+              navigation.navigate("HomeScreen");
             }}
-          >
-            <View style={[styles.cta, styles.ctaLayout]}/>
-            <View style={styles.irAlLibroParent}>
-              <Image
-                style={[styles.ionbookIcon, styles.lPosition]}
-                contentFit="cover"
-                source={require("../assets/ionbook.png")}
-              />
-              <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-                {owner ? "Editar livro" : "Emprestar Livro"}
+          />
+
+          <Image
+            style={styles.productImageIcon}
+            contentFit="cover"
+            source={{
+              uri: ((book?.cover) ? book?.cover : apiUrl + "/static/img/default_cover.jpg"),
+            }}
+          />
+          <View style={styles.title}>
+            <Text style={styles.pachinko}>
+              {book?.title}
+            </Text>
+          </View>
+          <View style={styles.viewWithBorder}>
+            <Text style={styles.minJinLee}>
+              {book?.author}
+            </Text>
+
+            <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullSummary && { textAlign: 'justify' }]}>
+              {/* Descrição do Livro */}
+
+              {
+                <Text key={book.id} style={styles.aSingleEspresso}>
+                  {showFullSummary ? book.summary : getLimitedSummary(book.summary)}
+                </Text>
+              }
+            {book?.summaryLength > 90 && (
+              <Pressable onPress={toggleShowFullSummary}>
+                <Text style={[styles.readMore1]}>{showFullSummary ? "Leia Menos" : "Leia Mais"}</Text>
+              </Pressable>
+            )}
+            </Text>
+
+            <View style={{height:20}}></View>
+
+            <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullRequirementsLoan && { textAlign: 'justify' }]}>
+              {
+                <Text key={book.id} style={styles.aSingleEspresso}>
+                  {showFullRequirementsLoan ? book.requirements_loan : getLimitedSummary(book.requirements_loan)}
+                </Text>
+              }
+            { book.requirements_loanLength > 90 && (
+              <Pressable onPress={toggleShowFullRequirementsLoan}>
+                <Text style={[styles.readMore1]}>
+                  {showFullRequirementsLoan ? "Leia Menos" : "Leia Mais"}
+                </Text>
+              </Pressable>
+            )}
+
+            </Text>
+
+            <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
+              <Text style={styles.cuentoNovela}>
+                {book?.genre?.replace(/,/g, " •")}
               </Text>
+            </Text>
+            <View style={styles.iconsSection}>
+              <Image
+                style={styles.biuploadIcon}
+                contentFit="cover"
+                source={require("../assets/biupload.png")}
+              />
+              <Pressable onPress={() => toggleFavorite(bookId)}>
+                <Image
+                  style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
+                  contentFit="cover"
+                  source={isFavorited ? starFilledImage : starOutlineImage}
+                />
+              </Pressable>
+              <Image
+                style={[styles.iconoirpageFlipPosition]}
+                contentFit="cover"
+                source={require("../assets/iconoirpageflip.png")}
+              />
             </View>
-          </Pressable>
+            <Pressable
+              onPress={ owner ? () => navigation.navigate("RegisterBook", { book: book }) : () => {
+                requestBook(bookId);
+              }}
+            >
+              <View style={[styles.cta, styles.ctaLayout]}/>
+              <View style={styles.irAlLibroParent}>
+                <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+                  {owner ? "Editar livro" : "Emprestar Livro"}
+                </Text>
+                <Image
+                  style={[styles.ionbookIcon, styles.lPosition]}
+                  contentFit="cover"
+                  source={require("../assets/ionbook.png")}
+                />
+              </View>
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  iconsSection: {
+    top: 25,
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    // backgroundColor: "blue",
+    justifyContent: "center"
+
+  },
   title: {
     justifyContent: "center",
     alignItems: "center",
@@ -356,7 +385,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   lPosition: {
-    right: 5,
     top:3,
   },
   phlistIcon: {
@@ -497,8 +525,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   biuploadIcon: {
-    // top: 45,
-    // left: 157,
     height: 24,
     width: 24,
     overflow: "hidden",
@@ -508,8 +534,6 @@ const styles = StyleSheet.create({
     marginRight:8,
   },
   iconoirpageFlip: {
-    // left: 233,
-    // top:-4,
   },
   cta: {
     top: 35,
@@ -537,21 +561,19 @@ const styles = StyleSheet.create({
     paddingBottom: Padding.p_smi,
   },
   irAlLibro: {
-    // left: 20,
     color: Color.colorGray_100,
-    
     height: 25,
   },
   ionbookIcon: {
-  
     width: 20,
     height: 20,
-   
+    marginLeft: 10,
   },
   irAlLibroParent: {
+    display: "flex",
+    justifyContent: "space-between",
     flexDirection: "row",
     alignSelf:"center",
-
   },
   BookDetailScreen: {
     flex: 1,

@@ -34,10 +34,12 @@ const HomeScreen = ({ route }) => {
     setPopupVisible(true);
   }
 
-  const togglePopup = (message) => {
-    if (message != null) setPopupVisible(true);
-    else setPopupVisible(false);
-    setPopupTexto(message);
+  const togglePopup = (message=null) => {
+    setPopupVisible(false);
+    if (message != null) {
+      setPopupTexto(message);
+      setPopupVisible(true);
+    }
   };
 
   const [ , setScrollPosition] = useState(0);

@@ -38,10 +38,12 @@ const ListBook = ({ route }) => {
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
   
-  const togglePopup = (message) => {
-    if (message != null) setPopupVisible(true);
-    else setPopupVisible(false);
-    setPopupTexto(message);
+  const togglePopup = (message=null) => {
+    setPopupVisible(false);
+    if (message != null) {
+      setPopupTexto(message);
+      setPopupVisible(true);
+    }
   };
 
   const getAccessToken = async () => {

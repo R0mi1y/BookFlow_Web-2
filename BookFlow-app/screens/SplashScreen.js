@@ -7,7 +7,6 @@ import * as SecureStore from 'expo-secure-store';
 const SplashScreen = ({ navigation }) => {
 
   useEffect(() => {
-    const user = SecureStore.deleteItemAsync("user");
 
       const fetchData = async () => {
         try {
