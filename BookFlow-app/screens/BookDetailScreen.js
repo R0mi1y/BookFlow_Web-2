@@ -15,14 +15,30 @@ import starOutlineImage from "../assets/solarstaroutline.png";
 import starFilledImage from "../assets/solarstarfilled.png";
 import * as SecureStore from 'expo-secure-store';
 import TopComponent from '../components/topComponent';
+import CustomPopup from '../components/CustomPopup';
 
 
 const BookDetailScreen = ({ route }) => {
   const navigation = useNavigation();
 
   const apiUrl = Constants.expoConfig.extra.apiUrl;
-  const [books, setBooks] = useState([]);
+  const [book, setBook] = useState([]);
   const [showFullSummary, setShowFullSummary] = useState(false); 
+  const [showFullRequirementsLoan, setShowFullRequirementsLoan] = useState(false); 
+  const [isFavorited, setIsFavorited] = useState(false); 
+
+  const [messagePopup, setPopupTexto] = useState('Loading');
+  const [popupVisible, setPopupVisible] = useState(true);
+
+  const { bookId, owner, fromScreen } = route.params || {};
+
+  const togglePopup = (message=null) => {
+    setPopupVisible(false);
+    if (message != null) {
+      setPopupTexto(message);
+      setPopupVisible(true);
+    }
+  };
 
   const getAccessToken = async () => {
     try {
@@ -94,13 +110,31 @@ const BookDetailScreen = ({ route }) => {
     }
   };
 
+  async function requestBook(bookId) {
+    try {
+      const accessToken = await getAccessToken();
+
+      if (accessToken) {
+        const response = await fetch(`${apiUrl}/api/book/${bookId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + accessToken,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao buscar livros:", error.message);
+    }
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const accessToken = await getAccessToken();
 
         if (accessToken) {
-          const response = await fetch(`${apiUrl}/api/book/`, {
+          const response = await fetch(`${apiUrl}/api/book/${bookId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -112,8 +146,15 @@ const BookDetailScreen = ({ route }) => {
             throw new Error(response.text());
           }
 
-          const data = await response.json();
-          setBooks(data);
+          var data = await response.json();
+
+          data['summaryLength'] = data.summary.lenth;
+          data['requirements_loanLength'] = data.summary.lenth;
+
+          await setBook(data);
+          setIsFavorited(data.is_in_wishlist ?? false)
+
+          togglePopup();
           console.log(data);
         } else {
           navigation.reset({
@@ -130,112 +171,168 @@ const BookDetailScreen = ({ route }) => {
     fetchData();
   }, []);
 
-  const { bookId, owner, fromScreen } = route.params || {};
-
   const toggleShowFullSummary = () => {
     setShowFullSummary(!showFullSummary);
+  };
+  const toggleShowFullRequirementsLoan = () => {
+    setShowFullRequirementsLoan(!showFullRequirementsLoan);
   };
 
   const getLimitedSummary = (summary) => {
     // Limite o texto a 300 caracteres
-    return summary.length > 90 ? summary.slice(0, 90) + "...    " : summary;
+    return summary?.length && summary?.length > 90 ? summary.slice(0, 90) + "...    " : summary;
   };
+
+  const toggleFavorite = async (bookId) => {
+    const url = `${apiUrl}/api/book/${bookId}/wishlist/`;
+    console.log(url);
+    try {
+      const accessToken = await getAccessToken();
+
+      if (accessToken) {
+        const response = await fetch(url,  {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + accessToken,
+          },
+        });
+        if (!response.ok) {
+          
+          throw new Error(await response.text());
+        }
+
+        setIsFavorited((prevIsFavorited) => !prevIsFavorited);
+        
+      } else {
+        console.error("Falha ao obter AccessToken");
+      }
+
+    } catch (error) {
+      console.error("Erro ao favoritar livro:", error.message);
+    }
+  };
+
   
   return (
-    <ScrollView>
-      <View style={styles.BookDetailScreen}>
-        <TopComponent
-          middle={() => {
-            navigation.navigate("HomeScreen");
-          }}
-        />
-
-        <Image
-          style={styles.productImageIcon}
-          contentFit="cover"
-          source={{
-            uri: ((books.find((book) => book.id === bookId)?.cover) ? books.find((book) => book.id === bookId)?.cover : apiUrl + "/static/img/default_cover.jpg"),
-          }}
-        />
-        <View style={styles.title}>
-          <Text style={styles.pachinko}>
-            {books.find((book) => book.id === bookId)?.title}
-          </Text>
-        </View>
-        <View style={styles.viewWithBorder}>
-          <Text style={styles.minJinLee}>
-            {books.find((book) => book.id === bookId)?.author}
-          </Text>
-
-          <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, , showFullSummary && { textAlign: 'justify' }]}>
-            {/* Descrição do Livro */}
-
-            {books
-            .filter((book) => book.id === bookId)
-            .map((book) => (
-              <Text key={book.id} style={styles.aSingleEspresso}>
-                {showFullSummary ? book.summary : getLimitedSummary(book.summary)}
-              </Text>
-            ))}
-          {books.find((book) => book.id === bookId)?.summary.length > 90 && (
-            <Pressable onPress={toggleShowFullSummary}>
-              <Text style={[styles.readMore1]}>{showFullSummary ? "Leia Menos" : "Leia Mais"}</Text>
-            </Pressable>
-          )}
-          </Text>
-
-          <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
-            <Text style={styles.cuentoNovela}>
-              {books
-                .find((book) => book.id === bookId)
-                ?.genre.replace(/,/g, " •")}
-            </Text>
-          </Text>
-          <Image
-            style={styles.biuploadIcon}
-            contentFit="cover"
-            source={require("../assets/biupload.png")}
-          />
-          <Image
-            style={[
-              styles.solarstarOutlineIcon,
-              styles.iconoirpageFlipPosition,
-            ]}
-            contentFit="cover"
-            source={
-              books.find((book) => book.id === bookId)?.is_in_wishlist
-                ? starFilledImage
-                : starOutlineImage
-            }
-          />
-          <Image
-            style={[styles.iconoirpageFlip, styles.iconoirpageFlipPosition]}
-            contentFit="cover"
-            source={require("../assets/iconoirpageflip.png")}
-          />
-          <Pressable
-            onPress={ owner ? () => navigation.navigate("RegisterBook", { book: books.find((book) => book.id === bookId) }) : () => {
+    <>
+      <CustomPopup
+        visible={popupVisible}
+        onClose={() => {togglePopup(null)}}
+        message={messagePopup}
+      />
+      <ScrollView>
+        <View style={styles.BookDetailScreen}>
+          <TopComponent
+            middle={() => {
+              navigation.navigate("HomeScreen");
             }}
-          >
-            <View style={[styles.cta, styles.ctaLayout]}/>
-            <View style={styles.irAlLibroParent}>
-              <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-                {owner ? "Editar livro" : "Emprestar Livro"}
-              </Text>
+          />
+          <View style={styles.iconsSection}>
+            {/* <Image
+              style={styles.biuploadIcon}
+              contentFit="cover"
+              source={require("../assets/biupload.png")}
+            /> */}
+            <Pressable onPress={() => toggleFavorite(bookId)}>
               <Image
-                style={[styles.ionbookIcon, styles.lPosition]}
+                style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
                 contentFit="cover"
-                source={require("../assets/ionbook.png")}
+                source={isFavorited ? starFilledImage : starOutlineImage}
               />
-            </View>
-          </Pressable>
+            </Pressable>
+            {/* <Image
+              style={[styles.iconoirpageFlipPosition]}
+              contentFit="cover"
+              source={require("../assets/iconoirpageflip.png")}
+            /> */}
+          </View>
+
+          <Image
+            style={styles.productImageIcon}
+            contentFit="cover"
+            source={{
+              uri: ((book?.cover) ? book?.cover : apiUrl + "/static/img/default_cover.jpg"),
+            }}
+          />
+          <View style={styles.title}>
+            <Text style={styles.pachinko}>
+              {book?.title}
+            </Text>
+          </View>
+          <View style={styles.viewWithBorder}>
+            <Text style={styles.minJinLee}>
+              {book?.author}
+            </Text>
+
+            <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullSummary && { textAlign: 'justify' }]}>
+              {
+                <Text key={book.id} style={styles.aSingleEspresso}>
+                  {showFullSummary ? book.summary : getLimitedSummary(book.summary)}
+                </Text>
+              }
+            {book?.summaryLength > 90 && (
+              <Pressable onPress={toggleShowFullSummary}>
+                <Text style={[styles.readMore1]}>{showFullSummary ? "Leia Menos" : "Leia Mais"}</Text>
+              </Pressable>
+            )}
+            </Text>
+
+            <View style={{height:20}}></View>
+
+            <Text style={[styles.aSingleEspressoContainer, styles.containerTypo, showFullRequirementsLoan && { textAlign: 'justify' }]}>
+              {
+                <Text key={book.id} style={styles.aSingleEspresso}>
+                  {showFullRequirementsLoan ? book.requirements_loan : getLimitedSummary(book.requirements_loan)}
+                </Text>
+              }
+            { book.requirements_loanLength > 90 && (
+              <Pressable onPress={toggleShowFullRequirementsLoan}>
+                <Text style={[styles.readMore1]}>
+                  {showFullRequirementsLoan ? "Leia Menos" : "Leia Mais"}
+                </Text>
+              </Pressable>
+            )}
+
+            </Text>
+
+            <Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>
+              <Text style={styles.cuentoNovela}>
+                {book?.genre?.replace(/,/g, " •")}
+              </Text>
+            </Text>
+            <Pressable
+              onPress={ owner ? () => navigation.navigate("RegisterBook", { book: book }) : () => {
+                requestBook(bookId);
+              }}
+            >
+              <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+                  {owner ? "Editar livro" : "Emprestar Livro"}
+                </Text>
+                <Image
+                  style={[styles.ionbookIcon, styles.lPosition]}
+                  contentFit="cover"
+                  source={require("../assets/ionbook.png")}
+                />
+              </View>
+                
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  iconsSection: {
+    marginTop: 25,
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "center"
+
+  },
   title: {
     justifyContent: "center",
     alignItems: "center",
@@ -244,11 +341,15 @@ const styles = StyleSheet.create({
     maxHeight: 250, // ou qualquer outra altura desejada
   },
   viewWithBorder: {
-    top: 482,
+    marginTop: 32,
     paddingTop: 5,
-    // height: 550,
-    // borderWidth: 4, // Largura da borda
-    // borderColor: "black", // Cor da borda (neste caso, preto)
+  },
+  contIcons:{
+  flexDirection: "row",
+  alignSelf:"center",
+  padding:10,
+  top:30,
+  marginBottom:20,
   },
   iconLayout: {
     width: 25,
@@ -292,7 +393,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   lPosition: {
-    right: 15,
+    marginTop:3,
   },
   phlistIcon: {
     height: 25,
@@ -377,15 +478,14 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorGray_200,
   },
   productImageIcon: {
-    top: 119,
-    height: 336,
+    marginTop: 15,
+    height: 302,
     width: 302,
-    left: 50,
-    position: "absolute",
+    alignSelf:"center",
     borderRadius: Border.br_mini,
   },
   pachinko: {
-    top: 475,
+    marginTop: 25,
     width: 300,
     fontSize: FontSize.size_5xl,
     lineHeight: 30,
@@ -417,7 +517,7 @@ const styles = StyleSheet.create({
   },
   aSingleEspressoContainer: {
     alignSelf: "center",
-    top: 10,
+    marginTop: 10,
     lineHeight: 17,
     // height: 100,
     fontSize: FontSize.size_xs,
@@ -427,28 +527,23 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.rosarivoRegular,
   },
   cuentoNovelaContainer: {
-    top: 20,
+    marginTop: 20,
     alignSelf: "center",
     lineHeight: 22,
   },
   biuploadIcon: {
-    top: 45,
-    left: 157,
     height: 24,
     width: 24,
     overflow: "hidden",
-
   },
   solarstarOutlineIcon: {
-    top: 20,
-    left: 195,
+    marginLeft:8,
+    marginRight:8,
   },
   iconoirpageFlip: {
-    left: 233,
-    top:-4,
   },
   cta: {
-    top: 35,
+    marginTop: 15,
     backgroundColor: Color.colorBlanchedalmond_100,
     shadowColor: "rgba(0, 0, 0, 0.15)",
     shadowOffset: {
@@ -473,24 +568,20 @@ const styles = StyleSheet.create({
     paddingBottom: Padding.p_smi,
   },
   irAlLibro: {
-    left: 10,
     color: Color.colorGray_100,
-    width: 250,
-    top: -30,
-    position: "absolute",
     height: 25,
   },
   ionbookIcon: {
-    top: -27,
     width: 20,
     height: 20,
-    overflow: "hidden",
+    marginLeft: 10,
   },
   irAlLibroParent: {
-    top:30,
-    alignSelf: "center",
-    width: 106,
-    height: 55,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    alignSelf:"center",
   },
   BookDetailScreen: {
     flex: 1,

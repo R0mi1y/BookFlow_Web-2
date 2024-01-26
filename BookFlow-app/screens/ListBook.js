@@ -38,10 +38,12 @@ const ListBook = ({ route }) => {
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
   
-  const togglePopup = (message) => {
-    if (message != null) setPopupVisible(true);
-    else setPopupVisible(false);
-    setPopupTexto(message);
+  const togglePopup = (message=null) => {
+    setPopupVisible(false);
+    if (message != null) {
+      setPopupTexto(message);
+      setPopupVisible(true);
+    }
   };
 
   const getAccessToken = async () => {
@@ -126,15 +128,12 @@ const ListBook = ({ route }) => {
 
         if (accessToken) {
           if (receivedData == 'SEARCH') {
-            console.log(route.params);
             var search = route.params?.search || '';
 
             url += `?search=${search}`;
           }
           else if (receivedData != 'NONE') url += `user/${user.id}?filter=${receivedData}`;
         
-          console.log(url);
-          
           const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -159,11 +158,11 @@ const ListBook = ({ route }) => {
         }
       } catch (error) {
         console.error("Erro ao buscar livros:", error.message);
+        fetchData();
       }
     };
 
     fetchData();
-
   }
   useEffect(getBooks, []);
 
@@ -189,6 +188,8 @@ const ListBook = ({ route }) => {
             middle={() => {
               navigation.navigate("HomeScreen");
             }}
+            text1="Liv"
+            text2="ros"
           />
 
           {/* NAV-BAR HOME */}
@@ -406,10 +407,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   groupChild4: {
-    height: 77,
-    top: 16,
-    left: 19,
-    width: 77,
+    height: "100%",
+    width: 100,
+    top: 0,
+    left: 0,
     borderRadius: Border.br_mini,
   },
   authorBook: {

@@ -25,10 +25,12 @@ import CustomPopup from '../components/CustomPopup';
     const [popupVisible, setPopupVisible] = React.useState(false);
     const [messagePopup, setPopupTexto] = React.useState("");
 
-    const togglePopup = (message) => {
-      if (message != null) setPopupVisible(true);
-      else setPopupVisible(false);
-      setPopupTexto(message);
+    const togglePopup = (message=null) => {
+      setPopupVisible(false);
+      if (message != null) {
+        setPopupTexto(message);
+        setPopupVisible(true);
+      }
     };
 
     const [email, setEmail] = React.useState('');

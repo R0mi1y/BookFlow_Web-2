@@ -52,7 +52,7 @@ export const Padding = {
 };
 /* border radiuses */
 export const Border = {
-  br_mini: 15,
+  br_mini: 5,
   br_12xs: 1,
   br_xs: 12,
   br_smi_6: 13,

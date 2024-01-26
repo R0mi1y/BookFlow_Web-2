@@ -7,6 +7,7 @@ import * as SecureStore from 'expo-secure-store';
 const SplashScreen = ({ navigation }) => {
 
   useEffect(() => {
+
       const fetchData = async () => {
         try {
           const user = await await SecureStore.getItemAsync("user");

@@ -6,7 +6,7 @@ import React, { memo, useState, useCallback } from "react";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
-const TopComponent = memo(({ middle }) => {
+const TopComponent = memo(({ middle, text1="Book", text2="Flow", searchBtn=true }) => {
 
   const navigation = useNavigation();
   const [phlistIconVisible, setPhlistIconVisible] = useState(false);
@@ -36,6 +36,7 @@ const TopComponent = memo(({ middle }) => {
   }, []);
 
   return (
+    
     <>
       <Modal
         transparent={true}
@@ -50,6 +51,7 @@ const TopComponent = memo(({ middle }) => {
               value={searchCamp}
               onChangeText={text => setSearchCamp(text)}
             />
+            
             <Pressable onPress={search}>
               <Image
                 contentFit="cover"
@@ -80,18 +82,18 @@ const TopComponent = memo(({ middle }) => {
           onPress={middle}
         >
           <View style={styles.brandLogo}>
-            <Text style={[styles.l]}>Book</Text>
-            <Text style={styles.libro}>Flow</Text>
+            <Text style={[styles.l]}>{text1}</Text>
+            <Text style={styles.libro}>{text2}</Text>
           </View>
         </Pressable>
-
+        {!searchBtn ? (<View style={[styles.phlistLayout]}></View>) : (
         <Pressable onPress={handleSearchPress}>
           <Image
             style={[styles.phlistLayout]}
             contentFit="cover"
             source={require("../assets/epsearch.png")}
           />
-        </Pressable>
+        </Pressable>)}
       </View>
       <Modal animationType="fade" transparent visible={phlistIconVisible}>
         <View style={styles.phlistIconOverlay}>
@@ -103,15 +105,15 @@ const TopComponent = memo(({ middle }) => {
             source={require("../assets/octiconperson24.png")}
           />
           <Image
-            style={[styles.octiconperson241, styles.octiconpersonLayout]}
+            style={[styles.octiconperson241, styles.iconBell]}
             contentFit="cover"
-            source={require("../assets/octiconperson241.png")}
+            source={require("../assets/notification-bell.png")}
           />
-          <Image
+          {/* <Image
             style={[styles.octiconperson242, styles.octiconpersonLayout]}
             contentFit="cover"
             source={require("../assets/octiconperson242.png")}
-          />
+          /> */}
           
           <Text style={styles.iniciarSesin} onPress={() => {
             setPhlistIconVisible(false);
@@ -120,14 +122,31 @@ const TopComponent = memo(({ middle }) => {
         
 
           <Text style={[styles.configuracin, styles.contctanosTypo]}>
-            Configurações
+            Notificações
           </Text>
+          <Image
+            style={[styles.octiconperson242, styles.octicon]}
+            contentFit="cover"
+             source={require("../assets/lista_books.png")}
+          />
+
+          <Image
+            style={[styles.iconlogout, styles.octiconpersonLayout]}
+            contentFit="cover"
+             source={require("../assets/logout.png")}
+          />
+          
           <Text style={[styles.contctanos, styles.contctanosTypo]}>
-            Contatos
+            Meus Empréstimos
+          </Text>
+
+          <Text style={[styles.logout, styles.contctanosTypo]}>
+            Logout
           </Text>
           <View style={[styles.androidLarge3Child, styles.androidLayout]} />
           <View style={[styles.androidLarge3Item, styles.androidLayout]} />
           <View style={[styles.androidLarge3Inner, styles.androidLayout]} />
+          <View style={[styles.androidLargeLogout, styles.androidLayout]} />
         </View>
         </View>
       </Modal>
@@ -136,10 +155,31 @@ const TopComponent = memo(({ middle }) => {
 });
 
 const styles = StyleSheet.create({
+  logout:{
+    marginTop:790,
+  },
+  iconlogout:{
+    top:768,
+  },
   octiconpersonLayout: {
     height: 24,
     width: 24,
     left: 36,
+    position: "absolute",
+    overflow: "hidden",
+  },
+
+  octicon: {
+    height: 25,
+    width: 29,
+    left: 35,
+    position: "absolute",
+    overflow: "hidden",
+  },
+  iconBell:{
+    height: 38,
+    width: 38,
+    left: 31,
     position: "absolute",
     overflow: "hidden",
   },
@@ -165,10 +205,13 @@ const styles = StyleSheet.create({
     top: 92,
   },
   octiconperson241: {
-    top: 144,
+    top: 138,
   },
   octiconperson242: {
     top: 196,
+  },
+  logout:{
+    top: 770,
   },
   iniciarSesin: {
     top: 99,
@@ -194,6 +237,9 @@ const styles = StyleSheet.create({
   },
   androidLarge3Inner: {
     top: 233,
+  },
+  androidLargeLogout:{
+    top: 799,
   },
   Menu: {
     position: 'absolute',
@@ -260,12 +306,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.rosarivoRegular,
   },
   topLayout: {
-    top: 60,
+    marginTop: 60,
     marginLeft: screenWidth * 0.05,
     marginRight: screenWidth * 0.05,
     width: screenWidth * 0.9,
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   iconLayout: {
     width: "100%",
@@ -292,7 +338,9 @@ const styles = StyleSheet.create({
   },
   brandLogo: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    width: screenWidth * 0.5,
+    justifyContent: 'center',
   },
   text: {
     top: 190,
