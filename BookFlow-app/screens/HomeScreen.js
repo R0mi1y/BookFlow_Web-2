@@ -154,6 +154,7 @@ const HomeScreen = ({ route }) => {
 
 
   useEffect(() => {
+    let count = 0;
     const fetchData = async (section, i) => {
       const user = JSON.parse(await SecureStore.getItemAsync("user"));
       try {
@@ -186,7 +187,7 @@ const HomeScreen = ({ route }) => {
           
           console.log(s[i].books);
 
-          if (sections.length -1 == i) togglePopup();
+          if (sections.length - 1 == i) togglePopup();
         } else {
           navigation.reset({
             index: 0,
@@ -194,8 +195,12 @@ const HomeScreen = ({ route }) => {
           });
           console.error("Falha ao obter AccessToken");
         }
+        count = 0;
       } catch (error) {
-        fetchData(section, i);
+        if (count < 5) {
+          count ++;
+          fetchData(section, i);
+        } else count = 0;
         console.error(error.message);
         console.error('Erro ao buscar livros:', error.message);
       }

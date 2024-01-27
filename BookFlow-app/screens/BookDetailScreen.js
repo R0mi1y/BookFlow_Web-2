@@ -115,16 +115,33 @@ const BookDetailScreen = ({ route }) => {
       const accessToken = await getAccessToken();
 
       if (accessToken) {
-        const response = await fetch(`${apiUrl}/api/book/${bookId}`, {
+        const response = await fetch(`${apiUrl}/api/book/${bookId}/request_loan/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + accessToken,
           },
         });
+
+        if (!response.ok) {
+          throw new Error(await response.text());
+        }
+        const data = await response.json();
+
+        if (data?.id) {
+          setBook(data);
+        } else if (data?.error) {
+          togglePopup(data.error);
+        }
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "HomeScreen" }],
+        });
       }
     } catch (error) {
-      console.error("Erro ao buscar livros:", error.message);
+      console.error("Erro ao requisitar empréstimo:");
+      console.error(error);
     }
   }
 
@@ -180,7 +197,7 @@ const BookDetailScreen = ({ route }) => {
 
   const getLimitedSummary = (summary) => {
     // Limite o texto a 300 caracteres
-    return summary?.length && summary?.length > 90 ? summary.slice(0, 90) + "...    " : summary;
+    return (summary?.length && summary?.length) > 93 ? summary.slice(0, 90) + "...    " : summary;
   };
 
   const toggleFavorite = async (bookId) => {
@@ -303,11 +320,11 @@ const BookDetailScreen = ({ route }) => {
             </Text>
             <Pressable
               onPress={ owner ? () => navigation.navigate("RegisterBook", { book: book }) : () => {
-                requestBook(bookId);
+                book.is_required ? togglePopup("Empréstimo já requisitado!") : requestBook(bookId);
               }}
             >
               <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-                  {owner ? "Editar livro" : "Emprestar Livro"}
+                  {owner ? "Editar livro" : "Requisitar empréstimo"}
                 </Text>
                 <Image
                   style={[styles.ionbookIcon, styles.lPosition]}
@@ -315,6 +332,7 @@ const BookDetailScreen = ({ route }) => {
                   source={require("../assets/ionbook.png")}
                 />
               </View>
+              {book.is_required ? (<Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>Livro requisitado</Text>) : (<></>)}
                 
             </Pressable>
           </View>

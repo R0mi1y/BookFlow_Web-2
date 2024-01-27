@@ -119,6 +119,7 @@ const ListBook = ({ route }) => {
 
 
   const getBooks = () => {
+    let cont = 0;
     const fetchData = async () => {
       try {
         const user = JSON.parse(await SecureStore.getItemAsync("user"));
@@ -133,6 +134,7 @@ const ListBook = ({ route }) => {
             url += `?search=${search}`;
           }
           else if (receivedData != 'NONE') url += `user/${user.id}?filter=${receivedData}`;
+          console.log(url);
         
           const response = await fetch(url, {
             method: 'GET',
@@ -143,12 +145,14 @@ const ListBook = ({ route }) => {
           });
 
           if (!response.ok) {
-            throw new Error(response.text());
+            throw new Error(await response.text());
           }
 
           const data = await response.json();
+
           setBooks(data);
           togglePopup();
+          cont = 0;
         } else {
           navigation.reset({
             index: 0,
@@ -157,8 +161,13 @@ const ListBook = ({ route }) => {
           console.error("Falha ao obter AccessToken");
         }
       } catch (error) {
-        console.error("Erro ao buscar livros:", error.message);
-        fetchData();
+        console.error("Erro ao buscar livros:", error);
+        if (cont < 5) {
+          cont ++;
+          fetchData();
+        } else {
+          cont = 0;
+        }
       }
     };
 
@@ -182,7 +191,7 @@ const ListBook = ({ route }) => {
         message={messagePopup}
       />
       <ScrollView>
-        <View style={[styles.listBook, styles.iconLayout, { height: ((screenHeight * 0.3) + (books.length) * 132) < screenHeight * 1.3 ? screenHeight : ((screenHeight * 0.3) + (books.length) * 132) }]}>
+        <View style={[styles.listBook, styles.iconLayout, { height: ((screenHeight * 0.3) + (books.length) * 132) < screenHeight * 1.5 ? screenHeight : ((screenHeight * 0.3) + (books.length) * 132) }]}>
           {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
           <TopComponent
             middle={() => {
@@ -352,13 +361,6 @@ const styles = StyleSheet.create({
     top: 0,
     position: "absolute",
   },
-  brandLogo: {
-    top: 49,
-    left: 115,
-    width: 144,
-    height: 52,
-    position: "absolute",
-  },
   autores: {
     width: 88,
     height: 16,
@@ -397,10 +399,9 @@ const styles = StyleSheet.create({
     width: 87,
   },
   instanceParent: {
-    top: 120,
+    marginTop: 10,
     width: "100%",
     flexDirection: "row",
-    position: "absolute",
   },
   groupChild3: {
     backgroundColor: Color.colorGray_300,
@@ -436,11 +437,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   scrol1: {
-    top: 180,
+    marginTop: 30,
     width: screenWidth * 0.9,
     margin: screenWidth * 0.05,
     height: "100%",
-    position: "absolute",
   },
   listBook: {
     flex: 1,
