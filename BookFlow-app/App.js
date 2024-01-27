@@ -15,6 +15,8 @@ import ListBook from "./screens/ListBook";
 import Profile from "./screens/Profile";
 import Frame from "./components/Frame";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+// import * as Notifications from 'expo-notifications';
+// import * as BackgroundNotifications from 'expo-background-notifications';
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -38,13 +40,14 @@ const App = () => {
   return (
     <>
       <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
         {hideSplashScreen ? (
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen
               name="SplashScreen"
               component={SplashScreen}
               options={{ headerShown: false }}
             />
+            ) : (<></>)}
             <Stack.Screen
               name="HomeScreen"
               component={HomeScreen}
@@ -86,9 +89,9 @@ const App = () => {
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
-        ) : null}
       </NavigationContainer>
     </>
   );
 };
+
 export default App;

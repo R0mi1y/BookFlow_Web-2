@@ -204,17 +204,23 @@ const ListBook = ({ route }) => {
           {/* NAV-BAR HOME */}
           <View style={styles.instanceParent}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.autoresWrapper, styles.frameBorder, receivedData == "MY_BOOKS" ? styles.selected : null]}>
+              <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.frameView, styles.frameBorder, receivedData == "MY_BOOKS" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "MY_BOOKS" ? styles.selected : null]}>Meus livros</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("PENDING")} style={[styles.autoresContainer, styles.frameBorder, receivedData == "PENDING" ? styles.selected : null]}>
+              <TouchableOpacity onPress={() => changeScreen("PENDING")} style={[styles.frameView, styles.frameBorder, receivedData == "PENDING" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "PENDING" ? styles.selected : null]}>Pendentes</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.autoresFrame, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
+              <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.frameView, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeScreen("POPULARS")} style={[styles.frameView, styles.frameBorder, receivedData == "POPULARS" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "POPULARS" ? styles.selected : null]}>Populares</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => changeScreen("REQUIRED_BY_ME")} style={[styles.frameView, styles.frameBorder, receivedData == "REQUIRED_BY_ME" ? styles.selected : null]}>
+                <Text style={[styles.autores, styles.autoresTypo, receivedData == "REQUIRED_BY_ME" ? styles.selected : null]}>Requisitei</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => changeScreen("REQUIRED")} style={[styles.frameView, styles.frameBorder, receivedData == "REQUIRED" ? styles.selected : null]}>
+                <Text style={[styles.autores, styles.autoresTypo, receivedData == "REQUIRED" ? styles.selected : null]}>Requisitados</Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -362,7 +368,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   autores: {
-    width: 88,
+    width: 150,
     height: 16,
     lineHeight: 18,
     fontSize: FontSize.size_sm,
@@ -393,7 +399,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   frameView: {
-    width: 112,
+    width: 250,
   },
   autoresWrapper1: {
     width: 87,

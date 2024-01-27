@@ -18,18 +18,18 @@ const MisFavoritosContainer = memo(
             styles.groupChildLayout,
           ]}
         >
-          <View style={[styles.groupChild, styles.groupChildLayout]} />
-          <Text style={[styles.misFavoritos]}>
-            {userFavorites}
-          </Text>
-          <View style={styles.octiconperson24} />
-          {showSolarstarOutlineIcon && (
-            <Image
-              style={styles.octiconperson24}
-              contentFit="cover"
-              source={source}
-            />
-          )}
+          <View style={[styles.groupChild, styles.groupChildLayout]} >
+            <Text style={[styles.misFavoritos]}>
+              {userFavorites}
+            </Text>
+            {showSolarstarOutlineIcon && (
+              <Image
+                style={[styles.octiconperson24, styles.octiconperson24]}
+                contentFit="cover"
+                source={source}
+              />
+            )}
+          </View>
         </View>
       </Pressable>
     );
@@ -38,34 +38,30 @@ const MisFavoritosContainer = memo(
 
 const styles = StyleSheet.create({
   groupChildLayout: {
-    height: 105,
+    height: 120,
     width: screenWidth * 0.28,
     alignItems: "center",
     marginRight: 5,
     marginLeft: 5,
+    justifyContent: "space-between"
   },
   groupChild: {
-    top: 0,
-    left: 0,
     borderRadius: Border.br_3xs,
     backgroundColor: Color.colorDimgray,
   },
   misFavoritos: {
-    top: 19,
+    marginTop: 19,
     fontSize: FontSize.size_base,
     lineHeight: 20,
     fontFamily: FontFamily.rosarivoRegular,
     color: Color.colorBlanchedalmond_100,
     textAlign: "center",
-    position: "absolute",
   },
   octiconperson24: {
-    top: 62,
-    left: 38,
-    width: 35,
-    height: 35,
+    height: 24,
+    width: 24,
+    bottom: 15,
     overflow: "hidden",
-    position: "absolute",
   },
 });
 

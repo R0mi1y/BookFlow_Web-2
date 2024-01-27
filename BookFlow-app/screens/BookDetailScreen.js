@@ -319,12 +319,12 @@ const BookDetailScreen = ({ route }) => {
               </Text>
             </Text>
             <Pressable
-              onPress={ owner ? () => navigation.navigate("RegisterBook", { book: book }) : () => {
+              onPress={ owner ? () => navigation.navigate(book.status == "Requisitado" ? "AcceptLoan" : "RegisterBook", { book: book }) : () => {
                 book.is_required ? togglePopup("Empréstimo já requisitado!") : requestBook(bookId);
               }}
             >
               <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-                  {owner ? "Editar livro" : "Requisitar empréstimo"}
+                  {owner ? book.status == "Requisitado" ? "Aprovar pedido" : "Editar livro" : "Requisitar empréstimo"}
                 </Text>
                 <Image
                   style={[styles.ionbookIcon, styles.lPosition]}

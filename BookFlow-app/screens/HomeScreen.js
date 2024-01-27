@@ -253,7 +253,7 @@ const HomeScreen = ({ route }) => {
                 •Coleção•
               </Text>
             </View>
-            <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
+            <View style={[styles.rectangleGroup]}>
               <Image
                 style={styles.groupChild}
                 contentFit="cover"
@@ -264,7 +264,7 @@ const HomeScreen = ({ route }) => {
                 •Coleção•
               </Text>
             </View>
-            <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
+            <View style={[styles.rectangleGroup]}>
               <Image
                 style={styles.groupChild}
                 contentFit="cover"
@@ -275,7 +275,7 @@ const HomeScreen = ({ route }) => {
                 •Coleção•
               </Text>
             </View>
-            <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
+            <View style={[styles.rectangleGroup]}>
               <Image
                 style={styles.groupChild}
                 contentFit="cover"
@@ -286,7 +286,7 @@ const HomeScreen = ({ route }) => {
                 •Coleção•
               </Text>
             </View>
-            <View style={[styles.rectangleGroup, styles.rectangleLayout1]}>
+            <View style={[styles.rectangleGroup]}>
               <Image
                 style={styles.groupChild}
                 contentFit="cover"
@@ -299,8 +299,8 @@ const HomeScreen = ({ route }) => {
                 •Coleção•
               </Text>
             </View>
+            <View style={{ width: screenWidth * 0.1 }}/>
           </ScrollView>
-          {/*-----------------------------------------------*/}
 
           <Text style={styles.miBiblioteca}>Minha biblioteca</Text>
           <ScrollView
@@ -363,8 +363,8 @@ const HomeScreen = ({ route }) => {
                           style={[styles.pachinkoNovela, styles.groupChildLayout1]}
                         >{book.title}</Text>
 
-                        <View style={[styles.groupChild5, styles.groupChildLayout]} />
-                        <Text style={[styles.text, styles.textTypo]}>STATUS</Text>
+                        {/* <View style={[styles.groupChild5, styles.groupChildLayout]} />
+                        <Text style={[styles.text, styles.textTypo]}>STATUS</Text> */}
                         <View style={[styles.groupChild6, styles.groupChildLayout]} />
                         <View style={styles.groupChild7} />
                         <Image
@@ -394,56 +394,9 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-  myBibSection:{
-    top: 20,
-    flexDirection: "row",
-    // justifyContent: "space-between",
-    paddingLeft: screenWidth * 0.05,
-    paddingRight: screenWidth * 0.05,
-    marginBottom: 40,
-    width: (screenWidth * 0.28 + 10) * 4,
-    height: 105,
-  },
-  topLayout: {
-    top: 40,
-    marginLeft: screenWidth * 0.05,
-    marginRight: screenWidth * 0.05,
-    width: screenWidth * 0.9,
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  modalContainer: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Define um fundo escuro semi-transparente
-  },
-  searchContainer: {
-    width: '80%',
-    top: screenHeight * 0.05,
-    padding: 20,
-    backgroundColor: 'transparent',
-    // backgroundColor: 'white',
-    borderRadius: 10,
-  },
-  searchInput: {
-    borderColor: 'white',
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-    height: 45,
-    marginBottom: 10,
-    borderRadius: 10,
-    paddingLeft: 15,
-    color: Color.colorBeige_100,
-    fontFamily: FontFamily.rosarivoRegular,
-  },
   iconLayout: {
     width: "100%",
     overflow: "hidden",
-  },
-  phlistLayout: {
-    height: 25,
-    width: 25,
-    marginTop: 15,
   },
   textFlexBox: {
     textAlign: "left",
@@ -458,7 +411,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleLayout1: {
-    width: screenWidth * 0.8,
   },
   crimenTypo: {
     letterSpacing: 2.8,
@@ -466,24 +418,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.colorWhite,
     position: "absolute",
-  },
-  autoresTypo: {
-    textAlign: "center",
-    color: Color.colorBlanchedalmond_100,
-    fontFamily: FontFamily.rosarivoRegular,
-  },
-  frameBorder: {
-    marginLeft: 15,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    height: 34,
-    borderWidth: 1,
-    borderColor: Color.colorBlanchedalmond_100,
-    borderStyle: "solid",
-    borderRadius: Border.br_3xs,
-    flexDirection: "row",
   },
   iconGroupLayout: {
     maxHeight: "100%",
@@ -494,7 +428,6 @@ const styles = StyleSheet.create({
   rectangleLayout: {
     height: 105,
     width: 110,
-    // position: "absolute",
   },
   textTypo: {
     fontSize: FontSize.size_base,
@@ -533,7 +466,6 @@ const styles = StyleSheet.create({
     top: 0,
     height: 150,
     width: "100%",
-    // position: "absolute",
   },
   cienciaFiccion: {
     top: 43,
@@ -561,6 +493,8 @@ const styles = StyleSheet.create({
   },
   rectangleGroup: {
     marginLeft: screenWidth * 0.05,
+    width: screenWidth * 0.8,
+    height: 180,
   },
   firstCarrousel: {
     marginLeft: screenWidth * 0.1,
@@ -601,10 +535,9 @@ const styles = StyleSheet.create({
     left: 46,
   },
   groupParent: {
-    top: 80,
+    marginTop: 20,
     flexDirection: "row",
     width: "100%",
-    // position: "absolute",
   },
   l: {
     fontSize: FontSize.size_11xl,
@@ -615,10 +548,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_23xl,
     color: Color.colorBlanchedalmond_100,
     fontFamily: FontFamily.rosarivoRegular,
-  },
-  brandLogo: {
-    flexDirection: "row",
-    alignItems: "center"
   },
   autores: {
     width: 88,
@@ -640,26 +569,6 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     flexDirection: "row",
   },
-  autoresContainer: {
-    width: 110,
-  },
-  autoresFrame: {
-    width: 90,
-    marginLeft: 15,
-  },
-  frameView: {
-    width: 112,
-  },
-  autoresWrapper1: {
-    width: 87,
-  },
-  instanceParent: {
-    top: 120,
-    width: 322,
-    left: 43,
-    flexDirection: "row",
-    position: "absolute",
-  },
   miBiblioteca: {
     width: 170,
     height: "auto",
@@ -670,41 +579,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.rosarivoRegular,
     textAlign: "left",
     color: Color.colorWhite,
-  },
-  vectorIcon: {
-    height: "2.61%",
-    width: "11.11%",
-    top: "31.77%",
-    right: "15.56%",
-    bottom: "66.62%",
-    left: "77%",
-  },
-  rectangleView: {
-    backgroundColor: Color.colorDimgray,
-    borderRadius: Border.br_3xs,
-    width: 95,
-    left: 0,
-    top: 0,
-  },
-  iniciarSesin: {
-    top: 19,
-    lineHeight: 20,
-    textAlign: "center",
-    color: Color.colorBlanchedalmond_100,
-    fontFamily: FontFamily.rosarivoRegular,
-    left: 10,
-  },
-  octiconperson24: {
-    left: 48,
-    height: 37,
-    top: 62,
-    width: 54,
-
-    overflow: "hidden",
-  },
-  rectangleParent2: {
-    top: 385,
-    left: 17,
   },
   groupChild3: {
     borderRadius: 13,
@@ -722,7 +596,7 @@ const styles = StyleSheet.create({
   },
   pachinkoNovela: {
     top: 131,
-    height: 35,
+    // height: 35,
     lineHeight: 20,
     width: 111,
     fontSize: FontSize.size_base,
@@ -747,19 +621,6 @@ const styles = StyleSheet.create({
     color: Color.colorWhite,
     fontWeight: "600",
   },
-  // groupChild6: {
-  //   left: 84,
-  //   backgroundColor: Color.colorBlanchedalmond_100,
-  //   width: 39,
-  // },
-  groupIcon: {
-    height: "9.37%",
-    width: "15.37%",
-    top: "81.61%",
-    right: "16.74%",
-    bottom: "10.83%",
-    left: "69%",
-  },
   groupChild7: {
     borderTopLeftRadius: Border.br_mini,
     borderBottomRightRadius: Border.br_mini,
@@ -779,71 +640,14 @@ const styles = StyleSheet.create({
     bottom: "88.26%",
     left: "13.33%",
   },
-  text1: {
-    top: 13,
-    left: 33,
-    width: 13,
-    height: 14,
-    fontSize: FontSize.size_3xs,
-    fontFamily: FontFamily.rosarivoRegular,
-    color: Color.colorWhite,
-  },
-  rectangleParent3: {
-    marginLeft: 19,
-  },
   groupContainer: {
     marginTop: 12,
     flexDirection: "row",
   },
-
-  agregadosRecientemente: {
-    marginTop: 12,
-  },
   scrol1: {
     width: "100%",
   },
-  bgIcon: {
-    top: -2,
-    right: 70,
-    bottom: 16,
-    left: 69,
-    display: "none",
-  },
-  batteryIcon: {
-    right: 0,
-    height: 11,
-    top: 0,
-  },
-  wifiIcon: {
-    width: 15,
-    height: 11,
-  },
-  mobileSignalIcon: {
-    width: 17,
-    height: 11,
-  },
-  rightSide: {
-    right: 15,
-    width: 67,
-    height: 11,
-  },
-  leftSideIcon: {
-    left: 34,
-    width: 28,
-    height: 11,
-  },
-  // iosstatusBarblack: {
-  //   right: 1,
-  //   left: 1,
-  //   height: 44,
-  //   top: 0,
-  //   position: "absolute",
-  //   overflow: "hidden",
-  //   backgroundColor: Color.colorGray_200,
-  // },
   homeScreen: {
-    // display:"flex",
-    top: 0,
     flex: 1,
     flexDirection: "column",
     overflow: "hidden",
