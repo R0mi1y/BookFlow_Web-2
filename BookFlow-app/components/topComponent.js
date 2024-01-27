@@ -1,165 +1,183 @@
-import { View, StyleSheet, Text, Image, Dimensions, Pressable, Modal, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  Dimensions,
+  Pressable,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import React, { memo, useState, useCallback } from "react";
+import * as SecureStore from "expo-secure-store";
 
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
-const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+const TopComponent = memo(
+  ({ middle, text1 = "Book", text2 = "Flow", searchBtn = true }) => {
+    const navigation = useNavigation();
+    const [phlistIconVisible, setPhlistIconVisible] = useState(false);
+    const [searchCamp, setSearchCamp] = React.useState("");
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-const TopComponent = memo(({ middle, text1="Book", text2="Flow", searchBtn=true }) => {
+    const handleSearchPress = () => {
+      setIsSearchVisible(true);
+      console.log(isSearchVisible);
+    };
 
-  const navigation = useNavigation();
-  const [phlistIconVisible, setPhlistIconVisible] = useState(false);
-  const [searchCamp, setSearchCamp] = React.useState('');
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const handleSearchClose = () => {
+      setIsSearchVisible(false);
+    };
 
-  const handleSearchPress = () => {
-    setIsSearchVisible(true);
-    console.log(isSearchVisible);
-  };
-  
-  const handleSearchClose = () => {
-    setIsSearchVisible(false);
-  };
-  
-  function search() {
-    handleSearchClose();
-    navigation.navigate("ListBook", { "dataToSend": "SEARCH", "search": searchCamp });
-  }
+    function search() {
+      handleSearchClose();
+      navigation.navigate("ListBook", {
+        dataToSend: "SEARCH",
+        search: searchCamp,
+      });
+    }
 
-  const openPhlistIcon = useCallback(() => {
-    setPhlistIconVisible(true);
-  }, []);
-  
-  const closePhlistIcon = useCallback(() => {
-    setPhlistIconVisible(false);
-  }, []);
+    function logout() {
+      SecureStore.deleteItemAsync("user");
+      navigation.navigate("LogInScreen");
+    }
 
-  return (
-    
-    <>
-      <Modal
-        transparent={true}
-        animationType="slide"
-        visible={isSearchVisible}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.searchContainer}>
-            <TextInput
-              placeholder="Pesquisar..."
-              style={styles.searchInput}
-              value={searchCamp}
-              onChangeText={text => setSearchCamp(text)}
+    const openPhlistIcon = useCallback(() => {
+      setPhlistIconVisible(true);
+    }, []);
+
+    const closePhlistIcon = useCallback(() => {
+      setPhlistIconVisible(false);
+    }, []);
+
+    return (
+      <>
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={isSearchVisible}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.searchContainer}>
+              <TextInput
+                placeholder="Pesquisar..."
+                style={styles.searchInput}
+                value={searchCamp}
+                onChangeText={(text) => setSearchCamp(text)}
+              />
+
+              <Pressable onPress={search}>
+                <Image
+                  contentFit="cover"
+                  source={require("../assets/epsearch.png")}
+                />
+              </Pressable>
+              <TouchableOpacity
+                onPress={handleSearchClose}
+                style={styles.searchButton}
+              >
+                <Text style={styles.textButton}>Fechar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <View style={[styles.topLayout]}>
+          <Pressable onPress={openPhlistIcon}>
+            <Image
+              style={[styles.icon, styles.iconLayout, styles.phlistLayout]}
+              contentFit="cover"
+              source={require("../assets/phlist.png")}
             />
-            
-            <Pressable onPress={search}>
+          </Pressable>
+
+          <Pressable onPress={middle}>
+            <View style={styles.brandLogo}>
+              <Text style={[styles.l]}>{text1}</Text>
+              <Text style={styles.libro}>{text2}</Text>
+            </View>
+          </Pressable>
+          {!searchBtn ? (
+            <View style={[styles.phlistLayout]}></View>
+          ) : (
+            <Pressable onPress={handleSearchPress}>
               <Image
+                style={[styles.phlistLayout]}
                 contentFit="cover"
                 source={require("../assets/epsearch.png")}
               />
             </Pressable>
-            <TouchableOpacity
-              onPress={handleSearchClose}
-              style={styles.searchButton}
-            >
-              <Text style={styles.textButton}>Fechar</Text>
-            </TouchableOpacity>
-          </View>
+          )}
         </View>
-      </Modal>
-      <View style={[styles.topLayout]}>
-        <Pressable
-          onPress={openPhlistIcon}
-        >
-          <Image
-          style={[styles.icon, styles.iconLayout, styles.phlistLayout]}
-          contentFit="cover"
-          source={require("../assets/phlist.png")}
-          />
-        </Pressable>
-
-        <Pressable
-          onPress={middle}
-        >
-          <View style={styles.brandLogo}>
-            <Text style={[styles.l]}>{text1}</Text>
-            <Text style={styles.libro}>{text2}</Text>
-          </View>
-        </Pressable>
-        {!searchBtn ? (<View style={[styles.phlistLayout]}></View>) : (
-        <Pressable onPress={handleSearchPress}>
-          <Image
-            style={[styles.phlistLayout]}
-            contentFit="cover"
-            source={require("../assets/epsearch.png")}
-          />
-        </Pressable>)}
-      </View>
-      <Modal animationType="fade" transparent visible={phlistIconVisible}>
-        <View style={styles.phlistIconOverlay}>
-          <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
-          <View style={styles.Menu}>
-          <Image
-            style={[styles.octiconperson24, styles.octiconpersonLayout]}
-            contentFit="cover"
-            source={require("../assets/octiconperson24.png")}
-          />
-          <Image
-            style={[styles.octiconperson241, styles.iconBell]}
-            contentFit="cover"
-            source={require("../assets/notification-bell.png")}
-          />
-          {/* <Image
+        <Modal animationType="fade" transparent visible={phlistIconVisible}>
+          <View style={styles.phlistIconOverlay}>
+            <Pressable style={styles.phlistIconBg} onPress={closePhlistIcon} />
+            <View style={styles.Menu}>
+              <Image
+                style={[styles.octiconperson24, styles.octiconpersonLayout]}
+                contentFit="cover"
+                source={require("../assets/octiconperson24.png")}
+              />
+              <Image
+                style={[styles.octiconperson241, styles.iconBell]}
+                contentFit="cover"
+                source={require("../assets/notification-bell.png")}
+              />
+              {/* <Image
             style={[styles.octiconperson242, styles.octiconpersonLayout]}
             contentFit="cover"
             source={require("../assets/octiconperson242.png")}
           /> */}
-          
-          <Text style={styles.iniciarSesin} onPress={() => {
-            setPhlistIconVisible(false);
-            navigation.navigate("Profile");
-          }}>Editar Perfil</Text>
-        
-
-          <Text style={[styles.configuracin, styles.contctanosTypo]}>
-            Notificações
-          </Text>
-          <Image
-            style={[styles.octiconperson242, styles.octicon]}
-            contentFit="cover"
-             source={require("../assets/lista_books.png")}
-          />
-
-          <Image
-            style={[styles.iconlogout, styles.octiconpersonLayout]}
-            contentFit="cover"
-             source={require("../assets/logout.png")}
-          />
-          
-          <Text style={[styles.contctanos, styles.contctanosTypo]}>
-            Meus Empréstimos
-          </Text>
-
-          <Text style={[styles.logout, styles.contctanosTypo]}>
-            Logout
-          </Text>
-          <View style={[styles.androidLarge3Child, styles.androidLayout]} />
-          <View style={[styles.androidLarge3Item, styles.androidLayout]} />
-          <View style={[styles.androidLarge3Inner, styles.androidLayout]} />
-          <View style={[styles.androidLargeLogout, styles.androidLayout]} />
-        </View>
-        </View>
-      </Modal>
-    </>
-  );
-});
+              <Text
+                style={styles.iniciarSesin}
+                onPress={() => {
+                  setPhlistIconVisible(false);
+                  navigation.navigate("Profile");
+                }}
+              >
+                Editar Perfil
+              </Text>
+              <Text style={[styles.configuracin, styles.contctanosTypo]}>
+                Notificações
+              </Text>
+              <Image
+                style={[styles.octiconperson242, styles.octicon]}
+                contentFit="cover"
+                source={require("../assets/lista_books.png")}
+              />
+              <Image
+                style={[styles.iconlogout, styles.octiconpersonLayout]}
+                contentFit="cover"
+                source={require("../assets/logout.png")}
+              />
+              <Text style={[styles.contctanos, styles.contctanosTypo]}>
+                Meus Empréstimos
+              </Text>
+              <Pressable onPress={logout}>
+                <Text style={[styles.logout, styles.contctanosTypo]}>
+                  Logout
+                </Text>
+              </Pressable>
+              <View style={[styles.androidLarge3Child, styles.androidLayout]} />
+              <View style={[styles.androidLarge3Item, styles.androidLayout]} />
+              <View style={[styles.androidLarge3Inner, styles.androidLayout]} />
+              <View style={[styles.androidLargeLogout, styles.androidLayout]} />
+            </View>
+          </View>
+        </Modal>
+      </>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
-  logout:{
-    marginTop:790,
+  logout: {
+    marginTop: 790,
   },
-  iconlogout:{
-    top:768,
+  iconlogout: {
+    top: 768,
   },
   octiconpersonLayout: {
     height: 24,
@@ -176,7 +194,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     overflow: "hidden",
   },
-  iconBell:{
+  iconBell: {
     height: 38,
     width: 38,
     left: 31,
@@ -198,7 +216,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     borderColor: Color.colorBlanchedalmond_200,
     borderStyle: "solid",
-    alignSelf:"center",
+    alignSelf: "center",
     position: "absolute",
   },
   octiconperson24: {
@@ -210,7 +228,7 @@ const styles = StyleSheet.create({
   octiconperson242: {
     top: 196,
   },
-  logout:{
+  logout: {
     top: 770,
   },
   iniciarSesin: {
@@ -238,22 +256,21 @@ const styles = StyleSheet.create({
   androidLarge3Inner: {
     top: 233,
   },
-  androidLargeLogout:{
+  androidLargeLogout: {
     top: 799,
   },
   Menu: {
-    position: 'absolute',
-    top:0,
-    left:0,
+    position: "absolute",
+    top: 0,
+    left: 0,
 
     backgroundColor: "#27181d",
-    right:60,
+    right: 60,
     width: 300,
     height: "100%",
     maxWidth: "100%",
     maxHeight: "100%",
     overflow: "hidden",
-    
   },
   phlistIconOverlay: {
     flex: 1,
@@ -269,35 +286,35 @@ const styles = StyleSheet.create({
     top: 0,
   },
   searchButton: {
-    borderColor: 'brown',
+    borderColor: "brown",
     borderWidth: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 10,
     borderRadius: 5,
-    width: '100%',
+    width: "100%",
   },
   textButton: {
-    color: 'brown', 
-    textAlign: 'center', 
-    width:"100%",
+    color: "brown",
+    textAlign: "center",
+    width: "100%",
   },
   modalContainer: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Define um fundo escuro semi-transparente
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.9)", // Define um fundo escuro semi-transparente
   },
   searchContainer: {
-    width: '80%',
+    width: "80%",
     top: screenHeight * 0.05,
     padding: 20,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     // backgroundColor: 'white',
     borderRadius: 10,
   },
   searchInput: {
-    borderColor: 'white',
+    borderColor: "white",
     borderWidth: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     height: 45,
     marginBottom: 10,
     borderRadius: 10,
@@ -340,7 +357,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: screenWidth * 0.5,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   text: {
     top: 190,

@@ -12,37 +12,97 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
+import CustomPopup from "../components/CustomPopup";
+import * as ImagePicker from 'expo-image-picker';
 
 const Profile = () => {
   const navigation = useNavigation();
 
-  const [name, setName] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
 
-  useEffect(() => {
-    // Chama a função para obter e preencher os dados do usuário
-    SecureStore.getItemAsync("user").then((user) => {
-      const parsedUser = JSON.parse(user);
+  const [messagePopup, setPopupTexto] = useState("");
+  const [popupVisible, setPopupVisible] = useState(false);
 
-      setUser(parsedUser);
-      setName(parsedUser.username);
-      setEmail(parsedUser.email);
-    });
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const [hasImagem, setHasImagem] = useState(false);
+
+  const togglePopup = (message = null) => {
+    setPopupVisible(false);
+    if (message != null) {
+      setPopupTexto(message);
+      setPopupVisible(true);
+    }
+  };
+
+  const pickImage = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      console.log(status);
+      if (status !== 'granted') {
+        console.error('Permissão negada para acessar a biblioteca de mídia');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      console.log(result);
+      if (!result.cancelled) {
+        console.log(result);
+        setHasImagem(true);  // Adicione essa linha
+        setSelectedImage(result.assets[0].uri);  // Acessar a URI dentro do array de assets
+        console.log(result.assets[0].uri);
+      }
+    } catch (err) {
+      console.error('Erro ao selecionar a imagem:', err);
+    }
+  };
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        // Chama a função para obter e preencher os dados do usuário
+        SecureStore.getItemAsync("user").then((user) => {
+          const parsedUser = JSON.parse(user);
+
+          setUser(parsedUser);
+          setUserName(parsedUser.username);
+          setEmail(parsedUser.email);
+
+          // Carregar a imagem do usuário
+          if (parsedUser.photo) {
+            setSelectedImage(parsedUser.photo); // Assumindo que o campo da imagem é 'photo'
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error.message);
+      }
+    };
+
+    loadUserData();
   }, []);
 
   const apiUrl = Constants.expoConfig.extra.apiUrl;
 
   const getAccessToken = async () => {
     try {
-      user = JSON.parse(await SecureStore.getItemAsync("user"));
+      const userFromSecureStore = JSON.parse(
+        await SecureStore.getItemAsync("user")
+      );
 
-      if (!user) {
+      if (!userFromSecureStore) {
         throw new Error("Couldn't find user");
       }
 
-      const refreshToken = user.refresh_token;
+      const refreshToken = userFromSecureStore.refresh_token;
 
       if (!refreshToken) {
         throw new Error("Refresh token não encontrado");
@@ -81,23 +141,48 @@ const Profile = () => {
       const accessToken = await getAccessToken();
 
       let id = user.id;
+
       let url = `${apiUrl}/api/user/${id}/`;
-      console.log(url);
+
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("email", email);
+
+      if (selectedImage) {
+        const localUri = selectedImage;
+        const filename = localUri.split("/").pop();
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : "image";
+
+        formData.append("photo", {
+          uri: localUri,
+          name: filename,
+          type,
+        });
+      }
 
       const response = await fetch(url, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({
-          name,
-          email,
-        }),
+        body: formData,
       });
 
       if (response.ok) {
-        console.log("Dados do usuário atualizados com sucesso!");
+        let user = await response.json();
+
+        if (user.id) {
+          try {
+            SecureStore.setItem("user", JSON.stringify(user));
+            togglePopup("Dados atualizados com sucesso");
+          } catch (e) {
+            console.log(e.message);
+          }
+        } else {
+          console.log(json);
+        }
       } else {
         console.error(
           "Erro ao atualizar dados do usuário:",
@@ -109,75 +194,86 @@ const Profile = () => {
     }
   };
 
-  return (
-    <View style={styles.telaUser}>
-      <Pressable onPress={() => navigation.goBack()}>
-        <Image
-          style={styles.materialSymbolsarrowBackIoIcon}
-          resizeMode="cover"
-          source={require("../assets/material-symbols_arrow-back-ios.png")}
-        />
-      </Pressable>
-      <Text style={[styles.profile, styles.profileTypo]}>Profile</Text>
 
-      <View style={styles.containerImagem}>
-        <Image
-          style={styles.telaUserChild}
-          resizeMode="cover"
-          source={require("../assets/ellipse-2.png")}
-        />
-        <Image
-          style={styles.solarcameraMinimalisticBoldIcon}
-          resizeMode="cover"
-          source={require("../assets/solar_camera-minimalistic-bold.png")}
-        />
-      </View>
-      <View style={[styles.nameParent, styles.parentLayout]}>
-        <Text style={[styles.name, styles.nameTypo]}>Name</Text>
-        <View style={[styles.rectangleParent, styles.groupChildLayout]}>
-          <View style={styles.groupChildPosition} />
-          <TextInput
-            style={[styles.melissaPeters, styles.saveChangesPosition]}
-            placeholder=""
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={name}
-            onChangeText={(text) => setName(text)}
-          ></TextInput>
-        </View>
-      </View>
-      <View style={[styles.emailParent, styles.parentLayout]}>
-        <Text style={styles.nameTypo}>Email</Text>
-        <View style={[styles.rectangleParent, styles.groupChildLayout]}>
-          <View style={styles.groupChildPosition} />
-          <TextInput
-            style={[styles.melissaPeters, styles.saveChangesPosition]}
-            placeholder="melpeters@gmail.com "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
+
+
+  return (
+    <>
+      <CustomPopup
+        visible={popupVisible}
+        onClose={() => {
+          togglePopup(null);
+        }}
+        message={messagePopup}
+      />
+      <View style={styles.telaUser}>
+        <Pressable onPress={() => navigation.goBack()}>
+          <Image
+            style={styles.materialSymbolsarrowBackIoIcon}
+            resizeMode="cover"
+            source={require("../assets/material-symbols_arrow-back-ios.png")}
           />
+        </Pressable>
+        <Text style={[styles.profile, styles.profileTypo]}>Profile</Text>
+
+        <View style={styles.containerImagem}>
+          {selectedImage ? (
+            <Image
+              style={styles.telaUserChild}
+              resizeMode="cover"
+              source={{ uri: selectedImage }}
+            />
+          ) : (
+            <Image
+              style={styles.telaUserChild}
+              resizeMode="cover"
+              source={require("../assets/ellipse-2.png")}
+            />
+          )}
+          <Pressable onPress={pickImage}>
+            <Image
+              style={styles.solarcameraMinimalisticBoldIcon}
+              resizeMode="cover"
+              source={require("../assets/solar_camera-minimalistic-bold.png")}
+            />
+          </Pressable>
         </View>
+        <View style={[styles.nameParent, styles.parentLayout]}>
+          <Text style={[styles.name, styles.nameTypo]}>Name</Text>
+          <View style={[styles.rectangleParent, styles.groupChildLayout]}>
+            <View style={styles.groupChildPosition} />
+            <TextInput
+              style={[styles.melissaPeters, styles.saveChangesPosition]}
+              placeholder=""
+              placeholderTextColor={Color.colorBlanchedalmond_101}
+              value={username}
+              onChangeText={(text) => setUserName(text)}
+            ></TextInput>
+          </View>
+        </View>
+        <View style={[styles.emailParent, styles.parentLayout]}>
+          <Text style={styles.nameTypo}>Email</Text>
+          <View style={[styles.rectangleParent, styles.groupChildLayout]}>
+            <View style={styles.groupChildPosition} />
+            <TextInput
+              style={[styles.melissaPeters, styles.saveChangesPosition]}
+              placeholder="melpeters@gmail.com "
+              placeholderTextColor={Color.colorBlanchedalmond_101}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+          </View>
+        </View>
+        <Pressable onPress={updateUserData}>
+          <View style={[styles.groupView, styles.viewLayout]}>
+            <View style={styles.rectangleView} />
+            <Text style={[styles.saveChanges, styles.saveChangesPosition]}>
+              Save changes
+            </Text>
+          </View>
+        </Pressable>
       </View>
-      <View style={[styles.passwordParent, styles.parentLayout]}>
-        <Text style={styles.nameTypo}>Password</Text>
-        <View style={[styles.rectangleParent, styles.groupChildLayout]}>
-          <View style={styles.groupChildPosition} />
-          <TextInput
-            style={[styles.melissaPeters, styles.saveChangesPosition]}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          ></TextInput>
-        </View>
-      </View>
-      <Pressable onPress={updateUserData}>
-        <View style={[styles.groupView, styles.viewLayout]}>
-          <View style={styles.rectangleView} />
-          <Text style={[styles.saveChanges, styles.saveChangesPosition]}>
-            Save changes
-          </Text>
-        </View>
-      </Pressable>
-    </View>
+    </>
   );
 };
 
@@ -248,7 +344,9 @@ const styles = StyleSheet.create({
     // marginTop: 0,
     // marginLeft: 0,
     width: 168,
-    height: 173,
+    height: 168,
+    borderRadius: 84,
+    overflow: "hidden",
     // left: "50%",
     // top: "50%",
   },
