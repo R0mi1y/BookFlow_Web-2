@@ -1,46 +1,56 @@
-[{
-    "author": "um ai",
-    "availability": false,
-    "cover": "/media/book_cover/cover_AvIOqUq.jpg",
-    "genre": "ação, comédia, animação",
-    "id": 1,
-    "is_in_wishlist": false,
-    "owner": 5,
-    "rating": "10.00",
-    "summary": "um gato lutando contra um lobo",
-    "title": "Gato de botas"
-}, 
 {
-    "author": "não lembro",
-    "availability": false,
-    "cover": "/media/book_cover/cover_W5lPyf3.jpg",
-    "genre": "animation, fairy tail",
-    "id": 3,
-    "is_in_wishlist": false,
-    "owner": 5,
-    "rating": "10.00",
-    "summary": "um principe e uma rapoza",
-    "title": "Pequeno Príncip"
-}, {
-    "author": "A1",
-    "availability": false,
-    "cover": "/media/book_cover/cover.jpg",
-    "genre": "G1",
-    "id": 52,
-    "is_in_wishlist": false,
-    "owner": 5,
-    "rating": "0.00",
-    "summary": "R1",
-    "title": "T1"
-}, {
-    "author": "J. R. R. Tolkien",
-    "availability": false,
-    "cover": null,
-    "genre": "Romance, Fantasia, Épico",
-    "id": 22,
-    "is_in_wishlist": false,
-    "owner": 5,
-    "rating": "0.00",
-    "summary": "O Hobbit conta a história de Bilbo Bolseiro, que já aos 50 anos, se envolve numa aventura rumo à Montanha Solitária, por influência de Gandalf e junto com os anãos que, liderados por Thorin Escudo de Carvalho, desejam reaver sua morada e seu tesouro escondido sob a Montanha Solitária.",
-    "title": "O Hobbit"
-}]
+    "accessInfo": {
+        "accessViewStatus": "SAMPLE",
+        "country": "BR",
+        "embeddable": true,
+        "epub": {
+            "isAvailable": false
+        },
+        "pdf": {
+            "acsTokenLink": "http://books.google.com.br/books/download/An%C3%A1lise_de_um_processo_de_inova%C3%A7%C3%A3o_ed-sample-pdf.acsm?id=y7a_oTPNpBwC&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api",
+            "isAvailable": true
+        },
+        "publicDomain": false,
+        "quoteSharingAllowed": false,
+        "textToSpeechPermission": "ALLOWED",
+        "viewability": "PARTIAL",
+        "webReaderLink": "http://play.google.com/books/reader?id=y7a_oTPNpBwC&hl=&source=gbs_api"
+    },
+    "etag": "f+sWhQkDO9c",
+    "id": "y7a_oTPNpBwC",
+    "kind": "books#volume",
+    "saleInfo": {
+        "country": "BR",
+        "isEbook": false,
+        "saleability": "NOT_FOR_SALE"
+    },
+    "searchInfo": {
+        "textSnippet": "... <b>a</b> si mesmos. Não para ajudar os alunos <b>a</b> resolverem qualquer problematização por eles formulada, proposta pelo professor ou por ambos, de modo <b>a</b> permitir-lhes <b>a</b> avançar nos seus modos de explicar <b>a</b> realidade. Significa dizer que os&nbsp;..."
+    },
+    "selfLink": "https://www.googleapis.com/books/v1/volumes/y7a_oTPNpBwC",
+    "volumeInfo": {
+        "allowAnonLogging": false,
+        "canonicalVolumeLink": "https://books.google.com/books/about/An%C3%A1lise_de_um_processo_de_inova%C3%A7%C3%A3o_ed.html?hl=&id=y7a_oTPNpBwC",
+        "contentVersion": "0.1.1.0.preview.1",
+        "imageLinks": {
+            "smallThumbnail": "http://books.google.com/books/content?id=y7a_oTPNpBwC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+            "thumbnail": "http://books.google.com/books/content?id=y7a_oTPNpBwC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        },
+        "infoLink": "http://books.google.com.br/books?id=y7a_oTPNpBwC&dq=A&hl=&source=gbs_api",
+        "language": "pt",
+        "maturityRating": "NOT_MATURE",
+        "pageCount": 518,
+        "panelizationSummary": {
+            "containsEpubBubbles": false,
+            "containsImageBubbles": false
+        },
+        "previewLink": "http://books.google.com.br/books?id=y7a_oTPNpBwC&pg=PA259&dq=A&hl=&cd=1&source=gbs_api",
+        "printType": "BOOK",
+        "publisher": "Univ Santiago de Compostela",
+        "readingModes": {
+            "image": true,
+            "text": false
+        },
+        "title": "Análise de um processo de inovação educativa numa escola gaúcha: a interdisciplinaridade como principio inovador."
+    }
+}

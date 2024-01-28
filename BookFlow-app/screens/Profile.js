@@ -15,19 +15,18 @@ import * as SecureStore from "expo-secure-store";
 import CustomPopup from "../components/CustomPopup";
 import * as ImagePicker from 'expo-image-picker';
 
-const Profile = () => {
+const Profile = (context) => {
   const navigation = useNavigation();
 
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [user, setUser] = useState("");
-
-  const [messagePopup, setPopupTexto] = useState("");
-  const [popupVisible, setPopupVisible] = useState(false);
-
   const [selectedImage, setSelectedImage] = useState(null);
 
   const [hasImagem, setHasImagem] = useState(false);
+
+  const [messagePopup, setPopupTexto] = useState("");
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const togglePopup = (message = null) => {
     setPopupVisible(false);
@@ -195,8 +194,6 @@ const Profile = () => {
   };
 
 
-
-
   return (
     <>
       <CustomPopup
@@ -272,6 +269,61 @@ const Profile = () => {
             </Text>
           </View>
         </Pressable>
+        <Pressable onPress={() => {
+          togglePopup("Loading");
+          let cont = 0;
+          const fetchData = async () => {
+            var url = `${apiUrl}/api/book/maps/`;
+            try {
+              const accessToken = await getAccessToken();
+      
+              if (accessToken) {
+                const response = await fetch(url, {
+                  method: 'GET',
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken,
+                  },
+                });
+      
+                if (!response.ok) {
+                  throw new Error(await response.text());
+                }
+      
+                const data = await response.json();
+      
+                navigation.navigate("SelectMapScreen", { users: data, screen: "Profile"});
+
+                cont = 0;
+              } else {
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "LogInScreen" }],
+                });
+                console.error("Falha ao obter AccessToken");
+              }
+            } catch (error) {
+              console.error("Erro ao buscar livros:", error);
+              console.log(url);
+              if (cont < 5) {
+                cont ++;
+                fetchData();
+              } else {
+                cont = 0;
+              }
+            }
+          }
+          fetchData();
+        }}
+        style={[styles.groupView1, styles.saveChanges]}
+        >
+          <View style={[styles.viewLayout]}>
+            <View style={styles.rectangleView} />
+            <Text style={[styles.saveChanges, styles.saveChangesPosition]}>
+              Adicionar endereço
+            </Text>
+          </View>
+        </Pressable>
       </View>
     </>
   );
@@ -318,7 +370,6 @@ const styles = StyleSheet.create({
   viewLayout: {
     height: 45,
     width: 221,
-    position: "absolute",
   },
   materialSymbolsarrowBackIoIcon: {
     top: 58,
@@ -427,6 +478,10 @@ const styles = StyleSheet.create({
   },
   groupView: {
     top: 626,
+    left: "25%",
+  },
+  groupView1: {
+    top: 726,
     left: "25%",
   },
   telaUser: {

@@ -9,6 +9,7 @@ import LogInScreen from "./screens/LogInScreen";
 import HomeScreen from "./screens/HomeScreen";
 import SplashScreen from "./screens/SplashScreen";
 import BookDetailScreen from "./screens/BookDetailScreen";
+import BookMap from "./screens/SelectMapScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import RegisterBook from "./screens/RegisterBook";
 import ListBook from "./screens/ListBook";
@@ -51,6 +52,11 @@ const App = () => {
             <Stack.Screen
               name="HomeScreen"
               component={HomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SelectMapScreen"
+              component={BookMap}
               options={{ headerShown: false }}
             />
             <Stack.Screen

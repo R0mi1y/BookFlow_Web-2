@@ -8,6 +8,8 @@ import {
   View,
   Pressable,
   Image,
+  Dimensions,
+  FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
@@ -17,6 +19,7 @@ import CustomPopup from '../components/CustomPopup';
 import axios from 'axios';
 import TopComponent from '../components/topComponent';
 
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const RegisterBook = ({ route }) => {
   const book = route.params?.book || null;
@@ -45,6 +48,8 @@ const RegisterBook = ({ route }) => {
   const [resumo, setResumo] = useState("");
   const [hasImagem, setHasImagem] = useState(false);
   const [registering, setRegistering] = useState(false);
+  const [searchElements, setSearchElements] = useState(false);
+  const [isTituloSelected, setIsTituloSelected] = useState(false);
 
   useEffect(() => {
     if (book) {
@@ -199,6 +204,25 @@ const RegisterBook = ({ route }) => {
     }
   };
 
+  const getLimitedStr = (str) => {
+    return (str?.length && str?.length) > 33 ? str.slice(0, 30) + "..." : str;
+  };
+
+  const searchBook = (text) => {
+    setTitulo(text);
+    var elements = [];
+  
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=${text}`)
+      .then((response) => response.json())
+      .then((response) => {
+        var books = response.items;
+        if (books) {
+          setSearchElements(books);
+        }
+      });
+  };
+  
+
   return (
     <>
       <CustomPopup
@@ -223,8 +247,47 @@ const RegisterBook = ({ route }) => {
             placeholder=" Título "
             placeholderTextColor={Color.colorBlanchedalmond_101}
             value={titulo}
-            onChangeText={(text) => setTitulo(text)}
+            onChangeText={(text) => {
+              searchBook(text);
+            }}
+            onFocus={() => setIsTituloSelected(true)}
+            onBlur={() => setIsTituloSelected(false)}
           />
+          {isTituloSelected && searchElements.length > 0 && (
+          <View style={{ position: 'relative' }}>
+            <FlatList
+              style={styles.searchList}
+              data={searchElements}
+              renderItem={({ item }) => (
+                <Pressable
+                  onPress={() => {
+                    console.log(item);
+
+                    const t = item.volumeInfo.title ? item.volumeInfo.title : titulo;
+                    const authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "";
+                    const categories = item.volumeInfo.categories ? item.volumeInfo.categories.join(", ") : "";
+                    const description = item.volumeInfo.description ? item.volumeInfo.description : "";
+
+                    setTitulo(t);
+                    setAutor(authors);
+                    setGenero(categories);
+                    setResumo(description);
+                    setSelectedImage(item.volumeInfo.imageLinks?.thumbnail);
+                    setHasImagem(true);
+
+                    setIsTituloSelected(false);
+                  }}
+                  style={{ zIndex: 1 }}
+                >
+                  <Text style={{ color: "black", marginBottom: 10, borderBottomColor: "black", zIndex: 1 }}>
+                    {item.volumeInfo.title}
+                  </Text>
+                </Pressable>
+              )}
+              keyExtractor={(item) => item.volumeInfo.title}
+            />
+          </View>
+          )}
         </View>
 
         <View style={[styles.cta2, styles.ctaLayout]}>
@@ -284,6 +347,32 @@ const RegisterBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  bookContainer: {
+    padding: 10,
+    margin: 5,
+    borderRadius: 5,
+  },
+  bookTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  searchList: {
+    borderRadius: 10,
+    top: 40,
+    padding: 10,
+    right: 0,
+    backgroundColor: '#ececec',
+    flexDirection: "column",
+    position: "absolute",
+    width: screenWidth * 0.5,
+    height: screenHeight * 0.3,
+    overflow: "scroll",
+    zIndex: 1,
+  },
+  searchText: {
+    color: "white",
+  },
   android1: {
     top: 170,
   },
@@ -303,7 +392,7 @@ const styles = StyleSheet.create({
     width: 111,
     height: 111,
     borderRadius: Border.br_mini,
-    top:130,
+    top: 55,
     alignSelf:"center",
   },
   iconLayout: {

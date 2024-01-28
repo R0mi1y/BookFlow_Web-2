@@ -28,13 +28,7 @@ const ListBook = ({ route }) => {
   const [user, setUser] = React.useState(null);
 
   const navigation = useNavigation();
-  const [phlistIconVisible, setPhlistIconVisible] = useState(false);
-  const openPhlistIcon = useCallback(() => {
-    setPhlistIconVisible(true);
-  }, []);
-  const closePhlistIcon = useCallback(() => {
-    setPhlistIconVisible(false);
-  }, []);
+  
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
   

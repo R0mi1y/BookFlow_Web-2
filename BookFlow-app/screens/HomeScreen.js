@@ -163,8 +163,6 @@ const HomeScreen = ({ route }) => {
         if (accessToken) {
           var url = `${apiUrl}/api/book/user/${user.id}?filter=${section}`;
 
-          console.log(url);
-
           const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -185,8 +183,6 @@ const HomeScreen = ({ route }) => {
 
           setSections(s);
           
-          console.log(s[i].books);
-
           if (sections.length - 1 == i) togglePopup();
         } else {
           navigation.reset({
@@ -208,7 +204,6 @@ const HomeScreen = ({ route }) => {
 
     sections.map((section, i) => {
       fetchData(section.filter, i);
-      console.log(i);
     });
 
   }, []);

@@ -196,7 +196,6 @@ const BookDetailScreen = ({ route }) => {
   };
 
   const getLimitedSummary = (summary) => {
-    // Limite o texto a 300 caracteres
     return (summary?.length && summary?.length) > 93 ? summary.slice(0, 90) + "...    " : summary;
   };
 
