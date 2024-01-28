@@ -199,103 +199,90 @@ const RegisterBook = ({ route }) => {
           text2="Livro"
         />
 
-        <View style={[styles.cta, styles.ctaLayout]} />
-        <View style={[styles.cta1, styles.ctaLayout]}>
-          <TextInput
-            style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
-            placeholder=" Título "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={titulo}
-            onChangeText={(text) => {
-              searchBook(text);
-            }}
-            onFocus={() => setIsTituloSelected(true)}
-            onBlur={() => setIsTituloSelected(false)}
-          />
-          {isTituloSelected && searchElements.length > 0 && (
-          <View style={{ position: 'relative' }}>
-            <FlatList
-              style={styles.searchList}
-              data={searchElements}
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => {
-                    console.log(item);
-
-                    const t = item.volumeInfo.title ? item.volumeInfo.title : titulo;
-                    const authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "";
-                    const categories = item.volumeInfo.categories ? item.volumeInfo.categories.join(", ") : "";
-                    const description = item.volumeInfo.description ? item.volumeInfo.description : "";
-
-                    setTitulo(t);
-                    setAutor(authors);
-                    setGenero(categories);
-                    setResumo(description);
-                    setSelectedImage(item.volumeInfo.imageLinks?.thumbnail);
-                    setHasImagem(true);
-
-                    setIsTituloSelected(false);
-                  }}
-                  style={{ zIndex: 1 }}
-                >
-                  <Text style={{ color: "black", marginBottom: 10, borderBottomColor: "black", zIndex: 1 }}>
-                    {item.volumeInfo.title}
-                  </Text>
-                </Pressable>
-              )}
-              keyExtractor={(item) => item.volumeInfo.title}
-            />
-          </View>
-          )}
+        <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: selectedImage }} style={styles.imgBook}/>
         </View>
 
-        <View style={[styles.cta2, styles.ctaLayout]}>
-          <TextInput
-            style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
-            placeholder="  Autor  "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={autor}
-            onChangeText={(text) => setAutor(text)}
+        <Pressable style={[styles.textInput]}
+        onPress={pickDocument}>
+          <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
+        </Pressable>
+
+        <TextInput
+          style={[styles.textInput]}
+          placeholder=" Título "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={titulo}
+          onChangeText={(text) => {
+            searchBook(text);
+          }}
+          onFocus={() => setIsTituloSelected(true)}
+          onBlur={() => setIsTituloSelected(false)}
+        />
+        {isTituloSelected && searchElements.length > 0 && (
+        <View style={{display:"flex", alignItems:"center"}}>
+          <FlatList
+            style={[styles.searchList, { position: 'absolute' }]}
+            data={searchElements}
+            renderItem={({ item }) => (
+              <Pressable
+                onPress={() => {
+                  console.log(item);
+
+                  const t = item.volumeInfo.title ? item.volumeInfo.title : titulo;
+                  const authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "";
+                  const categories = item.volumeInfo.categories ? item.volumeInfo.categories.join(", ") : "";
+                  const description = item.volumeInfo.description ? item.volumeInfo.description : "";
+
+                  setTitulo(t);
+                  setAutor(authors);
+                  setGenero(categories);
+                  setResumo(description);
+                  setSelectedImage(item.volumeInfo.imageLinks?.thumbnail);
+                  setHasImagem(true);
+
+                  setIsTituloSelected(false);
+                }}
+                style={{ zIndex: 1 }}
+              >
+                <Text style={{ color: "black", marginBottom: 10, borderBottomColor: "black", zIndex: 1 }}>
+                  {item.volumeInfo.title}
+                </Text>
+              </Pressable>
+            )}
+            keyExtractor={(item) => item.volumeInfo.title}
           />
         </View>
+        )}
 
-        <View style={[styles.cta3, styles.ctaLayout]}>
-          <TextInput
-            style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
-            placeholder="  Genêro  "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={genero}
-            onChangeText={(text) => setGenero(text)}
-          />
+        <TextInput
+          style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder="  Autor  "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={autor}
+          onChangeText={(text) => setAutor(text)}
+        />
+        <TextInput
+          style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder="  Genêro  "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={genero}
+          onChangeText={(text) => setGenero(text)}
+        />
+        <TextInput
+          style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
+          placeholder=" Resumo "
+          placeholderTextColor={Color.colorBlanchedalmond_101}
+          value={resumo}
+          onChangeText={(text) => setResumo(text)}
+        />
         </View>
 
-        <View style={[styles.cta4, styles.ctaLayout]}>
-          <TextInput
-            style={[styles.irAlLibroInput]} // Certifique-se de ter um estilo para seus TextInput
-            placeholder=" Resumo "
-            placeholderTextColor={Color.colorBlanchedalmond_101}
-            value={resumo}
-            onChangeText={(text) => setResumo(text)}
-          />
-        </View>
-
-        <View style={[styles.cta5, styles.ctaLayout]}>
-          <Pressable
-          onPress={pickDocument}>
-            <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
-          </Pressable>
-        </View>
-
-        <View style={[styles.android1, styles.androidLayout]} />
-
-        <Image source={{ uri: selectedImage }} style={styles.imgBook} />
-        
-        <View style={[styles.android2, styles.androidLayout]} />
-
-        <Pressable style={styles.irAlLibroParent} onPress={send_book}>
+        <Pressable style={styles.button} onPress={send_book}>
           <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>{ book ? "Editar" :  "Cadastrar" }</Text>
           <Image
-            style={[styles.ionbookIcon, styles.lPosition]}
+            style={[styles.ionbookIcon]}
             contentFit="cover"
             source={require("../assets/ionbook.png")}
           />
@@ -306,94 +293,26 @@ const RegisterBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  bookContainer: {
-    padding: 10,
-    margin: 5,
-    borderRadius: 5,
-  },
-  bookTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+  container: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 200,
   },
   searchList: {
     borderRadius: 10,
-    top: 40,
     padding: 10,
-    right: 0,
     backgroundColor: '#ececec',
     flexDirection: "column",
-    position: "absolute",
-    width: screenWidth * 0.5,
+    width: "60%",
     height: screenHeight * 0.3,
     overflow: "scroll",
     zIndex: 1,
-  },
-  searchText: {
-    color: "white",
-  },
-  android1: {
-    top: 170,
-  },
-  android2: {
-    top: 320,
-  },
-  androidLayout: {
-    height: 1,
-    width: 300,
-    borderTopWidth: 0.5,
-    borderColor: Color.colorBlanchedalmond_200,
-    borderStyle: "solid",
-    alignSelf:"center",
-    position: "absolute",
   },
   imgBook:{
     width: 111,
     height: 111,
     borderRadius: Border.br_mini,
-    top: 55,
     alignSelf:"center",
-  },
-  iconLayout: {
-    width: 25,
-    top: 62,
-    height: 25,
-    position: "absolute",
-    overflow: "hidden",
-  },
-  lTypo: {
-    textAlign: "center",
-    fontFamily: FontFamily.rosarivoRegular,
-  },
-  libroPosition: {
-    top: 0,
-    position: "absolute",
-  },
-  sidePosition: {
-    top: 17,
-    height: 11,
-    position: "absolute",
-  },
-  containerTypo: {
-    fontSize: FontSize.size_xs,
-    color: Color.colorWhite,
-    textAlign: "left",
-    position: "absolute",
-  },
-  iconoirpageFlipPosition: {
-    top: 538,
-    height: 24,
-    width: 24,
-    position: "absolute",
-    overflow: "hidden",
-  },
-  ctaLayout: {
-    alignSelf: "center",
-    justifyContent: "center",
-    height: 45,
-    borderRadius: Border.br_3xs,
-    width: 302,
-    position: "absolute",
   },
   irAlLibroTypo: {
     textAlign: "center",
@@ -401,37 +320,43 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: FontSize.size_base,
   },
-  irAlLibroInput: {
+  button: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Color.colorBlanchedalmond_100,
+    width: "70%",
+    height:45,
+    borderRadius: Border.br_3xs,
+  },
+  imageContainer: {
+    height:180,
+    justifyContent: "center",
+    marginBottom: 30, 
+    marginTop: 20, 
+    width: "70%",
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: Color.colorBlanchedalmond_100,
+    borderTopColor: Color.colorBlanchedalmond_100,
+  },
+  textInput: {
+    marginBottom: 15,
+    alignItems: "center",
+    justifyContent: "center",
     textAlign: "center",
     fontFamily: FontFamily.openSansSemiBold,
     fontWeight: "600",
     fontSize: FontSize.size_base,
     color: Color.colorBlanchedalmond_100,
-  },
-  lPosition: {
-    left: 0,
-    position: "absolute",
-  },
-  phlistIcon: {
-    height: 25,
-    left: 27,
-    width: 25,
-    top: 62,
-  },
-  epsearchIcon: {
-    left: 311,
-    height: 25,
-    width: 25,
-    top: 62,
-  },
-  l: {
-    top: 46,
-    fontSize: FontSize.size_29xl,
-    color: Color.colorBlanchedalmond_400,
-    width: 250,
-    height: 50,
-    left: 70,
-    position: "absolute",
+    width: "70%",
+    borderStyle: "solid",
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+    borderRadius: Border.br_3xs,
+    height: 45,
+
   },
   libro: {
     left: 37,
@@ -442,215 +367,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: FontFamily.rosarivoRegular,
   },
-  brandLogo: {
-    top: 49,
-    left: 10,
-    width: 144,
-    height: 52,
-    position: "absolute",
-  },
-  bgIcon: {
-    top: -2,
-    right: 70,
-    bottom: 16,
-    left: 69,
-    maxWidth: "100%",
-    maxHeight: "100%",
-    display: "none",
-    position: "absolute",
-    overflow: "hidden",
-  },
-  batteryIcon: {
-    width: 24,
-    height: 11,
-    right: 0,
-    top: 0,
-    position: "absolute",
-  },
-  wifiIcon: {
-    width: 15,
-    height: 11,
-  },
-  mobileSignalIcon: {
-    width: 17,
-    height: 11,
-  },
-  rightSide: {
-    right: 15,
-    width: 67,
-    height: 11,
-  },
-  leftSideIcon: {
-    left: 34,
-    width: 28,
-    height: 11,
-  },
-  iosstatusBarblack: {
-    left: 2,
-    height: 44,
-    right: 0,
-    top: 0,
-    position: "absolute",
-    overflow: "hidden",
-    backgroundColor: Color.colorGray_200,
-  },
-  productImageIcon: {
-    top: 119,
-    height: 336,
-    width: 302,
-    left: 27,
-    position: "absolute",
-  },
-  pachinko: {
-    top: 482,
-    left: 113,
-    fontSize: FontSize.size_5xl,
-    lineHeight: 30,
-    color: Color.colorWhite,
-    textAlign: "left",
-    fontFamily: FontFamily.rosarivoRegular,
-    position: "absolute",
-  },
-  minJinLee: {
-    top: 512,
-    left: 136,
-    lineHeight: 20,
-    fontSize: FontSize.size_base,
-    color: Color.colorBlanchedalmond_100,
-    textAlign: "left",
-    fontFamily: FontFamily.rosarivoRegular,
-    position: "absolute",
-  },
-  aSingleEspresso: {
-    fontWeight: "300",
-    fontFamily: FontFamily.openSansLight,
-  },
-  text: {
-    fontFamily: FontFamily.openSansRegular,
-  },
-  readMore1: {
-    textDecoration: "underline",
-  },
-  aSingleEspressoContainer: {
-    top: 594,
-    lineHeight: 17,
-    height: 57,
-    left: 29,
-    fontSize: FontSize.size_xs,
-    width: 302,
-  },
-  cuentoNovela: {
-    fontFamily: FontFamily.rosarivoRegular,
-  },
-  cuentoNovelaContainer: {
-    top: 579,
-    left: 101,
-    lineHeight: 15,
-  },
-  biuploadIcon: {
-    top: 537,
-    left: 129,
-    height: 24,
-    width: 24,
-    position: "absolute",
-    overflow: "hidden",
-  },
-  solarstarOutlineIcon: {
-    left: 168,
-  },
-  iconoirpageFlip: {
-    left: 207,
-  },
-  cta: {
-    top: 700,
-    backgroundColor: Color.colorBlanchedalmond_100,
-    shadowColor: "rgba(0, 0, 0, 0.15)",
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowRadius: 15,
-    elevation: 15,
-    shadowOpacity: 1,
-  },
   contenidoRelacionado: {
     color: Color.colorBlanchedalmond_100,
   },
-  cta1: {
-    top: 420,
-    borderStyle: "solid",
-    borderColor: Color.colorBlanchedalmond_100,
-    borderWidth: 1,
-    flexDirection: "row",
-    paddingHorizontal: 50,
-    paddingTop: 10,
-    paddingBottom: Padding.p_smi,
-  },
-
-  cta2: {
-    top: 490,
-    borderStyle: "solid",
-    borderColor: Color.colorBlanchedalmond_100,
-    borderWidth: 1,
-    flexDirection: "row",
-    paddingHorizontal: 50,
-    paddingTop: 10,
-    paddingBottom: Padding.p_smi,
-  },
-  cta3: {
-    top: 560,
-    borderStyle: "solid",
-    borderColor: Color.colorBlanchedalmond_100,
-    borderWidth: 1,
-    flexDirection: "row",
-    paddingHorizontal: 50,
-    paddingTop: 10,
-    paddingBottom: Padding.p_smi,
-  },
-  cta4: {
-    top: 630,
-    borderStyle: "solid",
-    borderColor: Color.colorBlanchedalmond_100,
-    borderWidth: 1,
-    flexDirection: "row",
-    paddingHorizontal: 50,
-    paddingTop: 10,
-    paddingBottom: Padding.p_smi,
-  },
-  cta5: {
-    top: 350,
-    borderStyle: "solid",
-    borderColor: Color.colorBlanchedalmond_100,
-    borderWidth: 1,
-    flexDirection: "row",
-    paddingHorizontal: 50,
-    paddingTop: 10,
-    paddingBottom: Padding.p_smi,
-  },
-
-
   irAlLibro: {
-    left: 20,
     color: Color.colorGray_100,
-    width: 86,
-    top: 0,
-    position: "absolute",
-    height: 25,
+    marginRight: 10,
   },
   ionbookIcon: {
-    top: 2,
+    top: 5,
     width: 20,
     height: 20,
     overflow: "hidden",
   },
-  irAlLibroParent: {
-    top: 710,
-    left: 150,
-    width: 106,
-    height: 25,
-    position: "absolute",
-  },
   RegisterBook: {
+    display: "flex",
+    alignItems: "center",
     flex: 1,
     width: "100%",
     height: 900,

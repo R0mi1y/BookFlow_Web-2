@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.9)", // Define um fundo escuro semi-transparente
+    backgroundColor: Color.colorGray_200, // Define um fundo escuro semi-transparente
   },
   searchContainer: {
     width: "80%",
