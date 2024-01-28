@@ -7,12 +7,17 @@ import { useNavigation } from "@react-navigation/native";
 import CustomPopup from "../components/CustomPopup";
 import TopComponent from '../components/topComponent';
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import getAccessToken from '../components/auxiliarFunctions';
+import Constants from 'expo-constants';
 
+const apiUrl = Constants.expoConfig.extra.apiUrl;
 
 const BookMap = ({ route }) => {
     const [messagePopup, setPopupTexto] = useState("");
     const [popupVisible, setPopupVisible] = useState(false);
     const [showBooks, setShowBooks] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [selectPlace, setSelectPlace] = useState(false);
   
     const togglePopup = (message = null) => {
         setPopupVisible(false);
@@ -21,13 +26,57 @@ const BookMap = ({ route }) => {
             setPopupVisible(true);
         }
     };
-    var users = [];
 
     const screen = route.params?.screen;
     useEffect(() => {
-        if (route.params?.users) {
-            users = route.params?.users;
-            setShowBooks(true);
+        if (route.params?.showBooks) {
+            setSelectPlace(false);
+            togglePopup("Loading");
+            let cont = 0;
+            const fetchData = async () => {
+                var url = `${apiUrl}/api/book/maps/`;
+                console.log(url);
+                
+                try {
+                const accessToken = await getAccessToken();
+        
+                if (accessToken) {
+                    const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + accessToken,
+                    },
+                    });
+        
+                    if (!response.ok) {
+                    throw new Error(await response.text());
+                    }
+        
+                    const data = await response.json();
+                    
+                    setUsers(data);
+                    setShowBooks(true);
+                    togglePopup();
+                } else {
+                    navigation.reset({
+                    index: 0,
+                    routes: [{ name: "LogInScreen" }],
+                    });
+                    console.error("Falha ao obter AccessToken");
+                }
+                } catch (error) {
+                    console.error("Erro ao buscar livros:", error);
+                    console.log(url);
+                    if (cont < 5) {
+                        cont ++;
+                        fetchData();
+                    } else {
+                        cont = 0;
+                    }
+                }
+            }
+            fetchData();
         }
     }, []);
 
@@ -67,60 +116,65 @@ const BookMap = ({ route }) => {
                 togglePopup(null);
                 }}
                 message={messagePopup}
+                navigation={navigation}
+                setVisible={setPopupVisible}
             />
             <View style={styles.container}>
-            <View style={{backgroundColor: Color.colorGray_200,}}>
-                <TopComponent
-                    middle={() => {
-                    navigation.navigate("HomeScreen");
-                    }}
-                    text1="Liv"
-                    text2="ros"
-                />
-            </View>
-            {location && (
-                <MapView
-                    style={styles.map}
-                    initialRegion={{
-                        latitude: location.latitude,
-                        longitude: location.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
-                    onPress={handleMapPress}
-                >
-                {selectedLocation && (
-                    <Marker
-                        coordinate={{
-                            latitude: selectedLocation.latitude,
-                            longitude: selectedLocation.longitude,
+                <View style={{backgroundColor: Color.colorGray_200,}}>
+                    <TopComponent
+                        middle={() => {
+                        navigation.navigate("HomeScreen");
                         }}
-                        title="Local Selecionado"
+                        text1="Liv"
+                        text2="ros"
                     />
+                </View>
+                {location && (
+                    <MapView
+                        style={styles.map}
+                        initialRegion={{
+                            latitude: location.latitude,
+                            longitude: location.longitude,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }}
+                        onPress={handleMapPress}
+                    >
+                    {selectedLocation && (
+                        <Marker
+                            coordinate={{
+                                latitude: selectedLocation.latitude,
+                                longitude: selectedLocation.longitude,
+                            }}
+                            title="Local Selecionado"
+                        />
+                    )}
+                    {showBooks ? users.map((u, userIndex) => (
+                        <Marker
+                            key={`${userIndex}`}
+                            coordinate={{
+                                latitude: parseFloat(u.lat),
+                                longitude: parseFloat(u.lon),
+                            }}
+                            description={getLimitedStr(u.books.map((book, i) => book.title).join(", "))}
+                            title={u.username}
+                            onPress={() => {
+                                togglePopup({type:"books", books: u.books})
+                            }}
+                        />
+                    )) : (<></>)}
+                    </MapView>
                 )}
-                {showBooks ? users.map((u, userIndex) => (
-                    <Marker
-                        key={`${userIndex}`}
-                        coordinate={{
-                            latitude: parseFloat(u.lat),
-                            longitude: parseFloat(u.lon),
-                        }}
-                        description={getLimitedStr(u.books.map((book, i) => book.title).join(", "))}
-                        title={u.username}
-                    />
-                )) : (<></>)}
-                </MapView>
-            )}
-            <TouchableOpacity
-                style={styles.selectLocationButton}
-                onPress={() => {
-                    console.log('Local selecionado:', selectedLocation);
-                    if (selectedLocation) navigation.navigate(screen, {selectedLocation});
-                }}
-            >
-    
-                <Text style={{color: "white",}}>Selecionar Local</Text>
-            </TouchableOpacity>
+                {selectPlace && <TouchableOpacity
+                    style={styles.selectLocationButton}
+                    onPress={() => {
+                        console.log('Local selecionado:', selectedLocation);
+                        if (selectedLocation) navigation.navigate(screen, {selectedLocation});
+                    }}
+                >
+        
+                    <Text style={{color: "white",}}>Selecionar Local</Text>
+                </TouchableOpacity>}
             </View>
         </>
     );

@@ -16,6 +16,7 @@ import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
 import CustomPopup from '../components/CustomPopup';
+import getAccessToken from '../components/auxiliarFunctions';
 import axios from 'axios';
 import TopComponent from '../components/topComponent';
 
@@ -61,48 +62,6 @@ const RegisterBook = ({ route }) => {
     }
   }, []);
 
-  const getAccessToken = async () => {
-    try {
-      user = JSON.parse(await SecureStore.getItemAsync("user"));
-
-      if (!user) {
-        throw new Error("Couldn't find user");
-      }
-
-      const refreshToken = user.refresh_token;
-
-      if (!refreshToken) {
-        throw new Error("Refresh token não encontrado");
-      }
-
-      const response = await fetch(`${apiUrl}/api/token/refresh/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          refresh: refreshToken,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Erro na requisição de atualização do token: ${response.statusText}`
-        );
-      }
-
-      const data = await response.json();
-
-      if ("access" in data) {
-        return data.access;
-      } else {
-        throw new Error("Resposta não contém o token de acesso");
-      }
-    } catch (error) {
-      throw new Error("Erro ao obter o token de acesso: " + error.message);
-    }
-  };
-
   const send_book = async () => {
     if (titulo == '' || resumo == '' || autor == '' || genero == '') {
       togglePopup("Preencha todos os campos!");
@@ -113,7 +72,7 @@ const RegisterBook = ({ route }) => {
     if (registering) return;
     setRegistering(true);
     
-    const accessToken = await getAccessToken();
+    const accessToken = await getAccessToken(navigation);
 
     try {
       const formData = new FormData();

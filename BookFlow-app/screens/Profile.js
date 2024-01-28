@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
 import CustomPopup from "../components/CustomPopup";
+import getAccessToken from "../components/auxiliarFunctions";
 import * as ImagePicker from 'expo-image-picker';
 
 const Profile = (context) => {
@@ -91,53 +92,9 @@ const Profile = (context) => {
 
   const apiUrl = Constants.expoConfig.extra.apiUrl;
 
-  const getAccessToken = async () => {
-    try {
-      const userFromSecureStore = JSON.parse(
-        await SecureStore.getItemAsync("user")
-      );
-
-      if (!userFromSecureStore) {
-        throw new Error("Couldn't find user");
-      }
-
-      const refreshToken = userFromSecureStore.refresh_token;
-
-      if (!refreshToken) {
-        throw new Error("Refresh token não encontrado");
-      }
-
-      const response = await fetch(`${apiUrl}/api/token/refresh/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          refresh: refreshToken,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Erro na requisição de atualização do token: ${response.statusText}`
-        );
-      }
-
-      const data = await response.json();
-
-      if ("access" in data) {
-        return data.access;
-      } else {
-        throw new Error("Resposta não contém o token de acesso");
-      }
-    } catch (error) {
-      throw new Error("Erro ao obter o token de acesso: " + error.message);
-    }
-  };
-
   const updateUserData = async () => {
     try {
-      const accessToken = await getAccessToken();
+      const accessToken = await getAccessToken(navigation);
 
       let id = user.id;
 
@@ -270,50 +227,7 @@ const Profile = (context) => {
           </View>
         </Pressable>
         <Pressable onPress={() => {
-          togglePopup("Loading");
-          let cont = 0;
-          const fetchData = async () => {
-            var url = `${apiUrl}/api/book/maps/`;
-            try {
-              const accessToken = await getAccessToken();
-      
-              if (accessToken) {
-                const response = await fetch(url, {
-                  method: 'GET',
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + accessToken,
-                  },
-                });
-      
-                if (!response.ok) {
-                  throw new Error(await response.text());
-                }
-      
-                const data = await response.json();
-      
-                navigation.navigate("SelectMapScreen", { users: data, screen: "Profile"});
-
-                cont = 0;
-              } else {
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: "LogInScreen" }],
-                });
-                console.error("Falha ao obter AccessToken");
-              }
-            } catch (error) {
-              console.error("Erro ao buscar livros:", error);
-              console.log(url);
-              if (cont < 5) {
-                cont ++;
-                fetchData();
-              } else {
-                cont = 0;
-              }
-            }
-          }
-          fetchData();
+          navigation.navigate("SelectMapScreen", { showBooks: true, screen: "Profile"});
         }}
         style={[styles.groupView1, styles.saveChanges]}
         >

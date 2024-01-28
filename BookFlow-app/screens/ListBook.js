@@ -16,6 +16,7 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import * as SecureStore from 'expo-secure-store';
 import CustomPopup from '../components/CustomPopup';
 import TopComponent from '../components/topComponent';
+import getAccessToken from '../components/auxiliarFunctions';
 
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
@@ -40,84 +41,12 @@ const ListBook = ({ route }) => {
     }
   };
 
-  const getAccessToken = async () => {
-    try {
-      const user = JSON.parse(await SecureStore.getItemAsync("user"));
-      setUser(user);
-      
-      if (!user) {
-        console.error("Usuário não encontrado");
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "LogInScreen" }],
-        });
-        return;
-      }
-
-      const refreshToken = user.refresh_token;
-
-      if (!refreshToken) {
-        console.error("Refresh token não encontrado");
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "LogInScreen" }],
-        });
-        return;
-      }
-
-      const response = await fetch(`${apiUrl}/api/token/refresh/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          refresh: refreshToken,
-        }),
-      });
-
-      if (!response.ok) {
-        console.error(
-          `Erro na requisição de atualização do token: ${response.statusText}`
-        );
-        return;
-      }
-
-      if (response.code === "token_not_valid") {
-        console.error("Invalid token: " + response.statusText);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "LogInScreen" }],
-        });
-      }
-
-      const data = await response.json();
-
-      if (!("access" in data)) {
-        console.error("Resposta não contém o token de acesso");
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "LogInScreen" }],
-        });
-        return;
-      }
-
-      return data.access;
-    } catch (error) {
-      console.error("Erro ao obter o token de acesso", error);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "LogInScreen" }],
-      });
-    }
-  };
-
-
   const getBooks = () => {
     let cont = 0;
     const fetchData = async () => {
       try {
         const user = JSON.parse(await SecureStore.getItemAsync("user"));
-        const accessToken = await getAccessToken();
+        const accessToken = await getAccessToken(navigation);
 
         var url = `${apiUrl}/api/book/`;
 
