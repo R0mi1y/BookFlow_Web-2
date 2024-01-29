@@ -29,6 +29,10 @@ const ListBook = ({ route }) => {
   const [user, setUser] = React.useState(null);
 
   const navigation = useNavigation();
+
+  useEffect(async () => {
+    setUser(JSON.parse(await SecureStore.getItemAsync("user")));
+  }, []);
   
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
@@ -113,8 +117,8 @@ const ListBook = ({ route }) => {
         onClose={() => {togglePopup(null)}}
         message={messagePopup}
       />
-      <ScrollView>
-        <View style={[styles.listBook, styles.iconLayout, { height: ((screenHeight * 0.3) + (books.length) * 132) < screenHeight * 1.5 ? screenHeight : ((screenHeight * 0.3) + (books.length) * 132) }]}>
+      <ScrollView style={{minHeight: screenHeight, backgroundColor: Color.colorGray_200,}}>
+        <View style={[styles.listBook, styles.iconLayout, { flex: 1 }]}>
           {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
           <TopComponent
             middle={() => {

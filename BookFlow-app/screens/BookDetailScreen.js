@@ -249,12 +249,12 @@ const BookDetailScreen = ({ route }) => {
               </Text>
             </Text>
             <Pressable
-              onPress={ owner ? () => navigation.navigate(book.status == "Requisitado" ? "AcceptLoan" : "RegisterBook", { book: book }) : () => {
+              onPress={ owner ? () => navigation.navigate("RegisterBook", { book: book }) : () => {
                 book.is_required ? togglePopup("Empréstimo já requisitado!") : requestBook(bookId);
               }}
             >
               <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-                  {owner ? book.status == "Requisitado" ? "Aprovar pedido" : "Editar livro" : "Requisitar empréstimo"}
+                  {owner ? "Editar livro" : "Requisitar empréstimo"}
                 </Text>
                 <Image
                   style={[styles.ionbookIcon, styles.lPosition]}
@@ -262,9 +262,24 @@ const BookDetailScreen = ({ route }) => {
                   source={require("../assets/ionbook.png")}
                 />
               </View>
-              {book.is_required ? (<Text style={[styles.cuentoNovelaContainer, styles.containerTypo]}>Livro requisitado</Text>) : (<></>)}
-                
             </Pressable>
+              {owner && book.status == "Requisitado" && (
+                <Pressable
+                onPress={ owner ? () => navigation.navigate("AcceptLoan", { book: book }) : () => {
+                  book.is_required ? togglePopup("Empréstimo já requisitado!") : requestBook(bookId);
+                }}
+              >
+                <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+                    Aprovar pedido
+                  </Text>
+                  <Image
+                    style={[styles.ionbookIcon, styles.lPosition]}
+                    contentFit="cover"
+                    source={require("../assets/ionbook.png")}
+                  />
+                </View>
+            </Pressable>
+              )}
           </View>
         </View>
       </ScrollView>
