@@ -231,11 +231,6 @@ const HomeScreen = ({ route }) => {
             style={{ padding: 15 }}
           >
             <MisFavoritosContainer
-              userFavorites={`Fazer\nempréstimo`}
-              showSolarstarOutlineIcon
-              source={require("../assets/lista_books.png")}
-            />
-            <MisFavoritosContainer
               onPress={() => navigation.navigate("RegisterBook")}
               userFavorites={`Cadastrar\nLivros`}
               showSolarstarOutlineIcon

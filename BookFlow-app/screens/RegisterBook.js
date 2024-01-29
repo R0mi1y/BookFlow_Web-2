@@ -10,6 +10,7 @@ import {
   Image,
   Dimensions,
   FlatList,
+  Switch
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
@@ -27,9 +28,11 @@ const RegisterBook = ({ route }) => {
   
   const navigation = useNavigation();
   const apiUrl = Constants.expoConfig.extra.apiUrl;
+  const [isAvalible, setIsAvalible] = useState(false);
 
   const [popupVisible, setPopupVisible] = React.useState(false);
   const [messagePopup, setPopupTexto] = React.useState("");
+  const [user, setUser] = React.useState(null);
 
   const togglePopup = (message=null) => {
     setPopupVisible(false);
@@ -39,8 +42,10 @@ const RegisterBook = ({ route }) => {
     }
   };
 
-  var user = null;
-
+  useState(async () => {
+    setUser(JSON.parse(await SecureStore.getItemAsync("user")));
+  }, []);
+  
   const [selectedImage, setSelectedImage] = useState(`${apiUrl}/static/img/default_cover.jpg`);
 
   const [titulo, setTitulo] = useState("");
@@ -59,6 +64,7 @@ const RegisterBook = ({ route }) => {
       setGenero(book.genre);
       setResumo(book.summary);
       setSelectedImage(book.cover ?? apiUrl + "/static/img/default_cover.jpg");
+      setIsAvalible(book.availability);
     }
   }, []);
 
@@ -90,6 +96,11 @@ const RegisterBook = ({ route }) => {
       formData.append('genre', genero);
       formData.append('owner', user.id);
       formData.append('cover', "");
+      if (isAvalible)
+        formData.append('availability', true);
+      else
+        formData.append('availability', false);
+
 
       var response;
 
@@ -163,24 +174,22 @@ const RegisterBook = ({ route }) => {
     }
   };
 
-  const getLimitedStr = (str) => {
-    return (str?.length && str?.length) > 33 ? str.slice(0, 30) + "..." : str;
-  };
-
   const searchBook = (text) => {
     setTitulo(text);
-    var elements = [];
-  
     fetch(`https://www.googleapis.com/books/v1/volumes?q=${text}`)
       .then((response) => response.json())
       .then((response) => {
         var books = response.items;
+        console.log(books);
         if (books) {
           setSearchElements(books);
         }
       });
   };
-  
+
+   const toggleSwitch = () => {
+    setIsAvalible((previousState) => !previousState);
+  };
 
   return (
     <>
@@ -200,83 +209,92 @@ const RegisterBook = ({ route }) => {
         />
 
         <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: selectedImage }} style={styles.imgBook}/>
-        </View>
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: selectedImage }} style={styles.imgBook}/>
+          </View>
 
-        <Pressable style={[styles.textInput]}
-        onPress={pickDocument}>
-          <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
-        </Pressable>
+          <Pressable style={[styles.textInput]}
+          onPress={pickDocument}>
+            <Text style={[styles.contenidoRelacionado, styles.irAlLibroTypo]}>Insira uma imagem</Text>
+          </Pressable>
 
-        <TextInput
-          style={[styles.textInput]}
-          placeholder=" Título "
-          placeholderTextColor={Color.colorBlanchedalmond_101}
-          value={titulo}
-          onChangeText={(text) => {
-            searchBook(text);
-          }}
-          onFocus={() => setIsTituloSelected(true)}
-          onBlur={() => setIsTituloSelected(false)}
-        />
-        {isTituloSelected && searchElements.length > 0 && (
-        <View style={{display:"flex", alignItems:"center"}}>
-          <FlatList
-            style={[styles.searchList, { position: 'absolute' }]}
-            data={searchElements}
-            renderItem={({ item }) => (
-              <Pressable
-                onPress={() => {
-                  console.log(item);
-
-                  const t = item.volumeInfo.title ? item.volumeInfo.title : titulo;
-                  const authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "";
-                  const categories = item.volumeInfo.categories ? item.volumeInfo.categories.join(", ") : "";
-                  const description = item.volumeInfo.description ? item.volumeInfo.description : "";
-
-                  setTitulo(t);
-                  setAutor(authors);
-                  setGenero(categories);
-                  setResumo(description);
-                  setSelectedImage(item.volumeInfo.imageLinks?.thumbnail);
-                  setHasImagem(true);
-
-                  setIsTituloSelected(false);
-                }}
-                style={{ zIndex: 1 }}
-              >
-                <Text style={{ color: "black", marginBottom: 10, borderBottomColor: "black", zIndex: 1 }}>
-                  {item.volumeInfo.title}
-                </Text>
-              </Pressable>
-            )}
-            keyExtractor={(item) => item.volumeInfo.title}
+          <TextInput
+            style={[styles.textInput]}
+            placeholder=" Título "
+            placeholderTextColor={Color.colorBlanchedalmond_101}
+            value={titulo}
+            onChangeText={(text) => {
+              searchBook(text);
+            }}
+            onFocus={() => setIsTituloSelected(true)}
+            onBlur={() => setTimeout(() => {
+              setIsTituloSelected(false);
+            }, 2000)}
           />
-        </View>
-        )}
+          {isTituloSelected && searchElements.length > 0 && (
+          <View style={{display:"flex", alignItems:"center"}}>
+            <FlatList
+              style={[styles.searchList, { position: 'absolute' }]}
+              data={searchElements}
+              renderItem={({ item }) => (
+                <Pressable
+                  onPress={() => {
+                    console.log(item);
 
-        <TextInput
-          style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
-          placeholder="  Autor  "
-          placeholderTextColor={Color.colorBlanchedalmond_101}
-          value={autor}
-          onChangeText={(text) => setAutor(text)}
-        />
-        <TextInput
-          style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
-          placeholder="  Genêro  "
-          placeholderTextColor={Color.colorBlanchedalmond_101}
-          value={genero}
-          onChangeText={(text) => setGenero(text)}
-        />
-        <TextInput
-          style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
-          placeholder=" Resumo "
-          placeholderTextColor={Color.colorBlanchedalmond_101}
-          value={resumo}
-          onChangeText={(text) => setResumo(text)}
-        />
+                    const t = item.volumeInfo.title ? item.volumeInfo.title : titulo;
+                    const authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "";
+                    const categories = item.volumeInfo.categories ? item.volumeInfo.categories.join(", ") : "";
+                    const description = item.volumeInfo.description ? item.volumeInfo.description : "";
+
+                    setTitulo(t);
+                    setAutor(authors);
+                    setGenero(categories);
+                    setResumo(description);
+                    setSelectedImage(item.volumeInfo.imageLinks?.thumbnail);
+                    setHasImagem(true);
+
+                    setIsTituloSelected(false);
+                  }}
+                  style={{ zIndex: 1 }}
+                >
+                  <Text style={{ color: "black", marginBottom: 10, borderBottomColor: "black", zIndex: 1 }}>
+                    {item.volumeInfo.title}
+                  </Text>
+                </Pressable>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </View>
+          )}
+
+          <TextInput
+            style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
+            placeholder="  Autor  "
+            placeholderTextColor={Color.colorBlanchedalmond_101}
+            value={autor}
+            onChangeText={(text) => setAutor(text)}
+          />
+          <TextInput
+            style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
+            placeholder="  Genêro  "
+            placeholderTextColor={Color.colorBlanchedalmond_101}
+            value={genero}
+            onChangeText={(text) => setGenero(text)}
+          />
+          <TextInput
+            style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
+            placeholder=" Resumo "
+            placeholderTextColor={Color.colorBlanchedalmond_101}
+            value={resumo}
+            onChangeText={(text) => setResumo(text)}
+          />
+          { book && (<View style={styles.switchContainer}><Switch
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+            thumbColor={isAvalible ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isAvalible}
+          /><Text style={[{color: "white"}, styles.irAlLibroTypo]}>{isAvalible ? "Disponível": "Indisponível"}</Text></View>) }
         </View>
 
         <Pressable style={styles.button} onPress={send_book}>
@@ -293,12 +311,18 @@ const RegisterBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  switchContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
   container: {
     width: "100%",
     alignItems: "center",
-    marginBottom: 200,
+    marginBottom: 50,
   },
   searchList: {
+    top: -14,
     borderRadius: 10,
     padding: 10,
     backgroundColor: '#ececec',
@@ -385,7 +409,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     width: "100%",
-    height: 900,
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
   },
