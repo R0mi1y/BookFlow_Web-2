@@ -15,6 +15,7 @@ import RegisterBook from "./screens/RegisterBook";
 import ListBook from "./screens/ListBook";
 import Profile from "./screens/Profile";
 import Frame from "./components/Frame";
+import RegisterLocation from "./screens/RegisterLocation";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import * as Notifications from 'expo-notifications';
 // import * as BackgroundNotifications from 'expo-background-notifications';
@@ -72,6 +73,11 @@ const App = () => {
             <Stack.Screen
               name="Profile"
               component={Profile}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="RegisterLocation"
+              component={RegisterLocation}
               options={{ headerShown: false }}
             />
             <Stack.Screen

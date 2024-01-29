@@ -226,10 +226,15 @@ const Profile = (context) => {
             </Text>
           </View>
         </Pressable>
-        <Pressable onPress={() => {
-          navigation.navigate("SelectMapScreen", { showBooks: true, screen: "Profile"});
+        {/* <Pressable onPress={() => {
+          navigation.navigate("SelectMapScreen", { showBooks: true, screen: "Profile" });
         }}
-        style={[styles.groupView1, styles.saveChanges]}
+          style={[styles.groupView1, styles.saveChanges]}
+        >   */}
+        <Pressable onPress={() => {
+          navigation.navigate("RegisterLocation");
+        }}
+          style={[styles.groupView1, styles.saveChanges]}
         >
           <View style={[styles.viewLayout]}>
             <View style={styles.rectangleView} />
