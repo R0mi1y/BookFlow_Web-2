@@ -8,7 +8,7 @@ const getAccessToken = async (navigation) => {
         const user = JSON.parse(await SecureStore.getItemAsync("user"));
 
         if (!user) {
-            console.error("Usuário não encontrado");
+            console.log("Usuário não logado");
             navigation.reset({
                 index: 0,
                 routes: [{ name: "LogInScreen" }],
@@ -19,17 +19,17 @@ const getAccessToken = async (navigation) => {
         const refreshToken = user.refresh_token;
 
         if (!refreshToken) {
-            console.error(refreshToken);
-            console.error("Refresh token não encontrado");
+            console.log("Refresh token não encontrado");
             navigation.reset({
                 index: 0,
                 routes: [{ name: "LogInScreen" }],
             });
             return;
         }
+        var url = `${apiUrl}/api/token/refresh/`;
+        console.log(url);
 
-        const response = await fetch(
-            `${apiUrl}/api/token/refresh/`,
+        const response = await fetch(url,
             {
             method: 'POST',
             headers: {
@@ -42,12 +42,12 @@ const getAccessToken = async (navigation) => {
         );
 
         if (!response.ok) {
-            console.error(`Erro na requisição de atualização do token: ${response.statusText}`);
+            console.log(`Erro na requisição de atualização do token: ${response.statusText}`);
             return;
         }
 
         if (response.code === "token_not_valid") {
-            console.error("Invalid token: " + response.statusText);
+            console.log("Invalid token: " + response.statusText);
             navigation.reset({
                 index: 0,
                 routes: [{ name: "LogInScreen" }],

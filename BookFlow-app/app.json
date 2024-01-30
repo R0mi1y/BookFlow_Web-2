@@ -34,7 +34,7 @@
     },
     "scheme": "bookflow",
     "extra": {
-      "apiUrl": "http://89.117.75.69",
+      "apiUrl": "http://89.117.75.69:8881",
       "eas": {
         "projectId": "1b18319f-92e7-4d30-927d-eb62eae6fee3"
       }

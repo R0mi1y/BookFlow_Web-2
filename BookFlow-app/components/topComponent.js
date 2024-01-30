@@ -125,11 +125,6 @@ const TopComponent = memo(
                 contentFit="cover"
                 source={require("../assets/notification-bell.png")}
               />
-              {/* <Image
-            style={[styles.octiconperson242, styles.octiconpersonLayout]}
-            contentFit="cover"
-            source={require("../assets/octiconperson242.png")}
-          /> */}
               <Text
                 style={styles.iniciarSesin}
                 onPress={() => {

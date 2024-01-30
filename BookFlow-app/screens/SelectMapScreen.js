@@ -28,6 +28,7 @@ const BookMap = ({ route }) => {
     };
 
     const screen = route.params?.screen;
+
     useEffect(() => {
         if (route.params?.showBooks) {
             setSelectPlace(false);
@@ -77,6 +78,8 @@ const BookMap = ({ route }) => {
                 }
             }
             fetchData();
+        } else {
+            setShowBooks(false);
         }
     }, []);
 
@@ -102,6 +105,8 @@ const BookMap = ({ route }) => {
             latitude: event.nativeEvent.coordinate.latitude,
             longitude: event.nativeEvent.coordinate.longitude,
         });
+
+        setSelectPlace(true);
     };
 
     const getLimitedStr = (str) => {
@@ -140,7 +145,7 @@ const BookMap = ({ route }) => {
                         }}
                         onPress={handleMapPress}
                     >
-                    {selectedLocation && (
+                    {!showBooks && selectedLocation && (
                         <Marker
                             coordinate={{
                                 latitude: selectedLocation.latitude,
@@ -165,14 +170,12 @@ const BookMap = ({ route }) => {
                     )) : (<></>)}
                     </MapView>
                 )}
-                {selectPlace && <TouchableOpacity
+                {selectPlace && !showBooks && <TouchableOpacity
                     style={styles.selectLocationButton}
                     onPress={() => {
-                        console.log('Local selecionado:', selectedLocation);
                         if (selectedLocation) navigation.navigate(screen, {selectedLocation});
                     }}
                 >
-        
                     <Text style={{color: "white",}}>Selecionar Local</Text>
                 </TouchableOpacity>}
             </View>
