@@ -171,6 +171,7 @@ const Profile = (context) => {
         <Text style={[styles.profile, styles.profileTypo]}>Profile</Text>
 
         <View style={styles.containerImagem}>
+          {console.log(selectedImage)}
           {selectedImage ? (
             <Image
               style={styles.telaUserChild}
@@ -195,9 +196,9 @@ const Profile = (context) => {
         <View style={[styles.nameParent, styles.parentLayout]}>
           <Text style={[styles.name, styles.nameTypo]}>Name</Text>
           <View style={[styles.rectangleParent, styles.groupChildLayout]}>
-            <View style={styles.groupChildPosition} />
+
             <TextInput
-              style={[styles.melissaPeters, styles.saveChangesPosition]}
+              style={[styles.textInput]}
               placeholder=""
               placeholderTextColor={Color.colorBlanchedalmond_101}
               value={username}
@@ -208,9 +209,8 @@ const Profile = (context) => {
         <View style={[styles.emailParent, styles.parentLayout]}>
           <Text style={styles.nameTypo}>Email</Text>
           <View style={[styles.rectangleParent, styles.groupChildLayout]}>
-            <View style={styles.groupChildPosition} />
             <TextInput
-              style={[styles.melissaPeters, styles.saveChangesPosition]}
+              style={[styles.textInput]}
               placeholder="melpeters@gmail.com "
               placeholderTextColor={Color.colorBlanchedalmond_101}
               value={email}
@@ -218,50 +218,72 @@ const Profile = (context) => {
             />
           </View>
         </View>
-        <Pressable onPress={updateUserData}>
-          <View style={[styles.groupView, styles.viewLayout]}>
-            <View style={styles.rectangleView} />
-            <Text style={[styles.saveChanges, styles.saveChangesPosition]}>
-              Save changes
-            </Text>
-          </View>
-        </Pressable>
-        {/* <Pressable onPress={() => {
-          navigation.navigate("SelectMapScreen", { showBooks: true, screen: "Profile" });
-        }}
-          style={[styles.groupView1, styles.saveChanges]}
-        >   */}
-        <Pressable onPress={() => {
-          navigation.navigate("RegisterLocation");
-        }}
-          style={[styles.groupView1, styles.saveChanges]}
-        >
-          <View style={[styles.viewLayout]}>
-            <View style={styles.rectangleView} />
-            <Text style={[styles.saveChanges, styles.saveChangesPosition]}>
-              Adicionar endereço
-            </Text>
-          </View>
-        </Pressable>
-      </View>
+        <View style={styles.viewButtons}>
+          <Pressable onPress={() => {
+            navigation.navigate("RegisterLocation");
+          }}
+            style={[styles.button]}
+          >
+            <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Adicionar Endereço</Text>
+          </Pressable>
+          <Pressable style={[styles.button]} onPress={updateUserData}>
+            <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Salvar Alterações</Text>
+            <Image
+              style={[styles.ionbookIcon]}
+              contentFit="cover"
+              source={require("../assets/ionbook.png")}
+            />
+          </Pressable>
+        </View>
+      </View >
     </>
   );
 };
 
 const styles = StyleSheet.create({
+
+  textInput: {
+    // marginBottom: 15,;
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    fontFamily: FontFamily.openSansSemiBold,
+    fontWeight: "600",
+    fontSize: FontSize.size_base,
+    color: Color.colorBlanchedalmond_100,
+    width: "115%",
+    borderStyle: "solid",
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+    borderRadius: Border.br_3xs,
+    height: 45,
+  },
+
+  viewButtons: {
+    top: "50%",
+    display: "flex",
+    alignItems: "center",
+  },
+  ionbookIcon: {
+    top: 2,
+    width: 25,
+    height: 25,
+    overflow: "hidden",
+  },
+
   profileTypo: {
     textAlign: "left",
     fontFamily: "Rosarivo-Regular",
   },
   saveChangesPosition: {
     top: "50%",
-    position: "absolute",
+    display: "flex"
   },
   parentLayout: {
     height: 80,
     width: 314,
     left: 24,
-    position: "absolute",
+    display: "flex",
   },
   nameTypo: {
     // lineHeight: 14,
@@ -271,12 +293,12 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: "#efe3c8",
     fontFamily: "Rosarivo-Regular",
-    position: "absolute",
+    display: "flex",
   },
   groupChildLayout: {
     height: 44,
     width: 314,
-    position: "absolute",
+    display: "flex",
   },
   groupChildPosition: {
     borderRadius: 6,
@@ -284,7 +306,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 44,
     width: 370,
-    position: "absolute",
+    display: "flex",
   },
   viewLayout: {
     height: 45,
@@ -295,7 +317,7 @@ const styles = StyleSheet.create({
     left: 25,
     width: 30,
     height: 30,
-    position: "absolute",
+    display: "flex",
     overflow: "hidden",
   },
   profile: {
@@ -307,7 +329,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontSize: 20,
     left: "50%",
-    position: "absolute",
+    display: "flex",
   },
 
   telaUserChild: {
@@ -318,15 +340,15 @@ const styles = StyleSheet.create({
     borderRadius: 84,
     overflow: "hidden",
     // left: "50%",
-    // top: "50%",
+    // top: "20%",
   },
   containerImagem: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     position: "absolute",
-    top: 110,
-    left: 120,
+    top: "18%",
+    left: "30%",
     // right: 200,
   },
 
@@ -350,7 +372,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 44,
     width: 314,
-    position: "absolute",
+    display: "flex",
   },
   melissaPeters: {
     marginTop: -14,
@@ -362,14 +384,14 @@ const styles = StyleSheet.create({
     color: "#efe3c8",
   },
   rectangleParent: {
-    top: 25,
+    top: "20%",
     left: 0,
   },
   nameParent: {
-    top: 308,
+    top: "37%",
   },
   emailParent: {
-    top: 395,
+    top: "42%",
   },
   passwordParent: {
     top: 482,
@@ -381,7 +403,7 @@ const styles = StyleSheet.create({
     top: 0,
     height: 45,
     width: 215,
-    position: "absolute",
+    display: "flex",
   },
   saveChanges: {
     marginTop: -10,
@@ -393,7 +415,7 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     fontSize: 20,
     left: "50%",
-    position: "absolute",
+    display: "flex",
   },
   groupView: {
     top: 626,
@@ -409,7 +431,34 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 800,
     overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
   },
+  button: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Color.colorBlanchedalmond_100,
+    width: "70%",
+    height: 45,
+    borderRadius: Border.br_3xs,
+    marginTop: "5%",
+
+  },
+
+  irAlLibroTypo: {
+    textAlign: "center",
+    fontFamily: FontFamily.openSansSemiBold,
+    fontWeight: "600",
+    fontSize: FontSize.size_base,
+  },
+
+  irAlLibro: {
+    color: Color.colorGray_100,
+    marginRight: 10,
+  },
+
 });
 
 export default Profile;
