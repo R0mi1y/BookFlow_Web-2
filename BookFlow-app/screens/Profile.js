@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: FontSize.size_base,
     color: Color.colorBlanchedalmond_100,
-    width: "115%",
+    width: "100%",
     borderStyle: "solid",
     borderColor: Color.colorBlanchedalmond_100,
     borderWidth: 1,
