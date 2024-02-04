@@ -195,7 +195,7 @@ const Profile = (context) => {
         </View>
         <View style={[styles.nameParent, styles.parentLayout]}>
           <Text style={[styles.name, styles.nameTypo]}>Name</Text>
-          <View style={[styles.rectangleParent, styles.groupChildLayout]}>
+          {/* <View style={[styles.rectangleParent, styles.groupChildLayout]}> */}
 
             <TextInput
               style={[styles.textInput]}
@@ -204,11 +204,11 @@ const Profile = (context) => {
               value={username}
               onChangeText={(text) => setUserName(text)}
             ></TextInput>
-          </View>
+          {/* </View> */}
         </View>
         <View style={[styles.emailParent, styles.parentLayout]}>
           <Text style={styles.nameTypo}>Email</Text>
-          <View style={[styles.rectangleParent, styles.groupChildLayout]}>
+          {/* <View style={[styles.rectangleParent, styles.groupChildLayout]}> */}
             <TextInput
               style={[styles.textInput]}
               placeholder="melpeters@gmail.com "
@@ -216,7 +216,7 @@ const Profile = (context) => {
               value={email}
               onChangeText={(text) => setEmail(text)}
             />
-          </View>
+          {/* </View> */}
         </View>
         <View style={styles.viewButtons}>
           <Pressable onPress={() => {
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   parentLayout: {
     height: 80,
-    width: 314,
+    width: "90%",
     left: 24,
     display: "flex",
   },
