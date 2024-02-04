@@ -18,7 +18,6 @@ import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
 import CustomPopup from '../components/CustomPopup';
 import getAccessToken from '../components/auxiliarFunctions';
-import axios from 'axios';
 import TopComponent from '../components/topComponent';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
@@ -68,6 +67,29 @@ const RegisterBook = ({ route }) => {
     }
   }, []);
 
+  const delete_book = async () => {
+    if (book) {
+      const accessToken = await getAccessToken(navigation);
+
+      let response = await fetch(`${apiUrl}/api/book/${book.id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: "Bearer " + accessToken,
+        },
+      });
+
+      if(response.ok) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "HomeScreen" }],
+        });
+      } else {
+        togglePopup("Erro interno, tente novamente mais tarde!");
+      }
+    }
+  }
+
   const send_book = async () => {
     if (titulo == '' || resumo == '' || autor == '' || genero == '') {
       togglePopup("Preencha todos os campos!");
@@ -101,22 +123,25 @@ const RegisterBook = ({ route }) => {
       else
         formData.append('availability', false);
 
-
-      var response;
+      let response;
 
       if (book) {
-        response = await axios.put(`${apiUrl}/api/book/${book.id}/`, formData, {
+        response = await fetch(`${apiUrl}/api/book/${book.id}/`, formData, {
+          method: 'PUT',
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: "Bearer " + accessToken,
           },
+          body: formData,
         });
       } else {
-        response = await axios.post(`${apiUrl}/api/book/`, formData, {
+        response = await fetch(`${apiUrl}/api/book/`, {
+          method: 'POST',
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: "Bearer " + accessToken,
           },
+          body: formData,
         });
       }
 
@@ -135,6 +160,7 @@ const RegisterBook = ({ route }) => {
 
       } else {
         if (response.data?.message) {
+          togglePopup("Erro no cadastro:", response.data.message);
           console.error("Erro no cadastro:", response.data.message);
         }
       }
@@ -179,7 +205,7 @@ const RegisterBook = ({ route }) => {
     fetch(`https://www.googleapis.com/books/v1/volumes?q=${text}`)
       .then((response) => response.json())
       .then((response) => {
-        var books = response.items;
+        let books = response.items;
         console.log(books);
         if (books) {
           setSearchElements(books);
@@ -298,13 +324,23 @@ const RegisterBook = ({ route }) => {
         </View>
 
         <Pressable style={styles.button} onPress={send_book}>
-          <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>{ book ? "Editar" :  "Cadastrar" }</Text>
+          <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>{ book ? "Salvar" :  "Cadastrar" }</Text>
           <Image
             style={[styles.ionbookIcon]}
             contentFit="cover"
             source={require("../assets/ionbook.png")}
           />
         </Pressable>
+        { book ? (<>
+        <View style={{height:10}}/>
+        <Pressable style={styles.button} onPress={delete_book}>
+          <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Deletar Livro</Text>
+          <Image
+            style={[styles.ionbookIcon]}
+            contentFit="cover"
+            source={require("../assets/ionbook.png")}
+          />
+          </Pressable></>) :  (<></>) }
       </View>
     </>
   );

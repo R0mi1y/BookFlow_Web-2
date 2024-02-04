@@ -22,7 +22,7 @@ import getAccessToken from '../components/auxiliarFunctions';
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const ListBook = ({ route }) => {
-  var receivedData = route.params?.dataToSend || 'NONE';
+  let receivedData = route.params?.dataToSend || 'NONE';
 
   const [popupVisible, setPopupVisible] = React.useState(true);
   const [messagePopup, setPopupTexto] = React.useState("Loading");
@@ -45,24 +45,24 @@ const ListBook = ({ route }) => {
     }
   };
 
-  const getBooks = () => {
-    let cont = 0;
-    const fetchData = async () => {
-      try {
+  const getBooks = async () => {
+    try {
+      let attempts = 0;
+
+      while (attempts < 5) {
         const user = JSON.parse(await SecureStore.getItemAsync("user"));
         const accessToken = await getAccessToken(navigation);
 
-        var url = `${apiUrl}/api/book/`;
+        let url = `${apiUrl}/api/book/`;
 
         if (accessToken) {
-          if (receivedData == 'SEARCH') {
-            var search = route.params?.search || '';
-
+          if (receivedData === 'SEARCH') {
+            const search = route.params?.search || '';
             url += `?search=${search}`;
+          } else if (receivedData !== 'NONE') {
+            url += `user/${user.id}?filter=${receivedData}`;
           }
-          else if (receivedData != 'NONE') url += `user/${user.id}?filter=${receivedData}`;
-          console.log(url);
-        
+
           const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -79,28 +79,26 @@ const ListBook = ({ route }) => {
 
           setBooks(data);
           togglePopup();
-          cont = 0;
+          return; // Sai da função se a busca for bem-sucedida
         } else {
           navigation.reset({
             index: 0,
             routes: [{ name: "LogInScreen" }],
           });
-          console.error("Falha ao obter AccessToken");
-        }
-      } catch (error) {
-        console.error("Erro ao buscar livros:", error);
-        if (cont < 5) {
-          cont ++;
-          fetchData();
-        } else {
-          cont = 0;
+          console.log("Falha ao obter AccessToken");
+          return; // Sai da função se falhar ao obter AccessToken
         }
       }
-    };
 
-    fetchData();
-  }
-  useEffect(getBooks, []);
+      console.error("Número máximo de tentativas atingido. Falha ao buscar livros.");
+    } catch (error) {
+      console.error("Erro ao buscar livros:", error);
+    }
+  };
+
+  useEffect(() => {
+    getBooks();
+  }, [route, navigation]);
 
   const changeScreen = (screen) => {
     togglePopup("Loading");
@@ -165,7 +163,7 @@ const ListBook = ({ route }) => {
                     style={[styles.groupChild4, styles.groupChildLayout1]}
                     resizeMode="cover"
                     source={{
-                      uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
+                      uri: (book.cover ? book.cover : apiUrl + "/static/img/default_cover.jpg"),
                     }}
                   />
                   <View style={styles.bookInfoContainer}>

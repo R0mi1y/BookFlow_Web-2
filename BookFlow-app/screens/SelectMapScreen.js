@@ -1,12 +1,12 @@
 // BookMap.js
 import React, { useEffect, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 import { useNavigation } from "@react-navigation/native";
 import CustomPopup from "../components/CustomPopup";
 import TopComponent from '../components/topComponent';
-import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import { Color } from "../GlobalStyles";
 import getAccessToken from '../components/auxiliarFunctions';
 import Constants from 'expo-constants';
 
@@ -35,7 +35,7 @@ const BookMap = ({ route }) => {
             togglePopup("Loading");
             let cont = 0;
             const fetchData = async () => {
-                var url = `${apiUrl}/api/book/maps/`;
+                let url = `${apiUrl}/api/book/maps/`;
                 console.log(url);
                 
                 try {
@@ -64,10 +64,10 @@ const BookMap = ({ route }) => {
                     index: 0,
                     routes: [{ name: "LogInScreen" }],
                     });
-                    console.error("Falha ao obter AccessToken");
+                    console.log("Falha ao obter AccessToken");
                 }
                 } catch (error) {
-                    console.error("Erro ao buscar livros:", error);
+                    console.log("Erro ao buscar livros:", error);
                     console.log(url);
                     if (cont < 5) {
                         cont ++;

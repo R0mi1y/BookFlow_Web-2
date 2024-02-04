@@ -61,7 +61,7 @@ const CustomPopup = ({ visible, onClose, message, navigation=null, setVisible=nu
       </Modal>
     );
   } else if ( typeof message === 'object') {
-    var books = (<></>);
+    let books = (<></>);
     if (message.type == "books") {
       books = message.books.map((book) => (
         <Pressable

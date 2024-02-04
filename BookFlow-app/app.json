@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "book flow",
-    "slug": "book_flow",
+    "slug": "book-flow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,12 +22,17 @@
       "bundleIdentifier": "com.bookflow"
     },
     "android": {
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.bookflow",
-      "config": {}
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB2YzngwGwvTwI5DRVySMBfJ-6TzLPjl1Q"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,12 +41,20 @@
     "extra": {
       "apiUrl": "http://89.117.75.69:8881",
       "eas": {
-        "projectId": "1b18319f-92e7-4d30-927d-eb62eae6fee3"
+        "projectId": "54606835-cb6d-4e34-a7af-34b5127b0813"
       }
     },
-    "owner": "romily",
+    "owner": "ediel",
     "plugins": [
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ]
   },
   "web": "expo start --web"

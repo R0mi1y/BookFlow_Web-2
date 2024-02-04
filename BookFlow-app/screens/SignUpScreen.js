@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,19 +6,17 @@ import {
   Pressable,
   ImageBackground,
   Image,
-  Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Frame from "../components/Frame";
 import { FontFamily, Color, FontSize, Padding, Border } from "../GlobalStyles";
 import { TextInput } from "react-native";
 import Constants from 'expo-constants';
-import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import CustomPopup from '../components/CustomPopup';
+import * as SecureStore from 'expo-secure-store';
 
 
   const SignUpScreen = () => {
@@ -116,7 +114,7 @@ import CustomPopup from '../components/CustomPopup';
       if (!token) return;
 
       try {
-        var response_user = await fetch(
+        let response_user = await fetch(
           "https://www.googleapis.com/userinfo/v2/me",
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -160,7 +158,7 @@ import CustomPopup from '../components/CustomPopup';
     });
   }
 
-  const signUp = () => {
+  const signUp = async () => {
     togglePopup("Loading");
     if (pass == '' || email == '') {
       togglePopup();
@@ -171,8 +169,10 @@ import CustomPopup from '../components/CustomPopup';
       togglePopup("A senha e a confirmação precisam ser iguais!");
       return;
     }
-    console.error(`${apiUrl}/api/user/`);
+
+    console.log(`${apiUrl}/api/user/`);
     try {
+      let token = await SecureStore.getItemAsync("notification-token");
       fetch(
         `${apiUrl}/api/user/`,
         {
@@ -180,22 +180,22 @@ import CustomPopup from '../components/CustomPopup';
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({password:pass, email:email, username:name}),
+          body: JSON.stringify({password:pass, email:email, username:name, notification_token: token}),
         }
       ).then((json) => json.json())
       .then((data) => {
         if ("id" in data) {
           AsyncStorage.setItem("@user", JSON.stringify(data));
 
-            getRefreshToken();
-          } else {
-            let message = "";
+          getRefreshToken();
+        } else {
+          let message = "";
 
-            data_array = Object.entries(data);
-            data_array.forEach(element => {
-              message += "\n\n";
-              message += element[1];
-            });
+          data_array = Object.entries(data);
+          data_array.forEach(element => {
+            message += "\n\n";
+            message += element[1];
+          });
 
           togglePopup();
           togglePopup(message);

@@ -2,7 +2,7 @@
 // ios: 842894758664-5lvro06b7p49mtbpgr563v9fd5fsd1eq.apps.googleusercontent.com
 
 const Stack = createNativeStackNavigator();
-import * as React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import LogInScreen from "./screens/LogInScreen";
@@ -17,8 +17,6 @@ import Profile from "./screens/Profile";
 import Frame from "./components/Frame";
 import RegisterLocation from "./screens/RegisterLocation";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import * as Notifications from 'expo-notifications';
-// import * as BackgroundNotifications from 'expo-background-notifications';
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);

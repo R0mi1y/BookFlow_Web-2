@@ -26,7 +26,7 @@ const getAccessToken = async (navigation) => {
             });
             return;
         }
-        var url = `${apiUrl}/api/token/refresh/`;
+        let url = `${apiUrl}/api/token/refresh/`;
         console.log(url);
 
         const response = await fetch(url,
@@ -68,7 +68,7 @@ const getAccessToken = async (navigation) => {
         return data.access;
 
     } catch (error) {
-        console.error("Erro ao obter o token de acesso", error);
+        console.log("Erro ao obter o token de acesso", error);
         navigation.reset({
             index: 0,
             routes: [{ name: "LogInScreen" }],

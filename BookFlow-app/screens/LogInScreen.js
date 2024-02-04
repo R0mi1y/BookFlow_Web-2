@@ -18,7 +18,7 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google"
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-
+import axios from 'axios';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -50,37 +50,44 @@ const LogInScreen = () => {
     handleSingInWithGoogle();
   }, [response]);
 
-
-  const login = () => {
+  const login = async () => {
     togglePopup("Loading");
-    
-    fetch(
-      `${apiUrl}/api/user/login/`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: `{"email": "${email}", "password": "${pass}"}`,
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data?.status == "success") {
-          SecureStore.setItemAsync("user", JSON.stringify(data['user']));
-          setUserInfo(data['user']);
 
-          // navigation.navigate("pickDocument");
-          navigation.navigate("HomeScreen");
-        } else {
-          if (data?.message ?? false) {
-            togglePopup(data?.message);
-          }
+    try {
+      const response = await axios.post(
+        `${apiUrl}/api/user/login/`,
+        {
+          email: email,
+          password: pass,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
-      })
-      .catch((error) => console.error("1º fetch erro:" + error))
-      .finally(() => console.log('Requisição finalizada'));
-  }
+      );
+
+      togglePopup(response.data);
+
+      console.log(response.data);
+
+      if (response.data?.status === "success") {
+        SecureStore.setItemAsync("user", JSON.stringify(response.data.user));
+        setUserInfo(response.data.user);
+
+        navigation.navigate("HomeScreen");
+      } else {
+        if (response.data?.message ?? false) {
+          togglePopup(response.data.message);
+        }
+      }
+    } catch (error) {
+      console.error("Erro durante a requisição:", error);
+    } finally {
+      console.log('Requisição finalizada');
+    }
+  };
+
 
   async function handleSingInWithGoogle() {
     SecureStore.getItemAsync("user")
@@ -124,7 +131,6 @@ const LogInScreen = () => {
         await SecureStore.setItemAsync("user", JSON.stringify(user));
         setUserInfo(user);
 
-        // navigation.navigate("pickDocument");
         navigation.navigate("HomeScreen");
         return user;
       } else {
@@ -144,7 +150,7 @@ const LogInScreen = () => {
     if (!token) return;
 
     try {
-      var response_user = await fetch(
+      let response_user = await fetch(
         "https://www.googleapis.com/userinfo/v2/me",
         {
           headers: { Authorization: `Bearer ${token}` },

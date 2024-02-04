@@ -94,7 +94,7 @@ const BookDetailScreen = ({ route }) => {
             throw new Error(response.text());
           }
 
-          var data = await response.json();
+          let data = await response.json();
 
           data['summaryLength'] = data.summary.lenth;
           data['requirements_loanLength'] = data.summary.lenth;
@@ -109,10 +109,10 @@ const BookDetailScreen = ({ route }) => {
             index: 0,
             routes: [{ name: "LogInScreen" }],
           });
-          console.error("Falha ao obter AccessToken");
+          console.log("Falha ao obter AccessToken");
         }
       } catch (error) {
-        console.error("Erro ao buscar livros:", error.message);
+        console.log("Erro ao buscar livros:", error.message);
       }
     };
 
@@ -152,11 +152,11 @@ const BookDetailScreen = ({ route }) => {
         setIsFavorited((prevIsFavorited) => !prevIsFavorited);
         
       } else {
-        console.error("Falha ao obter AccessToken");
+        console.log("Falha ao obter AccessToken");
       }
 
     } catch (error) {
-      console.error("Erro ao favoritar livro:", error.message);
+      console.log("Erro ao favoritar livro:", error.message);
     }
   };
 

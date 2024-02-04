@@ -18,10 +18,20 @@ import starFilledImage from "../assets/solarstarfilled.png";
 import CustomPopup from '../components/CustomPopup';
 import TopComponent from '../components/topComponent';
 import getAccessToken from '../components/auxiliarFunctions';
+import * as Notifications from 'expo-notifications';
+
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const HomeScreen = ({ route }) => {
+  Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'Nova Notificação',
+      body: 'Você tem uma nova mensagem.',
+    },
+    trigger: null, // Para enviar imediatamente
+  });
+
   const navigation = useNavigation();
   const [messagePopup, setPopupTexto] = useState('Loading');
   const [popupVisible, setPopupVisible] = useState(true);
@@ -87,7 +97,7 @@ const HomeScreen = ({ route }) => {
         const accessToken = await getAccessToken(navigation);
 
         if (accessToken) {
-          var url = `${apiUrl}/api/book/user/${user.id}?filter=${section}`;
+          let url = `${apiUrl}/api/book/user/${user.id}?filter=${section}`;
           console.log("Buscando em " + url);
 
           const response = await fetch(url, {
@@ -104,7 +114,7 @@ const HomeScreen = ({ route }) => {
 
           const data = await response.json();
           
-          var s = sections;
+          let s = sections;
           
           s[i].books = data;
 
@@ -116,7 +126,7 @@ const HomeScreen = ({ route }) => {
             index: 0,
             routes: [{ name: "LogInScreen" }],
           });
-          console.error("Falha ao obter AccessToken");
+          console.log("Falha ao obter AccessToken");
         }
         count = 0;
       } catch (error) {
@@ -124,8 +134,8 @@ const HomeScreen = ({ route }) => {
           count ++;
           fetchData(section, i);
         } else count = 0;
-        console.error(error.message);
-        console.error('Erro ao buscar livros:', error.message);
+        console.log(error.message);
+        console.log('Erro ao buscar livros:', error.message);
       }
     };
 

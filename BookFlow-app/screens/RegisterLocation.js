@@ -16,7 +16,6 @@ import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
 import CustomPopup from '../components/CustomPopup';
 import getAccessToken from '../components/auxiliarFunctions';
-import axios from 'axios';
 import TopComponent from '../components/topComponent';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
@@ -54,7 +53,7 @@ const RegisterLocation = ({ route }) => {
             setLon(longitude);
 
             const fetchData = async () => {
-                var response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`, {
+                let response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`, {
                     method: "GET",
                 });
                 let data = await response.json();
