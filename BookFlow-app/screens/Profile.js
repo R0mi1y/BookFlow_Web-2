@@ -224,7 +224,7 @@ const Profile = (context) => {
           }}
             style={[styles.button]}
           >
-            <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Adicionar Endereço</Text>
+            <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Editar Endereço</Text>
           </Pressable>
           <Pressable style={[styles.button]} onPress={updateUserData}>
             <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Salvar Alterações</Text>

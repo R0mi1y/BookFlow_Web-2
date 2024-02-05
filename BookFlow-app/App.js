@@ -15,6 +15,7 @@ import RegisterBook from "./screens/RegisterBook";
 import ListBook from "./screens/ListBook";
 import Profile from "./screens/Profile";
 import Frame from "./components/Frame";
+import OwnerScreen from "./screens/OwnerScreen";
 import RegisterLocation from "./screens/RegisterLocation";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -73,7 +74,7 @@ const App = () => {
               component={Profile}
               options={{ headerShown: false }}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="RegisterLocation"
               component={RegisterLocation}
               options={{ headerShown: false }}
@@ -86,6 +87,11 @@ const App = () => {
             <Stack.Screen
               name="BookDetailScreen"
               component={BookDetailScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="OwnerScreen"
+              component={OwnerScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

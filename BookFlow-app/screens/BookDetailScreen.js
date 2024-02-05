@@ -280,6 +280,16 @@ const BookDetailScreen = ({ route }) => {
                 </View>
             </Pressable>
               )}
+          
+          <Pressable onPress={() => {
+            navigation.navigate("OwnerScreen", {ownerId: book.owner});
+          }}>
+          <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+                    Informações do proprietario
+                  </Text>
+                  
+                </View>
+          </Pressable>
           </View>
         </View>
       </ScrollView>
