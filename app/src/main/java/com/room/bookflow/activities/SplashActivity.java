@@ -1,4 +1,4 @@
-package com.room.bookflow;
+package com.room.bookflow.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.room.bookflow.activities.LoginActivity;
+import com.room.bookflow.activities.NotificationService;
 import com.room.bookflow.databinding.ActivitySplashBinding;
 
 public class SplashActivity extends AppCompatActivity {
@@ -24,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }

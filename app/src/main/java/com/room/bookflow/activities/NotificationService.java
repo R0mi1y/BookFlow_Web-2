@@ -1,4 +1,4 @@
-package com.room.bookflow;
+package com.room.bookflow.activities;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -34,6 +34,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.room.bookflow.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
