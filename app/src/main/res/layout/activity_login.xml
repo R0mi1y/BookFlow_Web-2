@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.LoginActivity"
-    android:orientation="vertical"
-    android:background="@drawable/login_bg">
+    android:background="@drawable/login_bg" >
 
     <LinearLayout
         android:layout_width="0dp"
@@ -14,7 +13,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">>
+        app:layout_constraintTop_toTopOf="parent">
 
         <Space
             android:id="@+id/space"
@@ -82,6 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
+            android:autoText="true"
             android:background="@drawable/default_border"
             android:ems="10"
             android:foregroundGravity="center"
@@ -94,18 +94,43 @@
             android:textColorHint="#A3A3A3"
             android:textColorLink="#FFFFFF" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="350dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/default_border"
-            android:ems="10"
-            android:hint="Senha"
-            android:inputType="text"
-            android:padding="10dp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFA3A3A3" />
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#00FFFFFF"
+                android:ems="10"
+                android:hint="Senha"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFA3A3A3" />
+
+            <Button
+                android:id="@+id/show_pass"
+                android:layout_width="50dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:foregroundGravity="center"
+                android:textColorHighlight="#F4F4F4"
+                android:textColorLink="#FFFFFF"
+                app:icon="@drawable/baseline_remove_red_eye_24"
+                app:iconGravity="top"
+                app:iconTint="#faf3dd" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -160,12 +185,11 @@
             android:background="#00FFFFFF"
             android:fontFamily="@font/rosarivo_regular"
             android:text="Cadsatre-se"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
+            android:textColor="#FFFFFF" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="95dp" />
+            android:layout_height="70dp" />
     </LinearLayout>
 
 

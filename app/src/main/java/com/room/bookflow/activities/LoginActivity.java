@@ -5,10 +5,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -36,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     private GoogleSignInClient googleSignInClient;
-
+    private int TYPE_TEXT_VARIATION_PASSWORD = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,15 +47,28 @@ public class LoginActivity extends AppCompatActivity {
 
         setupGoogleSignIn();
 
+        binding.showPass.setOnClickListener(v -> {
+            int inputType = binding.password.getInputType();
+
+            if (TYPE_TEXT_VARIATION_PASSWORD == -1) TYPE_TEXT_VARIATION_PASSWORD = inputType;
+
+            Toast.makeText(this, Integer.toString(inputType), Toast.LENGTH_SHORT).show();
+
+            int newInputType = inputType == TYPE_TEXT_VARIATION_PASSWORD ?
+                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD :
+                    TYPE_TEXT_VARIATION_PASSWORD;
+
+            binding.password.setInputType(newInputType);
+            binding.password.setSelection(binding.password.getText().length());
+        });
+
         binding.loginBtn.setOnClickListener(v -> {
             Log.i("Login with google", "Começando o login!");
-            Toast.makeText(this, "Começando o login!", Toast.LENGTH_SHORT).show();
             doLogin();
         });
 
         binding.googleLoginBtn.setOnClickListener(v -> {
             Log.i("Login with google", "Começando o login com o google!");
-            Toast.makeText(this, "Começando o login com o google!", Toast.LENGTH_SHORT).show();
             Intent signInIntent = googleSignInClient.getSignInIntent();
             singInGoogleActivity.launch(signInIntent);
         });
@@ -82,18 +97,14 @@ public class LoginActivity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == -1) {
                     Intent intent = result.getData();
-
-                    Toast.makeText(this, "Resultado recebido do sign in google intent!", Toast.LENGTH_SHORT).show();
                     Log.i("Login with google", "Resultado recebido do sign in google intent!");
 
                     try {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
 
-                        Toast.makeText(this, "intent: " + intent.getExtras().toString(), Toast.LENGTH_SHORT).show();
                         Log.i("Login with google", "intent: " + intent.getExtras().toString());
                         GoogleSignInAccount account = task.getResult(ApiException.class);
 
-                        Toast.makeText(this, "Api pass", Toast.LENGTH_SHORT).show();
                         Log.i("Login with google", "Api pass");
 
                         doLoginWithGoogle(account);
@@ -112,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> singUpActivity = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == -1) {
+                if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
 
                     PopUp("Sucesso!", "Sua conta foi criada com sucesso, agora faça login e seja bem vindo!");
@@ -129,9 +140,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doLoginWithGoogle(GoogleSignInAccount account) {
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-
-        // Criar um objeto JSON com os dados da conta Google
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("id", account.getId());
@@ -142,79 +150,74 @@ public class LoginActivity extends AppCompatActivity {
             jsonBody.put("picture", account.getPhotoUrl().toString());
         } catch (JSONException e) {
             e.printStackTrace();
-            // Lidar com erro ao criar o JSON, se necessário
         }
 
         String url = getString(R.string.api_url) + "/api/user/signup/googleaccount/";
 
-        // Criar a requisição Volley
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 response -> {
-                    // Lidar com a resposta bem-sucedida
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
                     intent.putExtra("user", response.toString());
                     startActivity(intent);
                 },
                 error -> {
-                    // Lidar com erros na requisição
                     if (error instanceof NoConnectionError) {
-                        // Sem conexão de internet
                         Toast.makeText(LoginActivity.this, "Sem conexão de internet", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof TimeoutError) {
-                        // Tempo de espera excedido
                         Toast.makeText(LoginActivity.this, "Tempo de espera excedido", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof ServerError) {
-                        // Erro no servidor
                         Toast.makeText(LoginActivity.this, "Erro no servidor", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Outro tipo de erro
                         Toast.makeText(LoginActivity.this, "Erro desconhecido", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        // Adicionar a requisição à fila
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
 
     private void doLogin() {
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-
-        // Criar um objeto JSON com os dados da conta Google
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("email", binding.email.getText());
-            jsonBody.put("password", binding.password.getText());
+            jsonBody.put("email", binding.email.getText().toString());
+            jsonBody.put("password", binding.password.getText().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         String url = getString(R.string.api_url) + "/api/user/login/";
 
-        // Criar a requisição Volley
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 response -> {
-                    // Lidar com a resposta bem-sucedida
-                    intent.putExtra("user", response.toString());
-                    startActivity(intent);
+                    try {
+                        if (response.has("status") && response.getString("status").equals("error")) {
+                            String errorMessage = response.getString("message");
+                            PopUp("Erro ao cadastrar", errorMessage);
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            intent.putExtra("user", response.toString());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                            startActivity(intent);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("Erro ao processar resposta", e.getMessage());
+                    }
                 },
                 error -> {
-                    // Lidar com erros na requisição
                     if (error instanceof NoConnectionError) {
-                        // Sem conexão de internet
                         Toast.makeText(LoginActivity.this, "Sem conexão de internet", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof TimeoutError) {
-                        // Tempo de espera excedido
                         Toast.makeText(LoginActivity.this, "Tempo de espera excedido", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof ServerError) {
-                        // Erro no servidor
                         Toast.makeText(LoginActivity.this, "Erro no servidor", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Outro tipo de erro
                         Toast.makeText(LoginActivity.this, "Erro desconhecido", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        // Adicionar a requisição à fila
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
