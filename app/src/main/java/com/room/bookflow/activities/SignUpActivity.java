@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivitySignUpBinding;
 import com.room.bookflow.databinding.ActivitySplashBinding;
+import com.room.bookflow.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,7 +92,9 @@ public class SignUpActivity extends AppCompatActivity {
         );
 
         binding.singinBtn.setOnClickListener(v -> {
-                signUp();
+                new Thread(() -> {
+                    signUp();
+                }).start();
             }
         );
     }
@@ -199,98 +202,15 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("email", binding.email.getText().toString());
-            jsonBody.put("username", binding.username.getText().toString());
-            jsonBody.put("password", binding.password.getText().toString());
-            jsonBody.put("first_name", binding.firstName.getText().toString());
-            jsonBody.put("last_name", binding.lastName.getText().toString());
+        User user = new User();
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        user.setEmail(binding.email.getText().toString());
+        user.setUsername(binding.username.getText().toString());
+        user.setFirstName(binding.firstName.getText().toString());
+        user.setLastName(binding.lastName.getText().toString());
+        user.setPassword(binding.password.getText().toString());
 
-        String url = getString(R.string.api_url) + "/api/user/";
-        Log.i("Erro Cadastrando", jsonBody.toString());
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
-                response -> {
-                    try {
-                        if (response.has("id")) {
-                            // Usuário registrado com sucesso
-                            Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
-                            intent.putExtra("user", response.toString());
-                            startActivity(intent);
-                        } else {
-                            // Tratar mensagem de erro
-                            StringBuilder message = new StringBuilder();
-
-                            JSONObject data = new JSONObject(response.toString());
-                            for (int i = 0; i < data.names().length(); i++) {
-                                String key = data.names().getString(i);
-                                String value = data.getString(key);
-
-                                message.append("\n\n");
-                                message.append(value);
-                            }
-
-                            PopUp("Erro", message.toString());
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                },
-                error -> {
-                    if (error instanceof NoConnectionError) {
-                        Toast.makeText(SignUpActivity.this, "Sem conexão de internet", Toast.LENGTH_SHORT).show();
-                    } else if (error instanceof TimeoutError) {
-                        Toast.makeText(SignUpActivity.this, "Tempo de espera excedido", Toast.LENGTH_SHORT).show();
-                    } else if (error instanceof ServerError) {
-                        StringBuilder message = new StringBuilder();
-                        if (error.networkResponse != null && error.networkResponse.data != null) {
-                            try {
-                                String errorResponse = new String(error.networkResponse.data, "UTF-8");
-                                Log.e("ErrorResponse", errorResponse);
-
-                                JSONObject data = new JSONObject(errorResponse);
-                                for (int i = 0; i < data.names().length(); i++) {
-                                    String key = data.names().getString(i);
-
-                                    // Verifica se a chave é "ok" e se o valor é uma lista
-                                    if (data.get(key) instanceof JSONArray) {
-                                        JSONArray values = data.getJSONArray(key);
-                                        for (int j = 0; j < values.length(); j++) {
-                                            String value = values.getString(j);
-                                            if (!value.isEmpty()) {
-                                                message.append("\n");
-                                                message.append(key.replace('_', ' ') + ": " + value);
-                                            }
-                                        }
-                                    } else if (!key.equals("ok")){
-                                        String value = data.getString(key);
-                                        if (!value.isEmpty()) {
-                                            message.append("\n");
-                                            message.append(key + ": " + value);
-                                        }
-                                    }
-                                }
-
-                                PopUp("Erro ao cadastrar", message.toString());
-                            } catch (JSONException e) {
-                                Log.e("Erro cadastrando", e.getMessage());
-                            } catch (UnsupportedEncodingException e) {
-                                throw new RuntimeException(e);
-                            }
-                            Toast.makeText(SignUpActivity.this, "Erro no servidor", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(SignUpActivity.this, "Erro desconhecido", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(request);
+        user.save(this);
     }
 
 

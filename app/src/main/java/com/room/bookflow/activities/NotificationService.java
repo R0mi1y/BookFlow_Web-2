@@ -78,36 +78,28 @@ public class NotificationService extends Service {
                     Request.Method.GET,
                     url,
                     null,
-                    new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray notificationsArray) {
-                            Log.e("title", Integer.toString(notificationsArray.length()));
+                    notificationsArray -> {
+                        Log.e("title", Integer.toString(notificationsArray.length()));
 
-                            for (int i = 0; i < notificationsArray.length(); i++) {
-                            Log.e("title", "title");
-                                try {
-                                    JSONObject notificationObject = notificationsArray.getJSONObject(i);
+                        for (int i = 0; i < notificationsArray.length(); i++) {
+                        Log.e("title", "title");
+                            try {
+                                JSONObject notificationObject = notificationsArray.getJSONObject(i);
 
-                                    String from = notificationObject.getString("from_field");
-                                    String message = notificationObject.getString("message");
-                                    String title = notificationObject.getString("title");
-                                    String description = notificationObject.getString("description");
-                                    int id = notificationObject.getInt("id");
-                                    makeNotification(from, message, title, description, id);
+                                String from = notificationObject.getString("from_field");
+                                String message = notificationObject.getString("message");
+                                String title = notificationObject.getString("title");
+                                String description = notificationObject.getString("description");
+                                int id = notificationObject.getInt("id");
+                                makeNotification(from, message, title, description, id);
 
-                                    Log.e("title", title);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                                Log.e("title", title);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
                     },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("Requisição GET", "Erro: " + error.toString());
-                        }
-                    }
+                    error -> Log.e("Requisição GET", "Erro: " + error.toString())
             ) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {

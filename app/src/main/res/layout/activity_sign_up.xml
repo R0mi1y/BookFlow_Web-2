@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SignUpActivity"
-    android:background="@drawable/login_bg" >
+    android:background="@drawable/login_bg"
+    tools:context=".activities.SignUpActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -74,6 +75,7 @@
             android:inputType="text"
             android:padding="10dp"
             android:shadowColor="#FFFFFF"
+            android:text="Lucimera"
             android:textColor="#FFFFFF"
             android:textColorHighlight="#FFFFFF"
             android:textColorHint="#A3A3A3"
@@ -100,6 +102,7 @@
                 android:inputType="text|textPersonName|textCapWords"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
+                android:text="ucimara"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
@@ -117,6 +120,7 @@
                 android:inputType="text|textPersonName|textCapWords"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
+                android:text="Caetano"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
@@ -147,6 +151,7 @@
             android:inputType="text|textEmailAddress"
             android:padding="10dp"
             android:shadowColor="#FFFFFF"
+            android:text="lucimara@gmail.com"
             android:textColor="#FFFFFF"
             android:textColorHighlight="#FFFFFF"
             android:textColorHint="#A3A3A3"
@@ -181,6 +186,7 @@
                 android:hint="Senha"
                 android:inputType="text|textPassword"
                 android:padding="10dp"
+                android:text="123123123"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#FFA3A3A3" />
 
@@ -227,6 +233,7 @@
                 android:hint="Confirmação da senha"
                 android:inputType="text|textPassword"
                 android:padding="10dp"
+                android:text="123123123"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#FFA3A3A3" />
 
@@ -247,6 +254,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -294,5 +302,29 @@
             android:layout_width="match_parent"
             android:layout_height="59dp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/loading_gif"
+        android:layout_width="411dp"
+        android:layout_height="0dp"
+        android:background="#85000000"
+        android:duration="1000"
+        android:fromAlpha="0.0"
+        android:padding="150dp"
+        android:toAlpha="1.0"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout4"
+        app:srcCompat="@drawable/book" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="710dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

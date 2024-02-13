@@ -1,18 +1,25 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.components.Utilitary.hideLoadingScreen;
+import static com.room.bookflow.components.Utilitary.showLoadingScreen;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
@@ -22,6 +29,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -52,8 +60,6 @@ public class LoginActivity extends AppCompatActivity {
 
             if (TYPE_TEXT_VARIATION_PASSWORD == -1) TYPE_TEXT_VARIATION_PASSWORD = inputType;
 
-            Toast.makeText(this, Integer.toString(inputType), Toast.LENGTH_SHORT).show();
-
             int newInputType = inputType == TYPE_TEXT_VARIATION_PASSWORD ?
                     InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD :
                     TYPE_TEXT_VARIATION_PASSWORD;
@@ -63,11 +69,13 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         binding.loginBtn.setOnClickListener(v -> {
+            showLoadingScreen(binding.loadingGif, this);
             Log.i("Login with google", "Começando o login!");
-            doLogin();
+            new Thread(this::doLogin).start();
         });
 
         binding.googleLoginBtn.setOnClickListener(v -> {
+            showLoadingScreen(binding.loadingGif, this);
             Log.i("Login with google", "Começando o login com o google!");
             Intent signInIntent = googleSignInClient.getSignInIntent();
             singInGoogleActivity.launch(signInIntent);
@@ -77,19 +85,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             singUpActivity.launch(intent);
         });
-    }
-
-    public void PopUp(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-        builder.setTitle(title)
-                .setMessage(message);
-
-        builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_border);
-
-        alertDialog.show();
     }
 
     ActivityResultLauncher<Intent> singInGoogleActivity = registerForActivityResult(
@@ -109,10 +104,12 @@ public class LoginActivity extends AppCompatActivity {
 
                         doLoginWithGoogle(account);
                     } catch (ApiException e) {
+                        hideLoadingScreen(binding.loadingGif);
                         e.printStackTrace();
                         Toast.makeText(this, "Google sign in failed > " + e.toString(), Toast.LENGTH_SHORT).show();
                         Log.e("LoginActivity", "Google sign in failed", e);
                     } catch (Exception e) {
+                        hideLoadingScreen(binding.loadingGif);
                         Toast.makeText(this, "Google sign in failed > " + e.toString(), Toast.LENGTH_SHORT).show();
                         Log.e("LoginActivity", "Google sign in failed", e);
                     }
@@ -126,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
 
-                    PopUp("Sucesso!", "Sua conta foi criada com sucesso, agora faça login e seja bem vindo!");
+                    popUp("Sucesso!", "Sua conta foi criada com sucesso, agora faça login e seja bem vindo!", this);
                 }
             }
     );
@@ -173,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Erro desconhecido", Toast.LENGTH_SHORT).show();
                     }
                 });
-
+        hideLoadingScreen(binding.loadingGif);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
@@ -194,12 +191,11 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         if (response.has("status") && response.getString("status").equals("error")) {
                             String errorMessage = response.getString("message");
-                            PopUp("Erro ao cadastrar", errorMessage);
+                            popUp("Erro ao efetuar login", errorMessage, this);
                         } else {
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             intent.putExtra("user", response.toString());
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
                             startActivity(intent);
                         }
                     } catch (JSONException e) {
@@ -217,7 +213,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Erro desconhecido", Toast.LENGTH_SHORT).show();
                     }
                 });
-
+        hideLoadingScreen(binding.loadingGif);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
