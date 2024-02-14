@@ -1,5 +1,7 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.components.Utilitary.showLoadingScreen;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -92,11 +94,14 @@ public class SignUpActivity extends AppCompatActivity {
         );
 
         binding.singinBtn.setOnClickListener(v -> {
+           binding.singinBtn.setEnabled(false);
+            showLoadingScreen(binding.loadingGif, this, () -> {
                 new Thread(() -> {
                     signUp();
+                    runOnUiThread(() -> binding.singinBtn.setEnabled(false));
                 }).start();
-            }
-        );
+            });
+        });
     }
 
     private void setupGoogleSignIn() {

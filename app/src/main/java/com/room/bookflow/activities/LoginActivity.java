@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +42,8 @@ import com.room.bookflow.databinding.ActivityLoginBinding;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.CountDownLatch;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -69,19 +72,24 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         binding.loginBtn.setOnClickListener(v -> {
-            showLoadingScreen(binding.loadingGif, this);
-            Log.i("Login with google", "Começando o login!");
-            new Thread(this::doLogin).start();
+            binding.loginBtn.setEnabled(false);
+            showLoadingScreen(binding.loadingGif, this, () -> {
+                new Handler(Looper.getMainLooper()).postDelayed(this::doLogin, 500);
+            });
         });
 
+
         binding.googleLoginBtn.setOnClickListener(v -> {
-            showLoadingScreen(binding.loadingGif, this);
-            Log.i("Login with google", "Começando o login com o google!");
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-            singInGoogleActivity.launch(signInIntent);
+            binding.googleLoginBtn.setEnabled(false);
+            showLoadingScreen(binding.loadingGif, this, () -> {
+                Log.i("Login with google", "Começando o login com o google!");
+                Intent signInIntent = googleSignInClient.getSignInIntent();
+                singInGoogleActivity.launch(signInIntent);
+            });
         });
 
         binding.sigUpButton.setOnClickListener(view -> {
+            binding.sigUpButton.setEnabled(false);
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             singUpActivity.launch(intent);
         });

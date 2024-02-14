@@ -9,4 +9,6 @@
     <color name="colorGray_100">#704341</color>
     <color name="colorBlanchedalmond_100">#efe3c8</color>
     <color name="colorBranco_Suave">#1AFFFFFF</color>
+    <color name="book_card_side_background">#332e35</color>
+    <color name="options_card_background">#352328</color>
 </resources>

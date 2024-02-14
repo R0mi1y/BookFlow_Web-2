@@ -10,15 +10,22 @@ import androidx.appcompat.app.AlertDialog;
 import com.bumptech.glide.Glide;
 import com.room.bookflow.R;
 
+import java.util.concurrent.CountDownLatch;
+
 public class Utilitary {
+
+    public static void showLoadingScreen(ImageView gif, Context context, Runnable runnable) {
+        showLoadingScreen(gif, context);
+        runnable.run();
+    }
 
     public static void showLoadingScreen(ImageView gif, Context context) {
         ((Activity) context).runOnUiThread(() -> {
+            gif.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .asGif()
                     .load(R.drawable.book)
                     .into(gif);
-            gif.setVisibility(View.VISIBLE);
         });
     }
 

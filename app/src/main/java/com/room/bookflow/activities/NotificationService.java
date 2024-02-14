@@ -53,12 +53,9 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                verificarNotificacoesDoServidor();
-                handler.postDelayed(this, INTERVAL);
-            }
+        handler.postDelayed(() -> {
+            /*verificarNotificacoesDoServidor();
+            handler.postDelayed(this, INTERVAL);*/
         }, INTERVAL);
 
         return START_STICKY;

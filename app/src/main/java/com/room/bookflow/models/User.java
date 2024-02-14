@@ -58,7 +58,7 @@ import org.json.JSONObject;
 public class User {
     @PrimaryKey(autoGenerate = true)
     private int id = -1;
-    private String refreshToken  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwNzg4NDY5MiwiaWF0IjoxNzA3Nzk4MjkyLCJqdGkiOiI4ZmY0MjdhNzExOTU0MmQ5ODljOWFjYTJkZTg3YmE3ZiIsInVzZXJfaWQiOjV9.W5vHgDGCh9YsFWgMpAYXmJ6fVLiRmQwD5L0jBJ7n0OE";
+    private String refreshToken  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwNzk0OTE2OCwiaWF0IjoxNzA3ODYyNzY4LCJqdGkiOiJmZjVkYzdhM2ZmNGM0YjI5YmI1OGUxNmFmYjBiNTdmMyIsInVzZXJfaWQiOjV9.p_1SVtKhhh7L4NyPfs1ZxCurYRbRr-cU86YJZrqyQJU";
     private String username;
     private String firstName;
     private String photo;

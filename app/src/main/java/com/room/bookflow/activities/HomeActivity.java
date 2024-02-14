@@ -1,20 +1,20 @@
 package com.room.bookflow.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.room.bookflow.R;
+import com.room.bookflow.adapters.CardSideBookAdapter;
 import com.room.bookflow.databinding.ActivityHomeBinding;
-import com.room.bookflow.databinding.ActivityLoginBinding;
 import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
@@ -22,35 +22,38 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityHomeBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_home);
 
-        Intent it = getIntent();
-        String st = it.getStringExtra("user");
-//        binding.textView.setText(st);
-//
-//        binding.mapsBtn.setOnClickListener(v -> {
-//            Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
-//            startActivity(intent);
-//        });
+        RecyclerView recyclerView0 = findViewById(R.id.book_side_cards_0);
+        RecyclerView recyclerView1 = findViewById(R.id.book_side_cards_1);
+        RecyclerView recyclerView2 = findViewById(R.id.book_side_cards_2);
+        Toast.makeText(this, "BBB", Toast.LENGTH_SHORT).show();
 
-        getUser();
+        new Thread(() -> {
+            runOnUiThread(() -> Toast.makeText(this, "000", Toast.LENGTH_SHORT).show());
+            List<Book> items = new User().getUserById(5, this).getWishlist(this);
+            runOnUiThread(() -> {
+                recyclerView0.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
+                recyclerView1.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
+                recyclerView2.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
+            });
+        }).start();
     }
 
     private void getUser() {
         new Thread(() -> {
             try {
-                User u = new User().getUserById(5, this);
-                u.setLastName("admda");
-                u.update(u, this);
                 User user = new User().getUserById(5, this);
-
                 if (user != null) {
-                    runOnUiThread(() -> showToast(user.getLastName()));
-                    user.getWishlist(this);
+
+                    RecyclerView recyclerView = findViewById(R.id.book_side_cards_1);
+                    List<Book> items = new User().getUserById(5, this).getWishlist(this);
+                    runOnUiThread(() -> {
+                        recyclerView.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
+                    });
 
                     StringBuilder books = new StringBuilder();
-                    for (Book book : user.getWishlist()) {
+                    for (Book book : items) {
                         books.append(book.getTitle()).append("\n\n");
                     }
 

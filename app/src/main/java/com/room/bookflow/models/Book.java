@@ -279,7 +279,7 @@ public class Book {
             this.genre = response.has("genre") ? response.getString("genre") : null;
             this.summary = response.has("summary") ? response.getString("summary") : null;
             this.requirementsLoan = response.has("requirements_loan") ? response.getString("requirements_loan") : null;
-            this.isInWishlist = response.has("is_in_wishlist") && response.getBoolean("biography");
+            this.isInWishlist = response.has("is_in_wishlist") && response.getBoolean("is_in_wishlist");
             this.rating = response.has("rating") ? Double.parseDouble(response.getString("rating")) : -1;
             this.availability = response.has("availability") && response.getBoolean("availability");
             this.ownerId = response.has("account_type") ? response.getInt("account_type") : -1;

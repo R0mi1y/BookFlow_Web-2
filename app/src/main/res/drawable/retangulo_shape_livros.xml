@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
 	android:shape="rectangle" >
 	<corners android:radius="13dp" />
-	<solid android:color="@color/colorBranco_Suave" />
+	<solid android:color="@color/book_card_side_background" />
 </shape>
 
