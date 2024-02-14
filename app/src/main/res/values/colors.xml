@@ -4,4 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="background1">#4a2b29</color>
     <color name="gray">#6E6E6E</color>
+    <color name="colorGray_200">#1c161e</color>
+    <color name="colorBlanchedalmond_100_Opaco">#80FFFAF0</color>
+    <color name="colorGray_100">#704341</color>
+    <color name="colorBlanchedalmond_100">#efe3c8</color>
+    <color name="colorBranco_Suave">#1AFFFFFF</color>
 </resources>

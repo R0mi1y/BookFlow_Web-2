@@ -4,29 +4,1291 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorGray_200"
     tools:context=".activities.HomeActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="412dp"
-        android:layout_height="608dp"
-        android:fontFamily="@font/rosarivo_regular"
-        android:padding="20sp"
-        android:text="TextView"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
 
-    <Button
-        android:id="@+id/maps_btn"
+    <TextView
+        android:id="@+id/title_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:fontFamily="@font/rosarivo"
+        android:text="Book"
+        android:textColor="@color/colorBlanchedalmond_100_Opaco"
+        android:textSize="42sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/title_flow"
+        app:layout_constraintHorizontal_bias="0.611"
+        app:layout_constraintStart_toEndOf="@+id/icon_menu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.047" />
+
+    <ImageView
+        android:id="@+id/icon_pesquisa"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.067"
+        app:srcCompat="@drawable/icon_pesquisa" />
+
+    <ImageView
+        android:id="@+id/icon_menu"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/icon_pesquisa"
+        app:layout_constraintHorizontal_bias="0.031"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.067"
+        app:srcCompat="@drawable/icon_menu" />
+
+    <TextView
+        android:id="@+id/title_flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/rosarivo"
+        android:text="Flow"
+        android:textColor="@color/white"
+        android:textSize="42sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/icon_pesquisa"
+        app:layout_constraintHorizontal_bias="0.968"
+        app:layout_constraintStart_toEndOf="@+id/icon_menu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.047" />
+
+    <ViewFlipper
+        android:id="@+id/view_flipper"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="-490dp"
+        android:autoStart="true"
+        android:flipInterval="3700"
+        android:inAnimation="@android:anim/slide_in_left"
+        android:outAnimation="@android:anim/slide_out_right"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/title_book">
+
+        <!-- Primeiro Item -->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_view_ficcao_cientifica"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/retangulo_ficcao_cientifica"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/_colecao_"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-9dp"
+                android:text="@string/_colecao_string"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/ciencia_ficcao"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_ficcao_cientifica"
+                app:layout_constraintHorizontal_bias="0.139"
+                app:layout_constraintStart_toStartOf="@+id/img_view_ficcao_cientifica"
+                app:layout_constraintTop_toTopOf="@+id/img_view_ficcao_cientifica"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/ciencia_ficcao"
+                android:layout_width="126dp"
+                android:layout_height="67dp"
+                android:fontFamily="@font/kodchasan_semibold"
+                android:text="@string/ciencia_ficciao_string"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/img_view_ficcao_cientifica"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_ficcao_cientifica"
+                app:layout_constraintHorizontal_bias="0.13"
+                app:layout_constraintStart_toStartOf="@+id/img_view_ficcao_cientifica"
+                app:layout_constraintTop_toTopOf="@+id/img_view_ficcao_cientifica"
+                app:layout_constraintVertical_bias="0.495" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Segundo Item -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_view_crime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/retangulo_crime"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/_colecao_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-9dp"
+                android:text="@string/_colecao_string"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/crime_ficcao"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_crime"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="@+id/img_view_crime"
+                app:layout_constraintTop_toTopOf="@+id/img_view_crime"
+                app:layout_constraintVertical_bias="0.79" />
+
+            <TextView
+                android:id="@+id/crime_ficcao"
+                android:layout_width="186dp"
+                android:layout_height="56dp"
+                android:fontFamily="@font/kameron"
+                android:letterSpacing="0.07"
+                android:text="@string/crime_string"
+                android:textColor="@color/white"
+                android:textSize="50sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/img_view_crime"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_crime"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="@+id/img_view_crime"
+                app:layout_constraintTop_toTopOf="@+id/img_view_crime"
+                app:layout_constraintVertical_bias="0.6" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Terceiro Item -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_view_aventura"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/retangulo_aventura"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/_colecao_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-9dp"
+                android:text="@string/_colecao_string"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/aventura_ficcao"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_aventura"
+                app:layout_constraintHorizontal_bias="0.752"
+                app:layout_constraintStart_toStartOf="@+id/img_view_aventura"
+                app:layout_constraintTop_toTopOf="@+id/img_view_aventura"
+                app:layout_constraintVertical_bias="0.959" />
+
+            <TextView
+                android:id="@+id/aventura_ficcao"
+                android:layout_width="156dp"
+                android:layout_height="43dp"
+                android:fontFamily="@font/miniver"
+                android:letterSpacing="0.07"
+                android:text="@string/aventura_string"
+                android:textColor="@color/white"
+                android:textSize="33sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/img_view_aventura"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_aventura"
+                app:layout_constraintHorizontal_bias="0.934"
+                app:layout_constraintStart_toStartOf="@+id/img_view_aventura"
+                app:layout_constraintTop_toTopOf="@+id/img_view_aventura"
+                app:layout_constraintVertical_bias="0.551" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Quarto Item -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_view_bio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/retangulo_bio"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/_colecao_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-9dp"
+                android:text="@string/_colecao_string"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/bio_ficcao"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_bio"
+                app:layout_constraintHorizontal_bias="0.701"
+                app:layout_constraintStart_toStartOf="@+id/img_view_bio"
+                app:layout_constraintTop_toTopOf="@+id/img_view_bio"
+                app:layout_constraintVertical_bias="0.883" />
+
+            <TextView
+                android:id="@+id/bio_ficcao"
+                android:layout_width="156dp"
+                android:layout_height="43dp"
+                android:fontFamily="@font/karantina"
+                android:letterSpacing="0.07"
+                android:text="@string/bio_string"
+                android:textColor="@color/white"
+                android:textSize="45sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/img_view_bio"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_bio"
+                app:layout_constraintHorizontal_bias="0.862"
+                app:layout_constraintStart_toStartOf="@+id/img_view_bio"
+                app:layout_constraintTop_toTopOf="@+id/img_view_bio"
+                app:layout_constraintVertical_bias="0.813" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Quinto Item -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_view_infantil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/retangulo_infantil"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/_colecao_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-9dp"
+                android:text="@string/_colecao_string"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/infantil_ficcao"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_infantil"
+                app:layout_constraintHorizontal_bias="0.211"
+                app:layout_constraintStart_toStartOf="@+id/img_view_infantil"
+                app:layout_constraintTop_toTopOf="@+id/img_view_infantil"
+                app:layout_constraintVertical_bias="0.756" />
+
+            <TextView
+                android:id="@+id/infantil_ficcao"
+                android:layout_width="123dp"
+                android:layout_height="32dp"
+                android:fontFamily="@font/jejuhallasan"
+                android:letterSpacing="0.07"
+                android:text="@string/infantil_string"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/img_view_infantil"
+                app:layout_constraintEnd_toEndOf="@+id/img_view_infantil"
+                app:layout_constraintHorizontal_bias="0.145"
+                app:layout_constraintStart_toStartOf="@+id/img_view_infantil"
+                app:layout_constraintTop_toTopOf="@+id/img_view_infantil"
+                app:layout_constraintVertical_bias="0.398" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ViewFlipper>
+
+    <TextView
+        android:id="@+id/txt_mi_biblioteca"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-20dp"
+        android:fontFamily="@font/rosarivo"
+        android:text="Minha biblioteca"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.059"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_flipper"
+        app:layout_constraintVertical_bias="0.413" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/grupo_cadastrar_livros"
+            android:layout_width="110dp"
+            android:layout_height="120dp"
+
+            android:layout_marginLeft="15sp">
+
+
+            <TextView
+                android:id="@+id/txt_cadastrar_livros"
+                android:layout_width="74dp"
+                android:layout_height="67dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal|center"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="50dp"
+                android:gravity="center"
+                android:text="Cadastrar Livros"
+                android:textColor="@color/colorBlanchedalmond_100"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/view_cadastrar_livros"
+                android:layout_width="110dp"
+                android:layout_height="120dp"
+                android:alpha="0.30000001192093"
+                android:background="@drawable/retangulo_shape_sessao" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/grupo_livros"
+            android:layout_width="110dp"
+            android:layout_height="120dp"
+
+            android:layout_marginLeft="15sp">
+
+
+            <TextView
+                android:id="@+id/txt_livros"
+                android:layout_width="74dp"
+                android:layout_height="67dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal|center"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="56dp"
+                android:gravity="center"
+                android:text="Livros"
+                android:textColor="@color/colorBlanchedalmond_100"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/view_livros"
+                android:layout_width="110dp"
+                android:layout_height="120dp"
+                android:alpha="0.30000001192093"
+                android:background="@drawable/retangulo_shape_sessao" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/grupo_mapa_livros"
+            android:layout_width="110dp"
+            android:layout_height="120dp"
+
+            android:layout_marginLeft="15sp">
+
+
+            <TextView
+                android:id="@+id/txt_mapa_livros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal|center"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="39dp"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="61dp"
+                android:gravity="center"
+                android:text="Mapa dos Livros"
+                android:textColor="@color/colorBlanchedalmond_100"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/view_mapa_livros"
+                android:layout_width="110dp"
+                android:layout_height="120dp"
+                android:alpha="0.30000001192093"
+                android:background="@drawable/retangulo_shape_sessao" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.139">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:gravity="left"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+            tools:layout_editor_absoluteX="0dp">
+
+            <!--            Titulo do grupo de livros (TODOS)-->
+
+            <TextView
+                android:id="@+id/txt_todos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/rosarivo"
+                android:text="Todos"
+                android:textColor="@color/white"
+                android:textSize="20dp"></TextView>
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <!--                    Livro 1-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_1"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_1"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_1"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_1"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_1"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_1"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                    <!--                    Livro 2-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_2"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_2"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_2"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_2"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_2"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_2"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                    <!--                    Livro 3-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_3"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_3"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_3"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_3"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_3"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_3"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <!--            Titulo do grupo de livros (PENDENTES)-->
+
+            <TextView
+                android:id="@+id/txt_pendentes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/rosarivo"
+                android:text="Pendentes"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_marginTop="14dp"></TextView>
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+
+                    <!--                    Livro 4-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_4"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_4"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_4"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_4"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_4"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_4"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+
+                    <!--                    Livro 5-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_5"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_5"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_5"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_5"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_5"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_5"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+
+                    <!--                    Livro 6-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_6"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_6"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_6"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_6"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_6"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_6"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <!--            Titulo do grupo de livros (FAVORITOS)-->
+
+            <TextView
+                android:id="@+id/txt_favoritos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/rosarivo"
+                android:text="Favoritos"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_marginTop="14dp"></TextView>
+
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+
+                    <!--                    Livro 7-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_7"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_7"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_7"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_7"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_7"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_7"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+
+                    <!--                    Livro 8-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_8"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_8"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_8"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_8"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_8"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_8"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+
+                    <!--                    Livro 9-->
+
+                    <RelativeLayout
+                        android:id="@+id/grupo_livros_9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="5dp">
+
+                        <View
+                            android:id="@+id/view_shape_livros_9"
+                            android:layout_width="145dp"
+                            android:layout_height="215dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/retangulo_shape_livros" />
+
+                        <View
+                            android:id="@+id/view_detalhe_livros_9"
+                            android:layout_width="115dp"
+                            android:layout_height="115dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/detalhelivro" />
+
+                        <TextView
+                            android:id="@+id/txt_titulo_9"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="150dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Titulo"
+                            android:textColor="@color/white"
+                            android:textSize="22dp" />
+
+                        <TextView
+                            android:id="@+id/txt_genero_9"
+                            android:layout_width="118dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="180dp"
+                            android:fontFamily="@font/rosarivo"
+                            android:gravity="center"
+                            android:text="Genero"
+                            android:textColor="@color/colorBlanchedalmond_100"
+                            android:textSize="17dp" />
+
+
+                        <ImageView
+                            android:id="@+id/shape_favorito_9"
+                            android:layout_width="41dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/shape_favorito" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/grupo_favorito_9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="20dp">
+
+
+                            <ImageView
+                                android:id="@+id/view_favorito_9"
+                                android:layout_width="10.49dp"
+                                android:layout_height="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="vector_ek7"
+                                android:src="@drawable/vector_ek7" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

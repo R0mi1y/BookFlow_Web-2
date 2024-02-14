@@ -27,12 +27,12 @@ public class HomeActivity extends AppCompatActivity {
 
         Intent it = getIntent();
         String st = it.getStringExtra("user");
-        binding.textView.setText(st);
-
-        binding.mapsBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
-            startActivity(intent);
-        });
+//        binding.textView.setText(st);
+//
+//        binding.mapsBtn.setOnClickListener(v -> {
+//            Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
+//            startActivity(intent);
+//        });
 
         getUser();
     }

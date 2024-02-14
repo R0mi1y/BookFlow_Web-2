@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Book Flow</string>
     <string name="map_api_key">AIzaSyBUP9xhhVnSUlnN91-g3iziN3mH-EGw8dc</string>
+    <string name="ciencia_ficciao_string">Ficção Científica</string>
+    <string name="crime_string">CRIME</string>
+    <string name="aventura_string">Aventura</string>
+    <string name="bio_string">BIOGRAFIA</string>
+    <string name="infantil_string">Infantil</string>
+    <string name="_colecao_string">•coleção•</string>
 </resources>
