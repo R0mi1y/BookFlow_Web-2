@@ -25,7 +25,7 @@
             android:id="@+id/back_button"
             android:layout_width="54dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="25sp"
+            android:layout_marginStart="25sp"
             android:background="@android:color/transparent"
             android:backgroundTint="#faf3dd"
             android:textColorHighlight="#faf3dd"
@@ -319,12 +319,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout4"
         app:srcCompat="@drawable/book" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="710dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

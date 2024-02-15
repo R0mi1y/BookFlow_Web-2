@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorGray_200"
-    android:orientation="vertical"
     tools:context=".activities.HomeActivity">
 
     <ScrollView
@@ -43,6 +42,7 @@
                     android:textColorLink="#FFFFFF"
                     app:icon="@drawable/icon_menu"
                     app:iconGravity="start"
+                    app:iconSize="35dp"
                     app:iconTint="#FFFFFF"
                     app:rippleColor="#FFFFFF" />
 
@@ -61,7 +61,7 @@
                     android:textSize="42sp" />
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -85,6 +85,7 @@
                     android:textColorLink="#FFFFFF"
                     app:icon="@drawable/icon_pesquisa"
                     app:iconGravity="end"
+                    app:iconSize="35dp"
                     app:iconTint="#FFFFFF"
                     app:rippleColor="#FFFFFF" />
             </LinearLayout>
@@ -110,7 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                <ImageView
                         android:id="@+id/img_view_ficcao_cientifica"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -375,12 +376,13 @@
                 android:scrollbarAlwaysDrawHorizontalTrack="false">
 
                 <LinearLayout
+                    android:id="@+id/op_books"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left">
 
                     <LinearLayout
-                        android:id="@+id/grupo_cadastrar_livros"
+                        android:id="@+id/register_book_btn"
                         android:layout_width="110dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="15sp"
@@ -393,10 +395,6 @@
                             android:id="@+id/txt_cadastrar_livros"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentBottom="true"
                             android:layout_gravity="center|center_vertical"
                             android:foregroundGravity="center"
                             android:gravity="center"

@@ -1,5 +1,7 @@
 package com.room.bookflow.models;
 
+import static com.room.bookflow.components.Utilitary.popUp;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,14 +24,17 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
+import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,15 +59,15 @@ public class Book {
     public Book() {
     }
 
-    public Book(String cover, String title, String author, String genre, String summary, String requirementsLoan, boolean isInWishlist, double rating, boolean availability, int ownerId) {
+    public Book(String cover, String title, String author, String genre, String summary, String requirementsLoan, boolean availability, int ownerId) {
+        this.id = -1;
+        this.ownerId = -1;
         this.cover = cover;
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.summary = summary;
         this.requirementsLoan = requirementsLoan;
-        this.isInWishlist = isInWishlist;
-        this.rating = rating;
         this.availability = availability;
         this.ownerId = ownerId;
     }
@@ -205,16 +211,20 @@ public class Book {
         }
     }
 
-    public List<Book> getAllBooks(Context context) {
-        String url = context.getString(R.string.api_url) + "/api/book/";
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
+    public static List<Book> getAllBooks(Context context) {
+        return Book.getAllBooks(context, null);
+    }
 
+    public static List<Book> getAllBooks(Context context, String filter) {
+        String url = context.getString(R.string.api_url) + "/api/book/user/" + User.getAuthenticatedUser().getId() + "?filter=" + (filter == null ? "ALL" : filter);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
         String authToken = User.getAccessToken(context);
 
         if (authToken == null) {
-            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+            Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            showToast(context, "Login expirado!");
+            Book.showToast(context, "Login expirado!");
             ((Activity) context).startActivity(intent);
             return null;
         }
@@ -249,24 +259,58 @@ public class Book {
         try {
             return bookQueue.poll(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Preserve a interrupção status
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
 
-    private void handleErrorResponse(VolleyError error, Context context) {
+    private static void handleErrorResponse(VolleyError error, Context context) {
         if (error instanceof NoConnectionError) {
             showToast(context, "Sem conexão de internet");
         } else if (error instanceof TimeoutError) {
             showToast(context, "Tempo de espera excedido");
+        } else if (error instanceof AuthFailureError) {
+            showToast(context, "Erro com as credenciais");
         } else if (error instanceof ServerError) {
-            showToast(context, "Erro no servidor");
+            NetworkResponse networkResponse = error.networkResponse;
+            if (networkResponse != null && networkResponse.data != null) {
+                String responseBody = new String(networkResponse.data, Charset.defaultCharset());
+                try {
+                    JSONObject data = new JSONObject(responseBody);
+                    StringBuilder message = new StringBuilder();
+                    Iterator<String> keys = data.keys();
+
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        Object value = data.get(key);
+
+                        message.append(key).append(": ");
+
+                        if (value instanceof String) {
+                            message.append(value);
+                        } else if (value instanceof JSONArray) {
+                            JSONArray jsonArray = (JSONArray) value;
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                message.append("\n");
+                                message.append(" - ").append(jsonArray.getString(i));
+                            }
+                        }
+                        message.append("\n");
+                    }
+
+                    popUp("Erro", message.toString(), context);
+                } catch (JSONException e) {
+                    showToast(context ,e.getMessage());
+                    e.printStackTrace();
+                }
+            }
         } else {
             showToast(context, "Erro desconhecido");
+            showToast(context, error.getMessage());
         }
     }
 
-    private void showToast(Context context, String message) {
+    private static void showToast(Context context, String message) {
         ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
     }
 
@@ -295,5 +339,72 @@ public class Book {
             return new User().getUserById(this.ownerId, context);
         }
         return null;
+    }
+
+    public Book save(Context context) {
+        return Book.save(this, context);
+    }
+
+    public static Book save(Book book, Context context) {
+        String url = context.getString(R.string.api_url) + "/api/book/";
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        BlockingQueue<Book> bookQueue = new LinkedBlockingQueue<>();
+        JSONObject jsonBody = new JSONObject();
+
+        String authToken = User.getAccessToken(context);
+
+        if (authToken == null) {
+            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
+            ((Activity) context).startActivity(intent);
+            return null;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+
+        try {
+            jsonBody.put("title", book.title);
+            jsonBody.put("summary", book.summary);
+            jsonBody.put("author", book.author);
+            jsonBody.put("genre", book.genre);
+            jsonBody.put("requirements_loan", book.requirementsLoan);
+            jsonBody.put("owner", User.getAuthenticatedUser().getId());
+            jsonBody.put("availability", book.availability);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                response -> {
+                    if (response.has("id")) {
+                        Intent intent = new Intent(((Activity) context), HomeActivity.class);
+                        intent.putExtra("user", response.toString());
+                        ((Activity) context).startActivity(intent);
+                        Book b = new Book();
+                        b.setByJSONObject(response, context);
+                        bookQueue.add(book);
+                    }
+                },
+                error -> {
+                    handleErrorResponse(error, context);
+                    bookQueue.add(new Book());
+                }){
+            @Override
+            public Map<String, String> getHeaders() {
+                return headers;
+            }
+        };
+        requestQueue.add(request);
+
+        try {
+            return bookQueue.poll(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            showToast(context, "Conexão perdida!");
+            e.printStackTrace();
+            return null;
+        }
     }
 }

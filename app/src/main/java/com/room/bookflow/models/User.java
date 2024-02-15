@@ -58,7 +58,7 @@ import org.json.JSONObject;
 public class User {
     @PrimaryKey(autoGenerate = true)
     private int id = -1;
-    private String refreshToken  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwNzk0OTE2OCwiaWF0IjoxNzA3ODYyNzY4LCJqdGkiOiJmZjVkYzdhM2ZmNGM0YjI5YmI1OGUxNmFmYjBiNTdmMyIsInVzZXJfaWQiOjV9.p_1SVtKhhh7L4NyPfs1ZxCurYRbRr-cU86YJZrqyQJU";
+    private String refreshToken  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwODA0Mjg3NywiaWF0IjoxNzA3OTU2NDc3LCJqdGkiOiIyNjRhYTVjMzI4ZGU0OTJhOWNjNjE4NzlkY2Y2OTczMSIsInVzZXJfaWQiOjV9.4NFfPRS_wIRHhFFPrrjEVX826ILdfvdCvi4q4n-uSzo";
     private String username;
     private String firstName;
     private String photo;
@@ -83,7 +83,9 @@ public class User {
     }
 
     public static User getAuthenticatedUser(){
-        return new User();
+        User u = new User();
+        u.setId(5);
+        return u;
     }
 
     public User getUserById(int id, Context context) {
@@ -191,6 +193,8 @@ public class User {
             showToast(context, "Sem conexão de internet");
         } else if (error instanceof TimeoutError) {
             showToast(context, "Tempo de espera excedido");
+        } else if (error instanceof AuthFailureError) {
+            popUp("Erro", "Erro com as credenciais", context);
         } else if (error instanceof ServerError) {
             NetworkResponse networkResponse = error.networkResponse;
             if (networkResponse != null && networkResponse.data != null) {
@@ -492,12 +496,16 @@ public class User {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 response -> {
                     if (response.has("id")) {
-                        Intent intent = new Intent(((Activity) context), HomeActivity.class);
+                        Intent intent = new Intent(context, HomeActivity.class);
                         intent.putExtra("user", response.toString());
-                        ((Activity) context).startActivity(intent);
+                        context.startActivity(intent);
+                        userQueue.add(user);
                     }
                 },
-                error -> handleErrorResponse(error, context));
+                error -> {
+                    handleErrorResponse(error, context);
+                    userQueue.add(new User());
+                });
         requestQueue.add(request);
 
         try {

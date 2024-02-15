@@ -1,73 +1,92 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.components.Utilitary.hideLoadingScreen;
+import static com.room.bookflow.components.Utilitary.popUp;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
 import com.room.bookflow.adapters.CardSideBookAdapter;
 import com.room.bookflow.databinding.ActivityHomeBinding;
 import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(binding.getRoot());
 
-        RecyclerView recyclerView0 = findViewById(R.id.book_side_cards_0);
-        RecyclerView recyclerView1 = findViewById(R.id.book_side_cards_1);
-        RecyclerView recyclerView2 = findViewById(R.id.book_side_cards_2);
-        Toast.makeText(this, "BBB", Toast.LENGTH_SHORT).show();
+        setBooks();
 
-        new Thread(() -> {
-            runOnUiThread(() -> Toast.makeText(this, "000", Toast.LENGTH_SHORT).show());
-            List<Book> items = new User().getUserById(5, this).getWishlist(this);
-            runOnUiThread(() -> {
-                recyclerView0.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
-                recyclerView1.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
-                recyclerView2.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
-            });
-        }).start();
+        binding.registerBookBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
+            registerBook.launch(intent);
+        });
     }
 
-    private void getUser() {
-        new Thread(() -> {
-            try {
-                User user = new User().getUserById(5, this);
-                if (user != null) {
+    ActivityResultLauncher<Intent> registerBook = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
 
-                    RecyclerView recyclerView = findViewById(R.id.book_side_cards_1);
-                    List<Book> items = new User().getUserById(5, this).getWishlist(this);
-                    runOnUiThread(() -> {
-                        recyclerView.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
-                    });
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    if (intent != null) {
+                        String title = intent.getStringExtra("title");
+                        String message = intent.getStringExtra("message");
 
-                    StringBuilder books = new StringBuilder();
-                    for (Book book : items) {
-                        books.append(book.getTitle()).append("\n\n");
+                        runOnUiThread(() -> {
+                            popUp(title, message, HomeActivity.this);
+                        });
                     }
-
-                    runOnUiThread(() -> showToast(books.toString()));
-                } else {
-                    runOnUiThread(() -> showToast("Failed to retrieve user"));
                 }
-            } catch (Exception e) {
-                Log.e("Error causing", Arrays.toString(e.getStackTrace()));
             }
-        }).start();
-    }
+    );
 
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+    private void setBooks() {
+        List<RecyclerView> recyclerViews = new ArrayList<>();
+        recyclerViews.add(binding.bookSideCards0);
+        recyclerViews.add(binding.bookSideCards1);
+        recyclerViews.add(binding.bookSideCards2);
+
+        String[] filters = new String[]{"ALL", "PENDING", "WISHLIST"};
+
+        ExecutorService executorService = Executors.newFixedThreadPool(recyclerViews.size());
+
+        for (int i = 0; i < recyclerViews.size(); i++) {
+            int finalI = i;
+            executorService.execute(() -> {
+                List<Book> items = Book.getAllBooks(this, filters[finalI]);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    recyclerViews.get(finalI).setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
+                });
+            });
+        }
+        executorService.shutdown();
     }
 }

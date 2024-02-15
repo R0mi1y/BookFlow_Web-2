@@ -8,8 +8,10 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <View
-        android:id="@+id/view_detalhe_livros_4"
+    <ImageView
+        android:background="@drawable/default_cover_bg"
+        android:scaleType="centerCrop"
+        android:id="@+id/cover"
         app:layout_constraintBottom_toTopOf="@+id/txt_titulo_"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,7 +19,7 @@
         android:layout_width="115dp"
         android:layout_height="115dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/detalhelivro" />
+        android:contentDescription="Capa do livro" />
 
     <TextView
         android:id="@+id/title"

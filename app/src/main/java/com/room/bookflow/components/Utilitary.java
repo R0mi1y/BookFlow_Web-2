@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.bumptech.glide.Glide;
 import com.room.bookflow.R;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 public class Utilitary {
@@ -37,7 +38,7 @@ public class Utilitary {
         builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
 
         AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_border);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
 
         alertDialog.show();
     }

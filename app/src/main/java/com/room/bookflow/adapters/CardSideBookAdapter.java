@@ -4,13 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.room.bookflow.R;
 import com.room.bookflow.models.Book;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -34,7 +37,9 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Book item = bookList.get(position);
-        holder.textViewItem.setText(item.getTitle());
+        holder.title.setText(item.getTitle());
+        holder.genre.setText(item.getTitle());
+        Picasso.get().load(context.getString(R.string.api_url) + item.getCover()).into(holder.cover);
     }
 
     @Override
@@ -43,11 +48,14 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewItem;
+        public TextView title, genre;
+        public ImageView cover;
 
         public ViewHolder(View view) {
             super(view);
-            textViewItem = view.findViewById(R.id.title);
+            title = view.findViewById(R.id.title);
+            genre = view.findViewById(R.id.genro);
+            cover = view.findViewById(R.id.cover);
         }
     }
 }
