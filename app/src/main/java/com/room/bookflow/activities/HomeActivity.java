@@ -47,6 +47,12 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
             registerBook.launch(intent);
         });
+
+        binding.listBooksBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, ListBooksActivity.class);
+            intent.putExtra("filter", "MY_BOOKS");
+            startActivity(intent);
+        });
     }
 
     ActivityResultLauncher<Intent> registerBook = registerForActivityResult(
@@ -83,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             executorService.execute(() -> {
                 List<Book> items = Book.getAllBooks(this, filters[finalI]);
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    recyclerViews.get(finalI).setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
+                    recyclerViews.get(finalI).setAdapter(new CardSideBookAdapter(items, R.layout.book_card_side_adapter, getApplicationContext()));
                 });
             });
         }

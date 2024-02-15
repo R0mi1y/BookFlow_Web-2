@@ -1,0 +1,75 @@
+package com.room.bookflow.activities;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Button;
+
+import com.room.bookflow.R;
+import com.room.bookflow.adapters.CardSideBookAdapter;
+import com.room.bookflow.databinding.ActivityListBooksBinding;
+import com.room.bookflow.models.Book;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class ListBooksActivity extends AppCompatActivity {
+
+    ActivityListBooksBinding binding;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityListBooksBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        Intent intent = getIntent();
+        String initialFilter = intent.getStringExtra("filter");
+
+        Map<String, Button> filterToButtonMap = new HashMap<>();
+        filterToButtonMap.put("MY_BOOKS", binding.myBooksButton);
+        filterToButtonMap.put("PENDING", binding.pendingButton);
+        filterToButtonMap.put("WISHLIST", binding.wishButton);
+        filterToButtonMap.put("POPULARS", binding.popularsButton);
+        filterToButtonMap.put("REQUIRED_BY_ME", binding.requestButton);
+        filterToButtonMap.put("REQUIRED", binding.requestByMeButton);
+
+        Button[] selectedButton = {filterToButtonMap.get(initialFilter)};
+        if (selectedButton[0] != null) {
+            selectedButton[0].setBackgroundColor(getColor(R.color.white));
+            selectedButton[0].setTextColor(getColor(R.color.black));
+        }
+
+        loadBooksForFilter(initialFilter);
+
+        for (Map.Entry<String, Button> entry : filterToButtonMap.entrySet()) {
+            entry.getValue().setOnClickListener(v -> {
+                if (selectedButton[0] != null) {
+                    selectedButton[0].setBackground(getDrawable(R.drawable.default_border));
+                    selectedButton[0].setTextColor(getColor(R.color.white));
+                }
+                selectedButton[0] = entry.getValue();
+                selectedButton[0].setBackgroundColor(getColor(R.color.white));
+                selectedButton[0].setTextColor(getColor(R.color.black));
+
+                loadBooksForFilter(entry.getKey());
+            });
+        }
+
+        binding.homeBtn1.setOnClickListener(v -> finish());
+        binding.homeBtn2.setOnClickListener(v -> finish());
+    }
+
+    private void loadBooksForFilter(String filter) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Book> items = Book.getAllBooks(this, filter);
+            runOnUiThread(() -> {
+                binding.items.setAdapter(new CardSideBookAdapter(items, R.layout.book_card_horizontal_adapter, getApplicationContext()));
+            });
+        });
+    }
+}

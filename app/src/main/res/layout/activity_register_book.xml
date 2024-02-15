@@ -31,7 +31,7 @@
         <Space
             android:id="@+id/space"
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="30dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,8 +100,8 @@
 
         <ImageView
             android:id="@+id/cover_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
             android:foregroundGravity="center"
             android:scaleType="centerCrop"
@@ -116,7 +116,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="50dp"
             android:background="#FFFFFF" />
 
         <androidx.appcompat.widget.AppCompatButton

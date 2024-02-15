@@ -5,6 +5,8 @@ import static com.room.bookflow.components.Utilitary.popUp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,15 +24,21 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
 import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.LoginActivity;
+import com.room.bookflow.components.Utilitary;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +49,11 @@ import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 public class Book {
     private int id = -1;
 
@@ -342,10 +354,22 @@ public class Book {
     }
 
     public Book save(Context context) {
-        return Book.save(this, context);
+        try {
+            return Book.save(this, context);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Book save(Book book, Context context) {
+    public static Book save(Book book, Context context) throws IOException {
+        return Book.save(book, null, context);
+    }
+    
+    public Book save(Bitmap imageFile, Context context) throws IOException {
+        return Book.save(this, imageFile, context);
+    }
+
+    public static Book save(Book book, Bitmap imageFile, Context context) throws IOException {
         String url = context.getString(R.string.api_url) + "/api/book/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -364,6 +388,7 @@ public class Book {
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + authToken);
+        headers.put("Content-Type", "multipart/form-data");
 
         try {
             jsonBody.put("title", book.title);
@@ -373,6 +398,11 @@ public class Book {
             jsonBody.put("requirements_loan", book.requirementsLoan);
             jsonBody.put("owner", User.getAuthenticatedUser().getId());
             jsonBody.put("availability", book.availability);
+
+            if (imageFile != null) {
+                byte[] imageBytes = Utilitary.convertBitmapToBytes(imageFile);
+                jsonBody.put("cover", Base64.encodeToString(imageBytes, Base64.DEFAULT));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -381,11 +411,10 @@ public class Book {
                 response -> {
                     if (response.has("id")) {
                         Intent intent = new Intent(((Activity) context), HomeActivity.class);
-                        intent.putExtra("user", response.toString());
                         ((Activity) context).startActivity(intent);
                         Book b = new Book();
                         b.setByJSONObject(response, context);
-                        bookQueue.add(book);
+                        bookQueue.add(b);
                     }
                 },
                 error -> {
@@ -407,4 +436,71 @@ public class Book {
             return null;
         }
     }
+
+    public Book uploadImage(Book book, Bitmap bitmap, Context context) {
+        String imageString = bitmapToBase64(bitmap);
+        String url = context.getString(R.string.api_url) + "/api/book/";
+        BlockingQueue<Book> bookQueue = new LinkedBlockingQueue<>();
+        String authToken = User.getAccessToken(context);
+
+        if (authToken == null) {
+            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
+            ((Activity) context).startActivity(intent);
+            return null;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Toast.makeText(context, "Imagem enviada com sucesso", Toast.LENGTH_SHORT).show();
+                    Book b = new Book();
+                    try {
+                        b.setByJSONObject(new JSONObject(response), context);
+                        bookQueue.add(b);
+                    } catch (JSONException e) {
+                        bookQueue.add(book);
+                        throw new RuntimeException(e);
+                    }
+                },
+                error -> {
+                    Log.e("TAG", "Erro ao enviar imagem: " + error.getMessage());
+                    Toast.makeText(context, "Erro ao enviar imagem", Toast.LENGTH_SHORT).show();
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("image", imageString);
+                params.put("title", book.title);
+                params.put("summary", book.summary);
+                params.put("author", book.author);
+                params.put("genre", book.genre);
+                params.put("requirements_loan", book.requirementsLoan);
+                params.put("owner", String.valueOf(User.getAuthenticatedUser().getId()));
+                params.put("availability", String.valueOf(book.availability));
+
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(context).add(stringRequest);
+
+        try {
+            return bookQueue.poll(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            showToast(context, "Conexão perdida!");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] imageBytes = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
 }
+

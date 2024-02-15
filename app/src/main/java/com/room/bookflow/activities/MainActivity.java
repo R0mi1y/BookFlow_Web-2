@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(() -> Toast.makeText(this, "000", Toast.LENGTH_SHORT).show());
             List<Book> items = new User().getUserById(5, this).getWishlist(this);
             runOnUiThread(() -> {
-                recyclerView.setAdapter(new CardSideBookAdapter(items, getApplicationContext()));
+                recyclerView.setAdapter(new CardSideBookAdapter(items, R.layout.book_card_side_adapter, getApplicationContext()));
             });
         }).start();
     }

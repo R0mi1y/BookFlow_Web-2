@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="25dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="25dp"
+    android:layout_marginBottom="0dp"
+    android:background="@drawable/retangulo_shape_livros"
+    android:foregroundGravity="center"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    app:layout_anchorGravity="center">
+
+    <ImageView
+        android:id="@+id/cover"
+        android:layout_width="115dp"
+        android:layout_height="115dp"
+        android:background="@drawable/default_cover_bg"
+        android:contentDescription="Capa do livro"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/txt_titulo_"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/rosarivo"
+            android:gravity="center"
+            android:text="Titulo"
+            android:textColor="#D2C490"
+            android:textSize="22dp"
+            tools:layout_editor_absoluteX="7dp"
+            tools:layout_editor_absoluteY="10dp" />
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/rosarivo"
+            android:gravity="center"
+            android:text="Author"
+            android:textColor="#D2C490"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/genro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/rosarivo"
+            android:gravity="center"
+            android:text="Genero"
+            android:textColor="@color/colorBlanchedalmond_100"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
+
+</LinearLayout>
