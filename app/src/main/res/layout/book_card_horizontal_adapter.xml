@@ -12,7 +12,8 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="10dp"
-    app:layout_anchorGravity="center">
+    app:layout_anchorGravity="center"
+    android:id="@+id/layoutCard">
 
     <ImageView
         android:id="@+id/cover"

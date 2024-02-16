@@ -43,7 +43,8 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     app:rippleColor="#FFFFFF"
-                    app:srcCompat="@drawable/baseline_menu_24"
+                    android:src="@drawable/baseline_menu_24"
+                    android:contentDescription="botão menu"
                     app:tint="#FFFFFF" />
 
                 <Button
@@ -84,8 +85,9 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     app:rippleColor="#FFFFFF"
-                    app:srcCompat="@drawable/baseline_search_24"
-                    app:tint="#FFFFFF" />
+                    android:src="@drawable/baseline_search_24"
+                    app:tint="#FFFFFF"
+                    android:contentDescription="botão de pesquisa"/>
 
             </LinearLayout>
 

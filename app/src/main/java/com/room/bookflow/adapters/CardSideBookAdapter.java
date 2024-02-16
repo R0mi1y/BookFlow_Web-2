@@ -1,11 +1,14 @@
 package com.room.bookflow.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.room.bookflow.R;
+import com.room.bookflow.activities.DetailBook;
 import com.room.bookflow.components.Utilitary;
 import com.room.bookflow.models.Book;
 import com.squareup.picasso.Picasso;
@@ -43,6 +47,13 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
         Book item = bookList.get(position);
         holder.title.setText(Utilitary.getTextReduced(item.getTitle(), 30));
         holder.genre.setText(Utilitary.getTextReduced(item.getGenre(), 30));
+        holder.layoutBook.setOnClickListener(view -> {
+            Intent intent = new Intent(context, DetailBook.class);
+            ((Activity)context).runOnUiThread(() -> {
+                ((Activity)context).startActivity(intent);
+            });
+
+        });
         Picasso.get()
                 .load(item.getCover().contains("http") ? item.getCover() : context.getString(R.string.api_url) + item.getCover())
                 .into(holder.cover);
@@ -58,11 +69,14 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
         public TextView title, genre;
         public ImageView cover;
 
+        public LinearLayout layoutBook;
+
         public ViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.title);
             genre = view.findViewById(R.id.genro);
             cover = view.findViewById(R.id.cover);
+            layoutBook = view.findViewById(R.id.layoutCard);
         }
     }
 }

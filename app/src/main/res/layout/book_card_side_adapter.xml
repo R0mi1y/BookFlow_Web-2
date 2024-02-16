@@ -6,7 +6,8 @@
     android:layout_margin="5dp"
     android:background="@drawable/retangulo_shape_livros"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:id="@+id/layoutCard">
 
     <ImageView
         android:id="@+id/cover"
