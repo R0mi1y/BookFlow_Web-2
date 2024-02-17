@@ -36,16 +36,20 @@
 
                 <ImageButton
                     android:id="@+id/menu_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="20dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
+                    android:contentDescription="botão menu"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    app:rippleColor="#FFFFFF"
+                    android:scaleType="centerInside"
                     android:src="@drawable/baseline_menu_24"
-                    android:contentDescription="botão menu"
+                    app:rippleColor="#FFFFFF"
                     app:tint="#FFFFFF" />
+
 
                 <Button
                     android:id="@+id/button3"
@@ -78,16 +82,19 @@
 
                 <ImageButton
                     android:id="@+id/search_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="20dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
+                    android:contentDescription="botão de pesquisa"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    app:rippleColor="#FFFFFF"
+                    android:scaleType="centerInside"
                     android:src="@drawable/baseline_search_24"
-                    app:tint="#FFFFFF"
-                    android:contentDescription="botão de pesquisa"/>
+                    app:rippleColor="#FFFFFF"
+                    app:tint="#FFFFFF" />
 
             </LinearLayout>
 

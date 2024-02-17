@@ -4,19 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorGray_200"
     tools:context=".activities.MapsActivity">
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        tools:context=".activities.MapsActivity" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="84dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/menu_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF"
+                android:textColorHint="#EDEDED"
+                android:textColorLink="#FFFFFF"
+                app:icon="@drawable/baseline_menu_24"
+                app:iconGravity="start"
+                app:iconSize="35dp"
+                app:iconTint="#FFFFFF"
+                app:rippleColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/home_btn_1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#00626262"
+                android:fontFamily="@font/rosarivo"
+                android:gravity="center_vertical|end"
+                android:padding="0dp"
+                android:text="Book"
+                android:textColor="@color/colorBlanchedalmond_100_Opaco"
+                android:textColorHint="@color/colorBlanchedalmond_100_Opaco"
+                android:textSize="42sp" />
+
+            <Button
+                android:id="@+id/home_btn_2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#00626262"
+                android:fontFamily="@font/rosarivo"
+                android:gravity="start|center_vertical"
+                android:padding="0dp"
+                android:text="Flow"
+                android:textColor="#FFFFFF"
+                android:textSize="42sp" />
+
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF"
+                android:textColorHint="#EDEDED"
+                android:textColorLink="#FFFFFF"
+                app:icon="@drawable/baseline_search_24"
+                app:iconGravity="end"
+                app:iconSize="35dp"
+                app:iconTint="#FFFFFF"
+                app:rippleColor="#FFFFFF" />
+
+        </LinearLayout>
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            tools:context=".activities.MapsActivity" />
+    </LinearLayout>
+
 
 </RelativeLayout>
