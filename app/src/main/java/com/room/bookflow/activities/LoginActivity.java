@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.loginBtn.setOnClickListener(v -> {
             binding.loginBtn.setEnabled(false);
             showLoadingScreen(binding.loadingGif, this, () -> {
-                new Handler(Looper.getMainLooper()).postDelayed(this::doLogin, 500);
+                new Handler(Looper.getMainLooper()).postDelayed(this::doLogin, 3000);
             });
         });
 
