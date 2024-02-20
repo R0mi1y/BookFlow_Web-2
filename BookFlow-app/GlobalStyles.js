@@ -43,7 +43,8 @@ export const Color = {
   colorBlanchedalmond_400: "rgba(239, 227, 200, 0.5)",
   colorDimgray: "rgba(112, 67, 65, 0.3)",
   // colorBeige_100: "#faf3dd",
-  colorBeige_100: "rgba(250, 242, 217, 0.5)",
+  colorBeige_100_transparent: "rgba(250, 242, 217, 0.5)",
+  colorBeige_100: "rgba(250, 242, 217, 1)",
   colorBeige_200: "rgba(250, 243, 221, 0.9)",
 };
 /* Paddings */

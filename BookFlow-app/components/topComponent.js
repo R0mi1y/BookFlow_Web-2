@@ -154,11 +154,6 @@ const TopComponent = memo(
                 contentFit="cover"
                 source={require("../assets/lista_books.png")}
               />
-              <Image
-                style={[styles.iconlogout, styles.octiconpersonLayout]}
-                contentFit="cover"
-                source={require("../assets/logout.png")}
-              />
               <Text
                 style={[styles.contctanos, styles.contctanosTypo]}
                 onPress={() => {
@@ -168,15 +163,20 @@ const TopComponent = memo(
               >
                 Meus Empréstimos
               </Text>
-              <Pressable onPress={logout}>
-                <Text style={[styles.logout, styles.contctanosTypo]}>
+              <Pressable style={[styles.logout]} onPress={logout}>
+                <Image
+                  style={[{height: 24, width: 24, marginEnd: 20}]}
+                  contentFit="cover"
+                  source={require("../assets/logout.png")}
+                />
+                <Text
+                  style={[styles.textLogout]}>
                   Logout
                 </Text>
               </Pressable>
               <View style={[styles.androidLarge3Child, styles.androidLayout]} />
               <View style={[styles.androidLarge3Item, styles.androidLayout]} />
               <View style={[styles.androidLarge3Inner, styles.androidLayout]} />
-              <View style={[styles.androidLargeLogout, styles.androidLayout]} />
             </View>
           </View>
         </Modal>
@@ -186,12 +186,6 @@ const TopComponent = memo(
 );
 
 const styles = StyleSheet.create({
-  logout: {
-    marginTop: 790,
-  },
-  iconlogout: {
-    top: 768,
-  },
   octiconpersonLayout: {
     height: 24,
     width: 24,
@@ -213,6 +207,13 @@ const styles = StyleSheet.create({
     left: 31,
     position: "absolute",
     overflow: "hidden",
+  },
+  textLogout: {
+    textAlign: "left",
+    color: Color.colorBlanchedalmond_100,
+    fontFamily: FontFamily.rosarivoRegular,
+    lineHeight: 20,
+    fontSize: FontSize.size_sm,
   },
   contctanosTypo: {
     textAlign: "left",
@@ -242,7 +243,15 @@ const styles = StyleSheet.create({
     top: 196,
   },
   logout: {
-    top: 770,
+    position: "absolute",
+    left: 40,
+    bottom: 80,
+    width: "75%",
+    display: "flex",
+    flexDirection: "row",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: "white",
   },
   iniciarSesin: {
     top: 99,

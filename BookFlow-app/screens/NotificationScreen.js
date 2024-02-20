@@ -34,7 +34,7 @@ const ListBook = ({ route }) => {
   }, []);
 
   const apiUrl = Constants.expoConfig.extra.apiUrl;
-  const [books, setBooks] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   const togglePopup = (message = null) => {
     setPopupVisible(false);
@@ -44,7 +44,7 @@ const ListBook = ({ route }) => {
     }
   };
 
-  const getBooks = async () => {
+  const getNotifications = async () => {
     try {
       let attempts = 0;
 
@@ -52,16 +52,9 @@ const ListBook = ({ route }) => {
         const user = JSON.parse(await SecureStore.getItemAsync("user"));
         const accessToken = await getAccessToken(navigation);
 
-        let url = `${apiUrl}/api/book/`;
+        let url = `${apiUrl}/api/user/${user.id}/notifications_all/`;
 
         if (accessToken) {
-          if (receivedData === "SEARCH") {
-            const search = route.params?.search || "";
-            url += `?search=${search}`;
-          } else if (receivedData !== "NONE") {
-            url += `user/${user.id}?filter=${receivedData}`;
-          }
-
           const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -76,7 +69,7 @@ const ListBook = ({ route }) => {
 
           const data = await response.json();
 
-          setBooks(data);
+          setNotifications(data);
           togglePopup();
           return; // Sai da função se a busca for bem-sucedida
         } else {
@@ -98,16 +91,14 @@ const ListBook = ({ route }) => {
   };
 
   useEffect(() => {
-    getBooks();
+    getNotifications();
   }, [route, navigation]);
 
-  const changeScreen = (screen) => {
-    togglePopup("Loading");
-    receivedData = screen;
-    navigation.navigate("ListBook", { dataToSend: screen });
-    setBooks([]);
-    getBooks();
-  };
+  function getFromPage(from_field) {
+    if (typeof from_field == 'string' && from_field.includes("bookPage")) {
+      navigation.navigate("BookDetailScreen", {bookId: parseInt(from_field.match(/\d+/)[0], 10), owner:false});
+    }
+  }
 
   return (
     <>
@@ -135,28 +126,21 @@ const ListBook = ({ route }) => {
           />
 
           <View style={styles.scrol1}>
-            {books.map((book) => (
+            {notifications.map((not) => (
               <Pressable
-                key={book.id}
+                key={not.id}
                 style={styles.groupLayout}
-                onPress={() =>
-                  navigation.navigate("BookDetailScreen", {
-                    bookId: book.id,
-                    fromScreen: receivedData,
-                    owner: book.owner == user.id,
-                  })
-                }
+                onPress={() => getFromPage(not.from_field)}
               >
                 {/* LIVROS */}
                 <View style={[styles.groupChild3, styles.groupLayout]}>
                   <View style={styles.bookInfoContainer}>
-                    <Text style={[styles.titleBook, styles.groupChildLayout1]}>
-                      Empréstimo de Livro Aprovado!
+                    <Text style={[ styles.titleBook, not.visualized ? styles.visualized : styles.notVisualized]}>
+                    {not.title}
                     </Text>
                     <View style={[styles.androidLarge, styles.androidLayout]} />
-                    <Text style={styles.authorBook}>
-                      Seu pedido de empréstimo do livro 'A Arte da Guerra' foi
-                      aprovado. Entre em contato com o proprietario.
+                    <Text style={[styles.authorBook, not.visualized ? styles.visualized : styles.notVisualized]}>
+                      {not.message}
                     </Text>
                   </View>
                 </View>
@@ -170,6 +154,12 @@ const ListBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  visualized: {
+    color: Color.colorBlanchedalmond_200,
+  },
+  notVisualized: {
+    color: Color.colorBlanchedalmond_100,
+  },
   androidLayout: {
     top: 29.5,
     height: 1,
@@ -333,7 +323,6 @@ const styles = StyleSheet.create({
   authorBook: {
     marginTop: 11,
     fontSize: FontSize.size_base,
-    color: Color.colorBlanchedalmond_100,
     textAlign: "center",
     fontFamily: FontFamily.openSansLight,
   },
@@ -341,7 +330,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     fontFamily: FontFamily.openSansSemiBold,
-    color: Color.colorBlanchedalmond_100,
   },
   scrol1: {
     marginTop: 30,
