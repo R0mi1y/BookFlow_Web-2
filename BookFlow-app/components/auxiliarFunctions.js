@@ -56,7 +56,7 @@ const getAccessToken = async (navigation) => {
 
         const data = await response.json();
 
-        if (!('access' in data)) {
+        if (!(data.includes('access'))) {
             console.error("Resposta não contém o token de acesso");
             navigation.reset({
                 index: 0,
