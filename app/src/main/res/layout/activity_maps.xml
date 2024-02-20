@@ -47,7 +47,7 @@
                 android:fontFamily="@font/rosarivo"
                 android:gravity="center_vertical|end"
                 android:padding="0dp"
-                android:text="Book"
+                android:text="Mapa"
                 android:textColor="@color/colorBlanchedalmond_100_Opaco"
                 android:textColorHint="@color/colorBlanchedalmond_100_Opaco"
                 android:textSize="42sp" />
@@ -61,7 +61,7 @@
                 android:fontFamily="@font/rosarivo"
                 android:gravity="start|center_vertical"
                 android:padding="0dp"
-                android:text="Flow"
+                android:text="Livros"
                 android:textColor="#FFFFFF"
                 android:textSize="42sp" />
 

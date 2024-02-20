@@ -43,7 +43,7 @@
 
                 <Button
                     android:id="@+id/back_btn1"
-                    android:layout_width="40dp"
+                    android:layout_width="5dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
@@ -56,21 +56,6 @@
                     app:iconSize="35dp"
                     app:iconTint="#FFFFFF"
                     app:rippleColor="#FFFFFF" />
-
-                <Button
-                    android:id="@+id/back_btn2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#00FFFFFF"
-                    android:fontFamily="@font/rosarivo_regular"
-                    android:lineSpacingExtra="-25sp"
-                    android:padding="0dp"
-                    android:text="Editar"
-                    android:textColor="@color/colorBlanchedalmond_100_Opaco"
-                    android:textSize="42sp"
-                    app:iconGravity="start"
-                    app:iconSize="35dp"
-                    app:iconTint="#FFFFFF" />
 
                 <Button
                     android:id="@+id/back_btn3"
