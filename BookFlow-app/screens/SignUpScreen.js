@@ -149,7 +149,10 @@ import * as SecureStore from 'expo-secure-store';
       } else {
         console.log("Falha ao obter refresh token!");
         console.log(JSON.stringify({password:pass, email:email, username:name}));
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
         togglePopup("Falha ao obter refresh token!\nFaça login");
       }
     })

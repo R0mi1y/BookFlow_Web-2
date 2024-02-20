@@ -1,7 +1,8 @@
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, Pressable, Image, ScrollView } from 'react-native';
-import React, { useRef, useEffect } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Dimensions, Pressable, Image, ScrollView } from 'react-native';
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import Constants from 'expo-constants';
+import React from 'react';
+import { Asset } from 'expo-asset';
 
 const apiUrl = Constants.expoConfig.extra.apiUrl;
 
@@ -10,24 +11,7 @@ const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 const CustomPopup = ({ visible, onClose, message, navigation=null, setVisible=null }) => {
   if (typeof message === 'string') {
     if (message == "Loading") {
-      const rotationValue = useRef(new Animated.Value(0)).current;
-
-      useEffect(() => {
-        // Configura a animação para fazer uma rotação de 360 graus
-        Animated.loop(
-          Animated.timing(rotationValue, {
-            toValue: 1,
-            duration: 2000, // Duração da animação em milissegundos
-            useNativeDriver: true,
-          })
-        ).start();
-      }, [rotationValue]);
-
-      // Interpola o valor da animação para converter de 0 a 1 para 0 a 360 graus
-      const rotate = rotationValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '360deg'],
-      });
+      const gif = Asset.fromModule(require('../assets/book.gif')).uri;
 
       return (
         <Modal
@@ -37,8 +21,10 @@ const CustomPopup = ({ visible, onClose, message, navigation=null, setVisible=nu
           onRequestClose={onClose}
         >
           <View style={styles.centeredView}>
-            {/* <Animated.Image source={require('../assets/loading.png')} style={[styles.square, { transform: [{ rotate }] }]} /> */}
-            <Animated.View style={[styles.square, { transform: [{ rotate }] }]} />
+            <Image
+              source={{ uri: gif }}
+              style={{ width: screenWidth * 0.5, height: screenWidth * 0.3}}
+            />
           </View>
         </Modal>
       );

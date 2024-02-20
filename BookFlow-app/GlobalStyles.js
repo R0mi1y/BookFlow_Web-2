@@ -27,19 +27,23 @@ export const FontSize = {
 };
 /* Colors */
 export const Color = {
+  colorDark_8: "rgba(0, 0, 0, 0.8)",
+  colorDark_7: "rgba(0, 0, 0, 0.7)",
+  colorDark_6: "rgba(0, 0, 0, 0.6)",
   colorGray_100: "#4a2b29",
   colorGray_200: "#1c161e",
   colorGray_300: "rgba(255, 255, 255, 0.1)",
   colorGray_400: "rgba(255, 255, 255, 0.08)",
   colorWhite: "#fff",
-  colorDarkslategray: "rgba(65, 65, 65, 0.5)",
+  colorDarkslategray: "rgba(65, 65, 65, 0.65)",
   colorBlanchedalmond_100: "#efe3c8",
   colorBlanchedalmond_101: "rgba(239, 227, 200, 0.7)",
   colorBlanchedalmond_200: "rgba(239, 227, 200, 0.3)",
   colorBlanchedalmond_300: "rgba(239, 227, 200, 0.2)",
   colorBlanchedalmond_400: "rgba(239, 227, 200, 0.5)",
   colorDimgray: "rgba(112, 67, 65, 0.3)",
-  colorBeige_100: "#faf3dd",
+  // colorBeige_100: "#faf3dd",
+  colorBeige_100: "rgba(250, 242, 217, 0.5)",
   colorBeige_200: "rgba(250, 243, 221, 0.9)",
 };
 /* Paddings */

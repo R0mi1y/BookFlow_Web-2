@@ -183,11 +183,6 @@ const LogInScreen = () => {
           onClose={() => {togglePopup(null)}}
           message={messagePopup}
         />
-        {/* <Image
-          style={[styles.icon]}
-          contentFit="cover"
-          source={require("../assets/logo.png")}
-        /> */}
         <View style={styles.textContainer}>
           <Text style={styles.getStarted}>Vamos começar!</Text>
           <Text style={styles.joinUsNow}>Entre conosco nessa jornada.</Text>

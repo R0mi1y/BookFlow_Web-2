@@ -20,7 +20,6 @@ import TopComponent from '../components/topComponent';
 import getAccessToken from '../components/auxiliarFunctions';
 import * as Notifications from 'expo-notifications';
 
-
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const HomeScreen = ({ route }) => {
@@ -144,6 +143,11 @@ const HomeScreen = ({ route }) => {
     });
 
   }, []);
+
+  function getLimitedText(text, size) {
+    if (text.length < size + 3) return text;
+    return text.substring(0, size) + '...';
+  }
 
   return (
     <>
@@ -283,32 +287,34 @@ const HomeScreen = ({ route }) => {
                         style={styles.groupLayout}
                         onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id })}
                       >
-                        {/* LIVRO 1 */}
-                        <View style={[styles.groupChild3, styles.groupLayout]} />
-                        <Image
-                          style={[styles.groupChild4, styles.groupChildLayout1]}
-                          contentFit="cover"
-                          source={{
-                            uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
-                          }}
-                        />
-                        <Text
-                          style={[styles.pachinkoNovela, styles.groupChildLayout1]}
-                        >{book.title}</Text>
+                          {/* LIVRO 1 */}
+                          <Image
+                            style={[styles.groupChild4]}
+                            contentFit="cover"
+                            source={{
+                              uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
+                            }}
+                          />
+                          <View style={styles.titleContainer}>
+                            <Text
+                              style={[styles.title]}
+                            >{getLimitedText(book.title, 25)}</Text>
+                            <Text
+                              style={[styles.genre]}
+                            >{getLimitedText(book.genre, 40)}</Text>
+                          </View>
 
-                        {/* <View style={[styles.groupChild5, styles.groupChildLayout]} />
-                        <Text style={[styles.text, styles.textTypo]}>STATUS</Text> */}
-                        <View style={[styles.groupChild6, styles.groupChildLayout]} />
-                        <View style={styles.groupChild7} />
-                        <Image
-                          style={[styles.groupChild8, styles.iconGroupLayout]}
-                          contentFit="cover"
-                          source={
-                            book?.is_in_wishlist
-                            ? starFilledImage
-                            : starOutlineImage
-                          }
-                        />  
+                          <View style={styles.blur} />
+                          <View style={styles.groupChild7} />
+                          <Image
+                            style={[styles.groupChild8, styles.iconGroupLayout]}
+                            contentFit="cover"
+                            source={
+                              book?.is_in_wishlist
+                              ? starFilledImage
+                              : starOutlineImage
+                            }
+                          />  
                       </Pressable>
                     ))}
                   </ScrollView>
@@ -323,6 +329,15 @@ const HomeScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  blur: {
+    borderTopLeftRadius: Border.br_mini,
+    borderBottomRightRadius: Border.br_mini,
+    borderBottomLeftRadius: Border.br_12xs,
+    backgroundColor: Color.colorDarkslategray,
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+  },
   scrollBooks:{
     paddingLeft: 20,
     paddingRight: 20,
@@ -368,12 +383,8 @@ const styles = StyleSheet.create({
   },
   groupLayout: {
     height: 230,
-    width: 135,
+    width: 150,
     marginRight: 20,
-  },
-  groupChildLayout1: {
-    width: 111,
-    left: 12,
   },
   groupChildLayout: {
     height: 39,
@@ -521,22 +532,41 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupChild4: {
-    height: 111,
-    top: 12,
-    width: 111,
+    height: "100%",
+    width: "100%",
     borderRadius: Border.br_mini,
     position: "absolute",
   },
-  pachinkoNovela: {
-    top: 131,
-    // height: 35,
+  titleContainer: {
+    color: "white",
+    top: 23,
+    right: 10,
     lineHeight: 20,
-    width: 111,
+    zIndex: 1,
+    width: "80%",
+    position: "absolute",
+    height: "85%",
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+  },
+  title: {
+    width: "100%",
+    textAlign: "right",
+    textAlignVertical: "bottom",
     fontSize: FontSize.size_base,
     fontFamily: FontFamily.rosarivoRegular,
-    textAlign: "center",
-    color: Color.colorBlanchedalmond_100,
-    position: "absolute",
+    textAlign: "right",
+    color: "white",
+  },
+  genre: {
+    width: "100%",
+    textAlign: "right",
+    textAlignVertical: "bottom",
+    fontSize: FontSize.size_3xs,
+    fontFamily: FontFamily.rosarivoRegular,
+    textAlign: "right",
+    color: Color.colorBeige_100,
   },
   groupChild5: {
     backgroundColor: Color.colorGray_400,
@@ -560,18 +590,14 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: Border.br_12xs,
     backgroundColor: Color.colorDarkslategray,
     width: 41,
-    left: 12,
-    top: 12,
     height: 20,
     position: "absolute",
   },
   groupChild8: {
     height: "4.35%",
     width: "7.78%",
-    top: "7.39%",
-    right: "78.89%",
-    bottom: "88.26%",
-    left: "13.33%",
+    top: 5,
+    left: 5,
   },
   groupContainer: {
     marginTop: 12,

@@ -15,6 +15,7 @@ const OwnerDetailScreen = ({ route }) => {
     const [showFullBiography, setShowFullBiography] = useState(false);
     const [owner, setOwner] = useState(null);
     const navigation = useNavigation();
+    const apiUrl = Constants.expoConfig.extra.apiUrl;
 
     useEffect(() => {
         const fetchOwnerData = async () => {
@@ -69,7 +70,7 @@ const OwnerDetailScreen = ({ route }) => {
                         style={[styles.groupChild4]}
                         resizeMode="cover"
                         source={{
-                            uri: owner.photo ? owner.photo : "URL_DA_IMAGEM_PADRAO",
+                            uri: owner.photo ? "http" in owner.photo ? owner.photo : apiUrl + owner.photo : apiUrl + "/static/img/default_perfil.jpg",
                         }}
                     />
                     <View style={styles.texts}>
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     groupChild4: {
         height: "30%",
         width: "70%",
-        borderRadius: 84,
+        borderRadius: 200,
         bottom: "2%",
         top: "1%",
     },

@@ -23,7 +23,10 @@ const SplashScreen = ({ navigation }) => {
         await registerForPushNotificationsAsync(user);
       } catch (error) {
         console.error("Erro lendo o SecureStore:", error);
-        navigation.navigate("LogInScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LogInScreen" }],
+        });
       }
     };
   

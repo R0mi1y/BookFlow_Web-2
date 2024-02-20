@@ -248,13 +248,13 @@ const BookDetailScreen = ({ route }) => {
                 {book?.genre?.replace(/,/g, " •")}
               </Text>
             </Text>
-            <Pressable
+            {owner ? (<Pressable
               onPress={ owner ? () => navigation.navigate("RegisterBook", { book: book }) : () => {
                 book.is_required ? togglePopup("Empréstimo já requisitado!") : requestBook(bookId);
               }}
             >
               <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-                  {owner ? "Editar livro" : "Requisitar empréstimo"}
+                   Editar livro
                 </Text>
                 <Image
                   style={[styles.ionbookIcon, styles.lPosition]}
@@ -262,9 +262,18 @@ const BookDetailScreen = ({ route }) => {
                   source={require("../assets/ionbook.png")}
                 />
               </View>
-            </Pressable>
-              {owner && book.status == "Requisitado" && (
-                <Pressable
+            </Pressable>) : (
+            <Pressable onPress={() => {
+              navigation.navigate("OwnerScreen", {ownerId: book.owner});
+            }}>
+            <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
+                      Informações do proprietario
+                    </Text>
+                    
+                  </View>
+            </Pressable>)}
+              { false && owner && book.status == "Requisitado" && (
+              <Pressable
                 onPress={ owner ? () => navigation.navigate("AcceptLoan", { book: book }) : () => {
                   book.is_required ? togglePopup("Empréstimo já requisitado!") : requestBook(bookId);
                 }}
@@ -278,18 +287,8 @@ const BookDetailScreen = ({ route }) => {
                     source={require("../assets/ionbook.png")}
                   />
                 </View>
-            </Pressable>
+              </Pressable>
               )}
-          
-          <Pressable onPress={() => {
-            navigation.navigate("OwnerScreen", {ownerId: book.owner});
-          }}>
-          <View style={[styles.cta, styles.ctaLayout, styles.irAlLibroParent]}><Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>
-                    Informações do proprietario
-                  </Text>
-                  
-                </View>
-          </Pressable>
           </View>
         </View>
       </ScrollView>

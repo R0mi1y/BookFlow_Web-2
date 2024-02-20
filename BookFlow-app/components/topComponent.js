@@ -13,6 +13,7 @@ import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import React, { memo, useState, useCallback } from "react";
 import * as SecureStore from "expo-secure-store";
+import { Button } from "react-native-web";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
@@ -42,7 +43,10 @@ const TopComponent = memo(
 
     function logout() {
       SecureStore.deleteItemAsync("user");
-      navigation.navigate("LogInScreen");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "LogInScreen" }],
+      });
     }
 
     const openPhlistIcon = useCallback(() => {
@@ -60,10 +64,12 @@ const TopComponent = memo(
           animationType="slide"
           visible={isSearchVisible}
         >
-          <View style={styles.modalContainer}>
+          <Pressable onPress={handleSearchClose} style={styles.modalContainer}>
             <View style={styles.searchContainer}>
+              <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
               <TextInput
                 placeholder="Pesquisar..."
+                placeholderTextColor="gray"
                 style={styles.searchInput}
                 value={searchCamp}
                 onChangeText={(text) => setSearchCamp(text)}
@@ -71,10 +77,12 @@ const TopComponent = memo(
 
               <Pressable onPress={search}>
                 <Image
+                  style={styles.searchIcon}
                   contentFit="cover"
                   source={require("../assets/epsearch.png")}
                 />
               </Pressable>
+              </View>
               <TouchableOpacity
                 onPress={handleSearchClose}
                 style={styles.searchButton}
@@ -82,7 +90,7 @@ const TopComponent = memo(
                 <Text style={styles.textButton}>Fechar</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </Pressable>
         </Modal>
         <View style={[styles.topLayout]}>
           <Pressable onPress={openPhlistIcon}>
@@ -291,7 +299,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   searchButton: {
-    borderColor: "brown",
+    borderColor: "white",
     borderWidth: 1,
     backgroundColor: "white",
     padding: 10,
@@ -299,33 +307,40 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   textButton: {
-    color: "brown",
+    color: "black",
     textAlign: "center",
     width: "100%",
+    fontFamily: FontFamily.rosarivoRegular,
   },
   modalContainer: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: Color.colorGray_200, // Define um fundo escuro semi-transparente
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.6)"
   },
   searchContainer: {
     width: "80%",
-    top: screenHeight * 0.05,
     padding: 20,
-    backgroundColor: "transparent",
-    // backgroundColor: 'white',
     borderRadius: 10,
+    backgroundColor: Color.colorGray_100,
+    borderColor: Color.colorBlanchedalmond_100,
+    borderWidth: 1,
+  },
+  searchIcon: {
+    height: 40,
+    width: 40,
   },
   searchInput: {
-    borderColor: "white",
+    width: "80%",
     borderWidth: 1,
-    backgroundColor: "transparent",
     height: 45,
     marginBottom: 10,
     borderRadius: 10,
     paddingLeft: 15,
     color: Color.colorBeige_100,
+    borderColor: Color.colorBlanchedalmond_100,
     fontFamily: FontFamily.rosarivoRegular,
+    backgroundColor: Color.colorDark_6
   },
   topLayout: {
     marginTop: 60,
