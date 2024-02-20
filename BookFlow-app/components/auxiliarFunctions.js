@@ -27,7 +27,6 @@ const getAccessToken = async (navigation) => {
             return;
         }
         let url = `${apiUrl}/api/token/refresh/`;
-        console.log(url);
 
         const response = await fetch(url,
             {

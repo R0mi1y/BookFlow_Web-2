@@ -70,7 +70,7 @@ const OwnerDetailScreen = ({ route }) => {
                         style={[styles.groupChild4]}
                         resizeMode="cover"
                         source={{
-                            uri: owner.photo ? "http" in owner.photo ? owner.photo : apiUrl + owner.photo : apiUrl + "/static/img/default_perfil.jpg",
+                            uri: owner.photo ? owner.photo.includes("http") ? owner.photo : apiUrl + owner.photo : apiUrl + "/static/img/default_perfil.jpg",
                         }}
                     />
                     <View style={styles.texts}>

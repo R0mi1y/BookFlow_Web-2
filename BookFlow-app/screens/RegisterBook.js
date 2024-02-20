@@ -118,6 +118,7 @@ const RegisterBook = ({ route }) => {
       formData.append('genre', genero);
       formData.append('owner', user.id);
       formData.append('cover', "");
+
       if (isAvalible)
         formData.append('availability', true);
       else
@@ -145,13 +146,12 @@ const RegisterBook = ({ route }) => {
         });
       }
 
-      console.log(response.data);
+      console.log(response.text());
       togglePopup();
 
       if (response.data?.id != null) {
         console.log("Livro cadastrado com sucesso: ", response.data);
-        togglePopup("Livro cadastrado com sucesso!");
-
+        
         if (book) {
           navigation.goBack();
         } else {
@@ -160,6 +160,9 @@ const RegisterBook = ({ route }) => {
 
       } else {
         if (response.data?.message) {
+          togglePopup("Erro no cadastro:", response.data.message);
+          console.error("Erro no cadastro:", response.data.message);
+        } else {
           togglePopup("Erro no cadastro:", response.data.message);
           console.error("Erro no cadastro:", response.data.message);
         }
