@@ -134,7 +134,11 @@ const TopComponent = memo(
               >
                 Editar Perfil
               </Text>
-              <Text style={[styles.configuracin, styles.contctanosTypo]}>
+              <Text style={[styles.configuracin, styles.contctanosTypo]} onPress={() => {
+                  setPhlistIconVisible(false);
+                  navigation.navigate("NotificationScreen");
+                }}
+              >
                 Notificações
               </Text>
               <Image
@@ -147,7 +151,13 @@ const TopComponent = memo(
                 contentFit="cover"
                 source={require("../assets/logout.png")}
               />
-              <Text style={[styles.contctanos, styles.contctanosTypo]}>
+              <Text
+                style={[styles.contctanos, styles.contctanosTypo]}
+                onPress={() => {
+                  setPhlistIconVisible(false);
+                  navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
+                }
+              >
                 Meus Empréstimos
               </Text>
               <Pressable onPress={logout}>

@@ -14,6 +14,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import RegisterBook from "./screens/RegisterBook";
 import ListBook from "./screens/ListBook";
 import Profile from "./screens/Profile";
+import NotificationScreen from "./screens/NotificationScreen";
 import Frame from "./components/Frame";
 import OwnerScreen from "./screens/OwnerScreen";
 import RegisterLocation from "./screens/RegisterLocation";
@@ -42,69 +43,76 @@ const App = () => {
     <>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {hideSplashScreen ? (
+          {hideSplashScreen ? (
             <Stack.Screen
               name="SplashScreen"
               component={SplashScreen}
               options={{ headerShown: false }}
             />
-            ) : (<></>)}
-            <Stack.Screen
-              name="HomeScreen"
-              component={HomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SelectMapScreen"
-              component={BookMap}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="LogInScreen"
-              component={LogInScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RegisterBook"
-              component={RegisterBook}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Profile"
-              component={Profile}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RegisterLocation"
-              component={RegisterLocation}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ListBook"
-              component={ListBook}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="BookDetailScreen"
-              component={BookDetailScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="OwnerScreen"
-              component={OwnerScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SignUpScreen"
-              component={SignUpScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Frame"
-              component={Frame}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
+          ) : (
+            <></>
+          )}
+          <Stack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SelectMapScreen"
+            component={BookMap}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="LogInScreen"
+            component={LogInScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RegisterBook"
+            component={RegisterBook}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RegisterLocation"
+            component={RegisterLocation}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ListBook"
+            component={ListBook}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="BookDetailScreen"
+            component={BookDetailScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="OwnerScreen"
+            component={OwnerScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUpScreen"
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="NotificationScreen"
+            component={NotificationScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Frame"
+            component={Frame}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
     </>
   );

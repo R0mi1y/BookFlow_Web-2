@@ -13,16 +13,15 @@ import {
 import Constants from "expo-constants";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import * as SecureStore from 'expo-secure-store';
-import CustomPopup from '../components/CustomPopup';
-import TopComponent from '../components/topComponent';
-import getAccessToken from '../components/auxiliarFunctions';
+import * as SecureStore from "expo-secure-store";
+import CustomPopup from "../components/CustomPopup";
+import TopComponent from "../components/topComponent";
+import getAccessToken from "../components/auxiliarFunctions";
 
-
-const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
 const ListBook = ({ route }) => {
-  let receivedData = route.params?.dataToSend || 'NONE';
+  let receivedData = route.params?.dataToSend || "NONE";
 
   const [popupVisible, setPopupVisible] = React.useState(true);
   const [messagePopup, setPopupTexto] = React.useState("Loading");
@@ -33,11 +32,11 @@ const ListBook = ({ route }) => {
   useEffect(async () => {
     setUser(JSON.parse(await SecureStore.getItemAsync("user")));
   }, []);
-  
+
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const [books, setBooks] = useState([]);
-  
-  const togglePopup = (message=null) => {
+
+  const togglePopup = (message = null) => {
     setPopupVisible(false);
     if (message != null) {
       setPopupTexto(message);
@@ -56,15 +55,15 @@ const ListBook = ({ route }) => {
         let url = `${apiUrl}/api/book/`;
 
         if (accessToken) {
-          if (receivedData === 'SEARCH') {
-            const search = route.params?.search || '';
+          if (receivedData === "SEARCH") {
+            const search = route.params?.search || "";
             url += `?search=${search}`;
-          } else if (receivedData !== 'NONE') {
+          } else if (receivedData !== "NONE") {
             url += `user/${user.id}?filter=${receivedData}`;
           }
 
           const response = await fetch(url, {
-            method: 'GET',
+            method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + accessToken,
@@ -90,7 +89,9 @@ const ListBook = ({ route }) => {
         }
       }
 
-      console.error("Número máximo de tentativas atingido. Falha ao buscar livros.");
+      console.error(
+        "Número máximo de tentativas atingido. Falha ao buscar livros."
+      );
     } catch (error) {
       console.error("Erro ao buscar livros:", error);
     }
@@ -106,75 +107,56 @@ const ListBook = ({ route }) => {
     navigation.navigate("ListBook", { dataToSend: screen });
     setBooks([]);
     getBooks();
-  }
+  };
 
   return (
     <>
       <CustomPopup
         visible={popupVisible}
-        onClose={() => {togglePopup(null)}}
+        onClose={() => {
+          togglePopup(null);
+        }}
         message={messagePopup}
       />
-      <ScrollView style={{minHeight: screenHeight, backgroundColor: Color.colorGray_200,}}>
+      <ScrollView
+        style={{
+          minHeight: screenHeight,
+          backgroundColor: Color.colorGray_200,
+        }}
+      >
         <View style={[styles.listBook, styles.iconLayout, { flex: 1 }]}>
           {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
           <TopComponent
             middle={() => {
               navigation.navigate("HomeScreen");
             }}
-            text1=""
-            text2="Livros"
+            text1="Notificações"
+            text2=""
           />
-
-          {/* NAV-BAR HOME */}
-          <View style={styles.instanceParent}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <TouchableOpacity onPress={() => changeScreen("MY_BOOKS")} style={[styles.frameView, styles.frameBorder, receivedData == "MY_BOOKS" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "MY_BOOKS" ? styles.selected : null]}>Meus livros</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("PENDING")} style={[styles.frameView, styles.frameBorder, receivedData == "PENDING" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "PENDING" ? styles.selected : null]}>Pendentes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.frameView, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("POPULARS")} style={[styles.frameView, styles.frameBorder, receivedData == "POPULARS" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "POPULARS" ? styles.selected : null]}>Populares</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("REQUIRED_BY_ME")} style={[styles.frameView, styles.frameBorder, receivedData == "REQUIRED_BY_ME" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "REQUIRED_BY_ME" ? styles.selected : null]}>Requisitei</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("REQUIRED")} style={[styles.frameView, styles.frameBorder, receivedData == "REQUIRED" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "REQUIRED" ? styles.selected : null]}>Requisitados</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
 
           <View style={styles.scrol1}>
             {books.map((book) => (
               <Pressable
                 key={book.id}
                 style={styles.groupLayout}
-                onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id, fromScreen: receivedData, owner: book.owner == user.id })}
+                onPress={() =>
+                  navigation.navigate("BookDetailScreen", {
+                    bookId: book.id,
+                    fromScreen: receivedData,
+                    owner: book.owner == user.id,
+                  })
+                }
               >
                 {/* LIVROS */}
                 <View style={[styles.groupChild3, styles.groupLayout]}>
-                  <Image
-                    style={[styles.groupChild4, styles.groupChildLayout1]}
-                    resizeMode="cover"
-                    source={{
-                      uri: (book.cover ? book.cover : apiUrl + "/static/img/default_cover.jpg"),
-                    }}
-                  />
                   <View style={styles.bookInfoContainer}>
                     <Text style={[styles.titleBook, styles.groupChildLayout1]}>
-                      {book.title.length > 20
-                        ? `${book.title.substring(0, 20)}...`
-                        : book.title}
+                      Empréstimo de Livro Aprovado!
                     </Text>
-                    <Text style={styles.authorBook}>{book.author}</Text>
-                    <Text style={[styles.genre, styles.genreTypo]}>
-                      {book.genre.replace(/,/g, " •")}
+                    <View style={[styles.androidLarge, styles.androidLayout]} />
+                    <Text style={styles.authorBook}>
+                      Seu pedido de empréstimo do livro 'A Arte da Guerra' foi
+                      aprovado. Entre em contato com o proprietario.
                     </Text>
                   </View>
                 </View>
@@ -188,10 +170,20 @@ const ListBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  androidLayout: {
+    top: 29.5,
+    height: 1,
+    width: 310,
+    borderTopWidth: 0.5,
+    borderColor: Color.colorBlanchedalmond_200,
+    borderStyle: "solid",
+    alignSelf: "center",
+    position: "absolute",
+  },
   bookInfoContainer: {
-    top: 12,
-    textAlign: "center",
-    width: "80%",
+    alignItems: "center",
+    alignSelf: "center",
+    width: "100%",
   },
   iconLayout: {
     width: "100%",
@@ -231,9 +223,9 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupLayout: {
-    height: 110,
+    padding: 8,
     width: "100%",
-    marginBottom: 22,
+    marginBottom: 2,
     borderRadius: Border.br_3xs,
   },
   audiolibrosTypo: {
@@ -338,34 +330,18 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorGray_300,
     flexDirection: "row",
   },
-  groupChild4: {
-    height: "100%",
-    width: 100,
-    top: 0,
-    left: 0,
-    borderRadius: Border.br_mini,
-  },
   authorBook: {
-    top: 30,
+    marginTop: 11,
     fontSize: FontSize.size_base,
     color: Color.colorBlanchedalmond_100,
-    alignSelf: "center",
-    fontFamily: FontFamily.rosarivoRegular,
-    position: "absolute",
+    textAlign: "center",
+    fontFamily: FontFamily.openSansLight,
   },
   titleBook: {
-    alignSelf: "center",
-    fontSize: 20,
-    fontFamily: FontFamily.rosarivoRegular,
+    textAlign: "center",
+    fontSize: 18,
+    fontFamily: FontFamily.openSansSemiBold,
     color: Color.colorBlanchedalmond_100,
-  },
-  genre: {
-    top: 55,
-    fontFamily: FontFamily.rosarivoRegular,
-    alignSelf: "center",
-    lineHeight: 20,
-    color: Color.colorWhite,
-    fontWeight: "600",
   },
   scrol1: {
     marginTop: 30,
