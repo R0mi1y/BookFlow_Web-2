@@ -183,7 +183,7 @@ const Profile = (context) => {
                 source={require("../assets/material-symbols_arrow-back-ios.png")}
               />
             </Pressable>
-            <Text style={[styles.profile, styles.profileTypo]}>Profile</Text>
+            <Text style={[styles.profile, styles.profileTypo]}>Perfil</Text>
 
             <View style={styles.containerImagem}>
               {console.log(selectedImage)}
@@ -203,7 +203,7 @@ const Profile = (context) => {
 
 
             <View style={[styles.parentLayout]}>
-              <Text style={[styles.name, styles.nameTypo]}>Name</Text>
+              <Text style={[styles.name, styles.nameTypo]}>Nome:</Text>
               {/* <View style={[styles.rectangleParent, styles.groupChildLayout]}> */}
 
               <TextInput
@@ -216,7 +216,7 @@ const Profile = (context) => {
               {/* </View> */}
             </View>
             <View style={[styles.parentLayout]}>
-              <Text style={styles.nameTypo}>Email</Text>
+              <Text style={styles.nameTypo}>Email:</Text>
               {/* <View style={[styles.rectangleParent, styles.groupChildLayout]}> */}
               <TextInput
                 style={[styles.textInput]}
@@ -228,7 +228,7 @@ const Profile = (context) => {
               {/* </View> */}
             </View>
             <View style={[styles.parentLayout]}>
-              <Text style={styles.nameTypo}>Telefone</Text>
+              <Text style={styles.nameTypo}>Telefone:</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Digite seu telefone"
@@ -239,7 +239,7 @@ const Profile = (context) => {
               />
             </View>
             <View style={[styles.parentLayout]}>
-              <Text style={styles.nameTypo}>Biografia</Text>
+              <Text style={styles.nameTypo}>Biografia:</Text>
               <TextInput
                 style={[styles.textInput, { height: 120 }]} // Ajuste a altura conforme necessário
                 placeholder="Digite sua biografia"
