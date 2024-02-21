@@ -103,32 +103,31 @@ const Profile = (context) => {
 
   const updateUserData = async () => {
     try {
+      togglePopup("Loading");
       const accessToken = await getAccessToken(navigation);
-
-      let id = user.id;
-
-      let url = `${apiUrl}/api/user/${id}/`;
-
+      const id = user.id;
+      const url = `${apiUrl}/api/user/${id}/`;
+  
       const formData = new FormData();
       formData.append("username", username);
       formData.append("email", email);
       formData.append("phone", phone);
       formData.append("biography", biography);
-
-
+  
       if (selectedImage) {
         const localUri = selectedImage;
         const filename = localUri.split("/").pop();
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : "image";
-
+        const type = `image/${filename.split(".").pop()}`;
+  
         formData.append("photo", {
           uri: localUri,
           name: filename,
           type,
         });
       }
-
+      
+      console.log(url);
+      
       const response = await fetch(url, {
         method: "PUT",
         headers: {
@@ -138,29 +137,26 @@ const Profile = (context) => {
         body: formData,
       });
 
+  
       if (response.ok) {
-        let user = await response.json();
-
-        if (user.id) {
-          try {
-            SecureStore.setItem("user", JSON.stringify(user));
-            togglePopup("Dados atualizados com sucesso");
-          } catch (e) {
-            console.log(e.message);
-          }
+        const updatedUser = await response.json();
+  
+        if (updatedUser.id) {
+          SecureStore.setItem("user", JSON.stringify(updatedUser));
+          togglePopup("Dados atualizados com sucesso");
         } else {
-          console.log(json);
+          console.error("Erro ao atualizar dados do usuário: ID não encontrado");
         }
       } else {
-        console.error(
-          "Erro ao atualizar dados do usuário:",
-          response.statusText
-        );
+        const errorMessage = await response.text();
+        console.error("Erro ao atualizar dados do usuário:", errorMessage);
+        togglePopup(`Erro: ${errorMessage}`);
       }
     } catch (error) {
       console.error("Erro ao atualizar dados do usuário:", error.message);
+      togglePopup(`Erro: ${error.message}`);
     }
-  };
+  };  
 
 
   return (
@@ -186,7 +182,6 @@ const Profile = (context) => {
             <Text style={[styles.profile, styles.profileTypo]}>Profile</Text>
 
             <View style={styles.containerImagem}>
-              {console.log(selectedImage)}
               <Image
                 style={styles.telaUserChild}
                 resizeMode="cover"
