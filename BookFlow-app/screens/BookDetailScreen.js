@@ -78,6 +78,9 @@ const BookDetailScreen = ({ route }) => {
                         },
                     });
 
+          if (!response.ok) {
+            throw new Error(await response.text());
+          }
                     if (!response.ok) {
                         throw new Error(response.text());
                     }
@@ -543,6 +546,7 @@ const styles = StyleSheet.create({
   BookDetailScreen: {
     flex: 1,
     width: "100%",
+    height: 1800,
     height: 1800,
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,

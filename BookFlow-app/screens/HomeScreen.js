@@ -34,6 +34,7 @@ const HomeScreen = ({ route }) => {
   const navigation = useNavigation();
   const [messagePopup, setPopupTexto] = useState('Loading');
   const [popupVisible, setPopupVisible] = useState(true);
+  const [trigger, setTrigger] = useState(false);
 
   const messageComing = route.params?.message[0] || '';
 
@@ -41,6 +42,7 @@ const HomeScreen = ({ route }) => {
     route.params?.message.pop();
     setPopupTexto(messageComing);
     setPopupVisible(true);
+    setTrigger(!trigger);
   }
 
   const togglePopup = (message=null) => {
@@ -85,6 +87,7 @@ const HomeScreen = ({ route }) => {
   const [sections, setSections] = useState([
     { title: 'Todos', filter: 'ALL', books: [] },
     { title: 'Pendentes', filter: 'PENDING', books: [] },
+    { title: 'Próximos', filter: 'CLOSER', books: [] },
     { title: 'Favoritos', filter: 'WISHLIST', books: [] },
   ]);
 
@@ -113,6 +116,10 @@ const HomeScreen = ({ route }) => {
 
           const data = await response.json();
           
+          for (const book of data) {
+            console.log(book.cover && book.cover != '' ? (book.cover.includes("http") ? book.cover : apiUrl + book.cover) : apiUrl + "/static/img/default_cover.jpg");
+          }
+
           let s = sections;
           
           s[i].books = data;
@@ -142,7 +149,7 @@ const HomeScreen = ({ route }) => {
       fetchData(section.filter, i);
     });
 
-  }, []);
+  }, [trigger]);
 
   function getLimitedText(text, size) {
     if (text.length < size + 3) return text;
@@ -292,7 +299,7 @@ const HomeScreen = ({ route }) => {
                             style={[styles.groupChild4]}
                             contentFit="cover"
                             source={{
-                              uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
+                              uri: book.cover && book.cover != '' ? (book.cover.includes("http") ? book.cover : apiUrl + book.cover) : apiUrl + "/static/img/default_cover.jpg",
                             }}
                           />
                           <View style={styles.titleContainer}>

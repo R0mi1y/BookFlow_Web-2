@@ -91,85 +91,59 @@ const RegisterBook = ({ route }) => {
   }
 
   const send_book = async () => {
-    if (titulo == '' || resumo == '' || autor == '' || genero == '') {
-      togglePopup("Preencha todos os campos!");
-      return;
-    }
-
-    togglePopup("Loading");
-    if (registering) return;
-    setRegistering(true);
-    
-    const accessToken = await getAccessToken(navigation);
-
     try {
+      if (![titulo, resumo, autor, genero].every(Boolean)) {
+        throw new Error("Preencha todos os campos obrigatórios!");
+      }
+  
+      togglePopup("Loading");
+      if (registering) return;
+      setRegistering(true);
+  
+      const accessToken = await getAccessToken(navigation);
+  
       const formData = new FormData();
       if (hasImagem) {
         formData.append('cover', {
           uri: selectedImage,
-          type: 'image/jpeg', // Ajuste conforme o tipo de arquivo
+          type: 'image/jpeg',
           name: 'cover.jpg',
         });
       }
-
+  
       formData.append('title', titulo);
       formData.append('author', autor);
       formData.append('summary', resumo);
       formData.append('genre', genero);
       formData.append('owner', user.id);
-      formData.append('cover', "");
+      formData.append('availability', isAvalible ?? true);
 
-      if (isAvalible)
-        formData.append('availability', true);
-      else
-        formData.append('availability', false);
-
-      let response;
-
-      if (book) {
-        response = await fetch(`${apiUrl}/api/book/${book.id}/`, formData, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: "Bearer " + accessToken,
-          },
-          body: formData,
-        });
+      console.log(formData);
+  
+      const url = book ? `${apiUrl}/api/book/${book.id}/` : `${apiUrl}/api/book/`;
+      const method = book ? 'PUT' : 'POST';
+  
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        togglePopup("Livro salvo com sucesso");
+        navigation.navigate("HomeScreen", { message: [book ? "Livro atualizado com sucesso!" : "Livro cadastrado com sucesso!"] });
       } else {
-        response = await fetch(`${apiUrl}/api/book/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: "Bearer " + accessToken,
-          },
-          body: formData,
-        });
-      }
-
-      console.log(response.text());
-      togglePopup();
-
-      if (response.data?.id != null) {
-        console.log("Livro cadastrado com sucesso: ", response.data);
-        
-        if (book) {
-          navigation.goBack();
-        } else {
-          navigation.navigate("HomeScreen", { message: ["Livro cadastrado com sucesso!"] });
-        }
-
-      } else {
-        if (response.data?.message) {
-          togglePopup("Erro no cadastro:", response.data.message);
-          console.error("Erro no cadastro:", response.data.message);
-        } else {
-          togglePopup("Erro no cadastro:", await response.text());
-          console.error("Erro no cadastro:", await response.text());
-        }
+        const errorMessage = data?.message || response.statusText;
+        togglePopup(`Erro no cadastro: ${errorMessage}`);
+        console.error("Erro no cadastro:", errorMessage);
       }
     } catch (error) {
-      console.error(error.response);
-      console.error(error);
+      console.error("Erro inesperado:", error.message || error);
       togglePopup("Erro, tente novamente mais tarde!");
     } finally {
       setRegistering(false);
@@ -209,7 +183,6 @@ const RegisterBook = ({ route }) => {
       .then((response) => response.json())
       .then((response) => {
         let books = response.items;
-        console.log(books);
         if (books) {
           setSearchElements(books);
         }
@@ -311,9 +284,11 @@ const RegisterBook = ({ route }) => {
             onChangeText={(text) => setGenero(text)}
           />
           <TextInput
-            style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
+            style={[styles.textInput, { height: 120 }]} // Certifique-se de ter um estilo para seus TextInput
             placeholder=" Resumo "
             placeholderTextColor={Color.colorBlanchedalmond_101}
+            multiline
+            numberOfLines={4}
             value={resumo}
             onChangeText={(text) => setResumo(text)}
           />
@@ -350,6 +325,9 @@ const RegisterBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  summary: {
+    height: 40,
+  },
   switchContainer: {
     display: "flex",
     flexDirection: "row",
@@ -406,9 +384,9 @@ const styles = StyleSheet.create({
   },
   textInput: {
     marginBottom: 15,
-    alignItems: "center",
     justifyContent: "center",
-    textAlign: "center",
+    textAlign: "left",
+    textAlignVertical: "top",
     fontFamily: FontFamily.openSansSemiBold,
     fontWeight: "600",
     fontSize: FontSize.size_base,
@@ -419,6 +397,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: Border.br_3xs,
     height: 45,
+    padding: 7,
 
   },
   libro: {
