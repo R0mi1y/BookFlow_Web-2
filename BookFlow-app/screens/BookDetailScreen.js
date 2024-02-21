@@ -558,7 +558,7 @@ const styles = StyleSheet.create({
   BookDetailScreen: {
     flex: 1,
     width: "100%",
-    height: 1200,
+    height: 1800,
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
   },
