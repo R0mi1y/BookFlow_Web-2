@@ -284,9 +284,11 @@ const RegisterBook = ({ route }) => {
             onChangeText={(text) => setGenero(text)}
           />
           <TextInput
-            style={[styles.textInput]} // Certifique-se de ter um estilo para seus TextInput
+            style={[styles.textInput, { height: 120 }]} // Certifique-se de ter um estilo para seus TextInput
             placeholder=" Resumo "
             placeholderTextColor={Color.colorBlanchedalmond_101}
+            multiline
+            numberOfLines={4}
             value={resumo}
             onChangeText={(text) => setResumo(text)}
           />
@@ -323,6 +325,9 @@ const RegisterBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  summary: {
+    height: 40,
+  },
   switchContainer: {
     display: "flex",
     flexDirection: "row",
@@ -379,9 +384,9 @@ const styles = StyleSheet.create({
   },
   textInput: {
     marginBottom: 15,
-    alignItems: "center",
     justifyContent: "center",
-    textAlign: "center",
+    textAlign: "left",
+    textAlignVertical: "top",
     fontFamily: FontFamily.openSansSemiBold,
     fontWeight: "600",
     fontSize: FontSize.size_base,
@@ -392,6 +397,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: Border.br_3xs,
     height: 45,
+    padding: 7,
 
   },
   libro: {

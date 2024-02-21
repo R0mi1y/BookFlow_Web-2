@@ -80,11 +80,11 @@ const Profile = (context) => {
         SecureStore.getItemAsync("user").then((user) => {
           const parsedUser = JSON.parse(user);
 
-          setUser(parsedUser);
-          setUserName(parsedUser.username);
-          setEmail(parsedUser.email);
-          setPhone(parsedUser.phone);
-          setBiography(parsedUser.biography);
+          setUser(parsedUser ?? "");
+          setUserName(parsedUser.username ?? "");
+          setEmail(parsedUser.email ?? "");
+          setPhone(parsedUser.phone ?? "");
+          setBiography(parsedUser.biography ?? "");
 
           // Carregar a imagem do usuário
           if (parsedUser.photo) {
@@ -190,7 +190,7 @@ const Profile = (context) => {
               <Image
                 style={styles.telaUserChild}
                 resizeMode="cover"
-                source={{ uri: selectedImage ? selectedImage : "../assets/ellipse-2.png" }}
+                source={{ uri: selectedImage ? selectedImage.includes("http") ? selectedImage : apiUrl + selectedImage : "../assets/ellipse-2.png" }}
               />
               <Pressable onPress={pickImage}>
                 <Image
@@ -283,10 +283,8 @@ const styles = StyleSheet.create({
     height: screenHeight * 1.5,
   },
   textInput: {
-    // marginBottom: 15,;
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
+    textAlignVertical: 'top',
+    padding: 10,
     fontFamily: FontFamily.openSansSemiBold,
     fontWeight: "600",
     fontSize: FontSize.size_base,
