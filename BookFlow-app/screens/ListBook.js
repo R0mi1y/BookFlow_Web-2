@@ -174,7 +174,7 @@ const ListBook = ({ route }) => {
                     </Text>
                     <Text style={styles.authorBook}>{book.author}</Text>
                     <Text style={[styles.genre, styles.genreTypo]}>
-                      {book.genre.replace(/,/g, " •")}
+                      {book.genre.replace(/,/g, " • ")}
                     </Text>
                   </View>
                 </View>
@@ -189,7 +189,7 @@ const ListBook = ({ route }) => {
 
 const styles = StyleSheet.create({
   bookInfoContainer: {
-    top: 12,
+    top: 10,
     textAlign: "center",
     width: "80%",
   },
@@ -354,6 +354,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   titleBook: {
+    
     alignSelf: "center",
     fontSize: 20,
     fontFamily: FontFamily.rosarivoRegular,
