@@ -163,8 +163,8 @@ const RegisterBook = ({ route }) => {
           togglePopup("Erro no cadastro:", response.data.message);
           console.error("Erro no cadastro:", response.data.message);
         } else {
-          togglePopup("Erro no cadastro:", response.data.message);
-          console.error("Erro no cadastro:", response.data.message);
+          togglePopup("Erro no cadastro:", await response.text());
+          console.error("Erro no cadastro:", await response.text());
         }
       }
     } catch (error) {
