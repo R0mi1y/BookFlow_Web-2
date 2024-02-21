@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     // marginLeft: 0,
     width: 200,
     height: 200,
-    borderRadius: 84,
+    borderRadius: 500,
     overflow: "hidden",
     // left: "50%",
     // top: "20%",
