@@ -113,6 +113,10 @@ const HomeScreen = ({ route }) => {
 
           const data = await response.json();
           
+          for (const book of data) {
+            console.log(book.cover && book.cover != '' ? (book.cover.includes("http") ? book.cover : apiUrl + book.cover) : apiUrl + "/static/img/default_cover.jpg");
+          }
+
           let s = sections;
           
           s[i].books = data;
@@ -292,7 +296,7 @@ const HomeScreen = ({ route }) => {
                             style={[styles.groupChild4]}
                             contentFit="cover"
                             source={{
-                              uri: apiUrl + (book.cover ? book.cover : "/static/img/default_cover.jpg"),
+                              uri: book.cover && book.cover != '' ? (book.cover.includes("http") ? book.cover : apiUrl + book.cover) : apiUrl + "/static/img/default_cover.jpg",
                             }}
                           />
                           <View style={styles.titleContainer}>

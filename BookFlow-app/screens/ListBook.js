@@ -62,6 +62,7 @@ const ListBook = ({ route }) => {
           } else if (receivedData !== 'NONE') {
             url += `user/${user.id}?filter=${receivedData}`;
           }
+          console.log(url);
 
           const response = await fetch(url, {
             method: 'GET',
@@ -76,6 +77,7 @@ const ListBook = ({ route }) => {
           }
 
           const data = await response.json();
+          console.info(data);
 
           setBooks(data);
           togglePopup();
@@ -138,14 +140,14 @@ const ListBook = ({ route }) => {
               <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.frameView, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("POPULARS")} style={[styles.frameView, styles.frameBorder, receivedData == "POPULARS" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "POPULARS" ? styles.selected : null]}>Populares</Text>
-              </TouchableOpacity>
               <TouchableOpacity onPress={() => changeScreen("REQUIRED_BY_ME")} style={[styles.frameView, styles.frameBorder, receivedData == "REQUIRED_BY_ME" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "REQUIRED_BY_ME" ? styles.selected : null]}>Requisitei</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => changeScreen("REQUIRED")} style={[styles.frameView, styles.frameBorder, receivedData == "REQUIRED" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "REQUIRED" ? styles.selected : null]}>Requisitados</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => changeScreen("NONE")} style={[styles.frameView, styles.frameBorder, receivedData == "NONE" ? styles.selected : null]}>
+                <Text style={[styles.autores, styles.autoresTypo, receivedData == "NONE" ? styles.selected : null]}>Todos</Text>
               </TouchableOpacity>
             </ScrollView>
           </View>

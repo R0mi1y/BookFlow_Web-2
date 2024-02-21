@@ -91,7 +91,7 @@ const BookDetailScreen = ({ route }) => {
           });
 
           if (!response.ok) {
-            throw new Error(response.text());
+            throw new Error(await response.text());
           }
 
           let data = await response.json();
