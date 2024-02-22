@@ -10,7 +10,8 @@ import {
   Image,
   Dimensions,
   FlatList,
-  Switch
+  Switch,
+  ScrollView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
@@ -197,7 +198,8 @@ const RegisterBook = ({ route }) => {
   };
 
   return (
-    <>
+ 
+    <ScrollView >
       <CustomPopup
         visible={popupVisible}
         onClose={() => {togglePopup(null)}}
@@ -209,7 +211,7 @@ const RegisterBook = ({ route }) => {
             navigation.navigate("HomeScreen");
           }}
           searchBtn={false}
-          text1="Cadastro"
+          text1={book ? "Editar" : "Cadastrar"}
           text2="Livro"
         />
 
@@ -304,7 +306,8 @@ const RegisterBook = ({ route }) => {
           /><Text style={[{color: "white"}, styles.irAlLibroTypo]}>{isAvalible ? "Disponível": "Indisponível"}</Text></View>) }
         </View>
 
-        <Pressable style={styles.button} onPress={send_book}>
+      
+        <Pressable style={[styles.button, styles.bnt1]} onPress={send_book}>
           <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>{ book ? "Salvar" :  "Cadastrar" }</Text>
           <Image
             style={[styles.ionbookIcon]}
@@ -314,22 +317,30 @@ const RegisterBook = ({ route }) => {
         </Pressable>
         { book ? (<>
         <View style={{height:10}}/>
-        <Pressable style={styles.button} onPress={delete_book}>
-          <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Deletar Livro</Text>
+        <Pressable style={[styles.button, styles.delete_bnt,]} onPress={delete_book}>
+          <Text style={[styles.irAlLibro, styles.irAlLibroTypo,]}>Deletar Livro</Text>
           <Image
             style={[styles.ionbookIcon]}
             contentFit="cover"
             source={require("../assets/ionbook.png")}
           />
           </Pressable></>) :  (<></>) }
-      </View>
-    </>
+          </View>
+      
+      </ScrollView>
+   
   );
 };
 
 const styles = StyleSheet.create({
   summary: {
     height: 40,
+  },
+  bnt1:{
+    marginTop:-35,
+  },
+  delete_bnt:{
+    marginBottom:50,
   },
   switchContainer: {
     display: "flex",
@@ -373,6 +384,7 @@ const styles = StyleSheet.create({
     width: "70%",
     height:45,
     borderRadius: Border.br_3xs,
+
   },
   imageContainer: {
     height:180,
