@@ -68,7 +68,7 @@ const OwnerDetailScreen = ({ route }) => {
     const phoneNumber = '1234567890'; // Substitua pelo número de telefone desejado
     const message = 'Olá, estou entrando em contato.'; // Substitua pela mensagem desejada
     const whatsappUrl = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
-    
+
     Linking.canOpenURL(whatsappUrl).then(supported => {
       if (supported) {
         return Linking.openURL(whatsappUrl);
@@ -121,28 +121,28 @@ const OwnerDetailScreen = ({ route }) => {
               {owner.biography}
             </Text>
             {owner.street && owner.district && owner.city && owner.state && owner.postal_code && (<><Text style={styles.title}>Localização:</Text>
-            <View style={styles.content}>
-              {owner.street ? (<Text style={styles.content2}>
-                <Text style={styles.title}>Rua: </Text> {owner.street}
-              </Text>) : (<></>)}
-              {owner.district ? (<Text style={styles.content2}>
-                <Text style={styles.title}>Bairro: </Text> {owner.district}
-              </Text>) : (<></>)}
-              {owner.city ? (<Text style={styles.content2}>
-                <Text style={styles.title}>Cidade: </Text> {owner.city}
-              </Text>) : (<></>)}
-              {owner.state ? (<Text style={styles.content2}>
-                <Text style={styles.title}>Estado: </Text> {owner.state}
-              </Text>) : (<></>)}
-              {owner.postal_code ? (<Text style={styles.content2}>
-                <Text style={styles.title}>Código Postal: </Text> {owner.postal_code}
-              </Text>) : (<></>)}
-            </View></>)}
+              <View style={styles.content}>
+                {owner.street ? (<Text style={styles.content2}>
+                  <Text style={styles.title}>Rua: </Text> {owner.street}
+                </Text>) : (<></>)}
+                {owner.district ? (<Text style={styles.content2}>
+                  <Text style={styles.title}>Bairro: </Text> {owner.district}
+                </Text>) : (<></>)}
+                {owner.city ? (<Text style={styles.content2}>
+                  <Text style={styles.title}>Cidade: </Text> {owner.city}
+                </Text>) : (<></>)}
+                {owner.state ? (<Text style={styles.content2}>
+                  <Text style={styles.title}>Estado: </Text> {owner.state}
+                </Text>) : (<></>)}
+                {owner.postal_code ? (<Text style={styles.content2}>
+                  <Text style={styles.title}>Código Postal: </Text> {owner.postal_code}
+                </Text>) : (<></>)}
+              </View></>)}
 
             <Text style={styles.title}>Contato:</Text>
 
             <View style={styles.content}>
-            {owner.phone ? (<Pressable onPress={handlePress}>
+              {owner.phone ? (<Pressable onPress={handlePress}>
                 <Text style={styles.content2}>
                   <Text style={styles.title}>Whatsapp: </Text> {owner.phone}
                 </Text>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.colorGray_200,
     alignItems: "center",
-    height: screenHeight * 1.2,
+    height: screenHeight * 1.5,
   },
   groupChild4: {
     height: 250,
