@@ -198,8 +198,7 @@ const RegisterBook = ({ route }) => {
   };
 
   return (
- 
-    <ScrollView >
+    <ScrollView contentContainerStyle ={styles.scrollContainer}>
       <CustomPopup
         visible={popupVisible}
         onClose={() => {togglePopup(null)}}
@@ -333,6 +332,9 @@ const RegisterBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  scrollContainer:{
+    flexGrow: 1,
+  },
   summary: {
     height: 40,
   },
@@ -444,6 +446,7 @@ const styles = StyleSheet.create({
     width: "100%",
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
+    minHeight: screenHeight * 1.1
   },
 });
 
