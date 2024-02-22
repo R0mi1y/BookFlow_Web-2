@@ -147,9 +147,9 @@ const OwnerDetailScreen = ({ route }) => {
 
             <Text style={styles.title}>Contato:</Text>
 
-            <View style={styles.content}>
+            <View style={[styles.content, styles.bnt2]}>
               {owner.phone ? (<Pressable onPress={handlePress}>
-                <Text style={styles.content2}>
+                <Text style={[styles.content2]}>
                   <Text style={styles.title}>Whatsapp: </Text> {owner.phone}
                 </Text>
               </Pressable>) : (<></>)}
@@ -167,6 +167,9 @@ const OwnerDetailScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  bnt2:{
+    marginBottom: 70,
+  },
   container: {
     display: "flex",
     alignItems: "center",

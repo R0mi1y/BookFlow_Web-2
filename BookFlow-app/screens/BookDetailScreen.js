@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     display: "flex",
     height: 170,
     width: 170,
-    marginBottom: -110,
+    marginBottom: -90,
     marginLeft: (screenWidth / 2) * 1.34,
     zIndex: 1,
     maxHeight: "100%",
