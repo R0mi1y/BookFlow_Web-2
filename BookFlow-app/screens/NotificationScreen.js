@@ -29,8 +29,11 @@ const ListBook = ({ route }) => {
 
   const navigation = useNavigation();
 
-  useEffect(async () => {
-    setUser(JSON.parse(await SecureStore.getItemAsync("user")));
+  useEffect(() => {
+    SecureStore.getItemAsync("user")
+      .then(user => {
+        setUser(JSON.parse(user));
+      });
   }, []);
 
   const apiUrl = Constants.expoConfig.extra.apiUrl;

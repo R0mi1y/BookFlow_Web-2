@@ -11,18 +11,21 @@ import {
 } from "react-native";
 import { Color, FontFamily, FontSize } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import React, { memo, useState, useCallback } from "react";
+import React, { memo, useState, useCallback, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
-import { Button } from "react-native-web";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
 const TopComponent = memo(
-  ({ middle, text1 = "Book", text2 = "Flow", searchBtn = true }) => {
+  ({ middle, text1 = "Book", text2 = "Flow", searchBtn = true, searchCampFrom = "" }) => {
     const navigation = useNavigation();
     const [phlistIconVisible, setPhlistIconVisible] = useState(false);
     const [searchCamp, setSearchCamp] = React.useState("");
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+    useEffect(() => {
+      setSearchCamp(searchCampFrom);
+    }, [searchCampFrom]);
 
     const handleSearchPress = () => {
       setIsSearchVisible(true);
@@ -364,8 +367,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   phlistLayout: {
-    height: 25,
-    width: 25,
+    height: 35,
+    width: 35,
     marginTop: 15,
   },
   icon: {

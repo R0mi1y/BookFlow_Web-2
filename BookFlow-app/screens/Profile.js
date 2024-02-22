@@ -48,7 +48,6 @@ const Profile = (context) => {
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-      console.log(status);
       if (status !== 'granted') {
         console.error('Permissão negada para acessar a biblioteca de mídia');
         return;
@@ -58,10 +57,10 @@ const Profile = (context) => {
 
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [4, 4],
         quality: 1,
       });
-      console.log(result);
+      
       if (!result.cancelled) {
         console.log(result);
         setHasImagem(true);  // Adicione essa linha
@@ -107,7 +106,7 @@ const Profile = (context) => {
       const accessToken = await getAccessToken(navigation);
       const id = user.id;
       const url = `${apiUrl}/api/user/${id}/`;
-  
+
       const formData = new FormData();
       formData.append("username", username);
       formData.append("email", email);
@@ -160,7 +159,6 @@ const Profile = (context) => {
 
 
   return (
-
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <>
@@ -181,15 +179,15 @@ const Profile = (context) => {
             </Pressable>
             <Text style={[styles.profile, styles.profileTypo]}>Perfil</Text>
 
-            <View style={styles.containerImagem}>
+            <View style={[styles.containerImagem]}>
               <Image
-                style={styles.telaUserChild}
+                style={[styles.telaUserChild]}
                 resizeMode="cover"
                 source={{ uri: selectedImage ? selectedImage.includes("http") ? selectedImage : apiUrl + selectedImage : "../assets/ellipse-2.png" }}
               />
-              <Pressable onPress={pickImage}>
+              <Pressable onPress={pickImage} style={[styles.solarcameraMinimalisticBoldIcon]}>
                 <Image
-                  style={styles.solarcameraMinimalisticBoldIcon}
+                style={{height: 50, width: 50,}}
                   resizeMode="cover"
                   source={require("../assets/solar_camera-minimalistic-bold.png")}
                 />
@@ -308,7 +306,6 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: Border.br_3xs,
     marginTop: "5%",
-
   },
   ionbookIcon: {
     top: 2,
@@ -326,15 +323,13 @@ const styles = StyleSheet.create({
     display: "flex"
   },
   parentLayout: {
-    width: "90%",
-    left: 24,
+    width: "80%",
+    left: "10%",
     display: "flex",
-    top: "10%",
+    top: "7%",
     marginBottom: "5%",
-
   },
   nameTypo: {
-    // lineHeight: 14,
     fontSize: 16,
     top: 0,
     left: 0,
@@ -386,6 +381,8 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 500,
     overflow: "hidden",
+    borderColor: "white",
+    borderWidth: 1,
     // left: "50%",
     // top: "20%",
   },
@@ -400,10 +397,10 @@ const styles = StyleSheet.create({
   },
 
   solarcameraMinimalisticBoldIcon: {
-    top: "45%",
-    height: 32,
-    width: 32,
-    right: "40%",
+    top: 80,
+    height: 50,
+    width: 50,
+    right: 40,
   },
   name: {
     textShadowColor: "rgba(0, 0, 0, 0.25)",

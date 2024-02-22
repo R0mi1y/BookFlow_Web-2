@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -15,6 +15,8 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import * as SecureStore from 'expo-secure-store';
 import starOutlineImage from "../assets/solarstaroutline.png";
 import starFilledImage from "../assets/solarstarfilled.png";
+import avalibleImage from "../assets/avalible_bookmark.png";
+import unvalibleImage from "../assets/unvalible_bookmark.png";
 import CustomPopup from '../components/CustomPopup';
 import TopComponent from '../components/topComponent';
 import getAccessToken from '../components/auxiliarFunctions';
@@ -183,65 +185,104 @@ const HomeScreen = ({ route }) => {
               setScrollPosition(event.nativeEvent.contentOffset.x);
             }}
           >
-            <View style={[styles.rectangleGroup, styles.rectangleLayout1, styles.firstCarrousel]}>
-              <Image
-                style={styles.groupChild}
-                contentFit="cover"
-                source={require("../assets/rectangle-3.png")}
-              />
-              <Text
-                style={[styles.cienciaFiccion, styles.textFlexBox]}
-              >{`Ficção Científica`}</Text>
-              <Text style={[styles.coleccin, styles.coleccinTypo]}>
-                •Coleção•
-              </Text>
-            </View>
-            <View style={[styles.rectangleGroup]}>
-              <Image
-                style={styles.groupChild}
-                contentFit="cover"
-                source={require("../assets/rectangle-5.png")}
-              />
-              <Text style={[styles.crimen, styles.crimenTypo]}>Criminal</Text>
-              <Text style={[styles.coleccin1, styles.coleccinTypo]}>
-                •Coleção•
-              </Text>
-            </View>
-            <View style={[styles.rectangleGroup]}>
-              <Image
-                style={styles.groupChild}
-                contentFit="cover"
-                source={require("../assets/rectangle-4.png")}
-              />
-              <Text style={[styles.aventura, styles.textFlexBox]}>Aventura</Text>
-              <Text style={[styles.coleccin2, styles.coleccinTypo]}>
-                •Coleção•
-              </Text>
-            </View>
-            <View style={[styles.rectangleGroup]}>
-              <Image
-                style={styles.groupChild}
-                contentFit="cover"
-                source={require("../assets/rectangle-2.png")}
-              />
-              <Text style={[styles.biografia, styles.crimenTypo]}>BIOGRAFIA</Text>
-              <Text style={[styles.coleccin3, styles.coleccinTypo]}>
-                •Coleção•
-              </Text>
-            </View>
-            <View style={[styles.rectangleGroup]}>
-              <Image
-                style={styles.groupChild}
-                contentFit="cover"
-                source={require("../assets/rectangle-1.png")}
-              />
-              <View style={{ height: 120 }}/>
-              <Text style={styles.infantil}>Infantil</Text>
+            <Pressable onPress={() => {
+              navigation.navigate("ListBook", {
+                dataToSend: "SEARCH",
+                search: "Ficção",
+              });
+            }}>
+              <View style={[styles.rectangleGroup, styles.rectangleLayout1, styles.firstCarrousel]}>
+                <Image
+                  style={styles.groupChild}
+                  contentFit="cover"
+                  source={require("../assets/rectangle-3.png")}
+                />
+                <Text
+                  style={[styles.cienciaFiccion, styles.textFlexBox]}
+                >{`Ficção Científica`}</Text>
+                <Text style={[styles.coleccin, styles.coleccinTypo]}>
+                  •Coleção•
+                </Text>
+              </View>
+            </Pressable>
 
-              <Text style={[styles.coleccin4, styles.coleccinTypo]}>
-                •Coleção•
-              </Text>
-            </View>
+            <Pressable onPress={() => {
+              navigation.navigate("ListBook", {
+                dataToSend: "SEARCH",
+                search: "Criminal",
+              });
+            }}>
+              <View style={[styles.rectangleGroup]}>
+                <Image
+                  style={styles.groupChild}
+                  contentFit="cover"
+                  source={require("../assets/rectangle-5.png")}
+                />
+                <Text style={[styles.crimen, styles.crimenTypo]}>Criminal</Text>
+                <Text style={[styles.coleccin1, styles.coleccinTypo]}>
+                  •Coleção•
+                </Text>
+              </View>
+            </Pressable>
+
+            <Pressable onPress={() => {
+              navigation.navigate("ListBook", {
+                dataToSend: "SEARCH",
+                search: "Aventura",
+              });
+            }}>
+              <View style={[styles.rectangleGroup]}>
+                <Image
+                  style={styles.groupChild}
+                  contentFit="cover"
+                  source={require("../assets/rectangle-4.png")}
+                />
+                <Text style={[styles.aventura, styles.textFlexBox]}>Aventura</Text>
+                <Text style={[styles.coleccin2, styles.coleccinTypo]}>
+                  •Coleção•
+                </Text>
+              </View>
+            </Pressable>
+
+            <Pressable onPress={() => {
+              navigation.navigate("ListBook", {
+                dataToSend: "SEARCH",
+                search: "Biografia",
+              });
+            }}>
+              <View style={[styles.rectangleGroup]}>
+                <Image
+                  style={styles.groupChild}
+                  contentFit="cover"
+                  source={require("../assets/rectangle-2.png")}
+                />
+                <Text style={[styles.biografia, styles.crimenTypo]}>Biografia</Text>
+                <Text style={[styles.coleccin3, styles.coleccinTypo]}>
+                  •Coleção•
+                </Text>
+              </View>
+            </Pressable>
+
+            <Pressable onPress={() => {
+              navigation.navigate("ListBook", {
+                dataToSend: "SEARCH",
+                search: "Infantil",
+              });
+            }}>
+              <View style={[styles.rectangleGroup]}>
+                <Image
+                  style={styles.groupChild}
+                  contentFit="cover"
+                  source={require("../assets/rectangle-1.png")}
+                />
+                <View style={{ height: 120 }}/>
+                <Text style={styles.infantil}>Infantil</Text>
+                <Text style={[styles.coleccin4, styles.coleccinTypo]}>
+                  •Coleção•
+                </Text>
+              </View>
+            </Pressable>
+
             <View style={{ width: screenWidth * 0.1 }}/>
           </ScrollView>
 
@@ -277,23 +318,33 @@ const HomeScreen = ({ route }) => {
             />
             <View style={{ width:20 }}/>
           </ScrollView>
-          <View style={styles.scrol1}>
+          <View style={[styles.scrol1]}>
             {/* GRUPO 1 LIVROS PENDENTES */}
             {sections.map((section) => (
-              <View key={section.title}>
+              <View key={[section.title]}>
                 <Text style={styles.audiolibrosTypo}>{section.title}</Text>
 
-                <View style={styles.groupContainer}>
-                  <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.scrollBooks}>
+                <View style={[styles.groupContainer]}>
+                  <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={[styles.scrollBooks]}>
                   {section.books.length === 0 ? (
                     <Text style={[styles.audiolibrosTypo, {fontSize: 15}]}>Nenhum livro disponível nesta seção</Text>
-                        ) : 
-                      section.books.map((book) => (
-                      <Pressable
-                        key={book.id}
-                        style={styles.groupLayout}
-                        onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id })}
-                      >
+                      ) : 
+                    section.books.map((book) => (
+                      <View style={{paddingTop: 11}}>
+                        <Image
+                          style={[styles.avaliabilityIcon]}
+                          contentFit="cover"
+                          source={
+                            book?.availability
+                            ? avalibleImage
+                            : unvalibleImage
+                          }
+                        />
+                        <Pressable
+                          key={book.id}
+                          style={[styles.groupLayout]}
+                          onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id })}
+                        >
                           {/* LIVRO 1 */}
                           <Image
                             style={[styles.groupChild4]}
@@ -322,7 +373,8 @@ const HomeScreen = ({ route }) => {
                               : starOutlineImage
                             }
                           />  
-                      </Pressable>
+                        </Pressable>
+                      </View>
                     ))}
                   </ScrollView>
                 </View>
@@ -605,6 +657,16 @@ const styles = StyleSheet.create({
     width: "7.78%",
     top: 5,
     left: 5,
+  },
+  avaliabilityIcon: {
+    height: 50,
+    width: 50,
+    zIndex: 1,
+    right: 20,
+    maxHeight: "100%",
+    maxWidth: "100%",
+    position: "absolute",
+    overflow: "hidden",
   },
   groupContainer: {
     marginTop: 12,

@@ -41,8 +41,11 @@ const RegisterBook = ({ route }) => {
     }
   };
 
-  useState(async () => {
-    setUser(JSON.parse(await SecureStore.getItemAsync("user")));
+  useEffect(() => {
+    SecureStore.getItemAsync("user")
+      .then(user => {
+        setUser(JSON.parse(user));
+      });
   }, []);
   
   const [selectedImage, setSelectedImage] = useState(`${apiUrl}/static/img/default_cover.jpg`);
@@ -252,7 +255,7 @@ const RegisterBook = ({ route }) => {
                     setAutor(authors);
                     setGenero(categories);
                     setResumo(description);
-                    setSelectedImage(item.volumeInfo.imageLinks?.thumbnail);
+                    setSelectedImage(item.volumeInfo.imageLinks?.thumbnail ?? apiUrl + "/static/img/default_cover.jpg");
                     setHasImagem(true);
 
                     setIsTituloSelected(false);

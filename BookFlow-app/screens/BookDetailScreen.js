@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ScrollView, Text, View, Pressable, Image } from "react-native";
+import { StyleSheet, ScrollView, Text, View, Pressable, Image, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import Constants from "expo-constants";
 import starOutlineImage from "../assets/solarstaroutline.png";
 import starFilledImage from "../assets/solarstarfilled.png";
-import * as SecureStore from 'expo-secure-store';
 import TopComponent from '../components/topComponent';
 import CustomPopup from '../components/CustomPopup';
 import getAccessToken from '../components/auxiliarFunctions';
+import avalibleImage from "../assets/avalible_plate.png";
+import unvalibleImage from "../assets/unvalible_plate.png";
+
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const BookDetailScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -160,20 +163,28 @@ const BookDetailScreen = ({ route }) => {
             <ScrollView >
                 <View style={styles.BookDetailScreen}>
                     <TopComponent
-                        middle={() => {
-                            navigation.navigate("HomeScreen");
-                        }}
+                      middle={() => {
+                        navigation.navigate("HomeScreen");
+                      }}
                     />
                     <View style={styles.iconsSection}>
-                        <Pressable onPress={() => toggleFavorite(bookId)}>
-                            <Image
-                                style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
-                                contentFit="cover"
-                                source={isFavorited ? starFilledImage : starOutlineImage}
-                            />
-                        </Pressable>
+                      <Pressable onPress={() => toggleFavorite(bookId)}>
+                        <Image
+                          style={[styles.solarstarOutlineIcon, styles.iconoirpageFlipPosition]}
+                          contentFit="cover"
+                          source={isFavorited ? starFilledImage : starOutlineImage}
+                        />
+                      </Pressable>
                     </View>
-
+                    <Image
+                      style={[styles.avaliabilityIcon]}
+                      contentFit="cover"
+                      source={
+                        book?.availability
+                        ? avalibleImage
+                        : unvalibleImage
+                      }
+                    />
                     <Image
                         style={styles.productImageIcon}
                         contentFit="cover"
@@ -203,21 +214,6 @@ const BookDetailScreen = ({ route }) => {
                                 </Pressable>
                             )}
                         </Text>
-
-                        {/* <Text style={[styles.aSingleEspressoContainer, showFullRequirementsLoan && { textAlign: 'justify' }]}>
-                            {
-                                <Text key={book.id} style={styles.aSingleEspresso}>
-                                    {showFullRequirementsLoan ? book.requirements_loan : getLimitedSummary(book.requirements_loan)}
-                                </Text>
-                            }
-                            { book.requirements_loanLength > 0 && (
-                                <Pressable onPress={toggleShowFullRequirementsLoan}>
-                                    <Text style={[styles.readMore1]}>
-                                        {showFullRequirementsLoan ? "Leia Menos" : "Leia Mais"}
-                                    </Text>
-                                </Pressable>
-                            )}
-                        </Text> */}
 
                         <Text style={[styles.cuentoNovelaContainer, styles.containerTypo1]}>
                             <Text style={styles.cuentoNovela}>
@@ -272,6 +268,16 @@ const BookDetailScreen = ({ route }) => {
     );
 };
 const styles = StyleSheet.create({
+  avaliabilityIcon: {
+    display: "flex",
+    height: 170,
+    width: 170,
+    marginBottom: -110,
+    marginLeft: (screenWidth / 2) * 1.23,
+    zIndex: 1,
+    maxHeight: "100%",
+    maxWidth: "100%",
+  },
   iconsSection: {
     marginTop: 25,
     display: "flex",

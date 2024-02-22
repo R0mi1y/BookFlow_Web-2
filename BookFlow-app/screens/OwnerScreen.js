@@ -7,13 +7,13 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  Linking,
+  Pressable,
 } from "react-native";
 import Constants from "expo-constants";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
-import * as SecureStore from "expo-secure-store";
 import getAccessToken from "../components/auxiliarFunctions";
-import CustomPopup from "../components/CustomPopup";
 import TopComponent from "../components/topComponent";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
@@ -45,6 +45,7 @@ const OwnerDetailScreen = ({ route }) => {
 
         if (response.ok) {
           const ownerData = await response.json();
+          console.log(ownerData);
           setOwner(ownerData);
         } else {
           console.error(
@@ -61,6 +62,20 @@ const OwnerDetailScreen = ({ route }) => {
   }, [route.params?.ownerId]);
   const toggleBiography = () => {
     setShowFullBiography(!showFullBiography);
+  };
+
+  const handlePress = () => {
+    const phoneNumber = '1234567890'; // Substitua pelo número de telefone desejado
+    const message = 'Olá, estou entrando em contato.'; // Substitua pela mensagem desejada
+    const whatsappUrl = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+    
+    Linking.canOpenURL(whatsappUrl).then(supported => {
+      if (supported) {
+        return Linking.openURL(whatsappUrl);
+      } else {
+        console.log("Não é possível abrir o WhatsApp. Certifique-se de que o aplicativo está instalado.");
+      }
+    }).catch(err => console.error('Erro ao verificar suporte ao WhatsApp:', err));
   };
 
   return (
@@ -105,34 +120,37 @@ const OwnerDetailScreen = ({ route }) => {
             >
               {owner.biography}
             </Text>
-            <TouchableOpacity onPress={toggleBiography}>
-              <Text style={styles.toggleBiography}>
-                {showFullBiography ? "Ver menos" : "Ver mais"}
+            {owner.street && owner.district && owner.city && owner.state && owner.postal_code && (<><Text style={styles.title}>Localização:</Text>
+            <View style={styles.content}>
+              {owner.street ? (<Text style={styles.content2}>
+                <Text style={styles.title}>Rua: </Text> {owner.street}
+              </Text>) : (<></>)}
+              {owner.district ? (<Text style={styles.content2}>
+                <Text style={styles.title}>Bairro: </Text> {owner.district}
+              </Text>) : (<></>)}
+              {owner.city ? (<Text style={styles.content2}>
+                <Text style={styles.title}>Cidade: </Text> {owner.city}
+              </Text>) : (<></>)}
+              {owner.state ? (<Text style={styles.content2}>
+                <Text style={styles.title}>Estado: </Text> {owner.state}
+              </Text>) : (<></>)}
+              {owner.postal_code ? (<Text style={styles.content2}>
+                <Text style={styles.title}>Código Postal: </Text> {owner.postal_code}
+              </Text>) : (<></>)}
+            </View></>)}
+
+            <Text style={styles.title}>Contato:</Text>
+
+            <View style={styles.content}>
+            {owner.phone ? (<Pressable onPress={handlePress}>
+                <Text style={styles.content2}>
+                  <Text style={styles.title}>Whatsapp: </Text> {owner.phone}
+                </Text>
+              </Pressable>) : (<></>)}
+              <Text style={styles.content2}>
+                <Text style={styles.title}>Email: </Text>
+                {owner.email}
               </Text>
-            </TouchableOpacity>
-
-            <Text style={styles.title}>Localização:</Text>
-
-              <View style={styles.content}>
-            <Text style={styles.content2}>
-              <Text style={styles.title}>Rua: </Text> {owner.street}
-            </Text>
-            <Text style={styles.content2}>
-              <Text style={styles.title}>Bairro: </Text>
-              {owner.district}
-            </Text>
-            <Text style={styles.content2}>
-              <Text style={styles.title}>Cidade: </Text>
-              {owner.city}
-            </Text>
-            <Text style={styles.content2}>
-              <Text style={styles.title}>Estado: </Text>
-              {owner.state}
-            </Text>
-            <Text style={styles.content2}>
-              <Text style={styles.title}>Código Postal: </Text>{" "}
-              {owner.postal_code}
-            </Text>
             </View>
           </View>
           {/* Adicione outros campos conforme necessário */}
@@ -153,14 +171,17 @@ const styles = StyleSheet.create({
     height: screenHeight * 1.2,
   },
   groupChild4: {
-    height: "30%",
-    width: "70%",
+    height: 250,
+    width: 250,
     borderRadius: 200,
+    borderWidth: 1,
+    borderColor: "white",
     bottom: "2%",
     top: "1%",
   },
   texts: {
     top: "2%",
+    width: "70%",
   },
   title: {
     fontSize: 17,
@@ -169,7 +190,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   content: {
-    marginBottom: 15,
+    marginBottom: 10,
     color: "white",
     fontSize: FontSize.size_sm,
     fontFamily: FontFamily.openSansLight,
@@ -177,7 +198,7 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     borderWidth: 1, // Define a largura da borda como 5 pixels
     borderColor: "white",
-    width: 302,
+    width: "100%",
   },
 
   content2: {
@@ -201,7 +222,6 @@ const styles = StyleSheet.create({
     width: 302,
   },
   biographyTitle: {
-    marginTop: 10,
     marginBottom: 2,
     fontSize: 17,
     color: Color.colorBlanchedalmond_100,

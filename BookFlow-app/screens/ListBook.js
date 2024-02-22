@@ -17,7 +17,10 @@ import * as SecureStore from 'expo-secure-store';
 import CustomPopup from '../components/CustomPopup';
 import TopComponent from '../components/topComponent';
 import getAccessToken from '../components/auxiliarFunctions';
-
+import avalibleImage from "../assets/avalible_bookmark.png";
+import unvalibleImage from "../assets/unvalible_bookmark.png";
+import starOutlineImage from "../assets/solarstaroutline.png";
+import starFilledImage from "../assets/solarstarfilled.png";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -30,8 +33,11 @@ const ListBook = ({ route }) => {
 
   const navigation = useNavigation();
 
-  useEffect(async () => {
-    setUser(JSON.parse(await SecureStore.getItemAsync("user")));
+  useEffect(() => {
+    SecureStore.getItemAsync("user")
+      .then(user => {
+        setUser(JSON.parse(user));
+      });
   }, []);
   
   const apiUrl = Constants.expoConfig.extra.apiUrl;
@@ -125,7 +131,8 @@ const ListBook = ({ route }) => {
               navigation.navigate("HomeScreen");
             }}
             text1=""
-            text2="Livros"
+            text2={receivedData === 'SEARCH' ? route.params?.search : "Livros"}
+            searchCampFrom={receivedData === 'SEARCH' ? route.params?.search : ""}
           />
 
           {/* NAV-BAR HOME */}
@@ -140,12 +147,6 @@ const ListBook = ({ route }) => {
               <TouchableOpacity onPress={() => changeScreen("WISHLIST")} style={[styles.frameView, styles.frameBorder, receivedData == "WISHLIST" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "WISHLIST" ? styles.selected : null]}>Desejados</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("REQUIRED_BY_ME")} style={[styles.frameView, styles.frameBorder, receivedData == "REQUIRED_BY_ME" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "REQUIRED_BY_ME" ? styles.selected : null]}>Requisitei</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeScreen("REQUIRED")} style={[styles.frameView, styles.frameBorder, receivedData == "REQUIRED" ? styles.selected : null]}>
-                <Text style={[styles.autores, styles.autoresTypo, receivedData == "REQUIRED" ? styles.selected : null]}>Requisitados</Text>
-              </TouchableOpacity>
               <TouchableOpacity onPress={() => changeScreen("NONE")} style={[styles.frameView, styles.frameBorder, receivedData == "NONE" ? styles.selected : null]}>
                 <Text style={[styles.autores, styles.autoresTypo, receivedData == "NONE" ? styles.selected : null]}>Todos</Text>
               </TouchableOpacity>
@@ -153,7 +154,7 @@ const ListBook = ({ route }) => {
           </View>
 
           <View style={styles.scrol1}>
-            {books.map((book) => (
+            {books.length > 0 ? books.map((book) => (
               <Pressable
                 key={book.id}
                 style={styles.groupLayout}
@@ -162,6 +163,26 @@ const ListBook = ({ route }) => {
                 {/* LIVROS */}
                 <View style={[styles.groupChild3, styles.groupLayout]}>
                   <Image
+                    style={[styles.avaliabilityIcon]}
+                    contentFit="cover"
+                    source={
+                      book?.availability
+                      ? avalibleImage
+                      : unvalibleImage
+                    }
+                  />
+                  <View style={styles.favoriteIcon}>
+                    <Image
+                      style={[styles.iconGroupLayout]}
+                      contentFit="cover"
+                      source={
+                        book?.is_in_wishlist
+                        ? starFilledImage
+                        : starOutlineImage
+                      }
+                    />
+                  </View>
+                  <Image
                     style={[styles.groupChild4, styles.groupChildLayout1]}
                     resizeMode="cover"
                     source={{
@@ -169,7 +190,7 @@ const ListBook = ({ route }) => {
                     }}
                   />
                   <View style={styles.bookInfoContainer}>
-                    <Text style={[styles.titleBook, styles.groupChildLayout1]}>
+                    <Text style={[styles.titleBook]}>
                       {book.title.length > 20
                         ? `${book.title.substring(0, 20)}...`
                         : book.title}
@@ -181,7 +202,7 @@ const ListBook = ({ route }) => {
                   </View>
                 </View>
               </Pressable>
-            ))}
+            )) : (<Text style={[styles.titleBook]}>Nenhum livro encontrado</Text>)}
           </View>
         </View>
       </ScrollView>
@@ -190,10 +211,37 @@ const ListBook = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  favoriteIcon: {
+    backgroundColor: Color.colorDark_6, 
+    width: 30, 
+    marginRight: -30, 
+    zIndex: 1, 
+    height: 22, 
+    padding: 3,
+    borderBottomRightRadius: 6,
+  },
+  iconGroupLayout: {
+    height: 15,
+    width: 15,
+    paddingTop: 5,
+    paddingLeft: 5,
+  },
+  avaliabilityIcon: {
+    height: 80,
+    width: 80,
+    zIndex: 1,
+    maxHeight: "100%",
+    maxWidth: "100%",
+    position: "absolute",
+    overflow: "hidden",
+    right: -5,
+    top: -17.5,
+  },
   bookInfoContainer: {
     top: 10,
     textAlign: "center",
     width: "80%",
+    right: 20,
   },
   iconLayout: {
     width: "100%",
@@ -326,7 +374,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   frameView: {
-    width: 250,
+    width: 150,
   },
   autoresWrapper1: {
     width: 87,
@@ -356,7 +404,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   titleBook: {
-    
     alignSelf: "center",
     fontSize: 20,
     fontFamily: FontFamily.rosarivoRegular,
