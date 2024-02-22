@@ -167,14 +167,14 @@ const OwnerDetailScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-  },
   container: {
+    display: "flex",
+    alignItems: "center",
     flex: 1,
     backgroundColor: Color.colorGray_200,
-    alignItems: "center",
-    height: screenHeight * 1.5,
+    width: "100%",
+    overflow: "hidden",
+    minHeight: screenHeight * 1.2,
   },
   groupChild4: {
     height: 250,
