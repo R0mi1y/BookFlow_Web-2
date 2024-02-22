@@ -60,13 +60,14 @@ const OwnerDetailScreen = ({ route }) => {
 
     fetchOwnerData();
   }, [route.params?.ownerId]);
+
   const toggleBiography = () => {
     setShowFullBiography(!showFullBiography);
   };
 
   const handlePress = () => {
-    const phoneNumber = '1234567890'; // Substitua pelo número de telefone desejado
-    const message = 'Olá, estou entrando em contato.'; // Substitua pela mensagem desejada
+    const phoneNumber = owner.phone; // Substitua pelo número de telefone desejado
+    const message = 'Olá, estou entrando em contato pois tenho interesse em um dos seus livros!'; // Substitua pela mensagem desejada
     const whatsappUrl = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
 
     Linking.canOpenURL(whatsappUrl).then(supported => {
@@ -120,6 +121,11 @@ const OwnerDetailScreen = ({ route }) => {
             >
               {owner.biography}
             </Text>
+            {owner.biography && owner.biography.length > 200 && (<Pressable onPress={toggleBiography}>
+              <Text style={styles.toggleBiography}>{showFullBiography ? "Ver menos." : "Ver mais."}</Text>
+            </Pressable>)}
+
+
             {owner.street && owner.district && owner.city && owner.state && owner.postal_code && (<><Text style={styles.title}>Localização:</Text>
               <View style={styles.content}>
                 {owner.street ? (<Text style={styles.content2}>

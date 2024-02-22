@@ -183,11 +183,15 @@ const Profile = (context) => {
               <Image
                 style={[styles.telaUserChild]}
                 resizeMode="cover"
-                source={{ uri: selectedImage ? selectedImage.includes("http") ? selectedImage : apiUrl + selectedImage : "../assets/ellipse-2.png" }}
+                source={{ uri: !hasImagem
+                  ? selectedImage && selectedImage.includes("http")
+                    ? selectedImage
+                    : apiUrl + selectedImage
+                  : selectedImage || "../assets/ellipse-2.png" }}
               />
               <Pressable onPress={pickImage} style={[styles.solarcameraMinimalisticBoldIcon]}>
                 <Image
-                style={{height: 50, width: 50,}}
+                  style={{height: 50, width: 50,}}
                   resizeMode="cover"
                   source={require("../assets/solar_camera-minimalistic-bold.png")}
                 />
