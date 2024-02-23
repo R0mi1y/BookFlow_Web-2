@@ -192,11 +192,13 @@ const BookDetailScreen = ({ route }) => {
             />
           </Pressable>
         </View>
+        <View style={[styles.icon]}>
         <Image
           style={[styles.avaliabilityIcon]}
           contentFit="cover"
           source={book?.availability ? avalibleImage : unvalibleImage}
         />
+        </View>
         <Image
           style={styles.productImageIcon}
           contentFit="cover"
@@ -312,18 +314,25 @@ const BookDetailScreen = ({ route }) => {
   );
 };
 const styles = StyleSheet.create({
+  icon:{ 
+    zIndex: 1,
+    height: 150,
+    width: 150,
+    marginLeft: (screenWidth / 2) * 1.40,
+    marginTop:-55,
+  },
   avaliabilityIcon: {
     display: "flex",
-    height: 170,
-    width: 170,
-    marginBottom: -90,
-    marginLeft: (screenWidth / 2) * 1.34,
-    zIndex: 1,
+    // height: 170,
+    // width: 170,
+
+    // marginLeft: (screenWidth / 2) * 1.34,
+    // zIndex: 1,
     maxHeight: "100%",
     maxWidth: "100%",
   },
   iconsSection: {
-    marginTop: 25,
+    marginTop: 15,
     display: "flex",
     flexDirection: "row",
     width: "100%",
@@ -484,7 +493,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorGray_200,
   },
   productImageIcon: {
-    marginTop: -35,
+    marginTop: -80,
     height: 302,
     width: 302,
     alignSelf: "center",
