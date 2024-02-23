@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     width: "100%",
     overflow: "hidden",
     backgroundColor: Color.colorGray_200,
-    minHeight: screenHeight * 1.1
+    minHeight: screenHeight * 1.2
   },
 });
 
