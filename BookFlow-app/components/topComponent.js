@@ -17,7 +17,13 @@ import * as SecureStore from "expo-secure-store";
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
 const TopComponent = memo(
-  ({ middle, text1 = "Book", text2 = "Flow", searchBtn = true, searchCampFrom = "" }) => {
+  ({
+    middle,
+    text1 = "Book",
+    text2 = "Flow",
+    searchBtn = true,
+    searchCampFrom = "",
+  }) => {
     const navigation = useNavigation();
     const [phlistIconVisible, setPhlistIconVisible] = useState(false);
     const [searchCamp, setSearchCamp] = React.useState("");
@@ -69,22 +75,28 @@ const TopComponent = memo(
         >
           <Pressable onPress={handleSearchClose} style={styles.modalContainer}>
             <View style={styles.searchContainer}>
-              <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-              <TextInput
-                placeholder="Pesquisar..."
-                placeholderTextColor="gray"
-                style={styles.searchInput}
-                value={searchCamp}
-                onChangeText={(text) => setSearchCamp(text)}
-              />
-
-              <Pressable onPress={search}>
-                <Image
-                  style={styles.searchIcon}
-                  contentFit="cover"
-                  source={require("../assets/epsearch.png")}
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <TextInput
+                  placeholder="Pesquisar..."
+                  placeholderTextColor="gray"
+                  style={styles.searchInput}
+                  value={searchCamp}
+                  onChangeText={(text) => setSearchCamp(text)}
                 />
-              </Pressable>
+
+                <Pressable onPress={search}>
+                  <Image
+                    style={styles.searchIcon}
+                    contentFit="cover"
+                    source={require("../assets/epsearch.png")}
+                  />
+                </Pressable>
               </View>
               <TouchableOpacity
                 onPress={handleSearchClose}
@@ -145,7 +157,9 @@ const TopComponent = memo(
               >
                 Editar Perfil
               </Text>
-              <Text style={[styles.configuracin, styles.contctanosTypo]} onPress={() => {
+              <Text
+                style={[styles.configuracin, styles.contctanosTypo]}
+                onPress={() => {
                   setPhlistIconVisible(false);
                   navigation.navigate("NotificationScreen");
                 }}
@@ -161,25 +175,38 @@ const TopComponent = memo(
                 style={[styles.contctanos, styles.contctanosTypo]}
                 onPress={() => {
                   setPhlistIconVisible(false);
-                  navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
-                }
+                  navigation.navigate("ListBook", { dataToSend: "MY_BOOKS" });
+                }}
               >
                 Meus Empréstimos
               </Text>
+              <Image
+                style={[styles.qrcodestyimg, styles.octicon]}
+                contentFit="cover"
+                source={require("../assets/scanqrcode.png")}
+              />
+              <Text
+                style={[styles.qrcodesty, styles.contctanosTypo]}
+                onPress={() => {
+                  setPhlistIconVisible(false);
+                  navigation.navigate("ScanQRcode");
+                }}
+              >
+                Scanear QRCode
+              </Text>
+
               <Pressable style={[styles.logout]} onPress={logout}>
                 <Image
-                  style={[{height: 24, width: 24, marginEnd: 20}]}
+                  style={[{ height: 24, width: 24, marginEnd: 20 }]}
                   contentFit="cover"
                   source={require("../assets/logout.png")}
                 />
-                <Text
-                  style={[styles.textLogout]}>
-                  Logout
-                </Text>
+                <Text style={[styles.textLogout]}>Logout</Text>
               </Pressable>
               <View style={[styles.androidLarge3Child, styles.androidLayout]} />
               <View style={[styles.androidLarge3Item, styles.androidLayout]} />
               <View style={[styles.androidLarge3Inner, styles.androidLayout]} />
+              <View style={[styles.androidLarge4Inner, styles.androidLayout]} />
             </View>
           </View>
         </Modal>
@@ -245,6 +272,9 @@ const styles = StyleSheet.create({
   octiconperson242: {
     top: 196,
   },
+  qrcodestyimg: {
+    top: 249,
+  },
   logout: {
     position: "absolute",
     left: 40,
@@ -272,6 +302,9 @@ const styles = StyleSheet.create({
   contctanos: {
     top: 203,
   },
+  qrcodesty: {
+    top: 253,
+  },
   androidLarge3Child: {
     top: 129,
   },
@@ -280,6 +313,9 @@ const styles = StyleSheet.create({
   },
   androidLarge3Inner: {
     top: 233,
+  },
+  androidLarge4Inner: {
+    top: 285,
   },
   androidLargeLogout: {
     top: 799,
@@ -328,7 +364,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.6)"
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
   searchContainer: {
     width: "80%",
@@ -352,7 +388,7 @@ const styles = StyleSheet.create({
     color: Color.colorBeige_100,
     borderColor: Color.colorBlanchedalmond_100,
     fontFamily: FontFamily.rosarivoRegular,
-    backgroundColor: Color.colorDark_6
+    backgroundColor: Color.colorDark_6,
   },
   topLayout: {
     marginTop: 60,

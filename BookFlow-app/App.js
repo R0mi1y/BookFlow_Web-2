@@ -14,6 +14,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import RegisterBook from "./screens/RegisterBook";
 import ListBook from "./screens/ListBook";
 import Profile from "./screens/Profile";
+import ScanQRcode from "./screens/ScanQRcode";
 import NotificationScreen from "./screens/NotificationScreen";
 import Frame from "./components/Frame";
 import OwnerScreen from "./screens/OwnerScreen";
@@ -75,6 +76,11 @@ const App = () => {
           <Stack.Screen
             name="Profile"
             component={Profile}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ScanQRcode"
+            component={ScanQRcode}
             options={{ headerShown: false }}
           />
           <Stack.Screen
