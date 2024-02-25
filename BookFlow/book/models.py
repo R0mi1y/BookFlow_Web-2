@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator
+from .managers import BookManager
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 
 class Book(models.Model):
@@ -9,15 +11,29 @@ class Book(models.Model):
     author = models.CharField(max_length=255)
     genre = models.CharField(max_length=255)  # Usando CharField para armazenar gênero como uma string
     summary = models.TextField()
-    requirements_loan = models.TextField(null=True, default=None)
-    is_in_wishlist = models.BooleanField(default=False) #talvez remover dps
+    status = models.CharField(max_length=255, default="")
+    requirements_loan = models.TextField(default="", blank=True)
     rating = models.DecimalField(max_digits=4, decimal_places=2, default=0, null=True, validators=[
         MaxValueValidator(10, message="Certifique-se de que a nota seja de no máximo 10")
     ])  # Usando DecimalField para armazenar a classificação
     availability = models.BooleanField(default=True)
     owner = models.ForeignKey('user.User', related_name="Criador", default=None, null=True, on_delete=models.CASCADE)
+    
+    objects = BookManager()
+    
     def __str__(self):
         return self.title
+
+
+@receiver(pre_save, sender=Book)
+def book_pre_save(sender, instance, **kwargs):
+    try:
+        old_book = Book.objects.get(pk=instance.pk)
+    except Book.DoesNotExist:
+        return
+
+    if old_book.availability != instance.availability and instance.availability:
+        Book.objects.send_favorite_notification(instance)
 
 
 class Comment(models.Model):
