@@ -165,7 +165,7 @@ const HomeScreen = ({ route }) => {
         onClose={() => {togglePopup(null)}}
         message={messagePopup}
       />
-      <ScrollView style={{backgroundColor: Color.colorGray_200}}>
+      <ScrollView style={{backgroundColor: Color.colorGray_200,}}>
         <View style={[styles.homeScreen, styles.iconLayout]}>
           {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
           <TopComponent
@@ -365,7 +365,7 @@ const HomeScreen = ({ route }) => {
                           <View style={styles.blur} />
                           <View style={styles.groupChild7} />
                           <Image
-                            style={[styles.groupChild8, styles.iconGroupLayout]}
+                            style={[styles.groupChild8, styles.iconcGroupLayout]}
                             contentFit="cover"
                             source={
                               book?.is_in_wishlist
@@ -676,6 +676,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   homeScreen: {
+    marginBottom:35,
     flex: 1,
     flexDirection: "column",
     overflow: "hidden",
