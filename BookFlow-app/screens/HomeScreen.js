@@ -321,7 +321,7 @@ const HomeScreen = ({ route }) => {
           <View style={[styles.scrol1]}>
             {/* GRUPO 1 LIVROS PENDENTES */}
             {sections.map((section) => (
-              <View key={[section.title]}>
+              <View key={[section.title + "::" + section.filter]}>
                 <Text style={styles.audiolibrosTypo}>{section.title}</Text>
 
                 <View style={[styles.groupContainer]}>
@@ -341,7 +341,7 @@ const HomeScreen = ({ route }) => {
                           }
                         />
                         <Pressable
-                          key={book.id}
+                          key={book.id + "::" + book.title}
                           style={[styles.groupLayout]}
                           onPress={() => navigation.navigate("BookDetailScreen", { bookId: book.id })}
                         >

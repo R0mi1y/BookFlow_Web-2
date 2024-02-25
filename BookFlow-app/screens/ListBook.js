@@ -68,7 +68,6 @@ const ListBook = ({ route }) => {
           } else if (receivedData !== 'NONE') {
             url += `user/${user.id}?filter=${receivedData}`;
           }
-          console.log(url);
 
           const response = await fetch(url, {
             method: 'GET',
@@ -83,7 +82,6 @@ const ListBook = ({ route }) => {
           }
 
           const data = await response.json();
-          console.info(data);
 
           setBooks(data);
           togglePopup();
