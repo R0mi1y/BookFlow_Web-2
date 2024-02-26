@@ -209,6 +209,7 @@ const saveQRCodeToDisk = async () => {
       }
     } catch (error) {
       console.error("Erro inesperado:", error.message || error);
+      console.error("Erro inesperado:", await error.text());
       togglePopup("Erro, tente novamente mais tarde!");
     } finally {
       setRegistering(false);
@@ -217,28 +218,27 @@ const saveQRCodeToDisk = async () => {
 
   const pickDocument = async () => {
     try {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
-      if (status !== 'granted') {
-          console.error('Permissão negada para acessar a biblioteca de mídia');
-          return;
-      }
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        
+        if (status !== 'granted') {
+            console.error('Permissão negada para acessar a biblioteca de mídia');
+            return;
+        }
 
-      const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          // aspect: [4, 3],
-          quality: 1,
-      });
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            quality: 1,
+        });
 
-      if (!result.cancelled) {
-        setSelectedImage(result.assets[0].uri);
-        console.log(result.assets[0].uri);
-        console.log(selectedImage);
-        setHasImagem(true);
-      }
+        if (!result.cancelled) {
+            setSelectedImage(result.assets[0].uri);
+            console.log(result.assets[0].uri);
+            console.log(selectedImage);
+            setHasImagem(true);
+        }
     } catch (err) {
-    console.error('Erro ao selecionar o documento:', err);
+        console.error('Erro ao selecionar o documento:', err);
     }
   };
 

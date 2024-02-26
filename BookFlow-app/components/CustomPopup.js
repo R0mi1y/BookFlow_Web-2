@@ -89,7 +89,6 @@ const CustomPopup = ({ visible, onClose, message, navigation=null, setVisible=nu
             transparent={true}
             visible={visible}
             onRequestClose={onClose}
-            style={{backgroundColor: "blue"}}
           >
             <ScrollView>
               <Pressable onPress={onClose} style={[styles.container, { height: screenHeight * 0.5 }]}/>
@@ -256,7 +255,8 @@ const styles = StyleSheet.create({
   scrol1Container: {
     backgroundColor: Color.colorGray_200,
     width: screenWidth,
-    borderRadius: 50,
+    minHeight: screenHeight * 0.5,
+    borderRadius: 40,
     paddingTop: 50,
   },
   scrol1: {

@@ -148,7 +148,7 @@ const Profile = (context) => {
         }
       } else {
         const errorMessage = await response.text();
-        console.error("Erro ao atualizar dados do usuário:", errorMessage);
+        console.error("Erro ao atualizar dados do usuário: aaa", errorMessage);
         togglePopup(`Erro: ${errorMessage}`);
       }
     } catch (error) {

@@ -161,7 +161,6 @@ const BookMap = ({ route }) => {
                                 latitude: parseFloat(u.lat),
                                 longitude: parseFloat(u.lon),
                             }}
-                            description={getLimitedStr(u.books.map((book, i) => book.title).join(", "))}
                             title={u.username}
                             onPress={() => {
                                 togglePopup({type:"books", books: u.books})
