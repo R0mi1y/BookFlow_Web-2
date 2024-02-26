@@ -13,11 +13,12 @@ from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from user.models import User, Loan
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.filters import SearchFilter
 from user.serializers import UserSerializer
-
+import qrcode
+import io
 
 def log(msm): 
     from django.conf import settings
@@ -195,6 +196,37 @@ class BookView(viewsets.ModelViewSet):
             return Response(book)
         else:
             return Response({"error": "Livro não encontrado", "code": "book_unfound"}, status=404)
+        
+        
+    @action(detail=True, methods=['get'])
+    def get_qr(self, request, pk=None):
+        book = self.get_object()
+        user = book.owner
+
+        # Criar conteúdo para o QR Code
+        qr_content = f"Contato do dono: WhatsApp - {user.phone}, E-mail - {user.email}. BOOKID::{book.id}"
+
+        # Criar o objeto QR Code
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_content)
+        qr.make(fit=True)
+
+        # Criar a imagem QR Code
+        img = qr.make_image(fill_color="black", back_color="white")
+
+        # Converter a imagem em bytes
+        img_bytes = io.BytesIO()
+        img.save(img_bytes, format='PNG')
+
+        # Retornar a resposta com a imagem em bytes
+        response = HttpResponse(img_bytes.getvalue(), content_type='image/png')
+        response['Content-Disposition'] = f'attachment; filename=qr_code.png'
+        return response
     
         
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])

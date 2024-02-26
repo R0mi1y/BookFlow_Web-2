@@ -44,6 +44,21 @@ class UserView(ModelViewSet):
     queryset = User.objects.all()
     
     
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs).data
+        
+        if response.get("id") is None: return Response(response)
+        user = User.objects.filter(id=response.get("id")).first()
+        
+        refresh_token = str(RefreshToken.for_user(user))
+        user_json = UserSerializer(user).data
+        user_json['refresh_token'] = refresh_token
+        del user_json['google_id']
+        
+        return Response(user_json)
+        
+        
+    
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         password = request.data.get('password', None)
@@ -162,4 +177,4 @@ class UserView(ModelViewSet):
             else:
                 return JsonResponse({"status": "error", "message": "Senha incorreta!"})
         else:
-            return JsonResponse({"status": "error", "message": "Email incorreto!"})
+            return JsonResponse({"status": "error", "message": "Email ou username incorreto!"})
