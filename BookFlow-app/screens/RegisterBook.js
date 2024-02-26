@@ -18,15 +18,15 @@ import {
   ToastAndroid
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
+import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
 import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
 import CustomPopup from '../components/CustomPopup';
 import getAccessToken from '../components/auxiliarFunctions';
 import TopComponent from '../components/topComponent';
-import QRCode from 'react-native-qrcode-svg';
-import { captureRef } from 'react-native-view-shot';
-
+import QRCode from 'react-native-qrcode-svg';  // Certifique-se de que esta linha está correta
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -44,56 +44,88 @@ const RegisterBook = ({ route }) => {
   const [qrCodeData, setQrCodeData] = useState("");
   const qrCodeRef = useRef(null);
 
-// Função para gerar os dados do QR Code
-const generateQRCodeData = () => {
-  const data = book ? String(book.id) : "";
-  console.log("QR Code Data:", data);
-  setQrCodeData(data);
-};
+  // Função para gerar os dados do QR Code
+  const generateQRCodeData = () => {
+    const data = book ? String(book.id) : "";
 
-useEffect(() => {
-  generateQRCodeData();
-}, [book]);
+    SecureStore.getItemAsync("user").then((user) => {
+      let u = JSON.parse(user);
+      setQrCodeData(`Contato do dono: WhatsApp - ${u.phone}, E-mail - ${u.email}. BOOKID::${data}
+      `);
+    }).catch(() => setQrCodeData(`BOOKID::${data}`));
+  };
 
-// Função para baixar a imagem do código QR
-const downloadQRCode = async () => {
-  try {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          title: 'Permissão para Download',
-          message: 'O aplicativo precisa de permissão para salvar a imagem.',
-          buttonPositive: 'OK',
-        }
+  useEffect(() => {
+    generateQRCodeData();
+  }, [book]);
+
+  // Função para baixar a imagem do código QR
+  const downloadQRCode = async () => {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
       );
-      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-        ToastAndroid.show('Permissão negada', ToastAndroid.SHORT);
-        return;
+
+      if (granted) {
+        console.log('Permissão já concedida');
+      } else {
+        if (Platform.OS === 'android') {
+          const result = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+            {
+              title: 'Permissão para Download',
+              message: 'O aplicativo precisa de permissão para salvar a imagem.',
+              buttonPositive: 'OK',
+            }
+          );
+
+          if (result === PermissionsAndroid.RESULTS.GRANTED) {
+            // Permissão concedida
+            console.log('Permissão concedida');
+          } else {
+            // Permissão negada
+            console.log('Permissão negada');
+            ToastAndroid.show('Permissão negada', ToastAndroid.SHORT);
+            return;
+          }
+        }
       }
+
+      downloadImage();
+    } catch (error) {
+      console.error('Erro ao baixar a imagem:', error);
+      ToastAndroid.show('Erro ao baixar a imagem', ToastAndroid.SHORT);
     }
+  };
+  
+  const downloadImage = async () => {
+    try {
+      togglePopup("Loading");
+  
+      const imageUrl = `${apiUrl}/api/book/${book.id}/get_qr`;
+  
+      const result = await FileSystem.downloadAsync(imageUrl, FileSystem.documentDirectory + 'downloaded_image.png');
+  
+      console.log('Result:', result);
+  
+      if (result && result.uri) {
+        const asset = await MediaLibrary.createAssetAsync(result.uri).catch((error) => {
+          console.error('Erro ao criar o ativo:', error);
+          togglePopup("Erro ao baixar imagem, tente novamente mais tarde!");
+          throw error;
+        });
+  
+        console.log('Asset:', asset);
+        togglePopup("Imagem baixada e salva com sucesso.");
+      } else {
+        console.error('A resposta de FileSystem.downloadAsync é inválida.');
+      }
+    } catch (error) {
+      togglePopup("Erro ao baixar imagem, tente novamente mais tarde!");
+      console.error('Erro ao baixar ou salvar a imagem:', error);
+    }
+  };
 
-    const uri = await saveQRCodeToDisk();
-
-    Linking.openURL(uri);
-  } catch (error) {
-    console.error('Erro ao baixar a imagem:', error);
-    ToastAndroid.show('Erro ao baixar a imagem', ToastAndroid.SHORT);
-  }
-};
-// Função para salvar a imagem do código QR no dispositivo
-const saveQRCodeToDisk = async () => {
-  try {
-    const uri = await captureRef(qrCodeRef, { format: 'png', quality: 1 });
-
-    console.log('Imagem salva:', uri);
-
-    return uri;
-  } catch (error) {
-    console.error('Erro ao salvar a imagem:', error);
-    throw new Error(`Erro ao salvar a imagem: ${error.message}`); 
-  }
-};
 
   const togglePopup = (message=null) => {
     setPopupVisible(false);
@@ -254,7 +286,7 @@ const saveQRCodeToDisk = async () => {
       });
   };
 
-   const toggleSwitch = () => {
+  const toggleSwitch = () => {
     setIsAvalible((previousState) => !previousState);
   };
 
@@ -385,18 +417,17 @@ const saveQRCodeToDisk = async () => {
               contentFit="cover"
               source={require("../assets/ionbook.png")}
             />
-          </Pressable></>) :  (<></>) }
-
+          </Pressable>
           <Pressable style={[styles.button, styles.buttonqr]} onPress={downloadQRCode}>
             <Text style={[styles.irAlLibro, styles.irAlLibroTypo]}>Baixar QRCode</Text>
           </Pressable>
           <View style={[styles.qrCodeContainer, styles.buttonqr]}>
             {qrCodeData !== "" && (
               <View >
-                <QRCode style={styles.qrCodeInside} value={qrCodeData} size={200} />
+                <QRCode style={styles.qrCodeInside} ref={(ref) => { qrCodeRef.current = ref; }} value={qrCodeData} size={200} />
               </View>
             )}
-          </View>
+          </View></>) : (<></>) }
         </View>
       </ScrollView>
    
@@ -414,7 +445,7 @@ const styles = StyleSheet.create({
     marginTop:-35,
   },
   delete_bnt:{
-    marginBottom:50,
+    marginBottom: 50,
   },
   switchContainer: {
     display: "flex",
@@ -457,16 +488,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Color.colorBlanchedalmond_100,
+    backgroundColor: Color.colorBeige_100,
     width: "70%",
-    height:45,
+    height: 45,
     borderRadius: Border.br_3xs,
-
   },
   qrCodeContainer: {
     backgroundColor: "white",
     width: 220,
-    margin: 10,
+    margin: 20,
     padding: 10,
     justifyContent: "center",
   },

@@ -42,6 +42,7 @@ export const Color = {
   colorBlanchedalmond_300: "rgba(239, 227, 200, 0.2)",
   colorBlanchedalmond_400: "rgba(239, 227, 200, 0.5)",
   colorDimgray: "rgba(112, 67, 65, 0.3)",
+  backGround: "#1c161e",
   // colorBeige_100: "#faf3dd",
   colorBeige_100_transparent: "rgba(250, 242, 217, 0.5)",
   colorBeige_100: "rgba(250, 242, 217, 1)",
