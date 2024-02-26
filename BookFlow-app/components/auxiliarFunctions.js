@@ -51,6 +51,7 @@ const getAccessToken = async (navigation) => {
                 index: 0,
                 routes: [{ name: "LogInScreen" }],
             });
+            return;
         }
 
         const data = await response.json();
@@ -72,6 +73,7 @@ const getAccessToken = async (navigation) => {
             index: 0,
             routes: [{ name: "LogInScreen" }],
         });
+        return;
     }
 };
 

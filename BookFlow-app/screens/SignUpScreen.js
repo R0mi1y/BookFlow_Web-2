@@ -12,7 +12,6 @@ import { FontFamily, Color, FontSize, Padding, Border } from "../GlobalStyles";
 import { TextInput } from "react-native";
 import Constants from "expo-constants";
 import * as Google from "expo-auth-session/providers/google";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import CustomPopup from "../components/CustomPopup";
@@ -30,10 +29,12 @@ const SignUpScreen = () => {
     }
   };
 
-  const [email, setEmail] = React.useState("");
-  const [pass, setPass] = React.useState("");
-  const [confirmPass, setConfirmPass] = React.useState("");
-  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("jkedhfgv@gmail.com");
+  const [pass, setPass] = React.useState("123123123");
+  const [confirmPass, setConfirmPass] = React.useState("123123123");
+  const [name, setName] = React.useState("ac");
+  const [firstName, setFirstName] = React.useState("qwelfi");
+  const [lastName, setLastName] = React.useState("fqwlekj");
 
   const apiUrl = Constants.expoConfig.extra.apiUrl;
   const navigation = useNavigation();
@@ -56,7 +57,7 @@ const SignUpScreen = () => {
   }, [response]);
 
   function handleSingInWithGoogle() {
-    const user = AsyncStorage.getItem("@user").then((user) => {
+    const user = SecureStore.getItemAsync("user").then((user) => {
       if (!user) {
         if (!response) return;
         if (response?.type == "success") {
@@ -89,13 +90,11 @@ const SignUpScreen = () => {
       if (data?.status === "success") {
         user = data.user;
 
-        AsyncStorage.setItem(
+        await SecureStore.setItemAsync(
           "@refresh_token",
           JSON.stringify(user["refresh_token"])
         );
-        AsyncStorage.setItem("@user", JSON.stringify(user));
-        setUserInfo(user);
-
+        await SecureStore.setItemAsync("user", JSON.stringify(user));
         navigation.navigate("HomeScreen");
         return user;
       } else {
@@ -112,6 +111,7 @@ const SignUpScreen = () => {
   };
 
   const getUserInfo = async (token) => {
+    console.log("aaaaaaaaaaaa");
     if (!token) return;
 
     try {
@@ -130,7 +130,7 @@ const SignUpScreen = () => {
     }
   };
 
-  const getRefreshToken = () => {
+  const getRefreshToken = async () => {
     fetch(`${apiUrl}/api/token/`, {
       method: "POST",
       headers: {
@@ -142,11 +142,12 @@ const SignUpScreen = () => {
       .then((data) => {
         console.log(data);
         if ("refresh" in data) {
-          AsyncStorage.setItem(
-            "@refresh_token",
-            JSON.stringify(data["refresh"])
-          );
-          navigation.navigate("HomeScreen");
+          SecureStore.getItemAsync(
+            "user"
+          ).then((u) => {
+            console.log(u);
+            navigation.navigate("HomeScreen");
+          });
         } else {
           console.log("Falha ao obter refresh token!");
           console.log(
@@ -189,14 +190,16 @@ const SignUpScreen = () => {
           email: email,
           username: name,
           notification_token: token,
+          first_name: firstName, 
+          last_name: lastName,
         }),
       })
         .then((json) => json.json())
         .then((data) => {
           if ("id" in data) {
-            AsyncStorage.setItem("@user", JSON.stringify(data));
-
-            getRefreshToken();
+            SecureStore.setItemAsync("user", JSON.stringify(data)).then((u) => {
+              getRefreshToken();
+            });
           } else {
             let message = "";
 
@@ -247,8 +250,8 @@ const SignUpScreen = () => {
                 style={styles.textInput}
                 placeholder="Nome de usuário"
                 placeholderTextColor="#d1d5db"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
+                value={name}
+                onChangeText={(text) => setName(text)}
               />
             </View>
 
@@ -259,8 +262,8 @@ const SignUpScreen = () => {
                   style={styles.textInput}
                   placeholder="Nome"
                   placeholderTextColor="#d1d5db"
-                  value={name}
-                  onChangeText={(text) => setName(text)}
+                  value={firstName}
+                  onChangeText={(text) => setFirstName(text)}
                   multiline={false}
                 />
               </View>
@@ -271,8 +274,8 @@ const SignUpScreen = () => {
                   style={styles.textInput}
                   placeholder="Sobrenome"
                   placeholderTextColor="#d1d5db"
-                  value={name}
-                  onChangeText={(text) => setName(text)}
+                  value={lastName}
+                  onChangeText={(text) => setLastName(text)}
                   multiline={false}
                 />
               </View>
