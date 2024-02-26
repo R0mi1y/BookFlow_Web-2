@@ -130,8 +130,8 @@ const BookMap = ({ route }) => {
                         middle={() => {
                         navigation.navigate("HomeScreen");
                         }}
-                        text1="Liv"
-                        text2="ros"
+                        text1="Mapa"
+                        text2="Livros"
                     />
                 </View>
                 {location && (
