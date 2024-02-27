@@ -41,10 +41,10 @@
     "extra": {
       "apiUrl": "http://89.117.75.69:8881",
       "eas": {
-        "projectId": "54606835-cb6d-4e34-a7af-34b5127b0813"
+        "projectId": "e23cad8c-b2a0-4588-a9a0-3d479297f444"
       }
     },
-    "owner": "ediel",
+    "owner": "r0mi1y",
     "plugins": [
       "expo-secure-store",
       [

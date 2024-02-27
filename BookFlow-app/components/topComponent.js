@@ -178,7 +178,7 @@ const TopComponent = memo(
                   navigation.navigate("ListBook", { dataToSend: "MY_BOOKS" });
                 }}
               >
-                Meus Empréstimos
+                Meus Livros
               </Text>
               <Image
                 style={[styles.qrcodestyimg, styles.octicon]}
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.colorDark_6,
   },
   topLayout: {
-    marginTop: 60,
+    marginTop: 20,
     marginLeft: screenWidth * 0.05,
     marginRight: screenWidth * 0.05,
     width: screenWidth * 0.9,

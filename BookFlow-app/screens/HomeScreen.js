@@ -305,12 +305,6 @@ const HomeScreen = ({ route }) => {
               source={require("../assets/book_aberto.png")}
             />
             <MisFavoritosContainer
-              onPress={() => navigation.navigate("ListBook", { "dataToSend": "MY_BOOKS" })}
-              userFavorites={`Empréstimos`}
-              showSolarstarOutlineIcon
-              source={require("../assets/lista_de_livros.png")}
-            />
-            <MisFavoritosContainer
               onPress={() => navigation.navigate("SelectMapScreen", { screen: "HomeScreen", showBooks: true })}
               userFavorites={`Mapa de Livros`}
               showSolarstarOutlineIcon
