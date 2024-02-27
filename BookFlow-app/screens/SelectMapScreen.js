@@ -132,6 +132,8 @@ const BookMap = ({ route }) => {
                         }}
                         text1="Mapa"
                         text2="Livros"
+                        searchBtn={false}
+                        backBtn={true}
                     />
                 </View>
                 {location && (

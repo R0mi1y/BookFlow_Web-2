@@ -161,7 +161,8 @@ const RegisterLocation = ({ route }) => {
                         navigation.navigate("HomeScreen");
                     }}
                     searchBtn={false}
-                    text1="Add"
+                    backBtn={true}
+                    text1=""
                     text2="Endereço"
                 />
 

@@ -303,6 +303,7 @@ const RegisterBook = ({ route }) => {
             navigation.navigate("HomeScreen");
           }}
           searchBtn={false}
+          backBtn={true}
           text1={book ? "Editar" : "Cadastrar"}
           text2="Livro"
         />

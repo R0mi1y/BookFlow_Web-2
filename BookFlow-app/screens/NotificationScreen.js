@@ -126,6 +126,8 @@ const ListBook = ({ route }) => {
             }}
             text1="Notificações"
             text2=""
+            searchBtn={false}
+            backBtn={true}
           />
 
           <View style={styles.scrol1}>

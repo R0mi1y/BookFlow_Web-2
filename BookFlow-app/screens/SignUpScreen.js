@@ -342,7 +342,7 @@ const SignUpScreen = () => {
             <Image
               style={styles.icon}
               contentFit="cover"
-              source={require("../assets/go-back.png")}
+              source={require("../assets/material-symbols_arrow-back-ios.png")}
             />
           </Pressable>
         </ImageBackground>

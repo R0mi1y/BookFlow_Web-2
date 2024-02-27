@@ -17,6 +17,7 @@ import CustomPopup from "../components/CustomPopup";
 import getAccessToken from "../components/auxiliarFunctions";
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from "react-native";
+import TopComponent from '../components/topComponent';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -170,14 +171,15 @@ const Profile = (context) => {
             message={messagePopup}
           />
           <View style={styles.telaUser}>
-            <Pressable onPress={() => navigation.goBack()}>
-              <Image
-                style={styles.materialSymbolsarrowBackIoIcon}
-                resizeMode="cover"
-                source={require("../assets/material-symbols_arrow-back-ios.png")}
-              />
-            </Pressable>
-            <Text style={[styles.profile, styles.profileTypo]}>Perfil</Text>
+            <TopComponent
+              middle={() => {
+                navigation.navigate("HomeScreen");
+              }}
+              searchBtn={false}
+              backBtn={true}
+              text1=""
+              text2="Perfil"
+            />
 
             <View style={[styles.containerImagem]}>
               <Image
@@ -395,13 +397,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     // position: "absolute",
-    top: "18%",
+    top: "10%",
     left: "1%"
     // right: 200,
   },
 
   solarcameraMinimalisticBoldIcon: {
-    top: 80,
+    top: 90,
     height: 50,
     width: 50,
     right: 40,

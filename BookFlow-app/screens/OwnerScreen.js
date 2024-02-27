@@ -88,6 +88,7 @@ const OwnerDetailScreen = ({ route }) => {
               navigation.navigate("HomeScreen");
             }}
             searchBtn={false}
+            backBtn={true}
             text1="Book"
             text2="Flow"
           />

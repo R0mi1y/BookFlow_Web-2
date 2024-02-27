@@ -176,6 +176,8 @@ const BookDetailScreen = ({ route }) => {
       />
       <View style={styles.BookDetailScreen}>
         <TopComponent
+          searchBtn={false}
+          backBtn={true}
           middle={() => {
             navigation.navigate("HomeScreen");
           }}

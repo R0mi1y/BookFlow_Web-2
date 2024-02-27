@@ -22,6 +22,7 @@ const TopComponent = memo(
     text1 = "Book",
     text2 = "Flow",
     searchBtn = true,
+    backBtn = false,
     searchCampFrom = "",
   }) => {
     const navigation = useNavigation();
@@ -35,7 +36,6 @@ const TopComponent = memo(
 
     const handleSearchPress = () => {
       setIsSearchVisible(true);
-      console.log(isSearchVisible);
     };
 
     const handleSearchClose = () => {
@@ -108,15 +108,25 @@ const TopComponent = memo(
           </Pressable>
         </Modal>
         <View style={[styles.topLayout]}>
-          <Pressable onPress={openPhlistIcon}>
+
+          {backBtn ? (<Pressable onPress={() => {navigation.goBack()}}>
+            <Image
+              style={[styles.icon, styles.iconLayout, styles.phlistLayout]}
+              contentFit="cover"
+              source={require("../assets/material-symbols_arrow-back-ios.png")}
+            />
+          </Pressable>) : (<Pressable onPress={openPhlistIcon}>
             <Image
               style={[styles.icon, styles.iconLayout, styles.phlistLayout]}
               contentFit="cover"
               source={require("../assets/phlist.png")}
             />
-          </Pressable>
+          </Pressable>)}
 
-          <Pressable onPress={middle}>
+          <Pressable onPress={middle == "search" ? () => {
+            if (text2 != "Livros") setSearchCamp(text2);
+            handleSearchPress();
+          } : middle}>
             <View style={styles.brandLogo}>
               <Text style={[styles.l]}>{text1}</Text>
               <Text style={styles.libro}>{text2}</Text>

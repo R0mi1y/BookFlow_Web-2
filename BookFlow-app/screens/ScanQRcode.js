@@ -67,6 +67,7 @@ const ScanQRcode = () => {
             navigation.navigate("HomeScreen");
           }}
           searchBtn={false}
+          backBtn={true}
           text1=""
           text2="Scanner"
         />

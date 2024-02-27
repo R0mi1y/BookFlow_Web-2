@@ -125,9 +125,8 @@ const ListBook = ({ route }) => {
         <View style={[styles.listBook, styles.iconLayout, { flex: 1 }]}>
           {/* BOTÕES SUPERIOSRES DE PESQUISA E MENU */}
           <TopComponent
-            middle={() => {
-              navigation.navigate("HomeScreen");
-            }}
+            middle="search"
+            backBtn={true}
             text1=""
             text2={receivedData === 'SEARCH' ? route.params?.search : "Livros"}
             searchCampFrom={receivedData === 'SEARCH' ? route.params?.search : ""}
