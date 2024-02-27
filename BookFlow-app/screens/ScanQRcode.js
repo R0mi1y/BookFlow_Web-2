@@ -4,20 +4,26 @@ import { CameraView, Camera } from "expo-camera/next";
 import { useNavigation } from "@react-navigation/native";
 import TopComponent from '../components/topComponent';
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
+import CustomPopup from '../components/CustomPopup';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
 const ScanQRcode = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [messagePopup, setPopupTexto] = useState();
+  const [popupVisible, setPopupVisible] = useState(true);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
+  const togglePopup = (message=null) => {
+    setPopupVisible(false);
+    if (message != null) {
+      setPopupTexto(message);
+      setPopupVisible(true);
+    }
+  };
+
+  var closePopUp = () => togglePopup(null);
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -29,24 +35,40 @@ const ScanQRcode = () => {
     navigation.navigate("BookDetailScreen", { bookId: bookId });
   };
 
-  if (hasPermission === null) {
-    return <Text>Solicitando permissão para acesso à câmera...</Text>;
+  var requestPermission = async () => {
+    if (hasPermission === null) {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+    }
+    if (hasPermission === false) {
+      togglePopup("Você precisa dar permissão para ler o QrCode");
+      closePopUp = async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        setHasPermission(status === "granted");
+      };
+    }
   }
-  if (hasPermission === false) {
-    return <Text>Sem acesso à câmera</Text>;
-  }
+
+  useEffect(() => {
+    requestPermission();
+  });
 
   return (
     <View style={styles.container}>
+      <CustomPopup
+        visible={popupVisible}
+        onClose={closePopUp}
+        message={messagePopup}
+      />
       <View 
-      style={styles.topView}>
+        style={styles.topView}>
         <TopComponent
           middle={() => {
             navigation.navigate("HomeScreen");
           }}
           searchBtn={false}
-          text1="Scanear"
-          text2="QRCode"
+          text1=""
+          text2="Scanner"
         />
       </View>
       <CameraView
@@ -58,7 +80,7 @@ const ScanQRcode = () => {
       />
       <View style={styles.navBottom}>
         <TouchableOpacity
-          style={[styles.button, {backgroundColor: scanned ? "gray" : "white"}]}
+          style={[styles.button, {backgroundColor: scanned ? Color.colorBeige_100 : "gray"}]}
           onPress={() => setScanned(false)}
         >
           <Text style={styles.textButton}>Ler Novamente</Text>
@@ -66,12 +88,12 @@ const ScanQRcode = () => {
       </View>
       <View style={styles.squares}>
         <View style={styles.top}>
-          <View style={[styles.squareTopLeft, styles.squareBorder, {borderColor: scanned ? "gray" : "white"}]}/>
-          <View style={[styles.squareTopRight, styles.squareBorder, {borderColor: scanned ? "gray" : "white"}]}/>
+          <View style={[styles.squareTopLeft, styles.squareBorder, {borderColor: scanned ? "gray" : Color.colorBeige_100}]}/>
+          <View style={[styles.squareTopRight, styles.squareBorder, {borderColor: scanned ? "gray" : Color.colorBeige_100}]}/>
         </View>
         <View style={styles.bottom}>
-          <View style={[styles.squareBottomLeft, styles.squareBorder, {borderColor: scanned ? "gray" : "white"}]}/>
-          <View style={[styles.squareBottomRight, styles.squareBorder, {borderColor: scanned ? "gray" : "white"}]}/>
+          <View style={[styles.squareBottomLeft, styles.squareBorder, {borderColor: scanned ? "gray" : Color.colorBeige_100}]}/>
+          <View style={[styles.squareBottomRight, styles.squareBorder, {borderColor: scanned ? "gray" : Color.colorBeige_100}]}/>
         </View>
       </View>
     </View>
@@ -148,14 +170,12 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   button: {
-    height: screenHeight * 0.05,
     backgroundColor: "white",
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
     borderRadius: 10,
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
   },
   navBottom: {
     flexDirection: 'row',
@@ -170,10 +190,16 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   textButton: {
+    textAlign: 'center',
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: 30,
+    marginRight: 30,
     fontSize: 20,
+    minWidth: screenWidth * 0.5,
     fontWeight: "bold",
     color: Color.colorBg,
-    marginRight: 10,
+    fontFamily: FontFamily.rosarivoRegular,
   },
   text: {
     color: "white",
