@@ -1,6 +1,15 @@
 package com.room.bookflow.models;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "address_table")
 public class Address {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "address_id")
+    private int id;
+
     private String street;
     private String city;
     private String district;
@@ -30,6 +39,14 @@ public class Address {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCity() {

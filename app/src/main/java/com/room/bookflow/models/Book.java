@@ -1,6 +1,8 @@
 package com.room.bookflow.models;
 
+import static com.room.bookflow.components.Utilitary.handleErrorResponse;
 import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.components.Utilitary.showToast;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,17 +37,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +63,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.room.bookflow.components.VolleyMultipartRequest;
+
 public class Book {
     private int id = -1;
 
@@ -228,7 +239,17 @@ public class Book {
     }
 
     public static List<Book> getAllBooks(Context context, String filter) {
-        String url = context.getString(R.string.api_url) + "/api/book/user/" + User.getAuthenticatedUser().getId() + "?filter=" + (filter == null ? "ALL" : filter);
+        return getAllBooks(context, filter, null);
+    }
+
+    public static List<Book> getAllBooks(Context context, String filter, String search) {
+        String url = context.getString(R.string.api_url) + "/api/book/";
+
+        if ("SEARCH".equals(filter)){
+            url += "?search=" + search;
+        } else {
+            url += "user/" + User.getAuthenticatedUser().getId() + "?filter=" + (filter == null ? "ALL" : filter);
+        }
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String authToken = User.getAccessToken(context);
@@ -236,7 +257,7 @@ public class Book {
         if (authToken == null) {
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            Book.showToast(context, "Login expirado!");
+            showToast(context, "Login expirado!");
             ((Activity) context).startActivity(intent);
             return null;
         }
@@ -274,56 +295,6 @@ public class Book {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
-    }
-
-    private static void handleErrorResponse(VolleyError error, Context context) {
-        if (error instanceof NoConnectionError) {
-            showToast(context, "Sem conexão de internet");
-        } else if (error instanceof TimeoutError) {
-            showToast(context, "Tempo de espera excedido");
-        } else if (error instanceof AuthFailureError) {
-            showToast(context, "Erro com as credenciais");
-        } else if (error instanceof ServerError) {
-            NetworkResponse networkResponse = error.networkResponse;
-            if (networkResponse != null && networkResponse.data != null) {
-                String responseBody = new String(networkResponse.data, Charset.defaultCharset());
-                try {
-                    JSONObject data = new JSONObject(responseBody);
-                    StringBuilder message = new StringBuilder();
-                    Iterator<String> keys = data.keys();
-
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        Object value = data.get(key);
-
-                        message.append(key).append(": ");
-
-                        if (value instanceof String) {
-                            message.append(value);
-                        } else if (value instanceof JSONArray) {
-                            JSONArray jsonArray = (JSONArray) value;
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                message.append("\n");
-                                message.append(" - ").append(jsonArray.getString(i));
-                            }
-                        }
-                        message.append("\n");
-                    }
-
-                    popUp("Erro", message.toString(), context);
-                } catch (JSONException e) {
-                    showToast(context ,e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            showToast(context, "Erro desconhecido");
-            showToast(context, error.getMessage());
-        }
-    }
-
-    private static void showToast(Context context, String message) {
-        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
     }
 
     public Book setByJSONObject(JSONObject response, Context context){
@@ -382,13 +353,12 @@ public class Book {
             Intent intent = new Intent(((Activity) context), LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
-            ((Activity) context).startActivity(intent);
+            context.startActivity(intent);
             return null;
         }
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + authToken);
-        headers.put("Content-Type", "multipart/form-data");
 
         try {
             jsonBody.put("title", book.title);
@@ -438,54 +408,34 @@ public class Book {
     }
 
     public Book uploadImage(Book book, Bitmap bitmap, Context context) {
-        String imageString = bitmapToBase64(bitmap);
         String url = context.getString(R.string.api_url) + "/api/book/";
-        BlockingQueue<Book> bookQueue = new LinkedBlockingQueue<>();
+
         String authToken = User.getAccessToken(context);
+        BlockingQueue<Book> bookQueue = new LinkedBlockingQueue<>();
 
         if (authToken == null) {
-            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+            Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
             ((Activity) context).startActivity(intent);
             return null;
         }
 
+        JSONObject jsonBody = new JSONObject();
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + authToken);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Toast.makeText(context, "Imagem enviada com sucesso", Toast.LENGTH_SHORT).show();
-                    Book b = new Book();
-                    try {
-                        b.setByJSONObject(new JSONObject(response), context);
-                        bookQueue.add(b);
-                    } catch (JSONException e) {
-                        bookQueue.add(book);
-                        throw new RuntimeException(e);
-                    }
-                },
-                error -> {
-                    Log.e("TAG", "Erro ao enviar imagem: " + error.getMessage());
-                    Toast.makeText(context, "Erro ao enviar imagem", Toast.LENGTH_SHORT).show();
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("image", imageString);
-                params.put("title", book.title);
-                params.put("summary", book.summary);
-                params.put("author", book.author);
-                params.put("genre", book.genre);
-                params.put("requirements_loan", book.requirementsLoan);
-                params.put("owner", String.valueOf(User.getAuthenticatedUser().getId()));
-                params.put("availability", String.valueOf(book.availability));
 
-                return params;
-            }
-        };
-
-        Volley.newRequestQueue(context).add(stringRequest);
+        try {
+            jsonBody.put("title", book.title);
+            jsonBody.put("summary", book.summary);
+            jsonBody.put("author", book.author);
+            jsonBody.put("genre", book.genre);
+            jsonBody.put("requirements_loan", book.requirementsLoan);
+            jsonBody.put("owner", User.getAuthenticatedUser().getId());
+            jsonBody.put("availability", book.availability);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         try {
             return bookQueue.poll(30, TimeUnit.SECONDS);
@@ -496,6 +446,7 @@ public class Book {
         }
     }
 
+
     private String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -503,4 +454,3 @@ public class Book {
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 }
-

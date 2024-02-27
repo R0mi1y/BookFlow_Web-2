@@ -57,7 +57,6 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
         Picasso.get()
                 .load(item.getCover().contains("http") ? item.getCover() : context.getString(R.string.api_url) + item.getCover())
                 .into(holder.cover);
-
     }
 
     @Override

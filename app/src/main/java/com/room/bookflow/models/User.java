@@ -1,7 +1,9 @@
 package com.room.bookflow.models;
 
+import static com.room.bookflow.components.Utilitary.handleErrorResponse;
 import static com.room.bookflow.components.Utilitary.hideLoadingScreen;
 import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.components.Utilitary.showToast;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,8 +30,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import androidx.core.util.Consumer;
+import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -57,8 +62,10 @@ import org.json.JSONObject;
 @Entity(tableName = "user_table")
 public class User {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "user_id")
     private int id = -1;
-    private String refreshToken  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwODEzNjE4NiwiaWF0IjoxNzA4MDQ5Nzg2LCJqdGkiOiIyM2Q2NWNlMjViOWY0MTdlYmQ0YzFjOTljNTUxYmE4YiIsInVzZXJfaWQiOjV9.2cAeiriK6s9tC78eNiTBoPMnh4UUcCB8pSHhCWRRYQQ";
+
+    private String refreshToken  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwODEzMTg0NCwiaWF0IjoxNzA4MDQ1NDQ0LCJqdGkiOiIxOTgxMTJkNTRjM2Q0ZGYyYTYzMmRmNWFjYTFmMTU0NSIsInVzZXJfaWQiOjV9.M987F_h7EVaTFiK-04ndhr3Kmst9Kz9qH642-0RF0GI";
     private String username;
     private String firstName;
     private String photo;
@@ -70,7 +77,13 @@ public class User {
     private String biography;
     private String dateJoined;
     private String password;
+
+    @Ignore
+    private List<Integer> abstract_wishlist;
+
+    @Ignore
     private List<Book> wishlist;
+    @Embedded
     private Address address;
 
     public User(){
@@ -188,55 +201,6 @@ public class User {
         }
     }
 
-    private static void handleErrorResponse(VolleyError error, Context context) {
-        if (error instanceof NoConnectionError) {
-            showToast(context, "Sem conexão de internet");
-        } else if (error instanceof TimeoutError) {
-            showToast(context, "Tempo de espera excedido");
-        } else if (error instanceof AuthFailureError) {
-            popUp("Erro", "Erro com as credenciais", context);
-        } else if (error instanceof ServerError) {
-            NetworkResponse networkResponse = error.networkResponse;
-            if (networkResponse != null && networkResponse.data != null) {
-                String responseBody = new String(networkResponse.data, Charset.defaultCharset());
-                try {
-                    JSONObject data = new JSONObject(responseBody);
-                    StringBuilder message = new StringBuilder();
-                    Iterator<String> keys = data.keys();
-
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        Object value = data.get(key);
-
-                        message.append(key).append(": ");
-
-                        if (value instanceof String) {
-                            message.append(value);
-                        } else if (value instanceof JSONArray) {
-                            JSONArray jsonArray = (JSONArray) value;
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                message.append("\n");
-                                message.append(" - ").append(jsonArray.getString(i));
-                            }
-                        }
-                        message.append("\n");
-                    }
-
-                    popUp("Erro", message.toString(), context);
-                } catch (JSONException e) {
-                    showToast(context ,e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            showToast(context, "Erro desconhecido");
-        }
-    }
-
-    private static void showToast(Context context, String message) {
-        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
-    }
-
     public User setByJSONObject(JSONObject response, Context context) {
         try {
             this.id = response.has("id") ? response.getInt("id") : -1;
@@ -250,6 +214,14 @@ public class User {
             this.email = response.has("email") ? response.getString("email") : null;
             this.accountType = response.has("account_type") ? response.getString("account_type") : null;
             this.biography = response.has("biography") && !response.isNull("biography") ? response.getString("biography") : null;
+            this.refreshToken = response.has("refresh_token") && !response.isNull("refresh_token") ? response.getString("refresh_token") : null;
+
+            JSONArray wishlistArray = response.getJSONArray("wishlist");
+            List<Integer> abstractWishlist = new ArrayList<>();
+
+            for (int i = 0; i < wishlistArray.length(); i++) {
+                abstractWishlist.add(wishlistArray.getInt(i));
+            }
 
             JSONObject addressJson = response.optJSONObject("address");
             this.address = new Address(
@@ -264,7 +236,6 @@ public class User {
             );
 
             List<Book> wishlistList = new ArrayList<>();
-            JSONArray wishlistArray = response.optJSONArray("wishlist");
 
             if (wishlistArray != null) {
                 for (int i = 0; i < wishlistArray.length(); i++) {

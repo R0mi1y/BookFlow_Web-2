@@ -3,18 +3,33 @@ package com.room.bookflow.components;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.room.bookflow.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
@@ -33,6 +48,82 @@ public class Utilitary {
                     .load(R.drawable.book)
                     .into(gif);
         });
+    }
+
+    public static void showToast(Context context, String message) {
+        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+    }
+
+    public static void handleErrorResponse(VolleyError error, Context context) {
+        if (error instanceof NoConnectionError) {
+            showToast(context, "Sem conexão de internet");
+        } else if (error instanceof TimeoutError) {
+            showToast(context, "Tempo de espera excedido");
+        } else if (error instanceof ServerError || error instanceof AuthFailureError) {
+            NetworkResponse networkResponse = error.networkResponse;
+            if (networkResponse != null && networkResponse.data != null) {
+                String responseBody = new String(networkResponse.data, Charset.defaultCharset());
+                try {
+                    JSONObject data = new JSONObject(responseBody);
+                    StringBuilder message = new StringBuilder();
+                    Iterator<String> keys = data.keys();
+
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        Object value = data.get(key);
+
+                        message.append(key).append(": ");
+
+                        if (value instanceof String) {
+                            message.append(value);
+                        } else if (value instanceof JSONArray) {
+                            JSONArray jsonArray = (JSONArray) value;
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                message.append("\n");
+                                message.append(" - ").append(jsonArray.getString(i));
+                            }
+                        }
+                        message.append("\n");
+                    }
+
+                    popUp("Erro", message.toString(), context);
+                } catch (JSONException e) {
+                    showToast(context ,e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            showToast(context, "Erro desconhecido");
+        }
+    }
+
+    public static File convertBitmapToFile(Context context, Bitmap bitmap, String fileName) {
+        if (isExternalStorageWritable()) {
+            File directory = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "temp");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            File file = new File(directory, fileName);
+
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                outputStream.flush();
+                outputStream.close();
+
+                return file;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    private static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     public static void popUp(String title, String message, Context context) {

@@ -39,12 +39,14 @@ public class ListBooksActivity extends AppCompatActivity {
         filterToButtonMap.put("REQUIRED", binding.requestByMeButton);
 
         Button[] selectedButton = {filterToButtonMap.get(initialFilter)};
-        if (selectedButton[0] != null) {
+        if (!initialFilter.equals("SEARCH") && selectedButton[0] != null) {
             selectedButton[0].setBackgroundColor(getColor(R.color.white));
             selectedButton[0].setTextColor(getColor(R.color.black));
+            loadBooksForFilter(initialFilter);
+        } else if (initialFilter.equals("SEARCH")) {
+            loadBooksForFilter(initialFilter, intent.getStringExtra("search"));
         }
 
-        loadBooksForFilter(initialFilter);
 
         for (Map.Entry<String, Button> entry : filterToButtonMap.entrySet()) {
             entry.getValue().setOnClickListener(v -> {
@@ -62,6 +64,15 @@ public class ListBooksActivity extends AppCompatActivity {
 
         binding.homeBtn1.setOnClickListener(v -> finish());
         binding.homeBtn2.setOnClickListener(v -> finish());
+    }
+
+    private void loadBooksForFilter(String filter, String search) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Book> items = Book.getAllBooks(this, filter, search);
+            runOnUiThread(() -> {
+                binding.items.setAdapter(new CardSideBookAdapter(items, R.layout.book_card_horizontal_adapter, getApplicationContext()));
+            });
+        });
     }
 
     private void loadBooksForFilter(String filter) {

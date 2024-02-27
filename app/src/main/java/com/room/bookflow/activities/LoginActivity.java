@@ -38,7 +38,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
+import com.room.bookflow.database.UserDatabase;
 import com.room.bookflow.databinding.ActivityLoginBinding;
+import com.room.bookflow.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             binding.password.setInputType(newInputType);
             binding.password.setSelection(binding.password.getText().length());
         });
+        doLogin();
 
         binding.loginBtn.setOnClickListener(v -> {
             binding.loginBtn.setEnabled(false);
@@ -161,11 +164,18 @@ public class LoginActivity extends AppCompatActivity {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                 response -> {
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    intent.putExtra("user", response.toString());
-                    startActivity(intent);
+                    try {
+                        if (response.has("status") && response.getString("status").equals("error")) {
+                            String errorMessage = null;
+                                errorMessage = response.getString("message");
+                            popUp("Erro ao efetuar login", errorMessage, this);
+                        } else if(response.getJSONObject("user").has("id")) {
+                            User user = new User().setByJSONObject(response.getJSONObject("user"), this);
+                            insertUser(user);
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                 },
                 error -> {
                     if (error instanceof NoConnectionError) {
@@ -200,11 +210,11 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.has("status") && response.getString("status").equals("error")) {
                             String errorMessage = response.getString("message");
                             popUp("Erro ao efetuar login", errorMessage, this);
+                        } else if(response.getJSONObject("user").has("id")) {
+                            User user = new User().setByJSONObject(response.getJSONObject("user"), this);
+                            insertUser(user);
                         } else {
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            intent.putExtra("user", response.toString());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            Toast.makeText(this, "error response.", Toast.LENGTH_LONG);
                         }
                     } catch (JSONException e) {
                         Log.e("Erro ao processar resposta", e.getMessage());
@@ -224,5 +234,25 @@ public class LoginActivity extends AppCompatActivity {
         hideLoadingScreen(binding.loadingGif);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
+    }
+
+    public void insertUser(User user) {
+        new Thread(() -> {
+            try {
+                UserDatabase userDatabase = UserDatabase.getDatabase(getApplicationContext());
+                long id = userDatabase.getDao().insert(user);
+
+                runOnUiThread(() -> {
+                    Toast.makeText(LoginActivity.this, user.getFirstName() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    intent.putExtra("user", user.toString());
+                    startActivity(intent);
+                });
+            } catch (Exception e) {
+                e.printStackTrace(); // Trate a exceção de acordo com os requisitos do seu aplicativo
+            }
+        }).start();
     }
 }

@@ -5,15 +5,21 @@ import static com.room.bookflow.components.Utilitary.popUp;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,6 +35,7 @@ import com.room.bookflow.models.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -53,6 +60,8 @@ public class HomeActivity extends AppCompatActivity {
             intent.putExtra("filter", "MY_BOOKS");
             startActivity(intent);
         });
+
+        binding.searchButton.setOnClickListener(v -> showInputDialog(this));
     }
 
     ActivityResultLauncher<Intent> registerBook = registerForActivityResult(
@@ -73,6 +82,28 @@ public class HomeActivity extends AppCompatActivity {
             }
     );
 
+    public void showInputDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.dialog_input, null);
+
+        final EditText editText = view.findViewById(R.id.editText);
+
+        builder.setView(view)
+                .setTitle("Digite um titulo, descrição ou gênero:")
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("OK", (dialog, which) -> {
+                    String userInput = editText.getText().toString();
+                    Intent intent = new Intent(this, ListBooksActivity.class);
+                    intent.putExtra("filter", "SEARCH");
+                    intent.putExtra("search", userInput);
+                    startActivity(intent);
+                });
+
+        AlertDialog alertDialog = builder.create();
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
+        alertDialog.show();
+    }
 
     private void setBooks() {
         List<RecyclerView> recyclerViews = new ArrayList<>();

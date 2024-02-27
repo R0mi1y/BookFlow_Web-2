@@ -169,17 +169,34 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/google_login_btn"
+        <LinearLayout
             android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginTop="20sp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/default_border"
-            android:fontFamily="@font/rosarivo_regular"
-            android:text="Login com Google"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/google_login_btn"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#00FFFFFF"
+                android:fontFamily="@font/rosarivo_regular"
+                android:paddingLeft="50dp"
+                android:text="Login com Google"
+                android:textColor="#FFFFFF" />
+
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/icon__google" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/sig_up_button"

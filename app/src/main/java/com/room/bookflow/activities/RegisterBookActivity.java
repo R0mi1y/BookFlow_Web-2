@@ -16,7 +16,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import java.io.IOException;
+import java.util.Objects;
 
+import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityRegisterBookBinding;
 import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
@@ -55,15 +57,21 @@ public class RegisterBookActivity extends AppCompatActivity {
                     book = book.save(this);
                 }
 
-                if (book.getId() > -1) {
-                    runOnUiThread(() -> {
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra("message", "O livro foi cadastrado com sucesso!");
-                        resultIntent.putExtra("title", "Sucesso");
-                        setResult(Activity.RESULT_OK, resultIntent);
-                        finish();
-                    });
-                } else {
+                try {
+                    if (book.getId() > -1) {
+                        runOnUiThread(() -> {
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("message", "O livro foi cadastrado com sucesso!");
+                            resultIntent.putExtra("title", "Sucesso");
+                            setResult(Activity.RESULT_OK, resultIntent);
+                            finish();
+                        });
+                    } else {
+                        runOnUiThread(() -> {
+                            popUp("Erro!", "Tente novamente mais tarde", RegisterBookActivity.this);
+                        });
+                    }
+                } catch (NullPointerException e) {
                     runOnUiThread(() -> {
                         popUp("Erro!", "Tente novamente mais tarde", RegisterBookActivity.this);
                     });
@@ -91,7 +99,9 @@ public class RegisterBookActivity extends AppCompatActivity {
                     }
                 });
 
-        builder.show();
+        AlertDialog alertDialog = builder.create();
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
+        alertDialog.show();
     }
 
     private void openGallery() {
