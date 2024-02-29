@@ -29,6 +29,9 @@
         android:theme="@style/Theme.BookFlow"
         tools:targetApi="31">
         <activity
+            android:name=".activities.OwnerScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.RegisterLocationActivity"
             android:exported="false" />
         <activity
