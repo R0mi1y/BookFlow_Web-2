@@ -462,7 +462,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/grupo_meus_livros_2"
+                        android:id="@+id/maps_btn"
                         android:layout_width="110dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="15sp"

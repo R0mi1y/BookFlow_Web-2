@@ -51,6 +51,7 @@ public class HomeActivity extends AppCompatActivity {
 
         setBooks();
 
+
         binding.registerBookBtn.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
             registerBook.launch(intent);
@@ -86,6 +87,10 @@ public class HomeActivity extends AppCompatActivity {
         binding.listBooksBtn.setOnClickListener(v -> {
             listBookIntent.putExtra("filter", "MY_BOOKS");
             startActivity(listBookIntent);
+        });
+        binding.mapsBtn.setOnClickListener(v -> {
+            Intent MapsActivity = new Intent(HomeActivity.this, MapsActivity.class);
+            startActivity(MapsActivity);
         });
 
         Intent thisIt = getIntent();
