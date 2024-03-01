@@ -53,6 +53,7 @@ import com.room.bookflow.R;
 import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.LoginActivity;
 import com.room.bookflow.activities.SignUpActivity;
+import com.room.bookflow.database.UserDatabase;
 
 import org.json.JSONArray;
 
@@ -65,7 +66,7 @@ public class User {
     @ColumnInfo(name = "user_id")
     private int id = -1;
 
-    private String refreshToken  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwODEzMTg0NCwiaWF0IjoxNzA4MDQ1NDQ0LCJqdGkiOiIxOTgxMTJkNTRjM2Q0ZGYyYTYzMmRmNWFjYTFmMTU0NSIsInVzZXJfaWQiOjV9.M987F_h7EVaTFiK-04ndhr3Kmst9Kz9qH642-0RF0GI";
+    private String refreshToken;
     private String username;
     private String firstName;
     private String photo;
@@ -95,10 +96,10 @@ public class User {
         return this.getUserById(this.id, context);
     }
 
-    public static User getAuthenticatedUser(){
-        User u = new User();
-        u.setId(5);
-        return u;
+    public static User getAuthenticatedUser(Context context){
+        UserDatabase userDatabase = UserDatabase.getDatabase(context);
+        User user = userDatabase.getDao().getFirst();
+        return user;
     }
 
     public User getUserById(int id, Context context) {
@@ -223,16 +224,15 @@ public class User {
                 abstractWishlist.add(wishlistArray.getInt(i));
             }
 
-            JSONObject addressJson = response.optJSONObject("address");
             this.address = new Address(
-                    addressJson != null ? addressJson.optString("street", null) : null,
-                    addressJson != null ? addressJson.optString("city", null) : null,
-                    addressJson != null ? addressJson.optString("district", null) : null,
-                    addressJson != null ? addressJson.optString("house_number", null) : null,
-                    addressJson != null ? addressJson.optString("state", null) : null,
-                    addressJson != null ? addressJson.optString("postal_code", null) : null,
-                    addressJson != null ? addressJson.optString("lat", null) : null,
-                    addressJson != null ? addressJson.optString("lon", null) : null
+                    response.has("street") ? response.optString("street", null) : null,
+                    response.has("city") ? response.optString("city", null) : null,
+                    response.has("district") ? response.optString("district", null) : null,
+                    response.has("house_number") ? response.optString("house_number", null) : null,
+                    response.has("state") ? response.optString("state", null) : null,
+                    response.has("postal_code") ? response.optString("postal_code", null) : null,
+                    response.has("lat") ? response.optString("lat", null) : null,
+                    response.has("lon") ? response.optString("lon", null) : null
             );
 
             List<Book> wishlistList = new ArrayList<>();
@@ -261,7 +261,7 @@ public class User {
         JSONObject jsonBody = new JSONObject();
 
         try {
-            jsonBody.put("refresh", User.getAuthenticatedUser().getRefreshToken());
+            jsonBody.put("refresh", User.getAuthenticatedUser(context).getRefreshToken());
         } catch (JSONException e) {
             e.printStackTrace();
         }

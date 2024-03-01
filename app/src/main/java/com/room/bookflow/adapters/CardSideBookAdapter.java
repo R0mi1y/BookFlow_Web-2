@@ -26,10 +26,10 @@ import java.util.List;
 public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapter.ViewHolder> {
 
     private List<Book> bookList;
-    private Context context;
+    private Activity context;
     private int adapter_view_id;
 
-    public CardSideBookAdapter(List<Book> bookList, int adapter_view_id, Context context) {
+    public CardSideBookAdapter(List<Book> bookList, int adapter_view_id, Activity context) {
         this.bookList = bookList;
         this.context = context;
         this.adapter_view_id = adapter_view_id;
@@ -47,16 +47,18 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
         Book item = bookList.get(position);
         holder.title.setText(Utilitary.getTextReduced(item.getTitle(), 30));
         holder.genre.setText(Utilitary.getTextReduced(item.getGenre(), 30));
-        holder.layoutBook.setOnClickListener(view -> {
-            Intent intent = new Intent(context, DetailBook.class);
-            ((Activity)context).runOnUiThread(() -> {
-                ((Activity)context).startActivity(intent);
-            });
-
-        });
         Picasso.get()
                 .load(item.getCover().contains("http") ? item.getCover() : context.getString(R.string.api_url) + item.getCover())
                 .into(holder.cover);
+        holder.layoutBook.setOnClickListener(view -> {
+            Intent intent = new Intent(context, DetailBook.class);
+            intent.putExtra("bookId", String.valueOf(item.getId()));
+
+            context.runOnUiThread(() -> {
+                context.startActivity(intent);
+            });
+
+        });
     }
 
     @Override
@@ -67,7 +69,6 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title, genre;
         public ImageView cover;
-
         public LinearLayout layoutBook;
 
         public ViewHolder(View view) {

@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.room.bookflow.R;
 import com.room.bookflow.adapters.CardSideBookAdapter;
+import com.room.bookflow.components.Utilitary;
 import com.room.bookflow.databinding.ActivityListBooksBinding;
 import com.room.bookflow.models.Book;
 
@@ -22,13 +23,14 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ListBooksActivity extends AppCompatActivity {
 
     ActivityListBooksBinding binding;
+    String searchCamp;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityListBooksBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Intent intent = getIntent();
-        String initialFilter = intent.getStringExtra("filter");
+        Intent thisIntent = getIntent();
+        String initialFilter = thisIntent.getStringExtra("filter");
 
         Map<String, Button> filterToButtonMap = new HashMap<>();
         filterToButtonMap.put("MY_BOOKS", binding.myBooksButton);
@@ -42,9 +44,20 @@ public class ListBooksActivity extends AppCompatActivity {
         if (!initialFilter.equals("SEARCH") && selectedButton[0] != null) {
             selectedButton[0].setBackgroundColor(getColor(R.color.white));
             selectedButton[0].setTextColor(getColor(R.color.black));
+
             loadBooksForFilter(initialFilter);
         } else if (initialFilter.equals("SEARCH")) {
-            loadBooksForFilter(initialFilter, intent.getStringExtra("search"));
+            if(selectedButton[0] != null) {
+                selectedButton[0].setBackgroundColor(getColor(R.color.transparent));
+                selectedButton[0].setTextColor(getColor(R.color.white));
+            }
+            searchCamp = thisIntent.getStringExtra("search");
+            loadBooksForFilter(initialFilter, searchCamp);
+
+            binding.searchButton.setOnClickListener(v -> Utilitary.showInputDialog(this, "Digite um título, descrição ou gênero:", searchCamp, text -> {
+                searchCamp = text;
+                loadBooksForFilter(initialFilter, searchCamp);
+            }));
         }
 
 
@@ -70,7 +83,7 @@ public class ListBooksActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Book> items = Book.getAllBooks(this, filter, search);
             runOnUiThread(() -> {
-                binding.items.setAdapter(new CardSideBookAdapter(items, R.layout.book_card_horizontal_adapter, getApplicationContext()));
+                binding.items.setAdapter(new CardSideBookAdapter(items, R.layout.book_card_horizontal_adapter, this));
             });
         });
     }
@@ -79,7 +92,7 @@ public class ListBooksActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Book> items = Book.getAllBooks(this, filter);
             runOnUiThread(() -> {
-                binding.items.setAdapter(new CardSideBookAdapter(items, R.layout.book_card_horizontal_adapter, getApplicationContext()));
+                binding.items.setAdapter(new CardSideBookAdapter(items, R.layout.book_card_horizontal_adapter, this));
             });
         });
     }

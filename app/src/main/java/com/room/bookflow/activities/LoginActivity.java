@@ -38,13 +38,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
+import com.room.bookflow.database.AddressDatabase;
 import com.room.bookflow.database.UserDatabase;
 import com.room.bookflow.databinding.ActivityLoginBinding;
+import com.room.bookflow.models.Address;
 import com.room.bookflow.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class LoginActivity extends AppCompatActivity {
@@ -194,6 +197,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doLogin() {
+        Log.i("Login", "Fazendo login");
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("email", binding.email.getText().toString());
@@ -240,7 +244,14 @@ public class LoginActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 UserDatabase userDatabase = UserDatabase.getDatabase(getApplicationContext());
-                long id = userDatabase.getDao().insert(user);
+                AddressDatabase addressDatabase = AddressDatabase.getDatabase(getApplicationContext());
+
+                userDatabase.getDao().delAll();
+                addressDatabase.getDao().delAll();
+
+                long userId = userDatabase.getDao().insert(user);
+                long addressId = addressDatabase.getDao().insert(user.getAddress());
+
 
                 runOnUiThread(() -> {
                     Toast.makeText(LoginActivity.this, user.getFirstName() + " inserida com sucesso", Toast.LENGTH_SHORT).show();

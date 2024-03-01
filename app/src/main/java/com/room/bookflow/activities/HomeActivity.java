@@ -28,6 +28,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
 import com.room.bookflow.adapters.CardSideBookAdapter;
+import com.room.bookflow.components.Utilitary;
 import com.room.bookflow.databinding.ActivityHomeBinding;
 import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
@@ -55,13 +56,50 @@ public class HomeActivity extends AppCompatActivity {
             registerBook.launch(intent);
         });
 
-        binding.listBooksBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, ListBooksActivity.class);
-            intent.putExtra("filter", "MY_BOOKS");
-            startActivity(intent);
+        Intent listBookIntent = new Intent(HomeActivity.this, ListBooksActivity.class);
+        binding.bioSession.setOnClickListener(v -> {
+            listBookIntent.putExtra("filter", "SEARCH");
+            listBookIntent.putExtra("search", "bio");
+            startActivity(listBookIntent);
+        });
+        binding.adventureSession.setOnClickListener(v -> {
+            listBookIntent.putExtra("filter", "SEARCH");
+            listBookIntent.putExtra("search", "aventura");
+            startActivity(listBookIntent);
+        });
+        binding.crimeSession.setOnClickListener(v -> {
+            listBookIntent.putExtra("filter", "SEARCH");
+            listBookIntent.putExtra("search", "crime");
+            startActivity(listBookIntent);
+        });
+        binding.fictionSession.setOnClickListener(v -> {
+            listBookIntent.putExtra("filter", "SEARCH");
+            listBookIntent.putExtra("search", "ficção");
+            startActivity(listBookIntent);
+        });
+        binding.infantilSession.setOnClickListener(v -> {
+            listBookIntent.putExtra("filter", "SEARCH");
+            listBookIntent.putExtra("search", "infantil");
+            startActivity(listBookIntent);
         });
 
-        binding.searchButton.setOnClickListener(v -> showInputDialog(this));
+        binding.listBooksBtn.setOnClickListener(v -> {
+            listBookIntent.putExtra("filter", "MY_BOOKS");
+            startActivity(listBookIntent);
+        });
+
+        Intent thisIt = getIntent();
+        String message = thisIt.getStringExtra("message");
+        if (message != null){
+            String messageTitle = thisIt.getStringExtra("messageTitle");
+            popUp(messageTitle, message, this);
+        }
+
+        binding.searchButton.setOnClickListener(v -> Utilitary.showInputDialog(this, "Digite um título, descrição ou gênero:", "", text -> {
+            listBookIntent.putExtra("filter", "SEARCH");
+            listBookIntent.putExtra("search", text);
+            startActivity(listBookIntent);
+        }));
     }
 
     ActivityResultLauncher<Intent> registerBook = registerForActivityResult(
@@ -82,29 +120,6 @@ public class HomeActivity extends AppCompatActivity {
             }
     );
 
-    public void showInputDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.dialog_input, null);
-
-        final EditText editText = view.findViewById(R.id.editText);
-
-        builder.setView(view)
-                .setTitle("Digite um titulo, descrição ou gênero:")
-                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
-                .setPositiveButton("OK", (dialog, which) -> {
-                    String userInput = editText.getText().toString();
-                    Intent intent = new Intent(this, ListBooksActivity.class);
-                    intent.putExtra("filter", "SEARCH");
-                    intent.putExtra("search", userInput);
-                    startActivity(intent);
-                });
-
-        AlertDialog alertDialog = builder.create();
-        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
-        alertDialog.show();
-    }
-
     private void setBooks() {
         List<RecyclerView> recyclerViews = new ArrayList<>();
         recyclerViews.add(binding.bookSideCards0);
@@ -119,9 +134,11 @@ public class HomeActivity extends AppCompatActivity {
             int finalI = i;
             executorService.execute(() -> {
                 List<Book> items = Book.getAllBooks(this, filters[finalI]);
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    recyclerViews.get(finalI).setAdapter(new CardSideBookAdapter(items, R.layout.book_card_side_adapter, getApplicationContext()));
-                });
+                if (items != null) {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        recyclerViews.get(finalI).setAdapter(new CardSideBookAdapter(items, R.layout.book_card_side_adapter, this));
+                    });
+                }
             });
         }
         executorService.shutdown();

@@ -79,7 +79,9 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:scrollbarAlwaysDrawHorizontalTrack="false"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -88,7 +90,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/my_books_button"
-                android:layout_width="238dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
@@ -101,7 +103,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/pending_button"
-                android:layout_width="238dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
@@ -114,7 +116,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/wish_button"
-                android:layout_width="238dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
@@ -127,7 +129,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/populars_button"
-                android:layout_width="238dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
@@ -140,7 +142,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/request_button"
-                android:layout_width="238dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
@@ -153,7 +155,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/request_by_me_button"
-                android:layout_width="238dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"

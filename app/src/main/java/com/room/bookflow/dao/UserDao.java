@@ -15,6 +15,8 @@ public interface UserDao {
     @Query("SELECT user_table.*, address_table.* FROM user_table LEFT JOIN address_table ON user_table.address_id = address_table.address_id")
     public List<User> getAllUsers();
 
+    @Query("SELECT * FROM user_table ORDER BY user_id LIMIT 1;\n")
+    public User getFirst();
 
     @Query("Select * FROM user_table WHERE user_id==:id")
     public User getById(long id);
@@ -25,6 +27,8 @@ public interface UserDao {
     @Delete
     public void delete(User user);
 
+    @Query("DELETE FROM user_table WHERE 1")
+    public void delAll();
     @Update
     public void update(User user);
 }

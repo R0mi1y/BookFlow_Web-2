@@ -115,6 +115,7 @@
                 <!-- Primeiro Item -->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/fiction_session"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="visible">
@@ -164,6 +165,7 @@
 
                 <!-- Segundo Item -->
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/crime_session"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -213,6 +215,7 @@
 
                 <!-- Terceiro Item -->
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/adventure_session"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -262,6 +265,7 @@
 
                 <!-- Quarto Item -->
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/bio_session"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -311,6 +315,7 @@
 
                 <!-- Sexto Item -->
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/infantil_session"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 

@@ -49,7 +49,7 @@ public class RegisterBookActivity extends AppCompatActivity {
 
         binding.registerBook.setOnClickListener(v -> {
             new Thread(() -> {
-                Book book = new Book("", binding.title.getText().toString(), binding.author.getText().toString(), binding.genre.getText().toString(), binding.summary.getText().toString(), binding.requirements.getText().toString(), false, User.getAuthenticatedUser().getId());
+                Book book = new Book("", binding.title.getText().toString(), binding.author.getText().toString(), binding.genre.getText().toString(), binding.summary.getText().toString(), binding.requirements.getText().toString(), false, User.getAuthenticatedUser(getApplicationContext()).getId());
 
                 if (hasImage){
                     book = book.uploadImage(book, imageBitMap, this);

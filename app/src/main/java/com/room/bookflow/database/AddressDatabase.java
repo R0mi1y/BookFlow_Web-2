@@ -11,7 +11,7 @@ import com.room.bookflow.dao.UserDao;
 import com.room.bookflow.models.Address;
 import com.room.bookflow.models.User;
 
-@Database(entities = {Address.class, User.class}, version = 1, exportSchema = true)
+@Database(entities = {Address.class, User.class}, version = 1)
 public abstract class AddressDatabase extends RoomDatabase {
     public abstract AddressDao getDao();
     private static volatile AddressDatabase INSTANCE;

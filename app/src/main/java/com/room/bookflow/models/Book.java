@@ -12,8 +12,11 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.android.volley.AuthFailureError;
@@ -65,7 +68,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.components.VolleyMultipartRequest;
 
+@Entity(tableName = "book_table")
 public class Book {
+    @ColumnInfo(name = "book_id")
+    @PrimaryKey(autoGenerate = true)
     private int id = -1;
 
     private String cover;
@@ -77,7 +83,18 @@ public class Book {
     private boolean isInWishlist;
     private double rating;
     private boolean availability;
+    @Ignore
     private int ownerId = -1;
+    @Embedded
+    private User owner;
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 
     public Book() {
     }
@@ -248,7 +265,7 @@ public class Book {
         if ("SEARCH".equals(filter)){
             url += "?search=" + search;
         } else {
-            url += "user/" + User.getAuthenticatedUser().getId() + "?filter=" + (filter == null ? "ALL" : filter);
+            url += "user/" + User.getAuthenticatedUser(context).getId() + "?filter=" + (filter == null ? "ALL" : filter);
         }
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -297,6 +314,48 @@ public class Book {
         }
     }
 
+    public static Book getBookById(Context context, int id) {
+        String url = context.getString(R.string.api_url) + "/api/book/" + id + "/";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String authToken = User.getAccessToken(context);
+
+        if (authToken == null) {
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            showToast(context, "Login expirado!");
+            ((Activity) context).startActivity(intent);
+            return null;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+        List<Book> list = new ArrayList<>();
+        BlockingQueue<Book> bookQueue = new LinkedBlockingQueue<>();
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    Book book = new Book().setByJSONObject(response, context);
+                    bookQueue.add(book);
+                },
+                error -> {
+                    handleErrorResponse(error, context);
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return headers;
+            }
+        };
+
+        requestQueue.add(request);
+        try {
+            return bookQueue.poll(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
+
     public Book setByJSONObject(JSONObject response, Context context){
         try {
             this.id = response.has("id") ? response.getInt("id") : -1;
@@ -310,18 +369,16 @@ public class Book {
             this.rating = response.has("rating") ? Double.parseDouble(response.getString("rating")) : -1;
             this.availability = response.has("availability") && response.getBoolean("availability");
             this.ownerId = response.has("account_type") ? response.getInt("account_type") : -1;
+
+            User u = new User();
+            u.setId(this.ownerId);
+            this.owner = u;
+
         } catch (JSONException e) {
             Log.e("error getting book", Objects.requireNonNull(e.getMessage()));
         }
 
         return this;
-    }
-
-    public User getOwner(Context context) {
-        if (this.ownerId > -1) {
-            return new User().getUserById(this.ownerId, context);
-        }
-        return null;
     }
 
     public Book save(Context context) {
@@ -366,7 +423,7 @@ public class Book {
             jsonBody.put("author", book.author);
             jsonBody.put("genre", book.genre);
             jsonBody.put("requirements_loan", book.requirementsLoan);
-            jsonBody.put("owner", User.getAuthenticatedUser().getId());
+            jsonBody.put("owner", User.getAuthenticatedUser(context).getId());
             jsonBody.put("availability", book.availability);
 
             if (imageFile != null) {
@@ -431,7 +488,7 @@ public class Book {
             jsonBody.put("author", book.author);
             jsonBody.put("genre", book.genre);
             jsonBody.put("requirements_loan", book.requirementsLoan);
-            jsonBody.put("owner", User.getAuthenticatedUser().getId());
+            jsonBody.put("owner", User.getAuthenticatedUser(context).getId());
             jsonBody.put("availability", book.availability);
         } catch (JSONException e) {
             e.printStackTrace();
