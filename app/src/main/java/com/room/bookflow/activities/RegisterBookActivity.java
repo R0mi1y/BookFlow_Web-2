@@ -1,5 +1,6 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.components.Utilitary.convertBitmapToFile;
 import static com.room.bookflow.components.Utilitary.popUp;
 
 import androidx.annotation.NonNull;
@@ -48,13 +49,24 @@ public class RegisterBookActivity extends AppCompatActivity {
         binding.backBtn3.setOnClickListener(backButtonClickListener);
 
         binding.registerBook.setOnClickListener(v -> {
+            if (
+                    !(!binding.title.getText().toString().replaceAll("\\s+", " ").equals("") &&
+                    !binding.author.getText().toString().replaceAll("\\s+", " ").equals("") &&
+                    !binding.genre.getText().toString().replaceAll("\\s+", " ").equals("") &&
+                    !binding.summary.getText().toString().replaceAll("\\s+", " ").equals("") &&
+                    !binding.requirements.getText().toString().replaceAll("\\s+", " ").equals(""))
+            ) {
+                popUp("Erro", "Preencha todos os campos antes de cadastrar o livro!", this);
+                return;
+            }
+
             new Thread(() -> {
-                Book book = new Book("", binding.title.getText().toString(), binding.author.getText().toString(), binding.genre.getText().toString(), binding.summary.getText().toString(), binding.requirements.getText().toString(), false, User.getAuthenticatedUser(getApplicationContext()).getId());
+                Book book = new Book("", binding.title.getText().toString(), binding.author.getText().toString(), binding.genre.getText().toString(), binding.summary.getText().toString(), binding.requirements.getText().toString(), true, User.getAuthenticatedUser(getApplicationContext()).getId());
 
                 if (hasImage){
-                    book = book.uploadImage(book, imageBitMap, this);
+                    book = book.registerBook(convertBitmapToFile(this, imageBitMap, "cover.png"), this);
                 } else {
-                    book = book.save(this);
+                    book = book.registerBook(this);
                 }
 
                 try {

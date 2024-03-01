@@ -198,7 +198,7 @@
           android:ems="10"
           android:foregroundGravity="center"
           android:gravity="start"
-          android:hint="Condições para empréstimos"
+          android:hint="Resumo"
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"

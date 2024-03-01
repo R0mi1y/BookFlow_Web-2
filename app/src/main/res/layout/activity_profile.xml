@@ -99,7 +99,6 @@
                 android:layout_height="30dp" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -109,12 +108,11 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/title"
+                android:id="@+id/name"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="24dp"
-                android:autoText="true"
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
@@ -129,7 +127,6 @@
                 android:textColorLink="#FFFFFF" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -139,12 +136,11 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/author"
+                android:id="@+id/email"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="24dp"
-                android:autoText="true"
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
@@ -159,7 +155,6 @@
                 android:textColorLink="#FFFFFF" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -169,12 +164,11 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/genre"
+                android:id="@+id/phone"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="24dp"
-                android:autoText="true"
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
@@ -189,7 +183,6 @@
                 android:textColorLink="#FFFFFF" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -199,7 +192,7 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/resume"
+                android:id="@+id/biography"
                 android:layout_width="350dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
@@ -207,6 +200,7 @@
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
+                android:gravity="top"
                 android:hint="Condições para empréstimos"
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
