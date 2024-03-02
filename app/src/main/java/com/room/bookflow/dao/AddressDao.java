@@ -19,6 +19,9 @@ public interface AddressDao {
     @Query("Select * FROM address_table WHERE address_id==:id")
     public Address getById(long id);
 
+    @Query("DELETE FROM address_table WHERE 1")
+    public void delAll();
+
     @Insert
     public long insert(Address address);
 

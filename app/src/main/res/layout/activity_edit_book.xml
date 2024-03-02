@@ -145,7 +145,6 @@
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
-          android:text="Título"
           android:textColor="#FFFFFF"
           android:textColorHighlight="#FFFFFF"
           android:textColorHint="#A3A3A3"
@@ -165,7 +164,6 @@
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
-          android:text="Autor"
           android:textColor="#FFFFFF"
           android:textColorHighlight="#FFFFFF"
           android:textColorHint="#A3A3A3"
@@ -185,14 +183,13 @@
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
-          android:text="Genêro"
           android:textColor="#FFFFFF"
           android:textColorHighlight="#FFFFFF"
           android:textColorHint="#A3A3A3"
           android:textColorLink="#FFFFFF" />
 
       <EditText
-          android:id="@+id/resume"
+          android:id="@+id/summary"
           android:layout_width="350dp"
           android:layout_height="120dp"
           android:layout_gravity="center"
@@ -200,11 +197,30 @@
           android:background="@drawable/default_border"
           android:ems="10"
           android:foregroundGravity="center"
+          android:gravity="start"
+          android:hint="Resumo"
+          android:inputType="text|textEmailAddress"
+          android:padding="10dp"
+          android:shadowColor="#FFFFFF"
+          android:textColor="#FFFFFF"
+          android:textColorHighlight="#FFFFFF"
+          android:textColorHint="#A3A3A3"
+          android:textColorLink="#FFFFFF" />
+
+      <EditText
+          android:id="@+id/requirements"
+          android:layout_width="350dp"
+          android:layout_height="120dp"
+          android:layout_gravity="center"
+          android:layout_marginBottom="24dp"
+          android:background="@drawable/default_border"
+          android:ems="10"
+          android:foregroundGravity="center"
+          android:gravity="start"
           android:hint="Condições para empréstimos"
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
-          android:text="Resumo"
           android:textColor="#FFFFFF"
           android:textColorHighlight="#FFFFFF"
           android:textColorHint="#A3A3A3"
@@ -218,20 +234,18 @@
           android:gravity="center"
           android:orientation="horizontal">
 
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Switch" />
+          <Switch
+              android:id="@+id/avaliability"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:checked="true"
+              android:enabled="true"
+              android:fontFamily="@font/rosarivo_regular"
+              android:text="Indisponível"
+              android:textColor="#FFFFFF"
+              android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Indisponivel"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
       </LinearLayout>
 
       <Space
@@ -247,7 +261,7 @@
           app:cardElevation="0dp">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/salvar_book"
+            android:id="@+id/save_book"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

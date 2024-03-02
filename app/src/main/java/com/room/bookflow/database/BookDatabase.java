@@ -6,21 +6,21 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.room.bookflow.dao.UserDao;
-import com.room.bookflow.models.Address;
+import com.room.bookflow.dao.BookDao;
+import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
 
-@Database(entities = {User.class, Address.class}, version = 1)
-public abstract class UserDatabase extends RoomDatabase {
-    public abstract UserDao getDao();
-    private static volatile UserDatabase INSTANCE;
+@Database(entities = {Book.class, User.class}, version = 1)
+public abstract class BookDatabase extends RoomDatabase {
+    public abstract BookDao getDao();
+    private static volatile BookDatabase INSTANCE;
 
-    public static UserDatabase getDatabase(final Context context) {
+    public static BookDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (UserDatabase.class) {
+            synchronized (BookDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    UserDatabase.class, "book_flow")
+                                    BookDatabase.class, "book_flow")
                             .fallbackToDestructiveMigration()
                             .build();
                 }

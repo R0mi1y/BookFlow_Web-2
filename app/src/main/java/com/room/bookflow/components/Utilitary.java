@@ -2,9 +2,12 @@ package com.room.bookflow.components;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,6 +21,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.room.bookflow.R;
+import com.room.bookflow.activities.ListBooksActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +36,7 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 
 public class Utilitary {
 
@@ -136,6 +141,27 @@ public class Utilitary {
         AlertDialog alertDialog = builder.create();
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
 
+        alertDialog.show();
+    }
+
+    public static void showInputDialog(Context context, String title, String searchCamp, Consumer<String> positiveClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.dialog_input, null);
+
+        final EditText editText = view.findViewById(R.id.editText);
+        editText.setText(searchCamp);
+
+        builder.setView(view)
+                .setTitle(title)
+                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("OK", (dialog, which) -> {
+                    String userInput = editText.getText().toString();
+                    positiveClickListener.accept(userInput);
+                });
+
+        AlertDialog alertDialog = builder.create();
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
         alertDialog.show();
     }
 
