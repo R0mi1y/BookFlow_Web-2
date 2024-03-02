@@ -88,7 +88,7 @@ public class User {
     private Address address;
 
     public User(){
-        this.wishlist = new ArrayList<Book>();
+        this.wishlist = new ArrayList<>();
     }
 
     public User getUserById(Context context) {
@@ -103,16 +103,16 @@ public class User {
     }
 
     public User getUserById(int id, Context context) {
-        String url = context.getString(R.string.api_url) + "/api/user/" + Integer.toString(id) + "/";
+        String url = context.getString(R.string.api_url) + "/api/user/" + id + "/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         String authToken = User.getAccessToken(context);
 
         if (authToken == null) {
-            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+            Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             showToast(context, "Login expirado!");
-            ((Activity) context).startActivity(intent);
+            context.startActivity(intent);
             return null;
         }
 
@@ -124,9 +124,8 @@ public class User {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     if (response.has("id")) {
-                        User user = new User();
-                        user.setByJSONObject(response, context);
-                        userQueue.add(user);
+                        this.setByJSONObject(response, context);
+                        userQueue.add(this);
                     } else {
                         showToast(context, "Erro buscando usuário!");
                         Log.e("Getting user", "Erro buscando usuário!");

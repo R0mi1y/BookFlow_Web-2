@@ -234,20 +234,18 @@
           android:gravity="center"
           android:orientation="horizontal">
 
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Switch" />
+          <Switch
+              android:id="@+id/avaliability"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:checked="true"
+              android:enabled="true"
+              android:fontFamily="@font/rosarivo_regular"
+              android:text="Indisponível"
+              android:textColor="#FFFFFF"
+              android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Indisponivel"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
       </LinearLayout>
 
       <Space
@@ -263,7 +261,7 @@
           app:cardElevation="0dp">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/salvar_book"
+            android:id="@+id/save_book"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -80,71 +80,111 @@
                 android:layout_height="30dp" />
 
             <TextView
-                android:layout_width="350dp"
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:fontFamily="@font/rosarivo_regular"
+                android:text="Nome de usuário:"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/default_border"
+                android:ems="10"
+                android:foregroundGravity="center"
+                android:padding="10dp"
+                android:shadowColor="#FFFFFF"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF"
+                android:textColorHint="#A3A3A3"
+                android:textColorLink="#FFFFFF" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:text="Nome:"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/name"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
-                android:text="Nome"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
                 android:textColorLink="#FFFFFF" />
 
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:text="Email:"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/email"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
-                android:text="Email"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
                 android:textColorLink="#FFFFFF" />
 
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:text="Telefone:"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
-            <EditText
+            <TextView
                 android:id="@+id/phone"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/default_border"
                 android:ems="10"
@@ -152,26 +192,29 @@
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
-                android:text="phone"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
                 android:textColorLink="#FFFFFF" />
 
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:text="Biografia:"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
-            <EditText
+            <TextView
                 android:id="@+id/biography"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/default_border"
                 android:ems="10"
@@ -180,25 +223,28 @@
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
-                android:text="Biografia"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
                 android:textColorLink="#FFFFFF" />
 
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:text="Localização:"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <TableLayout
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:background="@drawable/default_border"
                 android:gravity="center"
                 android:padding="10dp">
@@ -212,7 +258,7 @@
                         android:paddingRight="7dp"
                         android:text="Rua:"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/street"
@@ -220,7 +266,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/open_sans_light"
 
-                        android:text="Rua7"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp" />
                 </TableRow>
@@ -234,7 +279,7 @@
                         android:paddingRight="7dp"
                         android:text="Bairro:"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/district"
@@ -242,7 +287,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/open_sans_light"
 
-                        android:text="Centro"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp" />
                 </TableRow>
@@ -257,7 +301,7 @@
                         android:paddingRight="7dp"
                         android:text="Cidade:"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/city"
@@ -266,7 +310,6 @@
                         android:fontFamily="@font/open_sans_light"
 
 
-                        android:text="Guanambi"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp" />
                 </TableRow>
@@ -281,7 +324,7 @@
                         android:paddingRight="7dp"
                         android:text="Estado:"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/state"
@@ -290,7 +333,6 @@
                         android:fontFamily="@font/open_sans_light"
 
 
-                        android:text="Bahia"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp" />
                 </TableRow>
@@ -305,7 +347,7 @@
                         android:paddingRight="7dp"
                         android:text="Código Postal:"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/postal_code"
@@ -313,7 +355,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/open_sans_light"
 
-                        android:text="46430-000"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp" />
                 </TableRow>
@@ -326,18 +367,22 @@
                 android:layout_height="24dp" />
 
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:text="Contato:"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <TableLayout
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:background="@drawable/default_border"
                 android:gravity="center"
                 android:padding="10dp">
@@ -351,14 +396,13 @@
                         android:paddingRight="7dp"
                         android:text="Whatsapp:"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/open_sans_light"
 
-                        android:text="77988537742"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp" />
                 </TableRow>
@@ -372,14 +416,13 @@
                         android:paddingRight="7dp"
                         android:text="Email:"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/open_sans_light"
 
-                        android:text="email@gmail.com"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp" />
                 </TableRow>

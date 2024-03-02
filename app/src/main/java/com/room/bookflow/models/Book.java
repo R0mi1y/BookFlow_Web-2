@@ -56,7 +56,9 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.Url;
 
 import java.io.File;
 
@@ -89,6 +91,18 @@ public class Book {
     }
 
     public Book() {
+    }
+
+    public Book(String cover, int id, String title, String author, String genre, String summary, String requirementsLoan, boolean availability) {
+        this.id = id;
+        this.ownerId = -1;
+        this.cover = cover;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.summary = summary;
+        this.requirementsLoan = requirementsLoan;
+        this.availability = availability;
     }
 
     public Book(String cover, String title, String author, String genre, String summary, String requirementsLoan, boolean availability, int ownerId) {
@@ -360,7 +374,7 @@ public class Book {
             this.isInWishlist = response.has("is_in_wishlist") && response.getBoolean("is_in_wishlist");
             this.rating = response.has("rating") ? Double.parseDouble(response.getString("rating")) : -1;
             this.availability = response.has("availability") && response.getBoolean("availability");
-            this.ownerId = response.has("account_type") ? response.getInt("account_type") : -1;
+            this.ownerId = response.has("owner") ? response.getInt("owner") : -1;
 
             User u = new User();
             u.setId(this.ownerId);
@@ -405,7 +419,7 @@ public class Book {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        LivroApi livroApi = retrofit.create(LivroApi.class);
+        BookApi bookApi = retrofit.create(BookApi.class);
 
         RequestBody tituloBody = createRequestBody(book.title);
         RequestBody autorBody = createRequestBody(book.author);
@@ -422,9 +436,9 @@ public class Book {
         if(image != null) {
             imagemBody = RequestBody.create(MediaType.parse("image/*"), image);
             MultipartBody.Part coverPart = MultipartBody.Part.createFormData("cover", image.getName(), imagemBody);
-            call = livroApi.cadastrarLivro("Bearer " + authToken, tituloBody, autorBody, genreBody, summaryBody, requirementsLoanBody, ownerBody, coverPart);
+            call = bookApi.registerBook("Bearer " + authToken, tituloBody, autorBody, genreBody, summaryBody, requirementsLoanBody, ownerBody, coverPart);
         } else {
-            call = livroApi.cadastrarLivro("Bearer " + authToken, tituloBody, autorBody, genreBody, summaryBody, requirementsLoanBody, ownerBody);
+            call = bookApi.registerBook("Bearer " + authToken, tituloBody, autorBody, genreBody, summaryBody, requirementsLoanBody, ownerBody);
         }
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -462,6 +476,93 @@ public class Book {
         }
     }
 
+    public static Book updateBook(Book book, Context context) throws IOException {
+        return Book.updateBook(book, null, context);
+    }
+
+    public Book updateBook(File imageFile, Context context) {
+        return Book.updateBook(this, imageFile, context);
+    }
+
+    public static Book updateBook(Book book, File image, Context context) {
+        String authToken = User.getAccessToken(context);
+
+        if (authToken == null) {
+            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
+            context.startActivity(intent);
+            return null;
+        }
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(context.getString(R.string.api_url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        BookApi bookApi = retrofit.create(BookApi.class);
+
+        RequestBody tituloBody = createRequestBody(book.title);
+        RequestBody autorBody = createRequestBody(book.author);
+        int ownerId = User.getAuthenticatedUser(context).getId();
+        RequestBody ownerBody = createRequestBody(String.valueOf(ownerId));
+        RequestBody genreBody = createRequestBody(book.genre);
+        RequestBody summaryBody = createRequestBody(book.summary);
+        RequestBody availabilityBody = createRequestBody(String.valueOf(book.availability));
+        RequestBody requirementsLoanBody = createRequestBody(book.requirementsLoan);
+
+        BlockingQueue<Book> bookQueue = new LinkedBlockingQueue<>();
+
+        RequestBody imagemBody;
+        Call<ResponseBody> call;
+        if(image != null) {
+            imagemBody = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part coverPart = MultipartBody.Part.createFormData("cover", image.getName(), imagemBody);
+            call = bookApi.updateBook("api/book/" + book.id + "/","Bearer " + authToken, tituloBody, autorBody, genreBody, summaryBody, requirementsLoanBody, ownerBody, availabilityBody, coverPart);
+        } else {
+            call = bookApi.updateBook("api/book/" + book.id + "/", "Bearer " + authToken, tituloBody, autorBody, genreBody, summaryBody, requirementsLoanBody, ownerBody, availabilityBody);
+        }
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String json = response.body().string();
+
+                        bookQueue.add(new Book().setByJSONObject(new JSONObject(json), context));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    popUp("Sucesso!", "Livro cadastrado com sucesso", context);
+                } else {
+                    try {
+                        String errorBody = response.errorBody().string();
+                        Log.e("RegisteringBook", errorBody);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    popUp("Falha!", "Erro no servidor, tente novamente mais tarde!", context);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RegisteringBook", t.getMessage());
+            }
+        });
+
+        try {
+            return bookQueue.poll(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            showToast(context, "Conexão perdida!");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private static RequestBody createRequestBody(String value) {
         return RequestBody.create(MediaType.parse("text/plain"), value);
     }
@@ -473,10 +574,10 @@ public class Book {
     }
 }
 
-interface LivroApi {
+interface BookApi {
     @Multipart
     @POST("api/book/")
-    Call<ResponseBody> cadastrarLivro(
+    Call<ResponseBody> registerBook(
             @Header("Authorization") String authorizationHeader,
             @Part("title") RequestBody title,
             @Part("author") RequestBody author,
@@ -489,7 +590,7 @@ interface LivroApi {
 
     @Multipart
     @POST("api/book/")
-    Call<ResponseBody> cadastrarLivro(
+    Call<ResponseBody> registerBook(
             @Header("Authorization") String authorizationHeader,
             @Part("title") RequestBody title,
             @Part("author") RequestBody author,
@@ -497,5 +598,34 @@ interface LivroApi {
             @Part("summary") RequestBody summary,
             @Part("requirements_loan") RequestBody requirements_loan,
             @Part("owner") RequestBody owner
+    );
+
+    @Multipart
+    @PUT
+    Call<ResponseBody> updateBook(
+            @Url String url,
+            @Header("Authorization") String authorizationHeader,
+            @Part("title") RequestBody title,
+            @Part("author") RequestBody author,
+            @Part("genre") RequestBody genre,
+            @Part("summary") RequestBody summary,
+            @Part("requirements_loan") RequestBody requirements_loan,
+            @Part("owner") RequestBody owner,
+            @Part("availability") RequestBody availability,
+            @Part MultipartBody.Part cover
+    );
+
+    @Multipart
+    @PUT
+    Call<ResponseBody> updateBook(
+            @Url String url,
+            @Header("Authorization") String authorizationHeader,
+            @Part("title") RequestBody title,
+            @Part("author") RequestBody author,
+            @Part("genre") RequestBody genre,
+            @Part("summary") RequestBody summary,
+            @Part("requirements_loan") RequestBody requirements_loan,
+            @Part("owner") RequestBody owner,
+            @Part("availability") RequestBody availability
     );
 }
