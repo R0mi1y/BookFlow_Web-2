@@ -44,12 +44,15 @@ public class DetailBook extends AppCompatActivity {
         book = new Book();
         String bookId = getIntent().getStringExtra("bookId");
 
+        setAvailabilityImage();
+
         if (bookId != null) {
             book.setId(Integer.parseInt(bookId));
             new Thread(() -> {
                 book.getBookById(this);
                 setIsFavorited(book.isInWishlist());
                 setDetails();
+
 
                 binding.favoriteBtn.setOnClickListener(view -> {
                     toggleFavorite(bookId);
@@ -135,9 +138,20 @@ public class DetailBook extends AppCompatActivity {
     private void setIsFavorited(boolean favorited) {
         isFavorited = favorited;
         if (favorited) {
-            binding.favoriteBtn.setImageResource(R.drawable.solarstarfilled); // Recurso de imagem para favorito ativado
+            binding.favoriteBtn.setImageResource(R.drawable.solarstarfilled);
         } else {
-            binding.favoriteBtn.setImageResource(R.drawable.solarstaroutline); // Recurso de imagem para favorito desativado
+            binding.favoriteBtn.setImageResource(R.drawable.solarstaroutline);
         }
     }
+
+    private void setAvailabilityImage() {
+        ImageView imageView = findViewById(R.id.availability_img);
+
+        if (book != null && book.isAvailability()) {
+            imageView.setImageResource(R.drawable.avalible_plate);
+        } else {
+            imageView.setImageResource(R.drawable.unvalible_plate);
+        }
+    }
+
 }
