@@ -143,7 +143,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int itemSelecionado = item.getItemId();
 
         if(itemSelecionado == R.id.edit_profile){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+            Intent intent = new Intent(HomeActivity.this, ProfileView.class);
+            startActivity(intent);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
         }else if(itemSelecionado == R.id.notifications){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NotificationsFragment()).commit();
         }else if(itemSelecionado == R.id.loan){

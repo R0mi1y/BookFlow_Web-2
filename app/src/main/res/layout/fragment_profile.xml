@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorGray_200"
-    tools:context=".fragments.ProfileFragment">
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="16dp" />
+    tools:context=".activities.ProfileView">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,10 +21,14 @@
 
             <!-- Seta de voltar -->
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"/>
+                android:gravity="start" />
 
             <!-- Título "Profile" -->
             <TextView
@@ -209,4 +209,4 @@
         </LinearLayout>
     </ScrollView>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

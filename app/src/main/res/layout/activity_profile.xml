@@ -1,307 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:background="@color/colorGray_200"
-    android:orientation="vertical"
-    tools:context=".activities.ProfileActivity">
+    tools:context=".activities.ProfileView">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp">
 
         <LinearLayout
-            android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
 
-            <Space
-                android:id="@+id/space"
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:foregroundGravity="center"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/back_btn1"
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="#00FFFFFF"
-                    android:textColor="#FFFFFF"
-                    android:textColorHighlight="#FFFFFF"
-                    android:textColorHint="#EDEDED"
-                    android:textColorLink="#FFFFFF"
-                    app:icon="@drawable/baseline_arrow_back_ios_new_24"
-                    app:iconGravity="start"
-                    app:iconSize="35dp"
-                    app:iconTint="#FFFFFF"
-                    app:rippleColor="#FFFFFF" />
-
-                <Button
-                    android:id="@+id/back_btn3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="#00626262"
-                    android:fontFamily="@font/rosarivo"
-                    android:gravity="start|center_vertical"
-                    android:padding="0dp"
-                    android:text="  Perfil"
-                    android:textColor="#FFFFFF"
-                    android:textSize="42sp" />
-            </LinearLayout>
-
-
+            <!-- Seta de voltar -->
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
-            <ImageView
-                android:id="@+id/cover_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:foregroundGravity="center"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/default_cover_bg" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start" />
 
-
-            <ImageView
-                android:id="@+id/imageView6"
+            <!-- Título "Profile" -->
+            <TextView
+                android:id="@+id/profileText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="275sp"
-                android:src="@drawable/camera" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <TextView
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/rosarivo_regular"
-                android:text="Nome:"
-                android:textColor="#FFFFFF"
+                android:layout_gravity="center_horizontal"
+                android:text="Profile"
+                android:textColor="@color/colorBlanchedalmond_100"
                 android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="350dp"
+            <!-- Imagem de perfil -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:background="@drawable/ellipse2"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/cameraIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignEnd="@id/profileImage"
+                    android:layout_alignBottom="@id/profileImage"
+                    android:layout_marginEnd="-6dp"
+                    android:layout_marginBottom="-3dp"
+                    android:src="@drawable/solar_camera_minimalistic_bold" />
+
+            </RelativeLayout>
+
+            <!-- Nome -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/default_border"
-                android:ems="10"
-                android:foregroundGravity="center"
-                android:hint="Titulo"
-                android:inputType="text|textEmailAddress"
-                android:padding="10dp"
-                android:shadowColor="#FFFFFF"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/rosarivo_regular"
                 android:text="Nome"
-                android:textColor="#FFFFFF"
-                android:textColorHighlight="#FFFFFF"
-                android:textColorHint="#A3A3A3"
-                android:textColorLink="#FFFFFF" />
+                android:textColor="@color/colorBlanchedalmond_100"
+                android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/rosarivo_regular"
-                android:text="Email:"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+            <!-- EditText para o Nome -->
 
             <EditText
-                android:id="@+id/email"
-                android:layout_width="350dp"
+                android:id="@+id/editTextName"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/default_border"
-                android:ems="10"
-                android:foregroundGravity="center"
-                android:hint="Autor"
-                android:inputType="text|textEmailAddress"
-                android:padding="10dp"
-                android:shadowColor="#FFFFFF"
+                android:background="@drawable/edit_text"
+                android:gravity="left"
+                android:hint="Nome"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="@color/colorBlanchedalmond_60" />
+
+            <!-- Email -->
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="0dp"
+                android:fontFamily="@font/rosarivo_regular"
                 android:text="Email"
-                android:textColor="#FFFFFF"
-                android:textColorHighlight="#FFFFFF"
-                android:textColorHint="#A3A3A3"
-                android:textColorLink="#FFFFFF" />
+                android:textColor="@color/colorBlanchedalmond_100"
+                android:textSize="16sp" />
+
+            <!-- EditText para o Email -->
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_text"
+                android:gravity="left"
+                android:hint="Email"
+                android:padding="8dp"
+                android:textColorHint="@color/colorBlanchedalmond_60" />
+
+            <!-- Telefone -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="0dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Telefone:"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/phone"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/default_border"
-                android:ems="10"
-                android:foregroundGravity="center"
-                android:hint="Gênero"
-                android:inputType="text|textEmailAddress"
-                android:padding="10dp"
-                android:shadowColor="#FFFFFF"
                 android:text="Telefone"
-                android:textColor="#FFFFFF"
-                android:textColorHighlight="#FFFFFF"
-                android:textColorHint="#A3A3A3"
-                android:textColorLink="#FFFFFF" />
+                android:textColor="@color/colorBlanchedalmond_100"
+                android:textSize="16sp" />
+
+            <!-- EditText para o Telefone -->
+            <EditText
+                android:id="@+id/editTextPhone"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_text"
+                android:gravity="left"
+                android:hint="Telefone"
+                android:padding="8dp"
+                android:textColorHint="@color/colorBlanchedalmond_60" />
+
+            <!-- Biografia -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="0dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Biografia:"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/biography"
-                android:layout_width="350dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/default_border"
-                android:ems="10"
-                android:foregroundGravity="center"
-                android:gravity="top"
-                android:hint="Condições para empréstimos"
-                android:inputType="text|textEmailAddress"
-                android:padding="10dp"
-                android:shadowColor="#FFFFFF"
                 android:text="Biografia"
-                android:textColor="#FFFFFF"
-                android:textColorHighlight="#FFFFFF"
-                android:textColorHint="#A3A3A3"
-                android:textColorLink="#FFFFFF" />
+                android:textColor="@color/colorBlanchedalmond_100"
+                android:textSize="16sp" />
 
+            <!-- EditText para a Biografia -->
+            <EditText
+                android:id="@+id/editTextBiography"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/edit_text"
+                android:gravity="top"
+                android:hint="Biografia"
+                android:minLines="4"
+                android:padding="8dp"
+                android:textColorHint="@color/colorBlanchedalmond_60" />
 
+            <!-- Botões -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnEditLoc"
+                android:layout_width="250dp"
+                android:layout_height="100px"
+                android:layout_gravity="center"
+                android:background="@drawable/button"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text="Editar Endereço"
+                android:textAllCaps="false"
+                android:textColor="@color/background1"
+                android:textSize="16sp" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="16dp" />
 
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:layout_width="350dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginBottom="12dp"-->
-<!--                app:cardCornerRadius="8dp"-->
-<!--                app:cardElevation="0dp">-->
-
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    android:id="@+id/salvar_book"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:background="#FFFFFF"-->
-<!--                    android:fontFamily="@font/rosarivo_regular"-->
-<!--                    android:text="Salvar"-->
-<!--                    android:textColor="#000000"-->
-<!--                    android:textStyle="bold" />-->
-
-<!--            </androidx.cardview.widget.CardView>-->
-
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSalvChanges"
+                android:layout_width="250dp"
+                android:layout_height="100px"
                 android:layout_gravity="center"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/deletar_book"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#FFFFFF"
-                    android:fontFamily="@font/rosarivo_regular"
-                    android:text="Editar Endereço"
-                    android:textColor="#000000"
-                    android:textStyle="bold" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/qrcode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#FFFFFF"
-                    android:fontFamily="@font/rosarivo_regular"
-                    android:text="Salvar Alterações"
-                    android:textColor="#000000"
-                    android:textStyle="bold" />
-
-            </androidx.cardview.widget.CardView>
+                android:background="@drawable/button"
+                android:drawableRight="@drawable/ionbook_with_margin"
+                android:fontFamily="@font/open_sans_semibold"
+                android:foregroundGravity="left"
+                android:gravity="center"
+                android:text="Salvar Alterações"
+                android:textAllCaps="false"
+                android:textColor="@color/background1"
+                android:textSize="16sp" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="16dp" />
+
+            <!-- Adicione outros elementos conforme necessário -->
 
         </LinearLayout>
     </ScrollView>
 
-    <ImageView
-        android:id="@+id/loading_gif"
-        android:layout_width="411dp"
-        android:layout_height="0dp"
-        android:background="#85000000"
-        android:duration="1000"
-        android:fromAlpha="0.0"
-        android:padding="150dp"
-        android:toAlpha="1.0"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout4"
-        app:srcCompat="@drawable/book" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
