@@ -77,6 +77,7 @@ public class ListBooksActivity extends AppCompatActivity {
 
         binding.homeBtn1.setOnClickListener(v -> finish());
         binding.homeBtn2.setOnClickListener(v -> finish());
+        binding.backBtn.setOnClickListener(v -> finish());
     }
 
     private void loadBooksForFilter(String filter, String search) {
