@@ -17,10 +17,19 @@ import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class DetailBook extends AppCompatActivity {
 
     Book book;
     ActivityDetailBookBinding binding;
+    boolean isFavorited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +46,23 @@ public class DetailBook extends AppCompatActivity {
 
         if (bookId != null) {
             book.setId(Integer.parseInt(bookId));
-            setDetails();
-        }
-        else popUp("Erro", "Livro não encontrado na base de dados, tente novamente mais tarde!", this);
+            new Thread(() -> {
+                book.getBookById(this);
+                setIsFavorited(book.isInWishlist());
+                setDetails();
+
+                binding.favoriteBtn.setOnClickListener(view -> {
+                    toggleFavorite(bookId);
+                });
+            }).start();
+
+        } else
+            popUp("Erro", "Livro não encontrado na base de dados, tente novamente mais tarde!", this);
+
     }
 
-    private void setDetails(){
-        new Thread(() -> {
-            book.getBookById(this);
+    private void setDetails() {
+
             User authenticated = User.getAuthenticatedUser(this);
 
             runOnUiThread(() -> {
@@ -53,9 +71,7 @@ public class DetailBook extends AppCompatActivity {
                 binding.genre.setText(book.getGenre());
 
                 ImageView iv = findViewById(R.id.cover);
-                Picasso.get()
-                        .load(book.getCover().contains("http") ? book.getCover() : getString(R.string.api_url) + book.getCover())
-                        .into(iv);
+                Picasso.get().load(book.getCover().contains("http") ? book.getCover() : getString(R.string.api_url) + book.getCover()).into(iv);
                 if (book.getOwnerId() == authenticated.getId()) {
                     binding.editBtn.setText("Editar");
                     Intent it = new Intent(DetailBook.this, EditBookActivity.class);
@@ -82,6 +98,46 @@ public class DetailBook extends AppCompatActivity {
                     });
                 }
             });
-        }).start();
+    }
+
+    public void toggleFavorite(String bookId) {
+        String apiUrl = getString(R.string.api_url);
+        String url = apiUrl + "/api/book/" + bookId + "/wishlist/";
+
+        Log.d("ToggleFavorite", url);
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder().url(url).addHeader("Content-Type", "application/json").addHeader("Authorization", "Bearer " + User.getAccessToken(this)).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("ToggleFavorite", "Erro ao favoritar livro", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.e("ToggleFavorite", "Erro ao favoritar livro: " + response.body().string());
+                    return;
+                }
+
+                runOnUiThread(() -> setIsFavorited(!isFavorited));
+
+
+            }
+        });
+
+
+    }
+
+    private void setIsFavorited(boolean favorited) {
+        isFavorited = favorited;
+        if (favorited) {
+            binding.favoriteBtn.setImageResource(R.drawable.solarstarfilled); // Recurso de imagem para favorito ativado
+        } else {
+            binding.favoriteBtn.setImageResource(R.drawable.solarstaroutline); // Recurso de imagem para favorito desativado
+        }
     }
 }

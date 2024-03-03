@@ -39,7 +39,7 @@
                 app:rippleColor="#FFFFFF" />
 
             <Button
-                android:id="@+id/home_btn_1"
+                android:id="@+id/home_btn"
                 android:layout_width="196dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
