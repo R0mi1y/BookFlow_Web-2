@@ -91,20 +91,6 @@
 
             </LinearLayout>
 
-
-            <!--            <Space-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="50dp" />-->
-
-<!--            <ImageView-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginTop="7dp"-->
-<!--                android:layout_marginBottom="15dp"-->
-
-<!--                android:src="@drawable/solarstaroutline" />-->
-
             <ImageButton
                 android:id="@+id/favorite_btn"
                 android:layout_width="30dp"
@@ -118,27 +104,37 @@
                 />
 
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/cover"
-                android:layout_gravity="center"
-                android:scaleType="fitXY"
-                android:layout_width="310dp"
-                android:layout_height="345dp"
-                app:shapeAppearanceOverlay="@style/circular"
-                android:layout_weight="1"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp">
 
-                android:src="@drawable/default_cover_bg"
-                />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/cover"
+                    android:layout_width="310dp"
+                    android:layout_height="345dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_cover_bg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintVertical_bias="0.5"
+                    app:shapeAppearanceOverlay="@style/circular" />
 
                 <ImageView
                     android:id="@+id/availability_img"
                     android:layout_width="165dp"
                     android:layout_height="165dp"
                     android:layout_gravity="right"
-                    android:layout_marginTop="-420dp"
-                    android:layout_marginRight="-15dp"
-                   />
-
+                    android:layout_marginTop="-80dp"
+                    android:layout_marginEnd="-70dp"
+                    app:layout_constraintEnd_toEndOf="@+id/cover"
+                    app:layout_constraintTop_toTopOf="@+id/cover"
+                    app:srcCompat="@drawable/avalible_plate" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <TextView
@@ -147,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="50dp"
-                android:layout_marginTop="300dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginRight="50dp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:gravity="center"

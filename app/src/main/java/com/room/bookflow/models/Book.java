@@ -518,11 +518,11 @@ public class Book {
 
         BlockingQueue<Book> bookQueue = new LinkedBlockingQueue<>();
 
-        RequestBody imagemBody;
+        RequestBody imageBody;
         Call<ResponseBody> call;
         if(image != null) {
-            imagemBody = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part coverPart = MultipartBody.Part.createFormData("cover", image.getName(), imagemBody);
+            imageBody = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part coverPart = MultipartBody.Part.createFormData("cover", image.getName(), imageBody);
             call = bookApi.updateBook("api/book/" + book.id + "/","Bearer " + authToken, tituloBody, autorBody, genreBody, summaryBody, requirementsLoanBody, ownerBody, availabilityBody, coverPart);
         } else {
             call = bookApi.updateBook("api/book/" + book.id + "/", "Bearer " + authToken, tituloBody, autorBody, genreBody, summaryBody, requirementsLoanBody, ownerBody, availabilityBody);

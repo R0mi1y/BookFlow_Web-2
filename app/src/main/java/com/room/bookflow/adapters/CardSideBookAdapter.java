@@ -44,15 +44,17 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Book item = bookList.get(position);
-        holder.title.setText(Utilitary.getTextReduced(item.getTitle(), 30));
-        holder.genre.setText(Utilitary.getTextReduced(item.getGenre(), 30));
-        Picasso.get()
-                .load(item.getCover().contains("http") ? item.getCover() : context.getString(R.string.api_url) + item.getCover())
+        Book book = bookList.get(position);
+        holder.title.setText(Utilitary.getTextReduced(book.getTitle(), 30));
+        holder.genre.setText(Utilitary.getTextReduced(book.getGenre(), 30));
+        holder.avaliabilityIcon.setImageResource(book.isAvailability() ? R.drawable.avalible_bookmark : R.drawable.unvalible_bookmark);
+        holder.favoriteIcon.setImageResource(book.isInWishlist() ? R.drawable.solarstarfilled : R.drawable.solarstaroutline);
+        if (!(book.getCover() == null || book.getCover().equals("null"))) Picasso.get()
+                .load(book.getCover().contains("http") ? book.getCover() : context.getString(R.string.api_url) + book.getCover())
                 .into(holder.cover);
         holder.layoutBook.setOnClickListener(view -> {
             Intent intent = new Intent(context, DetailBook.class);
-            intent.putExtra("bookId", String.valueOf(item.getId()));
+            intent.putExtra("bookId", String.valueOf(book.getId()));
 
             context.runOnUiThread(() -> {
                 context.startActivity(intent);
@@ -68,7 +70,7 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title, genre;
-        public ImageView cover;
+        public ImageView cover, avaliabilityIcon, favoriteIcon;
         public LinearLayout layoutBook;
 
         public ViewHolder(View view) {
@@ -77,6 +79,8 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
             genre = view.findViewById(R.id.genro);
             cover = view.findViewById(R.id.cover);
             layoutBook = view.findViewById(R.id.layoutCard);
+            avaliabilityIcon = view.findViewById(R.id.avaliability_icon);
+            favoriteIcon = view.findViewById(R.id.favorite_icon);
         }
     }
 }

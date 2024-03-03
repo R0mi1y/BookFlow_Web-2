@@ -4,7 +4,6 @@ import static com.room.bookflow.components.Utilitary.popUp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,10 +51,10 @@ public class DetailBook extends AppCompatActivity {
                 book.getBookById(this);
                 setIsFavorited(book.isInWishlist());
                 setDetails();
-
-
-                binding.favoriteBtn.setOnClickListener(view -> {
-                    toggleFavorite(bookId);
+                runOnUiThread(() -> {
+                    binding.favoriteBtn.setOnClickListener(view -> {
+                        new Thread(() -> toggleFavorite(bookId)).start();
+                    });
                 });
             }).start();
 
@@ -65,16 +64,14 @@ public class DetailBook extends AppCompatActivity {
     }
 
     private void setDetails() {
-
             User authenticated = User.getAuthenticatedUser(this);
-
             runOnUiThread(() -> {
                 binding.title.setText(book.getTitle());
                 binding.summary.setText(book.getSummary());
                 binding.genre.setText(book.getGenre());
 
-                ImageView iv = findViewById(R.id.cover);
-                Picasso.get().load(book.getCover().contains("http") ? book.getCover() : getString(R.string.api_url) + book.getCover()).into(iv);
+                ImageView iv = binding.cover;
+                if (!(book.getCover() == null || book.getCover().equals("null"))) Picasso.get().load(book.getCover().contains("http") ? book.getCover() : getString(R.string.api_url) + book.getCover()).into(iv);
                 if (book.getOwnerId() == authenticated.getId()) {
                     binding.editBtn.setText("Editar");
                     Intent it = new Intent(DetailBook.this, EditBookActivity.class);
@@ -117,6 +114,7 @@ public class DetailBook extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("ToggleFavorite", "Erro ao favoritar livro", e);
+                runOnUiThread(() -> popUp("Erro", "Erro ao adicionar aos favoritos, tente novamente mais tarde!", getApplicationContext()));
             }
 
             @Override
@@ -125,10 +123,7 @@ public class DetailBook extends AppCompatActivity {
                     Log.e("ToggleFavorite", "Erro ao favoritar livro: " + response.body().string());
                     return;
                 }
-
                 runOnUiThread(() -> setIsFavorited(!isFavorited));
-
-
             }
         });
 
@@ -145,7 +140,7 @@ public class DetailBook extends AppCompatActivity {
     }
 
     private void setAvailabilityImage() {
-        ImageView imageView = findViewById(R.id.availability_img);
+        ImageView imageView = binding.availabilityImg;
 
         if (book != null && book.isAvailability()) {
             imageView.setImageResource(R.drawable.avalible_plate);
