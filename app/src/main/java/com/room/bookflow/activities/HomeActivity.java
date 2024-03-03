@@ -7,6 +7,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -39,10 +40,26 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
 
-public class HomeActivity extends AppCompatActivity {
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
+import com.room.bookflow.R;
+import com.room.bookflow.fragments.NotificationsFragment;
+import com.room.bookflow.fragments.ProfileFragment;
+
+
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityHomeBinding binding;
-
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
@@ -105,6 +122,39 @@ public class HomeActivity extends AppCompatActivity {
             listBookIntent.putExtra("search", text);
             startActivity(listBookIntent);
         }));
+
+        // MENU LATERAL
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) this);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Lidar com cliques nos itens do menu de navegação aqui
+        int itemSelecionado = item.getItemId();
+
+        if(itemSelecionado == R.id.edit_profile){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+        }else if(itemSelecionado == R.id.notifications){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NotificationsFragment()).commit();
+        }else if(itemSelecionado == R.id.loan){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+        }else if(itemSelecionado == R.id.nav_logout){
+            Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
+        }
+
+        // Iapós o usuário selecionar um item no menu lateral, o código fecha o menu, proporcionando uma experiência de navegação mais fluida.
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     ActivityResultLauncher<Intent> registerBook = registerForActivityResult(
@@ -148,4 +198,6 @@ public class HomeActivity extends AppCompatActivity {
         }
         executorService.shutdown();
     }
+
+
 }
