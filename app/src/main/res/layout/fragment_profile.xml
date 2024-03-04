@@ -110,6 +110,7 @@
                 android:gravity="center"
                 android:hint="Email"
                 android:padding="8dp"
+                android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
 
             <!-- Telefone -->
@@ -135,6 +136,7 @@
                 android:gravity="center"
                 android:hint="Telefone"
                 android:padding="8dp"
+                android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
 
             <!-- Biografia -->
@@ -161,6 +163,7 @@
                 android:hint="Biografia"
                 android:minLines="4"
                 android:padding="8dp"
+                android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
 
             <!-- Botões -->

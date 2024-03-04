@@ -84,6 +84,10 @@
 
             <!-- EditText para o Nome -->
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
             <EditText
                 android:id="@+id/editTextName"
                 android:layout_width="300dp"
@@ -112,6 +116,10 @@
                 android:textSize="16sp" />
 
             <!-- EditText para o Email -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
             <EditText
                 android:id="@+id/editTextEmail"
                 android:layout_width="300dp"
@@ -121,6 +129,7 @@
                 android:gravity="left"
                 android:hint="Email"
                 android:padding="8dp"
+                android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
 
             <!-- Telefone -->
@@ -139,6 +148,10 @@
                 android:textSize="16sp" />
 
             <!-- EditText para o Telefone -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
             <EditText
                 android:id="@+id/editTextPhone"
                 android:layout_width="300dp"
@@ -148,6 +161,7 @@
                 android:gravity="left"
                 android:hint="Telefone"
                 android:padding="8dp"
+                android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
 
             <!-- Biografia -->
@@ -166,6 +180,10 @@
                 android:textSize="16sp" />
 
             <!-- EditText para a Biografia -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
             <EditText
                 android:id="@+id/editTextBiography"
                 android:layout_width="300dp"
@@ -176,6 +194,7 @@
                 android:hint="Biografia"
                 android:minLines="4"
                 android:padding="8dp"
+                android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
 
             <!-- Botões -->

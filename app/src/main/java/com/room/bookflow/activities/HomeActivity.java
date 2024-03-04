@@ -151,7 +151,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }else if(itemSelecionado == R.id.loan){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
         }else if(itemSelecionado == R.id.nav_logout){
-            Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         // Iapós o usuário selecionar um item no menu lateral, o código fecha o menu, proporcionando uma experiência de navegação mais fluida.
