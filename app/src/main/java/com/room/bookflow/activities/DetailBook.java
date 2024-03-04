@@ -36,15 +36,9 @@ public class DetailBook extends AppCompatActivity {
         binding = ActivityDetailBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.backBtn.setOnClickListener(v -> {
-            finish();
-        });
-        binding.backBtn1.setOnClickListener(v -> {
-            finish();
-        });
-        binding.backButton.setOnClickListener(v -> {
-            finish();
-        });
+        binding.backBtn.setOnClickListener(v -> finish());
+        binding.backBtn1.setOnClickListener(v -> finish());
+        binding.backButton.setOnClickListener(v -> finish());
 
         book = new Book();
         String bookId = getIntent().getStringExtra("bookId");
