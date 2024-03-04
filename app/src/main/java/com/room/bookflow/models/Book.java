@@ -295,6 +295,7 @@ public class Book {
         List<Book> list = new ArrayList<>();
         BlockingQueue<List<Book>> bookQueue = new LinkedBlockingQueue<>();
 
+        String finalUrl = url;
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
                     for (int i = 0; i < response.length(); i++) {
@@ -303,7 +304,7 @@ public class Book {
                             Book book = new Book().setByJSONObject(jsonObject, context);
                             list.add(book);
                         } catch (JSONException e) {
-                            Log.e("Error getting book", Objects.requireNonNull(e.getMessage()));
+                            Log.e("Error getting book " + finalUrl, Objects.requireNonNull(e.getMessage()));
                         }
                     }
                     bookQueue.add(list);

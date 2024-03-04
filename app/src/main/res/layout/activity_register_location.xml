@@ -254,7 +254,7 @@
     </ScrollView>
 
     <ImageView
-        android:id="@+id/loading_gif"
+        android:id="@+id/qr_code"
         android:layout_width="411dp"
         android:layout_height="0dp"
         android:background="#85000000"

@@ -6,15 +6,18 @@ import static com.room.bookflow.components.Utilitary.popUp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.documentfile.provider.DocumentFile;
 import android.Manifest;
-import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.room.bookflow.R;
@@ -22,7 +25,12 @@ import com.room.bookflow.databinding.ActivityEditBookBinding;
 import com.room.bookflow.models.Book;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Objects;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -36,6 +44,8 @@ public class EditBookActivity extends AppCompatActivity {
     private Uri imageUri;
     private Bitmap imageBitMap;
     private Boolean hasImage = false;
+    private static final int REQUEST_CODE_PICK_DIRECTORY = 123;
+    int bookId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +58,7 @@ public class EditBookActivity extends AppCompatActivity {
         binding.backBtn2.setOnClickListener(v -> finish());
         binding.backBtn3.setOnClickListener(v -> finish());
 
-        int bookId = Integer.parseInt(Objects.requireNonNull(localIt.getStringExtra("bookId")));
+        bookId = Integer.parseInt(Objects.requireNonNull(localIt.getStringExtra("bookId")));
         String title = localIt.getStringExtra("title");
         String author = localIt.getStringExtra("author");
         String genre = localIt.getStringExtra("genre");
@@ -60,6 +70,7 @@ public class EditBookActivity extends AppCompatActivity {
         book = new Book(cover, bookId, title, author, genre, summary, requirementsLoan, availability);
 
         ImageView iv = binding.coverImage;
+        ImageView qrImage = binding.qrCode;
 
         binding.title.setText(book.getTitle());
         binding.author.setText(book.getAuthor());
@@ -72,6 +83,16 @@ public class EditBookActivity extends AppCompatActivity {
                 .load(book.getCover())
                 .into(iv);
 
+        String utlQrCode = getString(R.string.api_url) + "/api/book/" + bookId + "/get_qr?result=show";
+        Picasso.get()
+                .load(utlQrCode)
+                .into(qrImage);
+
+        binding.downloadQrcode.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+            startActivityForResult(intent, REQUEST_CODE_PICK_DIRECTORY);
+        });
+
         binding.saveBook.setOnClickListener(v -> updateBook());
 
         binding.insertCover.setOnClickListener(v -> showImageSourceDialog());
@@ -80,17 +101,14 @@ public class EditBookActivity extends AppCompatActivity {
     private void showImageSourceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Escolher fonte da imagem")
-                .setItems(new CharSequence[]{"Galeria", "Câmera"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                openGallery();
-                                break;
-                            case 1:
-                                takePhoto();
-                                break;
-                        }
+                .setItems(new CharSequence[]{"Galeria", "Câmera"}, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            openGallery();
+                            break;
+                        case 1:
+                            takePhoto();
+                            break;
                     }
                 });
 
@@ -142,6 +160,15 @@ public class EditBookActivity extends AppCompatActivity {
                         hasImage = true;
                     }
                     break;
+                case REQUEST_CODE_PICK_DIRECTORY:
+                    if (data != null && data.getData() != null) {
+                        Uri treeUri = data.getData();
+
+                        ImageDownloader imageDownloader = new ImageDownloader(getApplicationContext(), treeUri);
+
+                        imageDownloader.execute(getString(R.string.api_url) + "/api/book/" + bookId + "/get_qr?result=show");
+                    }
+                    break;
             }
         }
     }
@@ -176,5 +203,61 @@ public class EditBookActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+}
+
+class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+
+    private final Context context;
+    private final Uri treeUri;
+
+    public ImageDownloader(Context context, Uri treeUri) {
+        this.context = context;
+        this.treeUri = treeUri;
+    }
+
+    @Override
+    protected Bitmap doInBackground(String... params) {
+        String imageUrl = params[0];
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+
+            saveImageToSelectedDirectory(bitmap, "imagem_salva.png");
+
+            return bitmap;
+        } catch (Exception e) {
+            Log.e("ImageDownloader", "Erro ao baixar imagem: " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Bitmap result) {
+        popUp("Sucesso", "Imagem baixada com sucesso!", context);
+    }
+
+    private void saveImageToSelectedDirectory(Bitmap bitmap, String filename) {
+        try {
+            String directoryPath = getDirectoryPathFromUri(treeUri);
+
+            if (directoryPath != null) {
+                String filePath = directoryPath + File.separator + filename;
+                FileOutputStream outputStream = new FileOutputStream(filePath);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.close();
+            }
+        } catch (Exception e) {
+            Log.e("ImageDownloader", "Erro ao salvar imagem: " + e.getMessage());
+        }
+    }
+
+    private String getDirectoryPathFromUri(Uri treeUri) {
+        DocumentFile pickedDir = DocumentFile.fromTreeUri(context, treeUri);
+        return pickedDir != null ? pickedDir.getUri().getPath() : null;
     }
 }
