@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityEditBookBinding;
 import com.room.bookflow.models.Book;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -70,7 +72,6 @@ public class EditBookActivity extends AppCompatActivity {
         book = new Book(cover, bookId, title, author, genre, summary, requirementsLoan, availability);
 
         ImageView iv = binding.coverImage;
-        ImageView qrImage = binding.qrCode;
 
         binding.title.setText(book.getTitle());
         binding.author.setText(book.getAuthor());
@@ -83,10 +84,16 @@ public class EditBookActivity extends AppCompatActivity {
                 .load(book.getCover())
                 .into(iv);
 
-        String utlQrCode = getString(R.string.api_url) + "/api/book/" + bookId + "/get_qr?result=show";
+        ImageView qrImage = findViewById(R.id.qr_code);
+        String urlQrCode = getString(R.string.api_url) + "/api/book/" + bookId + "/get_qr/?result=show";
+        popUp("Log", urlQrCode, this);
+
         Picasso.get()
-                .load(utlQrCode)
+                .load(urlQrCode)  // Corrigir aqui para usar a variável urlQrCode
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
                 .into(qrImage);
+
 
         binding.downloadQrcode.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
