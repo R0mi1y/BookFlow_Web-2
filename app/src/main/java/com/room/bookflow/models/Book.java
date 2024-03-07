@@ -1,8 +1,8 @@
 package com.room.bookflow.models;
 
-import static com.room.bookflow.components.Utilitary.handleErrorResponse;
-import static com.room.bookflow.components.Utilitary.popUp;
-import static com.room.bookflow.components.Utilitary.showToast;
+import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.showToast;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,9 +25,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
-import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.LoginActivity;
-import com.room.bookflow.components.Utilitary;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,11 +33,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,15 +50,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Url;
-
-import java.io.File;
 
 @Entity(tableName = "book_table")
 public class Book {

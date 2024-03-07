@@ -5,12 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.room.bookflow.R;
+import com.room.bookflow.databinding.ActivityChatBinding;
 
-public class ProfileActivity extends AppCompatActivity {
-
+public class ChatActivity extends AppCompatActivity {
+    ActivityChatBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        binding = ActivityChatBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+
     }
 }

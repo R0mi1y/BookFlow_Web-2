@@ -1,7 +1,7 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.convertBitmapToFile;
-import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.convertBitmapToFile;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;

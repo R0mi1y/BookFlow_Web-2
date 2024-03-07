@@ -1,6 +1,6 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityDetailBookBinding;

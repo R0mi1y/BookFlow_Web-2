@@ -1,22 +1,13 @@
 package com.room.bookflow.models;
 
-import android.content.Context;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity(tableName = "address_table")
 public class Address {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "address_id")
+    @ColumnInfo(name = "id")
     private int id;
 
     private String street;

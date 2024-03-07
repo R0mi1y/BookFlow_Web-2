@@ -16,6 +16,10 @@
             android:id="@+id/loan"
             android:icon="@drawable/lista_books"
             android:title="Meus Empréstimos"/>
+        <item
+            android:id="@+id/scannerqr"
+            android:icon="@drawable/scanqrcode"
+            android:title="Scanear QRCode"/>
 
     </group>
     <item

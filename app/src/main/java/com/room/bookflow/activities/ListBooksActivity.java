@@ -4,13 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.widget.Button;
 
 import com.room.bookflow.R;
 import com.room.bookflow.adapters.CardSideBookAdapter;
-import com.room.bookflow.components.Utilitary;
+import com.room.bookflow.helpers.Utilitary;
 import com.room.bookflow.databinding.ActivityListBooksBinding;
 import com.room.bookflow.models.Book;
 
@@ -18,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ListBooksActivity extends AppCompatActivity {
 
@@ -42,13 +39,13 @@ public class ListBooksActivity extends AppCompatActivity {
 
         Button[] selectedButton = {filterToButtonMap.get(initialFilter)};
         if (!initialFilter.equals("SEARCH") && selectedButton[0] != null) {
-            selectedButton[0].setBackgroundColor(getColor(R.color.white));
+            selectedButton[0].setBackground(getDrawable(R.drawable.default_border_white));
             selectedButton[0].setTextColor(getColor(R.color.black));
 
             loadBooksForFilter(initialFilter);
         } else if (initialFilter.equals("SEARCH")) {
             if(selectedButton[0] != null) {
-                selectedButton[0].setBackgroundColor(getColor(R.color.transparent));
+                selectedButton[0].setBackground(getDrawable(R.drawable.default_border));
                 selectedButton[0].setTextColor(getColor(R.color.white));
             }
             searchCamp = thisIntent.getStringExtra("search");

@@ -1,26 +1,20 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.popUp;
-import static com.room.bookflow.components.Utilitary.hideLoadingScreen;
-import static com.room.bookflow.components.Utilitary.showLoadingScreen;
+import static com.room.bookflow.helpers.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.hideLoadingScreen;
+import static com.room.bookflow.helpers.Utilitary.showLoadingScreen;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
@@ -30,7 +24,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -38,17 +31,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
-import com.room.bookflow.database.AddressDatabase;
-import com.room.bookflow.database.UserDatabase;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.databinding.ActivityLoginBinding;
-import com.room.bookflow.models.Address;
 import com.room.bookflow.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -75,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             binding.password.setInputType(newInputType);
             binding.password.setSelection(binding.password.getText().length());
         });
-        doLogin();
+        /*doLogin();*/
 
         binding.loginBtn.setOnClickListener(v -> {
             binding.loginBtn.setEnabled(false);
@@ -243,15 +231,14 @@ public class LoginActivity extends AppCompatActivity {
     public void insertUser(User user) {
         new Thread(() -> {
             try {
-                UserDatabase userDatabase = UserDatabase.getDatabase(getApplicationContext());
-                AddressDatabase addressDatabase = AddressDatabase.getDatabase(getApplicationContext());
+                BookFlowDatabase database = BookFlowDatabase.getDatabase(getApplicationContext());
 
-                userDatabase.getDao().delAll();
-                addressDatabase.getDao().delAll();
+                database.userDao().delAll();
+                database.addressDao().delAll();
 
-                long userId = userDatabase.getDao().insert(user);
-                long addressId = addressDatabase.getDao().insert(user.getAddress());
-
+                long addressId = database.addressDao().insert(user.getAddress());
+                user.setAddress_id(addressId);
+                long userId = database.userDao().insert(user);
 
                 runOnUiThread(() -> {
                     Toast.makeText(LoginActivity.this, user.getFirstName() + " inserida com sucesso", Toast.LENGTH_SHORT).show();

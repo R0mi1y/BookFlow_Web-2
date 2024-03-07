@@ -7,7 +7,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.room.bookflow.models.Address;
-import com.room.bookflow.models.User;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface AddressDao {
     @Query("SELECT * FROM address_table")
     public List<Address> getAllAddress();
 
-    @Query("Select * FROM address_table WHERE address_id==:id")
+    @Query("Select * FROM address_table WHERE id==:id")
     public Address getById(long id);
 
     @Query("DELETE FROM address_table WHERE 1")

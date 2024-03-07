@@ -1,69 +1,55 @@
 package com.room.bookflow.models;
 
-import static com.room.bookflow.components.Utilitary.handleErrorResponse;
-import static com.room.bookflow.components.Utilitary.hideLoadingScreen;
-import static com.room.bookflow.components.Utilitary.popUp;
-import static com.room.bookflow.components.Utilitary.showToast;
+import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.showToast;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.security.Signature;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import androidx.core.util.Consumer;
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
 import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.LoginActivity;
-import com.room.bookflow.activities.SignUpActivity;
-import com.room.bookflow.database.UserDatabase;
+import com.room.bookflow.BookFlowDatabase;
 
 import org.json.JSONArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@Entity(tableName = "user_table")
+@Entity(tableName = "user_table", foreignKeys = { @ForeignKey(
+        entity = Address.class,
+        parentColumns = {"id"},
+        childColumns = {"address_id"},
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE
+)})
 public class User {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "user_id")
+    @ColumnInfo(name = "id")
     private int id = -1;
 
     private String refreshToken;
@@ -78,13 +64,15 @@ public class User {
     private String biography;
     private String dateJoined;
     private String password;
+    @NonNull
+    private long address_id;
 
     @Ignore
     private List<Integer> abstract_wishlist;
 
     @Ignore
     private List<Book> wishlist;
-    @Embedded
+    @Ignore
     private Address address;
 
     public User(){
@@ -97,8 +85,8 @@ public class User {
     }
 
     public static User getAuthenticatedUser(Context context){
-        UserDatabase userDatabase = UserDatabase.getDatabase(context);
-        User user = userDatabase.getDao().getFirst();
+        BookFlowDatabase userDatabase = BookFlowDatabase.getDatabase(context);
+        User user = userDatabase.userDao().getFirst();
         return user;
     }
 
@@ -171,7 +159,6 @@ public class User {
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
-                    ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Requisited", Toast.LENGTH_SHORT).show());
                     for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject jsonObject = response.getJSONObject(i);
@@ -271,11 +258,11 @@ public class User {
                         if (response.has("access")) {
                             tokenQueue.add(response.getString("access"));
                         } else {
-                            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+                            Intent intent = new Intent(context, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             showToast(context, "Login expirado!");
                             showToast(context, response.toString());
-                            ((Activity) context).startActivity(intent);
+                            context.startActivity(intent);
                             tokenQueue.add(null);
                         }
                     } catch (JSONException e) {
@@ -317,6 +304,22 @@ public class User {
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
+    }
+
+    public long getAddress_id() {
+        return address_id;
+    }
+
+    public void setAddress_id(long address_id) {
+        this.address_id = address_id;
+    }
+
+    public List<Integer> getAbstract_wishlist() {
+        return abstract_wishlist;
+    }
+
+    public void setAbstract_wishlist(List<Integer> abstract_wishlist) {
+        this.abstract_wishlist = abstract_wishlist;
     }
 
     public boolean isActive() {

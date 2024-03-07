@@ -1,9 +1,15 @@
-package com.room.bookflow.components;
+package com.room.bookflow.helpers;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +59,14 @@ public class Utilitary {
                     .load(R.drawable.book)
                     .into(gif);
         });
+    }
+
+    public static Boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) return true;
+        else return false;
     }
 
     public static void showToast(Context context, String message) {

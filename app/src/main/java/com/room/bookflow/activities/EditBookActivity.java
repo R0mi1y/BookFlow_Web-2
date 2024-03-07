@@ -1,7 +1,42 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.convertBitmapToFile;
-import static com.room.bookflow.components.Utilitary.popUp;
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.widget.ImageView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.room.bookflow.R;
+import com.room.bookflow.databinding.ActivityEditBookBinding;
+import com.room.bookflow.models.Book;
+import com.room.bookflow.helpers.Utilitary;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Objects;
+
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static com.room.bookflow.helpers.Utilitary.convertBitmapToFile;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -9,7 +44,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.documentfile.provider.DocumentFile;
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,17 +71,19 @@ import java.util.Objects;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
+
+
 public class EditBookActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 123;
-    ActivityEditBookBinding binding;
-    Book book;
+    private ActivityEditBookBinding binding;
+    private Book book;
     private Uri imageUri;
     private Bitmap imageBitMap;
     private Boolean hasImage = false;
     private static final int REQUEST_CODE_PICK_DIRECTORY = 123;
-    int bookId;
+    private int bookId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +91,6 @@ public class EditBookActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Intent localIt = getIntent();
-
-        binding.backBtn1.setOnClickListener(v -> finish());
-        binding.backBtn2.setOnClickListener(v -> finish());
-        binding.backBtn3.setOnClickListener(v -> finish());
 
         bookId = Integer.parseInt(Objects.requireNonNull(localIt.getStringExtra("bookId")));
         String title = localIt.getStringExtra("title");
@@ -71,8 +103,6 @@ public class EditBookActivity extends AppCompatActivity {
 
         book = new Book(cover, bookId, title, author, genre, summary, requirementsLoan, availability);
 
-        ImageView iv = binding.coverImage;
-
         binding.title.setText(book.getTitle());
         binding.author.setText(book.getAuthor());
         binding.summary.setText(book.getSummary());
@@ -80,20 +110,12 @@ public class EditBookActivity extends AppCompatActivity {
         binding.requirements.setText(book.getRequirementsLoan());
         binding.avaliability.setChecked(book.isAvailability());
 
-        Picasso.get()
-                .load(book.getCover())
-                .into(iv);
+        // Remove o uso do Picasso para carregar a imagem do QR Code e gera localmente
+        generateAndSetQRCode(String.valueOf(bookId));
 
-        ImageView qrImage = findViewById(R.id.qr_code);
-        String urlQrCode = getString(R.string.api_url) + "/api/book/" + bookId + "/get_qr/?result=show";
-        popUp("Log", urlQrCode, this);
-
-        Picasso.get()
-                .load(urlQrCode)  // Corrigir aqui para usar a variável urlQrCode
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
-                .into(qrImage);
-
+        binding.backBtn1.setOnClickListener(v -> finish());
+        binding.backBtn2.setOnClickListener(v -> finish());
+        binding.backBtn3.setOnClickListener(v -> finish());
 
         binding.downloadQrcode.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
@@ -210,6 +232,35 @@ public class EditBookActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private Bitmap generateQRCode(String text) {
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 512, 512);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            return bmp;
+        } catch (WriterException e) {
+            Log.e("QRCodeGenerator", "Could not generate QR Code", e);
+            return null;
+        }
+    }
+
+    private void generateAndSetQRCode(String bookId) {
+        Bitmap qrCodeBitmap = generateQRCode("Book ID: " + bookId);
+        if (qrCodeBitmap != null) {
+            ImageView qrImage = findViewById(R.id.qr_code);
+            qrImage.setImageBitmap(qrCodeBitmap);
+        } else {
+            Log.e("EditBookActivity", "Error generating QR Code");
+        }
     }
 }
 
