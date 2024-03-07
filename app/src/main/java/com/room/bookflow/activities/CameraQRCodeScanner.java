@@ -1,83 +1,121 @@
 package com.room.bookflow.activities;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
-import android.view.TextureView;
-import android.view.View;
-import android.widget.Button;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.Toast;
-import androidx.core.app.ActivityCompat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-public class CameraQRCodeScanner extends AppCompatActivity {
-    private static final int REQUEST_CAMERA_PERMISSION = 100;
+import com.bumptech.glide.Glide;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.ChecksumException;
+import com.google.zxing.FormatException;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Reader;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
 
-    private TextureView textureView;
+import java.io.IOException;
+
+public class CameraQRCodeScanner extends AppCompatActivity implements SurfaceHolder.Callback {
+
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    private SurfaceView surfaceView;
+    private SurfaceHolder surfaceHolder;
+    private boolean hasSurface;
+    private final String TAG = "CameraQRCodeScanner";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan);
+        setContentView(R.layout.activity_scan_qr_code);
 
-        textureView = findViewById(R.id.textureView);
-        Button scanButton = findViewById(R.id.scan_button);
-
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startScanning();
-            }
-        });
-
-        // Verifica e solicita permissão de câmera se necessário
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-        } else {
-            initializeCamera();
-        }
+        surfaceView = findViewById(R.id.surfaceView);
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+        hasSurface = false;
     }
 
-    private void initializeCamera() {
-        // Verifique se a permissão da câmera foi concedida
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            // A permissão foi concedida, inicialize a câmera
-            CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-            try {
-                // Abra a câmera e configure a visualização na TextureView
-                cameraManager.openCamera(cameraId, stateCallback, null);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    CAMERA_PERMISSION_REQUEST_CODE);
         } else {
-            // A permissão da câmera não foi concedida, solicite-a novamente
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            if (hasSurface) {
+                initCamera(surfaceHolder);
+            }
         }
-    }
-
-    private void startScanning() {
-        // Inicie o processo de escaneamento do QR code aqui
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setOrientationLocked(false);
-        integrator.setPrompt("Aponte a câmera para o código QR");
-        integrator.initiateScan();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initializeCamera();
+                if (hasSurface) {
+                    initCamera(surfaceHolder);
+                }
             } else {
-                Toast.makeText(this, "Permissão de câmera negada. Não é possível iniciar o escaneamento.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permissão da câmera negada. Não é possível escanear.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void initCamera(SurfaceHolder surfaceHolder) {
+        try {
+            CameraManager.get().openDriver(surfaceHolder);
+        } catch (IOException ioe) {
+            Log.w(TAG, ioe);
+        } catch (RuntimeException e) {
+            Log.w(TAG, "Unexpected error initializing camera", e);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CameraManager.get().closeDriver();
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        if (!hasSurface) {
+            hasSurface = true;
+            initCamera(holder);
+        }
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        hasSurface = false;
+    }
+
+    public void handleDecode(Result rawResult) {
+        // Aqui você lida com o resultado do escaneamento
+        Log.d(TAG, "Resultado do escaneamento: " + rawResult.getText());
+        String scannedData = rawResult.getText();
+        // Exemplo de como abrir uma nova atividade passando os dados escaneados
+        Intent intent = new Intent(this, ResultActivity.class);
+        intent.putExtra("scanned_data", scannedData);
+        startActivity(intent);
     }
 }

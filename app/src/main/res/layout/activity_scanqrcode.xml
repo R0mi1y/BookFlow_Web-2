@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorGray_200"
-    tools:context=".activities.ScanActivity">
-
+    tools:context=".activities.CameraQRCodeScanner">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,7 +46,7 @@
                 android:text="Scanner"
                 android:textColor="@color/colorBlanchedalmond_100_Opaco"
                 android:textColorHint="@color/colorBlanchedalmond_100_Opaco"
-                android:textSize="42sp" />
+                android:textSize="20sp" />
 
             <Space
                 android:layout_width="113dp"
@@ -56,11 +55,12 @@
 
         </LinearLayout>
 
-        <!-- Adicionando a TextureView para visualização da câmera -->
-        <TextureView
-            android:id="@+id/textureView"
+        <!-- Adicionando a SurfaceView para visualização da câmera -->
+        <SurfaceView
+            android:id="@+id/surfaceView"
             android:layout_width="match_parent"
-            android:layout_height="548dp" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="346dp"
@@ -84,7 +84,7 @@
                 android:text="Tentar Novamente"
                 android:textColor="@color/colorBlanchedalmond_100_Opaco"
                 android:textColorHint="@color/colorBlanchedalmond_100_Opaco"
-                android:textSize="32sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
