@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             binding.password.setInputType(newInputType);
             binding.password.setSelection(binding.password.getText().length());
         });
-        doLogin();
+        /*doLogin();*/
 
         binding.loginBtn.setOnClickListener(v -> {
             binding.loginBtn.setEnabled(false);
