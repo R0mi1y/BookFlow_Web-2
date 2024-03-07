@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.room.bookflow.R;
-import com.room.bookflow.databinding.ActivityOwnerScreenBinding;
 import com.room.bookflow.databinding.ActivityProfileBinding;
-import com.room.bookflow.models.User;
+import com.room.bookflow.data.models.User;
 
 public class ProfileView extends AppCompatActivity {
 
@@ -20,6 +18,9 @@ public class ProfileView extends AppCompatActivity {
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        binding.backBtn.setOnClickListener(v -> {
+            finish();
+        });
 
         new Thread(() -> {
             User userProfile = User.getAuthenticatedUser(this);

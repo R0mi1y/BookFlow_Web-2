@@ -14,4 +14,6 @@
     <color name="book_card_side_background">#332e35</color>
     <color name="options_card_background">#352328</color>
     <color name="menu_lateral_color">#27181D</color>
+    <color name="color_begie">#D2C490</color>
+    <color name="dark_color_begie">#89805C</color>
 </resources>

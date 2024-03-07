@@ -7,13 +7,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
@@ -31,14 +29,10 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivitySignUpBinding;
-import com.room.bookflow.databinding.ActivitySplashBinding;
-import com.room.bookflow.models.User;
+import com.room.bookflow.data.models.User;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 
 public class SignUpActivity extends AppCompatActivity {
 

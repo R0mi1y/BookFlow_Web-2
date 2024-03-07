@@ -1,4 +1,4 @@
-package com.room.bookflow.models;
+package com.room.bookflow.data.models;
 
 import android.content.Context;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @Entity(tableName = "address_table")
 public class Address {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "address_id")
+    @ColumnInfo(name = "id")
     private int id;
 
     private String street;

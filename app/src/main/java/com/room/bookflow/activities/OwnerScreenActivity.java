@@ -1,23 +1,25 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.components.Utilitary.popUp;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.room.bookflow.R;
+import com.room.bookflow.data.BookFlowDatabase;
+import com.room.bookflow.data.models.Chat;
 import com.room.bookflow.databinding.ActivityOwnerScreenBinding;
-import com.room.bookflow.models.User;
+import com.room.bookflow.data.models.User;
 import com.squareup.picasso.Picasso;
-
-import java.util.Objects;
 
 public class OwnerScreenActivity extends AppCompatActivity {
 
     ActivityOwnerScreenBinding binding;
+    User owner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +29,7 @@ public class OwnerScreenActivity extends AppCompatActivity {
         Intent localIt = getIntent();
         int ownerId = Integer.parseInt(localIt.getStringExtra("ownerId"));
 
-        User owner = new User();
+        owner = new User();
 
         new Thread(() -> {
             Log.e("wjkwnf", "weolfgjner");
@@ -55,6 +57,26 @@ public class OwnerScreenActivity extends AppCompatActivity {
             }
         }).start();
 
+        binding.startChat.setOnClickListener(v -> {
+            startChat();
+        });
+
         binding.backBtn.setOnClickListener(v -> finish());
+    }
+
+    private void startChat() {
+        new Thread(() -> {
+            BookFlowDatabase database = BookFlowDatabase.getDatabase(this);
+            Chat chat = new Chat(owner.getId());
+
+            try {
+                chat.startChat(this, owner.getId());
+                database.chatDao().insert(chat);
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    popUp("Erro", "Erro tentando abrir o chat!", this);
+                });
+            }
+        }).start();
     }
 }

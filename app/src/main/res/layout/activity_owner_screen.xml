@@ -432,6 +432,23 @@
 
             <Space
                 android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/start_chat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/default_border_white"
+                android:fontFamily="@font/rosarivo_regular"
+                android:text="Chat"
+                android:textAllCaps="false"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="match_parent"
                 android:layout_height="100dp" />
 
         </LinearLayout>

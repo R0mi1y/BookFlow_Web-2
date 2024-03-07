@@ -21,8 +21,8 @@ import java.util.Objects;
 
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityRegisterBookBinding;
-import com.room.bookflow.models.Book;
-import com.room.bookflow.models.User;
+import com.room.bookflow.data.models.Book;
+import com.room.bookflow.data.models.User;
 
 import pub.devrel.easypermissions.EasyPermissions;
 

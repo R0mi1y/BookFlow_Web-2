@@ -8,12 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityDetailBookBinding;
-import com.room.bookflow.models.Book;
-import com.room.bookflow.models.User;
+import com.room.bookflow.data.models.Book;
+import com.room.bookflow.data.models.User;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
