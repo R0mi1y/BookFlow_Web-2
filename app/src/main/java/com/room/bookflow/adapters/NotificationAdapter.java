@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.room.bookflow.R;
 import com.room.bookflow.activities.DetailBook;
-import com.room.bookflow.data.models.Notification;
+import com.room.bookflow.models.Notification;
 
 import java.util.List;
 

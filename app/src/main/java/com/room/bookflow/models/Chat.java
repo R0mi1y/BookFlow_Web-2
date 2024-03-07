@@ -1,27 +1,28 @@
-package com.room.bookflow.data.models;
+package com.room.bookflow.models;
 
-import static com.room.bookflow.components.Utilitary.handleErrorResponse;
-import static com.room.bookflow.components.Utilitary.showToast;
+import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.showToast;
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
+
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
 import com.room.bookflow.activities.LoginActivity;
-import com.room.bookflow.data.BookFlowDatabase;
+import com.room.bookflow.BookFlowDatabase;
+import com.room.bookflow.helpers.DateConverter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +36,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 @Entity(tableName = "chat_table")
+@TypeConverters(DateConverter.class)
 public class Chat {
     @NonNull
     @PrimaryKey(autoGenerate = true)
@@ -96,11 +98,8 @@ public class Chat {
     }
 
     public boolean startChat(Context context, int reciver_id) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        if (!(networkInfo != null && networkInfo.isConnected())) {
-            Log.w("CHAT", "Conexão pérdida!");
+        if (!isNetworkAvailable(context)) {
+            Log.w("CHAT", "Conexão perdida!");
             return false;
         }
 
@@ -142,7 +141,7 @@ public class Chat {
                 },
                 error -> handleErrorResponse(error, context)) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return headers;
             }
         };
@@ -158,22 +157,26 @@ public class Chat {
     }
 
     public List<Message> updateChat(Context context, long chat_id) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        if (!(networkInfo != null && networkInfo.isConnected())) {
-            Log.w("CHAT", "Conexão pérdida!");
+        if (!isNetworkAvailable(context)) {
+            Log.w("CHAT", "Conexão perdida!");
             return null;
         }
-
         BookFlowDatabase database = BookFlowDatabase.getDatabase(context);
 
-        // List<Message> unsentMessages = database.messageDao().getMessageByChatIdStatus(chat_id, 0);
+        List<Message> unsentMessages = database.messageDao().getMessageByChatIdStatus(chat_id, 0);
 
-        //if (unsentMessages.size() > 0) {
-        //    Message.sendMessages(context, unsentMessages);
-        //}
+        if (unsentMessages.size() > 0) {
+            if (Message.sendMessages(context, unsentMessages)){
+                for (Message message : unsentMessages) {
+                    database.messageDao().markAsSent(message.getId());
+                }
+            }
+        }
+
+        Message.getMessagesSentToMe(context);
+
         return null;
     }
 
 }
+

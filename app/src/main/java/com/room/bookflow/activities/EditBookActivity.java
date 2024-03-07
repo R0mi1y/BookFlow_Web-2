@@ -1,7 +1,7 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.convertBitmapToFile;
-import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.convertBitmapToFile;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -21,7 +21,7 @@ import android.widget.ImageView;
 
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityEditBookBinding;
-import com.room.bookflow.data.models.Book;
+import com.room.bookflow.models.Book;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;

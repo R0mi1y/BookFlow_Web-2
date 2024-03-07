@@ -8,9 +8,9 @@ import android.widget.Button;
 
 import com.room.bookflow.R;
 import com.room.bookflow.adapters.CardSideBookAdapter;
-import com.room.bookflow.components.Utilitary;
+import com.room.bookflow.helpers.Utilitary;
 import com.room.bookflow.databinding.ActivityListBooksBinding;
-import com.room.bookflow.data.models.Book;
+import com.room.bookflow.models.Book;
 
 import java.util.HashMap;
 import java.util.List;

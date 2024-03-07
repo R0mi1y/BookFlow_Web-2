@@ -1,4 +1,4 @@
-package com.room.bookflow.data.dao;
+package com.room.bookflow.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -6,8 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.room.bookflow.data.models.Address;
-import com.room.bookflow.data.models.Chat;
+import com.room.bookflow.models.Chat;
 
 import java.util.List;
 

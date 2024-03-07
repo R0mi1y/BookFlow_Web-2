@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.room.bookflow.R;
 import com.room.bookflow.activities.DetailBook;
-import com.room.bookflow.components.Utilitary;
-import com.room.bookflow.data.models.Book;
+import com.room.bookflow.helpers.Utilitary;
+import com.room.bookflow.models.Book;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

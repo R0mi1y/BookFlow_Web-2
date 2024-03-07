@@ -1,6 +1,6 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,10 +10,10 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.room.bookflow.R;
-import com.room.bookflow.data.BookFlowDatabase;
-import com.room.bookflow.data.models.Chat;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.databinding.ActivityOwnerScreenBinding;
-import com.room.bookflow.data.models.User;
+import com.room.bookflow.models.Chat;
+import com.room.bookflow.models.User;
 import com.squareup.picasso.Picasso;
 
 public class OwnerScreenActivity extends AppCompatActivity {

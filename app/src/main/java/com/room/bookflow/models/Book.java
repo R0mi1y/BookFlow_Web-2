@@ -1,8 +1,8 @@
-package com.room.bookflow.data.models;
+package com.room.bookflow.models;
 
-import static com.room.bookflow.components.Utilitary.handleErrorResponse;
-import static com.room.bookflow.components.Utilitary.popUp;
-import static com.room.bookflow.components.Utilitary.showToast;
+import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.showToast;
 
 import android.app.Activity;
 import android.content.Context;

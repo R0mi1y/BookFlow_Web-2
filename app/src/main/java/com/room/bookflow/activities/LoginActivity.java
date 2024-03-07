@@ -1,8 +1,8 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.popUp;
-import static com.room.bookflow.components.Utilitary.hideLoadingScreen;
-import static com.room.bookflow.components.Utilitary.showLoadingScreen;
+import static com.room.bookflow.helpers.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.hideLoadingScreen;
+import static com.room.bookflow.helpers.Utilitary.showLoadingScreen;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -31,9 +31,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
-import com.room.bookflow.data.BookFlowDatabase;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.databinding.ActivityLoginBinding;
-import com.room.bookflow.data.models.User;
+import com.room.bookflow.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;

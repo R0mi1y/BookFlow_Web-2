@@ -1,6 +1,6 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,8 +11,8 @@ import android.widget.ImageView;
 
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityDetailBookBinding;
-import com.room.bookflow.data.models.Book;
-import com.room.bookflow.data.models.User;
+import com.room.bookflow.models.Book;
+import com.room.bookflow.models.User;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;

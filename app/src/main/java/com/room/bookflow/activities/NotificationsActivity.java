@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.room.bookflow.R;
 import com.room.bookflow.adapters.NotificationAdapter;
 import com.room.bookflow.databinding.ActivityNotificationsBinding;
-import com.room.bookflow.data.models.Notification;
+import com.room.bookflow.models.Notification;
 
 import java.util.List;
 

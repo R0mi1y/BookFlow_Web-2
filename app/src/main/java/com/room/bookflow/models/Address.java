@@ -1,17 +1,8 @@
-package com.room.bookflow.data.models;
-
-import android.content.Context;
+package com.room.bookflow.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(tableName = "address_table")
 public class Address {

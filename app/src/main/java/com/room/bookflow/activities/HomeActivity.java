@@ -1,6 +1,6 @@
 package com.room.bookflow.activities;
 
-import static com.room.bookflow.components.Utilitary.popUp;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -16,10 +16,10 @@ import android.os.Looper;
 
 import com.room.bookflow.R;
 import com.room.bookflow.adapters.CardSideBookAdapter;
-import com.room.bookflow.components.Utilitary;
-import com.room.bookflow.data.BookFlowDatabase;
+import com.room.bookflow.helpers.Utilitary;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.databinding.ActivityHomeBinding;
-import com.room.bookflow.data.models.Book;
+import com.room.bookflow.models.Book;
 
 import java.util.ArrayList;
 import java.util.List;

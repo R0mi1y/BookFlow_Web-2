@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.room.bookflow.databinding.ActivityProfileBinding;
-import com.room.bookflow.data.models.User;
+import com.room.bookflow.models.User;
 
 public class ProfileView extends AppCompatActivity {
 

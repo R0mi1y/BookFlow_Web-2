@@ -1,7 +1,7 @@
-package com.room.bookflow.data.models;
+package com.room.bookflow.models;
 
-import static com.room.bookflow.components.Utilitary.handleErrorResponse;
-import static com.room.bookflow.components.Utilitary.showToast;
+import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.showToast;
 
 import android.app.Activity;
 import android.content.Context;
@@ -33,7 +33,7 @@ import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
 import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.LoginActivity;
-import com.room.bookflow.data.BookFlowDatabase;
+import com.room.bookflow.BookFlowDatabase;
 
 import org.json.JSONArray;
 
@@ -159,7 +159,6 @@ public class User {
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
-                    ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Requisited", Toast.LENGTH_SHORT).show());
                     for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject jsonObject = response.getJSONObject(i);
