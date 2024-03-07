@@ -14,8 +14,8 @@ public class QRCodeScannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setOrientationLocked(false);
-        integrator.setPrompt("Scan a book QR Code");
+        integrator.setOrientationLocked(true);
+        integrator.setPrompt("Scaneie o QRCODE");
         integrator.initiateScan();
     }
 
@@ -24,10 +24,10 @@ public class QRCodeScannerActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Cancelado", Toast.LENGTH_LONG).show();
                 finish();
             } else {
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Scaneado: " + result.getContents(), Toast.LENGTH_LONG).show();
                 String bookId = extractBookId(result.getContents());
                 Intent intent = new Intent(this, DetailBook.class);
                 intent.putExtra("bookId", bookId); // Certifique-se que é "bookId" aqui
