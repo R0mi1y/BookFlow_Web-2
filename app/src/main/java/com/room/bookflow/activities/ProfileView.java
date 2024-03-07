@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
-import com.room.bookflow.database.AddressDatabase;
-import com.room.bookflow.database.UserDatabase;
+
 import com.room.bookflow.databinding.ActivityProfileBinding;
 import com.room.bookflow.models.User;
 
@@ -101,14 +101,13 @@ public class ProfileView extends AppCompatActivity {
     public void changeUser(User user) {
         new Thread(() -> {
             try {
-                UserDatabase userDatabase = UserDatabase.getDatabase(getApplicationContext());
-                AddressDatabase addressDatabase = AddressDatabase.getDatabase(getApplicationContext());
+                BookFlowDatabase bookFlowDatabase = BookFlowDatabase.getDatabase(getApplicationContext());
 
-                userDatabase.getDao().delAll();
-                addressDatabase.getDao().delAll();
+                bookFlowDatabase.userDao().delAll();
+                bookFlowDatabase.addressDao().delAll();
 
-                long userId = userDatabase.getDao().insert(user);
-                long addressId = addressDatabase.getDao().insert(user.getAddress());
+                long userId = bookFlowDatabase.userDao().insert(user);
+                long addressId = bookFlowDatabase.addressDao().insert(user.getAddress());
 
 
                 runOnUiThread(() -> {

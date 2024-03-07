@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             binding.password.setInputType(newInputType);
             binding.password.setSelection(binding.password.getText().length());
         });
-        /*doLogin();*/
+        doLogin();
 
         binding.loginBtn.setOnClickListener(v -> {
             binding.loginBtn.setEnabled(false);
@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         if (response.has("status") && response.getString("status").equals("error")) {
                             String errorMessage = null;
-                                errorMessage = response.getString("message");
+                            errorMessage = response.getString("message");
                             popUp("Erro ao efetuar login", errorMessage, this);
                         } else if(response.getJSONObject("user").has("id")) {
                             User user = new User().setByJSONObject(response.getJSONObject("user"), this);
