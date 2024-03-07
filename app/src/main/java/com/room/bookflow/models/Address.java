@@ -31,6 +31,10 @@ public class Address {
         this.lon = lon;
     }
 
+    public Address() {
+
+    }
+
     // Getters and setters...
 
     public String getStreet() {

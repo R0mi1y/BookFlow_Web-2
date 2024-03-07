@@ -353,69 +353,40 @@ public class User {
         return this.wishlist;
     }
 
-    public User update(User user, Context context) {
-        if (this.id < 0) {
+    public void update(int id, User user, Context context, UpdateUserCallback callback) {
+        if (id < 0) {
             showToast(context, "Usuário não definido!");
-            return null;
+            if (callback != null) {
+                callback.onError();
+            }
+            return;
         }
-        return this.update(this.id, user, context);
-    }
 
-    public User update(int id, User user, Context context) {
-        this.username = user.username != null ? user.username : this.username;
-        this.lastName = user.lastName != null ? user.lastName : this.lastName;
-        this.firstName = user.firstName != null ? user.firstName : this.firstName;
-        /* this.photo = user.photo != null ? user.photo : this.photo; */
-        this.phone = user.phone != null ? user.phone : this.phone;
-        this.email = user.email != null ? user.email : this.email;
-        this.biography = user.biography != null ? user.biography : this.biography;
-
-        this.address = new Address(
-                user.getAddress() != null && user.getAddress().getStreet() != null ? user.getAddress().getStreet() : this.getAddress().getStreet(),
-                user.getAddress() != null && user.getAddress().getCity() != null ? user.getAddress().getCity() : this.getAddress().getCity(),
-                user.getAddress() != null && user.getAddress().getDistrict() != null ? user.getAddress().getDistrict() : this.getAddress().getDistrict(),
-                user.getAddress() != null && user.getAddress().getHouseNumber() != null ? user.getAddress().getHouseNumber() : this.getAddress().getHouseNumber(),
-                user.getAddress() != null && user.getAddress().getState() != null ? user.getAddress().getState() : this.getAddress().getState(),
-                user.getAddress() != null && user.getAddress().getPostalCode() != null ? user.getAddress().getPostalCode() : this.getAddress().getPostalCode(),
-                user.getAddress() != null && user.getAddress().getLat() != null ? user.getAddress().getLat() : this.getAddress().getLat(),
-                user.getAddress() != null && user.getAddress().getLon() != null ? user.getAddress().getLon() : this.getAddress().getLon()
-        );
-
-        String url = context.getString(R.string.api_url) + "/api/user/" + Integer.toString(id) + "/";
+        String url = context.getString(R.string.api_url) + "/api/user/" + id + "/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-        String authToken = User.getAccessToken(context);
+        String authToken = getAccessToken(context);
 
         if (authToken == null) {
-            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+            Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             showToast(context, "Login expirado!");
-            ((Activity) context).startActivity(intent);
-            return null;
+            context.startActivity(intent);
+            if (callback != null) {
+                callback.onError();
+            }
+            return;
         }
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + authToken);
 
-        BlockingQueue<User> userQueue = new LinkedBlockingQueue<>();
         JSONObject jsonBody = new JSONObject();
-
         try {
-            jsonBody.put("username", user.getUsername() != null ? user.getUsername() : JSONObject.NULL);
-            jsonBody.put("last_name", user.getLastName() != null ? user.getLastName() : JSONObject.NULL);
-            jsonBody.put("first_name", user.getFirstName() != null ? user.getFirstName() : JSONObject.NULL);
-            /*jsonBody.put("photo", user.getPhoto() != null ? user.getPhoto() : JSONObject.NULL);*/
-            jsonBody.put("phone", user.getPhone() != null ? user.getPhone() : JSONObject.NULL);
-            jsonBody.put("email", user.getEmail() != null ? user.getEmail() : JSONObject.NULL);
-            jsonBody.put("biography", user.getBiography() != null ? user.getBiography() : JSONObject.NULL);
-            jsonBody.put("street", user.getAddress() != null && user.getAddress().getStreet() != null ? user.getAddress().getStreet() : JSONObject.NULL);
-            jsonBody.put("city", user.getAddress() != null && user.getAddress().getCity() != null ? user.getAddress().getCity() : JSONObject.NULL);
-            jsonBody.put("district", user.getAddress() != null && user.getAddress().getDistrict() != null ? user.getAddress().getDistrict() : JSONObject.NULL);
-            jsonBody.put("house_number", user.getAddress() != null && user.getAddress().getHouseNumber() != null ? user.getAddress().getHouseNumber() : JSONObject.NULL);
-            jsonBody.put("state", user.getAddress() != null && user.getAddress().getState() != null ? user.getAddress().getState() : JSONObject.NULL);
-            jsonBody.put("postal_code", user.getAddress() != null && user.getAddress().getPostalCode() != null ? user.getAddress().getPostalCode() : JSONObject.NULL);
-            jsonBody.put("lat", user.getAddress() != null && user.getAddress().getLat() != null ? user.getAddress().getLat() : JSONObject.NULL);
-            jsonBody.put("lon", user.getAddress() != null && user.getAddress().getLon() != null ? user.getAddress().getLon() : JSONObject.NULL);
+            jsonBody.put("username", user.getUsername());
+            jsonBody.put("phone", user.getPhone());
+            jsonBody.put("email", user.getEmail());
+            jsonBody.put("biography", user.getBiography());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -423,28 +394,232 @@ public class User {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
                 response -> {
                     if (response.has("id")) {
-                        userQueue.add(user);
+                        // Atualização bem-sucedida
+                        if (callback != null) {
+                            callback.onSuccess(new User().setByJSONObject(response,context));
+
+                        }
                     } else {
+                        // Erro ao atualizar usuário
                         showToast(context, "Erro atualizando usuário!");
-                        Log.e("Getting user", "Erro atualizando usuário!");
+                        Log.e("Updating user", "Erro atualizando usuário!");
+                        if (callback != null) {
+                            callback.onError();
+                        }
                     }
                 },
-                error -> handleErrorResponse(error, context)) {
+                error -> {
+                    // Erro na solicitação
+                    handleErrorResponse(error, context);
+                    if (callback != null) {
+                        callback.onError();
+                    }
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return headers;
             }
         };
         requestQueue.add(request);
+    }
 
-        try {
-            return userQueue.poll(30, TimeUnit.SECONDS); // Ajuste o tempo limite conforme necessário
-        } catch (InterruptedException e) {
-            showToast(context, "Conexão perdida!");
-            e.printStackTrace();
+    // Interface para lidar com callbacks de atualização do usuário
+    public interface UpdateUserCallback {
+        void onSuccess(User updatedUser);
+        void onError();
+    }
+
+    // Método update sem callback
+    public User update(User user, Context context) {
+        if (this.id < 0) {
+            showToast(context, "Usuário não definido!");
             return null;
         }
+        // Chamando o método com callback, mas ignorando o callback aqui
+        update(this.id, user, context, null);
+        return user;
     }
+
+
+    public void updateLocate(int id, User user, Context context, UpdateUserLocateCallback callback) {
+        if (id < 0) {
+            showToast(context, "Usuário não definido!");
+            if (callback != null) {
+                callback.onError();
+            }
+            return;
+        }
+
+        String url = context.getString(R.string.api_url) + "/api/user/" + id + "/";
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        String authToken = getAccessToken(context);
+
+        if (authToken == null) {
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            showToast(context, "Login expirado!");
+            context.startActivity(intent);
+            if (callback != null) {
+                callback.onError();
+            }
+            return;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("street", user.getAddress().getStreet());
+            jsonBody.put("house_number", user.getAddress().getHouseNumber());
+            jsonBody.put("city", user.getAddress().getCity());
+            jsonBody.put("district", user.getAddress().getDistrict());
+            jsonBody.put("state", user.getAddress().getState());
+            jsonBody.put("postal_code", user.getAddress().getPostalCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
+                response -> {
+                    if (response.has("id")) {
+                        // Atualização bem-sucedida
+                        if (callback != null) {
+                            callback.onSuccess(new User().setByJSONObject(response,context));
+                        }
+                    } else {
+                        // Erro ao atualizar usuário
+                        showToast(context, "Erro atualizando usuário!");
+                        Log.e("Updating user", "Erro atualizando usuário!");
+                        if (callback != null) {
+                            callback.onError();
+                        }
+                    }
+                },
+                error -> {
+                    // Erro na solicitação
+                    handleErrorResponse(error, context);
+                    if (callback != null) {
+                        callback.onError();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return headers;
+            }
+        };
+        requestQueue.add(request);
+    }
+
+    // Interface para lidar com callbacks de atualização do usuário
+    public interface UpdateUserLocateCallback {
+        void onSuccess(User updatedUser);
+        void onError();
+    }
+
+    // Método update sem callback
+    public User updateLocate(User user, Context context) {
+        if (this.id < 0) {
+            showToast(context, "Usuário não definido!");
+            return null;
+        }
+        // Chamando o método com callback, mas ignorando o callback aqui
+        update(this.id, user, context, null);
+        return user;
+    }
+
+
+
+
+    //    public User update(int id, User user, Context context) {
+//        this.username = user.username != null ? user.username : this.username;
+////        this.lastName = user.lastName != null ? user.lastName : this.lastName;
+////        this.firstName = user.firstName != null ? user.firstName : this.firstName;
+//        /* this.photo = user.photo != null ? user.photo : this.photo; */
+//        this.phone = user.phone != null ? user.phone : this.phone;
+//        this.email = user.email != null ? user.email : this.email;
+//        this.biography = user.biography != null ? user.biography : this.biography;
+//
+////        if (user.getAddress() != null) {
+////            if (this.address == null) {
+////                this.address = new Address();
+////            }
+////
+////            this.address.setStreet(user.getAddress().getStreet() != null ? user.getAddress().getStreet() : this.address.getStreet());
+////            this.address.setCity(user.getAddress().getCity() != null ? user.getAddress().getCity() : this.address.getCity());
+////            this.address.setDistrict(user.getAddress().getDistrict() != null ? user.getAddress().getDistrict() : this.address.getDistrict());
+////            this.address.setHouseNumber(user.getAddress().getHouseNumber() != null ? user.getAddress().getHouseNumber() : this.address.getHouseNumber());
+////            this.address.setState(user.getAddress().getState() != null ? user.getAddress().getState() : this.address.getState());
+////            this.address.setPostalCode(user.getAddress().getPostalCode() != null ? user.getAddress().getPostalCode() : this.address.getPostalCode());
+////            this.address.setLat(user.getAddress().getLat() != null ? user.getAddress().getLat() : this.address.getLat());
+////            this.address.setLon(user.getAddress().getLon() != null ? user.getAddress().getLon() : this.address.getLon());
+////        }
+//
+//        String url = context.getString(R.string.api_url) + "/api/user/" + Integer.toString(id) + "/";
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//
+//        String authToken = User.getAccessToken(context);
+//
+//        if (authToken == null) {
+//            Intent intent = new Intent(((Activity) context), LoginActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//            showToast(context, "Login expirado!");
+//            ((Activity) context).startActivity(intent);
+//            return null;
+//        }
+//
+//        Map<String, String> headers = new HashMap<>();
+//        headers.put("Authorization", "Bearer " + authToken);
+//
+//        BlockingQueue<User> userQueue = new LinkedBlockingQueue<>();
+//        JSONObject jsonBody = new JSONObject();
+//
+//        try {
+//            jsonBody.put("username", user.getUsername() != null ? user.getUsername() : JSONObject.NULL);
+////            jsonBody.put("last_name", user.getLastName() != null ? user.getLastName() : JSONObject.NULL);
+////            jsonBody.put("first_name", user.getFirstName() != null ? user.getFirstName() : JSONObject.NULL);
+//            /*jsonBody.put("photo", user.getPhoto() != null ? user.getPhoto() : JSONObject.NULL);*/
+//            jsonBody.put("phone", user.getPhone() != null ? user.getPhone() : JSONObject.NULL);
+//            jsonBody.put("email", user.getEmail() != null ? user.getEmail() : JSONObject.NULL);
+//            jsonBody.put("biography", user.getBiography() != null ? user.getBiography() : JSONObject.NULL);
+////            jsonBody.put("street", user.getAddress() != null && user.getAddress().getStreet() != null ? user.getAddress().getStreet() : JSONObject.NULL);
+////            jsonBody.put("city", user.getAddress() != null && user.getAddress().getCity() != null ? user.getAddress().getCity() : JSONObject.NULL);
+////            jsonBody.put("district", user.getAddress() != null && user.getAddress().getDistrict() != null ? user.getAddress().getDistrict() : JSONObject.NULL);
+////            jsonBody.put("house_number", user.getAddress() != null && user.getAddress().getHouseNumber() != null ? user.getAddress().getHouseNumber() : JSONObject.NULL);
+////            jsonBody.put("state", user.getAddress() != null && user.getAddress().getState() != null ? user.getAddress().getState() : JSONObject.NULL);
+////            jsonBody.put("postal_code", user.getAddress() != null && user.getAddress().getPostalCode() != null ? user.getAddress().getPostalCode() : JSONObject.NULL);
+////            jsonBody.put("lat", user.getAddress() != null && user.getAddress().getLat() != null ? user.getAddress().getLat() : JSONObject.NULL);
+////            jsonBody.put("lon", user.getAddress() != null && user.getAddress().getLon() != null ? user.getAddress().getLon() : JSONObject.NULL);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
+//                response -> {
+//                    if (response.has("id")) {
+//                        userQueue.add(user);
+//                    } else {
+//                        showToast(context, "Erro atualizando usuário!");
+//                        Log.e("Getting user", "Erro atualizando usuário!");
+//                    }
+//                },
+//                error -> handleErrorResponse(error, context)) {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                return headers;
+//            }
+//        };
+//        requestQueue.add(request);
+//
+//        try {
+//            return userQueue.poll(30, TimeUnit.SECONDS); // Ajuste o tempo limite conforme necessário
+//        } catch (InterruptedException e) {
+//            showToast(context, "Conexão perdida!");
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
     public User save(Context context) {
         return User.save(this, context);
     }
