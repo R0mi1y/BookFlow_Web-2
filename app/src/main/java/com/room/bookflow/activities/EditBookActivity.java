@@ -249,7 +249,7 @@ public class EditBookActivity extends AppCompatActivity {
     }
 
     private void generateAndSetQRCode(String bookId) {
-        Bitmap qrCodeBitmap = generateQRCode("Book ID: " + bookId);
+        Bitmap qrCodeBitmap = generateQRCode("Book Flow: " + bookId);
         if (qrCodeBitmap != null) {
             ImageView qrImage = findViewById(R.id.qr_code);
             qrImage.setImageBitmap(qrCodeBitmap);
