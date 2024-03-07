@@ -70,6 +70,9 @@
         <activity
             android:name=".activities.LoginActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.QRCodeScannerActivity"
+            android:exported="false" />
 
         <service
             android:name=".activities.NotificationService"
