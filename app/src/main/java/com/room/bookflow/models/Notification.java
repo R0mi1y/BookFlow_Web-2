@@ -128,6 +128,7 @@ public class Notification {
                 },
                 error -> {
                     handleErrorResponse(error, context);
+                    notificationQueue.add(null);
                 }) {
             @Override
             public Map<String, String> getHeaders() {

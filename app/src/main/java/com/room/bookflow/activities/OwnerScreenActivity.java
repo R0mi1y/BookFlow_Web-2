@@ -67,11 +67,19 @@ public class OwnerScreenActivity extends AppCompatActivity {
     private void startChat() {
         new Thread(() -> {
             BookFlowDatabase database = BookFlowDatabase.getDatabase(this);
-            Chat chat = new Chat(owner.getId());
-
+            Intent intent = new Intent(OwnerScreenActivity.this, ChatActivity.class);
             try {
-                chat.startChat(this, owner.getId());
-                database.chatDao().insert(chat);
+                Chat chat = database.chatDao().getByReciver(owner.getId());
+                if (chat != null) {
+                    intent.putExtra("chatId", chat.getId());
+                } else {
+                    chat = new Chat(owner.getId());
+                    if (chat.startChat(this, owner.getId())) {
+                        long id = database.chatDao().insert(chat);
+                        intent.putExtra("chatId", id);
+                    }
+                }
+                runOnUiThread(() -> startActivity(intent));
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     popUp("Erro", "Erro tentando abrir o chat!", this);

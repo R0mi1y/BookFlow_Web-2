@@ -17,7 +17,7 @@ import com.room.bookflow.models.Chat;
 import com.room.bookflow.models.Message;
 import com.room.bookflow.models.User;
 
-@Database(entities={Address.class, User.class, Chat.class, Message.class, Book.class}, version=1)
+@Database(entities={Address.class, User.class, Chat.class, Message.class, Book.class}, version=2)
 public abstract class BookFlowDatabase extends RoomDatabase {
     public abstract MessageDao messageDao();
     public abstract UserDao userDao();

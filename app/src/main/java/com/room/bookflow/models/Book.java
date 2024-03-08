@@ -236,7 +236,10 @@ public class Book {
                         Log.e("Getting book", "Erro buscando usuário!");
                     }
                 },
-                error -> handleErrorResponse(error, context)) {
+                error -> {
+                    handleErrorResponse(error, context);
+                    bookQueue.add(null);
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return headers;
@@ -301,6 +304,7 @@ public class Book {
                 },
                 error -> {
                     handleErrorResponse(error, context);
+                    bookQueue.add(null);
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -342,6 +346,7 @@ public class Book {
                 },
                 error -> {
                     handleErrorResponse(error, context);
+                    bookQueue.add(null);
                 }) {
             @Override
             public Map<String, String> getHeaders() {

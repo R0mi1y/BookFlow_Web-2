@@ -61,6 +61,15 @@ public class Message {
     @Ignore
     private Chat chat;
 
+    @Ignore
+    public static final int STATUS_RECIVED = -2;
+    @Ignore
+    public static final int STATUS_SENT = 1;
+    @Ignore
+    public static final int STATUS_UNSENT = -1;
+    @Ignore
+    public static final int STATUS_ERROR_SENT = 0;
+
     public int getId() {
         return id;
     }
@@ -105,8 +114,8 @@ public class Message {
         return false;
     }
 
-    public static List<Message> getMessagesSentToMe(Context context){
-        String url = context.getString(R.string.api_url) + "/api/user/" + User.getAuthenticatedUser(context).getId() + "/messageboxes/";
+    public static List<Message> getMessagesSentToMe(Context context, int reciver_id){
+        String url = context.getString(R.string.api_url) + "/api/user/" + User.getAuthenticatedUser(context).getId() + "/messageboxes/" + reciver_id;
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         String authToken = User.getAccessToken(context);
@@ -143,7 +152,10 @@ public class Message {
                         Log.e("Getting user", "Erro buscando usuário!");
                     }
                 },
-                error -> handleErrorResponse(error, context)) {
+                error -> {
+                    handleErrorResponse(error, context);
+                    queue.add(null);
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return headers;

@@ -1,6 +1,7 @@
 package com.room.bookflow.models;
 
 import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 import static com.room.bookflow.helpers.Utilitary.showToast;
 
 import android.app.Activity;
@@ -50,7 +51,7 @@ import org.json.JSONObject;
 public class User {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private int id = -1;
+    private int id;
 
     private String refreshToken;
     private String username;
@@ -64,6 +65,8 @@ public class User {
     private String biography;
     private String dateJoined;
     private String password;
+    @ColumnInfo(defaultValue="false")
+    private boolean is_autenticated;
     @NonNull
     private long address_id;
 
@@ -75,8 +78,59 @@ public class User {
     @Ignore
     private Address address;
 
+    public boolean isIs_autenticated() {
+        return is_autenticated;
+    }
+
+    public void setIs_autenticated(boolean is_autenticated) {
+        this.is_autenticated = is_autenticated;
+    }
+
     public User(){
+        this.id = -1;
         this.wishlist = new ArrayList<>();
+    }
+
+    public User(String refreshToken, String username, String firstName, String photo, String lastName, String phone, String accountType, boolean active, String email, String biography, String dateJoined, String password, boolean is_autenticated, long address_id, List<Integer> abstract_wishlist, List<Book> wishlist, Address address) {
+        this.refreshToken = refreshToken;
+        this.username = username;
+        this.firstName = firstName;
+        this.photo = photo;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.accountType = accountType;
+        this.active = active;
+        this.email = email;
+        this.biography = biography;
+        this.dateJoined = dateJoined;
+        this.password = password;
+        this.is_autenticated = is_autenticated;
+        this.address_id = address_id;
+        this.abstract_wishlist = abstract_wishlist;
+        this.wishlist = wishlist;
+        this.address = address;
+    }
+
+    public User removeId() {
+        return new User(
+                this.refreshToken,
+                this.username,
+                this.firstName,
+                this.photo,
+                this.lastName,
+                this.phone,
+                this.accountType,
+                this.active,
+                this.email,
+                this.biography,
+                this.dateJoined,
+                this.password,
+                this.is_autenticated,
+                this.address_id,
+                this.abstract_wishlist,
+                this.wishlist,
+                this.address
+        );
     }
 
     public User getUserById(Context context) {
@@ -86,7 +140,7 @@ public class User {
 
     public static User getAuthenticatedUser(Context context){
         BookFlowDatabase userDatabase = BookFlowDatabase.getDatabase(context);
-        User user = userDatabase.userDao().getFirst();
+        User user = userDatabase.userDao().getAutenticated();
         return user;
     }
 
@@ -119,7 +173,10 @@ public class User {
                         Log.e("Getting user", "Erro buscando usuário!");
                     }
                 },
-                error -> handleErrorResponse(error, context)) {
+                error -> {
+                    handleErrorResponse(error, context);
+                    userQueue.add(null);
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 return headers;
@@ -172,6 +229,7 @@ public class User {
                 },
                 error -> {
                     handleErrorResponse(error, context);
+                    userQueue.add(null);
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -247,7 +305,17 @@ public class User {
         JSONObject jsonBody = new JSONObject();
 
         try {
-            jsonBody.put("refresh", User.getAuthenticatedUser(context).getRefreshToken());
+            User ua = User.getAuthenticatedUser(context);
+            if (ua != null) {
+                jsonBody.put("refresh", ua.getRefreshToken());
+            } else {
+                popUp("Error", "Nenhum usuário autenticado!", context);
+                Intent intent = new Intent(context, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                showToast(context, "Login expirado!");
+                context.startActivity(intent);
+                return null;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -269,7 +337,10 @@ public class User {
                         e.printStackTrace();
                     }
                 },
-                error -> handleErrorResponse(error, context)) {
+                error -> {
+                    handleErrorResponse(error, context);
+                    tokenQueue.add(null);
+                }) {
         };
         requestQueue.add(request);
 
@@ -408,12 +479,10 @@ public class User {
                         }
                     }
                 },
-                error -> {
-                    // Erro na solicitação
+                error ->  {
                     handleErrorResponse(error, context);
-                    if (callback != null) {
-                        callback.onError();
-                    }
+                    userQueue.add(null);
+
                 }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {

@@ -12,10 +12,13 @@ import java.util.List;
 
 @Dao
 public interface ChatDao {
+    @Query("SELECT * FROM chat_table WHERE receiver_id=:reciver_id")
+    public Chat getByReciver(int reciver_id);
+
     @Query("SELECT * FROM chat_table")
     public List<Chat> getAllChat();
 
-    @Query("Select * FROM chat_table WHERE id==:id")
+    @Query("Select * FROM chat_table WHERE id==:id LIMIT 1")
     public Chat getById(long id);
 
     @Query("DELETE FROM chat_table WHERE 1")
