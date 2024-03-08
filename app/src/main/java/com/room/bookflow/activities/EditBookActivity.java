@@ -82,7 +82,6 @@ public class EditBookActivity extends AppCompatActivity {
         binding.backBtn2.setOnClickListener(v -> finish());
         binding.backBtn3.setOnClickListener(v -> finish());
 
-
         binding.saveBook.setOnClickListener(v -> updateBook());
 
         binding.insertCover.setOnClickListener(v -> showImageSourceDialog());
@@ -222,7 +221,6 @@ public class EditBookActivity extends AppCompatActivity {
                     Book.updateBook(book, this);
                 } catch (IOException e) {
                     popUp("Erro", "Erro ao atualizar livro, tente novamente mais tarde!", this);
-                    throw new RuntimeException(e);
                 }
             }
         }).start();

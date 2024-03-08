@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                             insertUser(user);
                         }
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        popUp("Erro", "Erro ao efetuar login!", this);
                     }
                 },
                 error -> {

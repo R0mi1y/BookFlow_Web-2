@@ -25,11 +25,11 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder>{
-    private LiveData<List<Message>> messageList;
+    private List<Message> messageList;
     private Activity context;
     private int adapter_view_id;
 
-    public MessageAdapter(LiveData<List<Message>> bookList, int adapter_view_id, Activity context) {
+    public MessageAdapter(List<Message> bookList, int adapter_view_id, Activity context) {
         this.messageList = bookList;
         this.context = context;
         this.adapter_view_id = adapter_view_id;
@@ -44,24 +44,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Message message = messageList.getValue().get(position);
+        Message message = messageList.get(position);
         holder.message.setText(message.getMessage());
         if (message.getStatus() == Message.STATUS_UNSENT) holder.sent.setImageResource(R.drawable.baseline_schedule_send_24);
         else if (message.getStatus() == Message.STATUS_ERROR_SENT) holder.sent.setImageResource(R.drawable.baseline_cancel_schedule_send_24);
         else if (message.getStatus() == Message.STATUS_SENT) holder.sent.setImageResource(R.drawable.baseline_send_24);
 
         if (message.getStatus() == -2) {
-            holder.layout_foreground.setPadding(30, 5 ,5, 5);
+            holder.layout_foreground.setPadding(150, 5 ,5, 5);
             holder.layout.setBackground(context.getDrawable(R.drawable.default_border_orange));
         } else {
-            holder.layout_foreground.setPadding(5, 5 ,5, 30);
+            holder.layout_foreground.setPadding(5, 5 ,5, 150);
             holder.layout.setBackground(context.getDrawable(R.drawable.default_border_yellow));
         }
     }
 
     @Override
     public int getItemCount() {
-        return messageList.getValue().size();
+        if (messageList != null) return messageList.size();
+        else return 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
@@ -40,13 +41,15 @@ public class ChatActivity extends AppCompatActivity {
             // binding.perfilChat.setText(database.userDao());
             chat = database.chatDao().getById(chatId);
 
-            AtomicReference<LiveData<List<Message>>> messages = new AtomicReference<>(database.messageDao().getMessageByChatId(chatId));
-            runOnUiThread(() -> binding.items.setAdapter(new MessageAdapter(messages.get(), R.layout.message_adapter, this)));
+            List<Message> messages = database.messageDao().getMessageByChatId(chatId);
+            List<Message> finalMessages = messages;
+            runOnUiThread(() -> binding.items.setAdapter(new MessageAdapter(finalMessages, R.layout.message_adapter, this)));
 
             while (true) {
+                Log.i("SEARCHING MESSAGE", "Searching for messages...");
                 List<Message> messagesRecived = chat.updateChat(this, chat.getId());
                 if (messagesRecived.size() > 0) {
-                    messages.set(database.messageDao().getMessageByChatId(chatId));
+                    messages = database.messageDao().getMessageByChatId(chatId);
                 }
                 try {
                     Thread.sleep(5000);

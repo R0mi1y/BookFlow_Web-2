@@ -111,28 +111,6 @@ public class User {
         this.address = address;
     }
 
-    public User removeId() {
-        return new User(
-                this.refreshToken,
-                this.username,
-                this.firstName,
-                this.photo,
-                this.lastName,
-                this.phone,
-                this.accountType,
-                this.active,
-                this.email,
-                this.biography,
-                this.dateJoined,
-                this.password,
-                this.is_autenticated,
-                this.address_id,
-                this.abstract_wishlist,
-                this.wishlist,
-                this.address
-        );
-    }
-
     public User getUserById(Context context) {
         if (this.id == -1) return null;
         return this.getUserById(this.id, context);
@@ -155,7 +133,7 @@ public class User {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             showToast(context, "Login expirado!");
             context.startActivity(intent);
-            return null;
+            return new User();
         }
 
         Map<String, String> headers = new HashMap<>();
@@ -175,10 +153,10 @@ public class User {
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    userQueue.add(null);
+                    userQueue.add(new User());
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return headers;
             }
         };
@@ -189,7 +167,7 @@ public class User {
         } catch (InterruptedException e) {
             showToast(context, "Conexão perdida!");
             e.printStackTrace();
-            return null;
+            return new User();
         }
     }
 
@@ -206,7 +184,7 @@ public class User {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
             ((Activity) context).startActivity(intent);
-            return null;
+            return new ArrayList<>();
         }
 
         Map<String, String> headers = new HashMap<>();
@@ -229,7 +207,7 @@ public class User {
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    userQueue.add(null);
+                    userQueue.add(new ArrayList<>());
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -242,7 +220,7 @@ public class User {
         } catch (InterruptedException e) {
             showToast(context, "Conexão perdida!");
             Thread.currentThread().interrupt(); // Preserve a interrupção status
-            throw new RuntimeException(e);
+            return new ArrayList<>();
         }
     }
 

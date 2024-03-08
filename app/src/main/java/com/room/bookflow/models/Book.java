@@ -86,6 +86,7 @@ public class Book {
     }
 
     public Book() {
+        this.id = -1;
     }
 
     public Book(String cover, int id, String title, String author, String genre, String summary, String requirementsLoan, boolean availability) {
@@ -233,12 +234,12 @@ public class Book {
                         bookQueue.add(book);
                     } else {
                         showToast(context, "Erro buscando livro!");
-                        Log.e("Getting book", "Erro buscando usuário!");
+                        Log.e("Getting book", "Erro buscando livro!");
                     }
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    bookQueue.add(null);
+                    bookQueue.add(new Book());
                 }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -279,8 +280,8 @@ public class Book {
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             showToast(context, "Login expirado!");
-            ((Activity) context).startActivity(intent);
-            return null;
+            context.startActivity(intent);
+            return new ArrayList<>();
         }
 
         Map<String, String> headers = new HashMap<>();
@@ -304,7 +305,7 @@ public class Book {
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    bookQueue.add(null);
+                    bookQueue.add(new ArrayList<>());
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -316,7 +317,7 @@ public class Book {
             return bookQueue.poll(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
+            return new ArrayList<>();
         }
     }
 
@@ -346,7 +347,7 @@ public class Book {
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    bookQueue.add(null);
+                    bookQueue.add(new Book());
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -359,7 +360,7 @@ public class Book {
             return bookQueue.poll(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
+            return null;
         }
     }
 
