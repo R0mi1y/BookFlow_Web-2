@@ -34,7 +34,7 @@ public class OwnerScreenActivity extends AppCompatActivity {
         new Thread(() -> {
             Log.e("wjkwnf", "weolfgjner");
             owner.getUserById(ownerId, this);
-            if (owner.getId() > -1){
+            if (owner.getServer_id() > -1){
                 runOnUiThread(() -> {
                     String name = owner.getFirstName() + " " + owner.getLastName();
 
@@ -72,14 +72,17 @@ public class OwnerScreenActivity extends AppCompatActivity {
                 Chat chat = database.chatDao().getByReciver(owner.getId());
                 if (chat != null) {
                     intent.putExtra("chatId", chat.getId());
+                    runOnUiThread(() -> startActivity(intent));
                 } else {
                     chat = new Chat(owner.getId());
                     if (chat.startChat(this, owner.getId())) {
                         long id = database.chatDao().insert(chat);
                         intent.putExtra("chatId", id);
+                        runOnUiThread(() -> startActivity(intent));
+                    } else {
+                        popUp("Erro", "Falha ao tentar abrir chat!", this);
                     }
                 }
-                runOnUiThread(() -> startActivity(intent));
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     popUp("Erro", "Erro tentando abrir o chat!", this);
