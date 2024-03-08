@@ -287,7 +287,8 @@ public class User {
             if (ua != null) {
                 jsonBody.put("refresh", ua.getRefreshToken());
             } else {
-                popUp("Error", "Nenhum usuário autenticado!", context);
+                Toast.makeText(context, "Nenhum usuário autenticado!", Toast.LENGTH_SHORT).show();
+//                popUp("Error", "Nenhum usuário autenticado!", context);
                 Intent intent = new Intent(context, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 showToast(context, "Login expirado!");

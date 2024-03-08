@@ -105,15 +105,14 @@ public class ProfileView extends AppCompatActivity {
                 bookFlowDatabase.userDao().delAll();
                 bookFlowDatabase.addressDao().delAll();
 
-                long userId = bookFlowDatabase.userDao().insert(user);
-                long addressId = bookFlowDatabase.addressDao().insert(user.getAddress());
+                 bookFlowDatabase.userDao().update(user);
+                 bookFlowDatabase.addressDao().update(user.getAddress());
 
 
                 runOnUiThread(() -> {
                     Toast.makeText(ProfileView.this, user.getUsername() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ProfileView.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("user", user.toString());
                     startActivity(intent);
                 });
             } catch (Exception e) {
