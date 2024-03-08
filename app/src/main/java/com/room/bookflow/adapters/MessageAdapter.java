@@ -2,6 +2,7 @@ package com.room.bookflow.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,15 +47,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = messageList.get(position);
         holder.message.setText(message.getMessage());
-        if (message.getStatus() == Message.STATUS_UNSENT) holder.sent.setImageResource(R.drawable.baseline_schedule_send_24);
-        else if (message.getStatus() == Message.STATUS_ERROR_SENT) holder.sent.setImageResource(R.drawable.baseline_cancel_schedule_send_24);
-        else if (message.getStatus() == Message.STATUS_SENT) holder.sent.setImageResource(R.drawable.baseline_send_24);
 
         if (message.getStatus() == -2) {
-            holder.layout_foreground.setPadding(150, 5 ,5, 5);
+            holder.layout_foreground.setGravity(Gravity.LEFT);
+            holder.layout_foreground.setPadding(25, position == 0 ? 500 : 0 ,150, 10);
             holder.layout.setBackground(context.getDrawable(R.drawable.default_border_orange));
         } else {
-            holder.layout_foreground.setPadding(5, 5 ,5, 150);
+            holder.layout_foreground.setGravity(Gravity.RIGHT);
+            holder.layout_foreground.setPadding(150, 0 ,25, 10);
             holder.layout.setBackground(context.getDrawable(R.drawable.default_border_yellow));
         }
     }
@@ -67,13 +67,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView message;
-        public ImageView sent;
-        public ConstraintLayout layout, layout_foreground;
+        public ConstraintLayout layout;
+        public LinearLayout layout_foreground;
 
         public ViewHolder(View view) {
             super(view);
             message = view.findViewById(R.id.message);
-            sent = view.findViewById(R.id.sent_icon);
             layout = view.findViewById(R.id.layout);
             layout_foreground = view.findViewById(R.id.layout_foreground);
         }
