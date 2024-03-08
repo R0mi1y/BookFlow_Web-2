@@ -54,7 +54,6 @@
             android:layout_weight="1"
             android:background="@color/transparent"
             android:fontFamily="@font/rosarivo_regular"
-            android:text="Button"
             android:textColor="#FFFFFF"
             android:textColorHighlight="#FFFFFF"
             android:textColorHint="#FFFFFF"

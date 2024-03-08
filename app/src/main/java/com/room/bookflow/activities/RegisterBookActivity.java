@@ -13,15 +13,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +37,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityRegisterBookBinding;
+import com.room.bookflow.helpers.BookSuggestion;
 import com.room.bookflow.helpers.SslRemoveCertified;
 import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +59,19 @@ public class RegisterBookActivity extends AppCompatActivity {
     private Boolean hasImage = false;
     ActivityRegisterBookBinding binding;
 
+    private File convertBitmapToFile(Context context, Bitmap bitmap, String fileName) {
+        // Crie um arquivo no diretório cache da aplicação
+        File file = new File(context.getCacheDir(), fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,13 +86,37 @@ public class RegisterBookActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().trim().length() > 3) { // Verifica se o texto tem mais de 3 caracteres para começar a busca
+                if (s.toString().trim().length() > 2) { // Verifica se o texto tem mais de 3 caracteres para começar a busca
                     fetchBookSuggestions(s.toString().trim(), RegisterBookActivity.this, binding.title);
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        binding.title.setOnItemClickListener((parent, view, position, id) -> {
+            BookSuggestion selectedBook = (BookSuggestion) parent.getItemAtPosition(position);
+            binding.author.setText(selectedBook.getAuthors());
+            binding.genre.setText(selectedBook.getCategories());
+            binding.summary.setText(selectedBook.getDescription());
+
+            if (!TextUtils.isEmpty(selectedBook.getImageUrl())) {
+                Picasso.get().load(selectedBook.getImageUrl()).into(binding.coverImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        binding.coverImage.invalidate();
+                        BitmapDrawable drawable = (BitmapDrawable) binding.coverImage.getDrawable();
+                        imageBitMap = drawable.getBitmap();
+                        hasImage = true;
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        hasImage = false;
+                    }
+                });
             }
         });
 
@@ -85,13 +129,11 @@ public class RegisterBookActivity extends AppCompatActivity {
         binding.backBtn3.setOnClickListener(backButtonClickListener);
 
         binding.registerBook.setOnClickListener(v -> {
-            if (
-                    !(!binding.title.getText().toString().replaceAll("\\s+", " ").equals("") &&
+            if (!(!binding.title.getText().toString().replaceAll("\\s+", " ").equals("") &&
                     !binding.author.getText().toString().replaceAll("\\s+", " ").equals("") &&
                     !binding.genre.getText().toString().replaceAll("\\s+", " ").equals("") &&
                     !binding.summary.getText().toString().replaceAll("\\s+", " ").equals("") &&
-                    !binding.requirements.getText().toString().replaceAll("\\s+", " ").equals(""))
-            ) {
+                    !binding.requirements.getText().toString().replaceAll("\\s+", " ").equals(""))) {
                 popUp("Erro", "Preencha todos os campos antes de cadastrar o livro!", this);
                 return;
             }
@@ -99,8 +141,16 @@ public class RegisterBookActivity extends AppCompatActivity {
             new Thread(() -> {
                 Book book = new Book("", binding.title.getText().toString(), binding.author.getText().toString(), binding.genre.getText().toString(), binding.summary.getText().toString(), binding.requirements.getText().toString(), true, User.getAuthenticatedUser(getApplicationContext()).getId());
 
-                if (hasImage){
-                    book = book.registerBook(convertBitmapToFile(this, imageBitMap, "cover.png"), this);
+                // Adicionando verificação se imageBitmap é nulo
+                if (hasImage && imageBitMap != null) {
+                    try {
+                        File imageFile = convertBitmapToFile(this, imageBitMap, "cover.png");
+                        book = book.registerBook(imageFile, this);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> popUp("Erro", "Falha ao processar a imagem!", RegisterBookActivity.this));
+                        return;
+                    }
                 } else {
                     book = book.registerBook(this);
                 }
@@ -115,14 +165,10 @@ public class RegisterBookActivity extends AppCompatActivity {
                             finish();
                         });
                     } else {
-                        runOnUiThread(() -> {
-                            popUp("Erro!", "Tente novamente mais tarde", RegisterBookActivity.this);
-                        });
+                        runOnUiThread(() -> popUp("Erro!", "Tente novamente mais tarde", RegisterBookActivity.this));
                     }
                 } catch (NullPointerException e) {
-                    runOnUiThread(() -> {
-                        popUp("Erro!", "Tente novamente mais tarde", RegisterBookActivity.this);
-                    });
+                    runOnUiThread(() -> popUp("Erro!", "Tente novamente mais tarde", RegisterBookActivity.this));
                 }
             }).start();
         });
@@ -131,7 +177,6 @@ public class RegisterBookActivity extends AppCompatActivity {
     }
 
     public void fetchBookSuggestions(String query, Context context, AutoCompleteTextView autoCompleteTextView) {
-
         String baseUrl = "https://www.googleapis.com/books/v1/volumes";
         String url = baseUrl + "?q=" + Uri.encode(query);
 
@@ -139,19 +184,44 @@ public class RegisterBookActivity extends AppCompatActivity {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
-                    List<String> suggestions = new ArrayList<>();
+                    List<BookSuggestion> suggestions = new ArrayList<>();
                     try {
                         JSONArray items = response.getJSONArray("items");
                         for (int i = 0; i < items.length(); i++) {
                             JSONObject book = items.getJSONObject(i).getJSONObject("volumeInfo");
-                            String title = book.getString("title");
-                            suggestions.add(title);
+                            String title = book.optString("title");
+
+                            // Extração e junção dos autores
+                            String authors = "";
+                            if (book.has("authors")) {
+                                JSONArray authorsJsonArray = book.getJSONArray("authors");
+                                List<String> authorsList = new ArrayList<>();
+                                for (int j = 0; j < authorsJsonArray.length(); j++) {
+                                    authorsList.add(authorsJsonArray.getString(j));
+                                }
+                                authors = TextUtils.join(", ", authorsList);
+                            }
+
+                            // Extração e junção das categorias
+                            String categories = "";
+                            if (book.has("categories")) {
+                                JSONArray categoriesJsonArray = book.getJSONArray("categories");
+                                List<String> categoriesList = new ArrayList<>();
+                                for (int j = 0; j < categoriesJsonArray.length(); j++) {
+                                    categoriesList.add(categoriesJsonArray.getString(j));
+                                }
+                                categories = TextUtils.join(", ", categoriesList);
+                            }
+
+                            String description = book.optString("description");
+                            String imageUrl = book.has("imageLinks") ? book.getJSONObject("imageLinks").optString("thumbnail") : "";
+
+                            suggestions.add(new BookSuggestion(title, authors, categories, description, imageUrl));
                         }
 
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, suggestions);
+                        ArrayAdapter<BookSuggestion> adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, suggestions);
                         autoCompleteTextView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-                        autoCompleteTextView.showDropDown();
                     } catch (JSONException e) {
                         popUp("Erro ao processar sugestões de livros!", e.getMessage(), context);
                         e.printStackTrace();
@@ -164,8 +234,6 @@ public class RegisterBookActivity extends AppCompatActivity {
 
         requestQueue.add(request);
     }
-
-
 
     private void showImageSourceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

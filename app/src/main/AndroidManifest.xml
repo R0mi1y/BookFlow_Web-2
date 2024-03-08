@@ -13,8 +13,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -31,6 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookFlow"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.ActivityChatList"
+            android:exported="false" />
         <activity
             android:name=".activities.ChatActivity"
             android:exported="false" />
@@ -76,7 +78,6 @@
         <activity
             android:name=".activities.QRCodeScannerActivity"
             android:screenOrientation="portrait" />
-
 
         <service
             android:name=".activities.NotificationService"

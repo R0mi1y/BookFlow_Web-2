@@ -63,6 +63,8 @@
     <string name="button_save">SALVAR</string>
     <string name="button_delete">DELETAR LIVRO</string>
     <string name="check_">Indisponível</string>
+    <string name="button_chat_list">Lista de Chats</string>
+    <string name="perfil">Perfil</string>
     <!--    <string name="resume">Sinopse</string>-->
     <!--    <string name="resume">Sinopse</string>-->
     <!--    <string name="resume">Sinopse</string>-->
@@ -71,9 +73,7 @@
     <!--    <string name="resume">Sinopse</string>-->
 
 
-
-
-<!--    PERFIL DO USUÁRIO-->
+    <!--    PERFIL DO USUÁRIO-->
     <string name="owner_postal_code">Código Postal:</string>
     <string name="owner_region">Estado:</string>
     <string name="owner_city">Cidade:</string>
@@ -81,9 +81,6 @@
     <string name="owner_email">E-mail:</string>
     <string name="owner_street">Rua:</string>
     <string name="owner_info">INFORMAÇÕES DO DONO</string>
-
-
-
 
 
     <string name="open_nav">Open Navigation Drawer</string>
