@@ -34,7 +34,7 @@ public class OwnerScreenActivity extends AppCompatActivity {
         new Thread(() -> {
             Log.e("wjkwnf", "weolfgjner");
             owner.getUserById(ownerId, this);
-            if (owner.getServer_id() > -1){
+            if (owner.getId() > -1){
                 runOnUiThread(() -> {
                     String name = owner.getFirstName() + " " + owner.getLastName();
 

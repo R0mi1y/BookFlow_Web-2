@@ -115,7 +115,7 @@ public class Message {
     }
 
     public static List<Message> getMessagesSentToMe(Context context, int reciver_id){
-        String url = context.getString(R.string.api_url) + "/api/user/" + User.getAuthenticatedUser(context).getId() + "/messageboxes/" + reciver_id;
+        String url = context.getString(R.string.api_url) + "/api/user/" + reciver_id + "/messageboxes/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         String authToken = User.getAccessToken(context);
@@ -125,7 +125,7 @@ public class Message {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             showToast(context, "Login expirado!");
             context.startActivity(intent);
-            return null;
+            return new ArrayList<>();
         }
 
         Map<String, String> headers = new HashMap<>();
@@ -141,23 +141,23 @@ public class Message {
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
                                 Message message1 = new Message().setByJSONObject(jsonObject, context);
-                                messages.add(message1);
+                                if (message1 != null) messages.add(message1);
                             } catch (JSONException e) {
                                 Log.e("Error getting user", e.getMessage());
                             }
                         }
                         queue.add(messages);
                     } else {
-                        showToast(context, "Erro buscando usuário!");
-                        Log.e("Getting user", "Erro buscando usuário!");
+                        Log.e("Getting user", "Nenhuma mensagem encontrada!");
+                        queue.add(new ArrayList<>());
                     }
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    queue.add(null);
+                    queue.add(new ArrayList<Message>());
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return headers;
             }
         };
@@ -168,7 +168,7 @@ public class Message {
         } catch (InterruptedException e) {
             showToast(context, "Conexão perdida!");
             e.printStackTrace();
-            return new ArrayList<Message>();
+            return new ArrayList<>();
         }
     }
 

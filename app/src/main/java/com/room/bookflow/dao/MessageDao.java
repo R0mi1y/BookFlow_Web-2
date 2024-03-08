@@ -32,7 +32,7 @@ public interface MessageDao {
     public void markAsSentError(int message_id);
 
     @Query("SELECT * FROM message_table WHERE chat_id=:id")
-    public LiveData<List<Message>> getMessageByChatId(long id);
+    public List<Message> getMessageByChatId(long id);
 
     @Query("SELECT * FROM message_table WHERE chat_id=:id and status=:status")
     public List<Message> getMessageByChatIdStatus(long id, int status);
