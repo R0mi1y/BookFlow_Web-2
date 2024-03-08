@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                             insertUser(user);
                         }
                     } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                        popUp("Erro", "Erro ao efetuar login!", this);
                     }
                 },
                 error -> {
@@ -228,20 +228,26 @@ public class LoginActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-    public void insertUser(User user) {
+    public void insertUser(final User u) {
+        User user = u;
         new Thread(() -> {
             try {
                 BookFlowDatabase database = BookFlowDatabase.getDatabase(getApplicationContext());
 
-                database.userDao().delAll();
-                database.addressDao().delAll();
+                database.userDao().setAllUnautenticated();
 
-                long addressId = database.addressDao().insert(user.getAddress());
-                user.setAddress_id(addressId);
-                long userId = database.userDao().insert(user);
+                User user1 = database.userDao().getByUsername(user.getUsername());
+
+                if (user1 != null){
+                    database.userDao().setAutenticated(user1.getId());
+                } else {
+                    long addressId = database.addressDao().insert(user.getAddress());
+                    user.setAddress_id(addressId);
+                    user.setIs_autenticated(true);
+                    long userId = database.userDao().insert(user);
+                }
 
                 runOnUiThread(() -> {
-                    Toast.makeText(LoginActivity.this, user.getFirstName() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 

@@ -23,13 +23,10 @@ public class SplashActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, NotificationService.class);
         startService(serviceIntent);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }, 3000);
     }
 }

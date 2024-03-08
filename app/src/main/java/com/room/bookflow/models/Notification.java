@@ -104,7 +104,7 @@ public class Notification {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
             context.startActivity(intent);
-            return null;
+            return new ArrayList<>();
         }
 
         Map<String, String> headers = new HashMap<>();
@@ -119,7 +119,7 @@ public class Notification {
                         try {
                             JSONObject jsonObject = response.getJSONObject(i);
                             Notification notification = new Notification().setByJSONObject(jsonObject, context);
-                            list.add(notification);
+                            if (notification != null) list.add(notification);
                         } catch (JSONException e) {
                             Log.e("Error getting user", e.getMessage());
                         }
@@ -128,6 +128,7 @@ public class Notification {
                 },
                 error -> {
                     handleErrorResponse(error, context);
+                    notificationQueue.add(new ArrayList<>());
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -140,7 +141,7 @@ public class Notification {
         } catch (InterruptedException e) {
             showToast(context, "Conexão perdida!");
             Thread.currentThread().interrupt(); // Preserve a interrupção status
-            throw new RuntimeException(e);
+            return new ArrayList<>();
         }
     }
 
@@ -154,7 +155,7 @@ public class Notification {
             this.user_id = response.has("user") ? response.getInt("user") : null;
             this.visualized = response.has("visualized") ? response.getBoolean("visualized") : null;
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            return null;
         }
 
         return this;

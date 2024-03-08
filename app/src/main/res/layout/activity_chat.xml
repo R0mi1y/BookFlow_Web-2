@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorGray_200"
+    android:background="@color/colorGray_100"
     tools:context=".activities.NotificationsActivity">
 
     <LinearLayout
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@color/colorGray_200"
         android:foregroundGravity="center"
         android:gravity="center"
         android:orientation="horizontal"
@@ -44,6 +45,10 @@
             android:background="@color/transparent"
             android:fontFamily="@font/rosarivo_regular"
             android:text="Button"
+            android:textColor="#FFFFFF"
+            android:textColorHighlight="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textColorLink="#FFFFFF"
             android:textSize="34sp" />
     </LinearLayout>
 
@@ -66,8 +71,12 @@
         android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_margin="15dp"
+        android:layout_marginBottom="35dp"
+        android:background="@drawable/default_border"
+        android:backgroundTint="#FFFFFF"
         android:orientation="horizontal"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -79,8 +88,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:ems="10"
+            android:hint="Mensagem"
             android:inputType="text"
-            android:text="Name" />
+            android:textColor="#FFFFFF"
+            android:textColorHighlight="#FFFFFF"
+            android:textColorHint="#5D5656"
+            android:textColorLink="#FBFBFB" />
 
         <Space
             android:layout_width="wrap_content"
@@ -92,7 +105,7 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
             android:layout_weight="0"
             android:background="@drawable/default_border_white"
             android:backgroundTint="#EAE1D5"
@@ -100,6 +113,9 @@
             android:foregroundGravity="right"
             android:text="Enviar"
             android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textColorHighlight="#020202"
+            android:textColorHint="#000000"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>

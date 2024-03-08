@@ -1,6 +1,7 @@
 package com.room.bookflow.models;
 
 import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.popUp;
 import static com.room.bookflow.helpers.Utilitary.showToast;
 import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 
@@ -41,20 +42,19 @@ public class Chat {
     @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int user_id;
+    private int receiver_id;
     @Ignore
-    private User user;
-    private Date created_at;
+    private User receiver;
     @Ignore
     private List<Message> messages;
 
     public Chat() {
     }
 
-    public Chat(int user_id) {
-        this.user_id = user_id;
-        this.user = user;
-        this.created_at = new Date();
+    public Chat(int receiver_id) {
+        this.receiver_id = receiver_id;
+        this.receiver = new User();
+        this.receiver.setId(receiver_id);
     }
 
     public int getId() {
@@ -65,30 +65,6 @@ public class Chat {
         this.id = id;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
-
     public List<Message> getMessages() {
         return messages;
     }
@@ -97,13 +73,46 @@ public class Chat {
         this.messages = messages;
     }
 
+    public int getReceiver_id() {
+        return receiver_id;
+    }
+
+    public void setReceiver_id(int receiver_id) {
+        this.receiver_id = receiver_id;
+    }
+
+    public User getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
     public boolean startChat(Context context, int reciver_id) {
+        BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
         if (!isNetworkAvailable(context)) {
             Log.w("CHAT", "Conexão perdida!");
+            popUp("Error", "Conexão perdida!", context);
             return false;
         }
+        this.receiver = new User();
+        this.receiver = this.receiver.getUserById(reciver_id, context);
 
-        String url = context.getString(R.string.api_url) + "/api/chat/";
+        User user1 = db.userDao().getByUsername(this.receiver.getUsername());
+
+        if (user1 == null){
+            long addressId = db.addressDao().insert(this.receiver.getAddress());
+            this.receiver.setAddress_id(addressId);
+            this.receiver.setIs_autenticated(false);
+            long userId = db.userDao().insert(this.receiver);
+        }
+
+        return true;
+    }
+
+    public boolean sentMessage(Context context, int reciver_id) {
+        String url = context.getString(R.string.api_url) + "/api/message/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         String authToken = User.getAccessToken(context);
@@ -139,7 +148,10 @@ public class Chat {
                         Log.e("Getting user", "Erro requisitando chat!");
                     }
                 },
-                error -> handleErrorResponse(error, context)) {
+                error -> {
+                    handleErrorResponse(error, context);
+                    chatQueue.add(false);
+                }) {
             @Override
             public Map<String, String> getHeaders() {
                 return headers;
@@ -161,9 +173,11 @@ public class Chat {
             Log.w("CHAT", "Conexão perdida!");
             return null;
         }
-        BookFlowDatabase database = BookFlowDatabase.getDatabase(context);
 
-        List<Message> unsentMessages = database.messageDao().getMessageByChatIdStatus(chat_id, 0);
+        BookFlowDatabase database = BookFlowDatabase.getDatabase(context);
+        Chat chat = database.chatDao().getById(chat_id);
+
+        List<Message> unsentMessages = database.messageDao().getMessageByChatIdStatus(chat_id, Message.STATUS_ERROR_SENT);
 
         if (unsentMessages.size() > 0) {
             if (Message.sendMessages(context, unsentMessages)){
@@ -173,9 +187,24 @@ public class Chat {
             }
         }
 
-        Message.getMessagesSentToMe(context);
+        unsentMessages = database.messageDao().getMessageByChatIdStatus(chat_id, Message.STATUS_UNSENT);
+        if (unsentMessages.size() > 0) {
+            if (Message.sendMessages(context, unsentMessages)){
+                for (Message message : unsentMessages) {
+                    database.messageDao().markAsSent(message.getId());
+                }
+            }
+        }
 
-        return null;
+        List<Message> recived = Message.getMessagesSentToMe(context, chat.receiver_id);
+
+        for(Message messageRecived : recived) {
+            messageRecived.setStatus(Message.STATUS_RECIVED);
+            messageRecived.setChat_id((int) chat_id);
+            database.messageDao().insert(messageRecived);
+        }
+
+        return recived;
     }
 
 }

@@ -25,11 +25,14 @@ public interface MessageDao {
     @Query("SELECT * FROM message_table")
     public List<Message> getAllMessage();
 
-    @Query("UPDATE message_table SET status = 1 WHERE id = :message_id")
+    @Query("UPDATE message_table SET status = " + Message.STATUS_SENT + " WHERE id = :message_id")
     public void markAsSent(int message_id);
 
+    @Query("UPDATE message_table SET status = " + Message.STATUS_ERROR_SENT + " WHERE id = :message_id")
+    public void markAsSentError(int message_id);
+
     @Query("SELECT * FROM message_table WHERE chat_id=:id")
-    public LiveData<List<Message>> getMessageByChatId(long id);
+    public List<Message> getMessageByChatId(long id);
 
     @Query("SELECT * FROM message_table WHERE chat_id=:id and status=:status")
     public List<Message> getMessageByChatIdStatus(long id, int status);
