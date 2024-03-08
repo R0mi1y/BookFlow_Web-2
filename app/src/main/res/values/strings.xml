@@ -54,6 +54,21 @@
     <string name="whatsapp">Whatsapp:</string>
     <string name="info_user">Contato</string>
     <string name="location">Localização</string>
+    <string name="mybooks">MEUS LIVROS</string>
+    <string name="pendants">PENDENTES</string>
+    <string name="desired">DESEJADOS</string>
+    <string name="popular">POPULARES</string>
+    <string name="donwload_qr">BAIXAR QRCODE</string>
+    <string name="button_save">SALVAR</string>
+    <string name="button_delete">DELETAR LIVRO</string>
+    <string name="check_">Indisponível</string>
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+
 
 
 
@@ -64,21 +79,8 @@
     <string name="owner_district">Bairro:</string>
     <string name="owner_email">E-mail:</string>
     <string name="owner_street">Rua:</string>
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
-<!--    <string name="resume">Sinopse</string>-->
+    <string name="owner_info">INFORMAÇÕES DO DONO</string>
+
 
 
 

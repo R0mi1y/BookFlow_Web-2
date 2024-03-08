@@ -136,7 +136,7 @@
                 android:layout_marginRight="50dp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:gravity="center"
-                android:text="Titulo"
+                android:text="@string/title"
                 android:textColor="@color/white"
                 android:textSize="26dp" />
 
@@ -149,7 +149,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="50dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Autor"
+                android:text="@string/author"
                 android:textColor="@color/colorBlanchedalmond_100"
                 android:textSize="17dp" />
 
@@ -161,7 +161,7 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="50dp"
-                android:text="Resumo"
+                android:text="@string/resume"
                 android:textAlignment="center"
                 android:textColor="@color/colorBlanchedalmond_100"
                 android:textIsSelectable="true"
@@ -176,7 +176,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="50dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Genero"
+                android:text="@string/gen"
                 android:textColor="@color/colorBlanchedalmond_100"
                 android:textSize="17dp" />
 
@@ -196,7 +196,7 @@
                     android:layout_gravity="center"
                     android:background="#FFFFFF"
                     android:fontFamily="@font/rosarivo_regular"
-                    android:text="Informações do dono"
+                    android:text="@string/owner_info"
                     android:textColor="#000000"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
