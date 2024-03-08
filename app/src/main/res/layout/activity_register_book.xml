@@ -127,28 +127,28 @@
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/default_border"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="@string/text_image_regBook"
+                android:text="Insira uma imagem"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/title"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="24dp"
-                android:autoText="true"
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
-                android:hint="@string/title"
+                android:hint="Titulo"
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
-                android:textColorLink="#FFFFFF" />
+                android:textColorLink="#FFFFFF"
+                android:completionThreshold="1" />
 
             <EditText
                 android:id="@+id/author"
@@ -160,7 +160,7 @@
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
-                android:hint="@string/author"
+                android:hint="Autor"
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
@@ -179,7 +179,7 @@
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
-                android:hint="@string/gen"
+                android:hint="Gênero"
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
@@ -197,7 +197,7 @@
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:gravity="start"
-                android:hint="@string/resume"
+                android:hint="Resumo"
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
@@ -215,7 +215,7 @@
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:gravity="start"
-                android:hint="@string/requirements"
+                android:hint="Condições para empréstimos"
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
@@ -242,7 +242,7 @@
                     android:layout_gravity="center"
                     android:background="#FFFFFF"
                     android:fontFamily="@font/open_sans_semibold"
-                    android:text="@string/button_cad2"
+                    android:text="Cadastrar"
                     android:textColor="#000000"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
