@@ -2,10 +2,12 @@ package com.room.bookflow.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
+import androidx.room.Embedded;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.room.bookflow.models.Address;
 import com.room.bookflow.models.User;
 
 import java.util.List;
@@ -40,4 +42,5 @@ public interface UserDao {
     public void setAutenticated(int id);
     @Update
     public void update(User user);
+
 }

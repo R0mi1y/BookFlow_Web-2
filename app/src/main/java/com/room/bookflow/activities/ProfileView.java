@@ -105,10 +105,7 @@ public class ProfileView extends AppCompatActivity {
             try {
                 BookFlowDatabase bookFlowDatabase = BookFlowDatabase.getDatabase(getApplicationContext());
 
-
-                bookFlowDatabase.addressDao().update(user.getAddress());
                 bookFlowDatabase.userDao().update(user);
-
 
                 runOnUiThread(() -> {
                     Toast.makeText(ProfileView.this, user.getUsername() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
