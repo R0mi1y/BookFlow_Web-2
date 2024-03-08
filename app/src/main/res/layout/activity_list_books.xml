@@ -44,7 +44,7 @@
             android:text="Book"
             android:textColor="@color/colorBlanchedalmond_100_Opaco"
             android:textColorHint="@color/colorBlanchedalmond_100_Opaco"
-            android:textSize="42sp" />
+            android:textSize="39sp" />
 
         <Button
             android:id="@+id/home_btn_2"
@@ -57,7 +57,7 @@
             android:padding="0dp"
             android:text="Flow"
             android:textColor="#FFFFFF"
-            android:textSize="42sp" />
+            android:textSize="39sp" />
 
         <Button
             android:id="@+id/search_button"
@@ -97,7 +97,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/default_border"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Meus Livros"
+                android:text="@string/mybooks"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
@@ -110,7 +110,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/default_border"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Pendentes"
+                android:text="@string/pendants"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
@@ -123,7 +123,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/default_border"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Desejados"
+                android:text="@string/desired"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
@@ -136,35 +136,35 @@
                 android:layout_weight="1"
                 android:background="@drawable/default_border"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Populares"
+                android:text="@string/popular"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/request_button"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/default_border"
-                android:fontFamily="@font/rosarivo_regular"
-                android:text="Requisitei"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold" />
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/request_button"-->
+<!--                android:layout_width="200dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@drawable/default_border"-->
+<!--                android:fontFamily="@font/rosarivo_regular"-->
+<!--                android:text="Requisitei"-->
+<!--                android:textColor="#FFFFFF"-->
+<!--                android:textStyle="bold" />-->
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/request_by_me_button"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/default_border"
-                android:fontFamily="@font/rosarivo_regular"
-                android:text="Requisitados"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold" />
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/request_by_me_button"-->
+<!--                android:layout_width="200dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@drawable/default_border"-->
+<!--                android:fontFamily="@font/rosarivo_regular"-->
+<!--                android:text="Requisitados"-->
+<!--                android:textColor="#FFFFFF"-->
+<!--                android:textStyle="bold" />-->
         </LinearLayout>
     </HorizontalScrollView>
 

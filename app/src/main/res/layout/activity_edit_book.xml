@@ -127,7 +127,7 @@
           android:layout_marginBottom="24dp"
           android:background="@drawable/default_border"
           android:fontFamily="@font/rosarivo_regular"
-          android:text="Insira uma imagem"
+          android:text="@string/text_image_regBook"
           android:textColor="#FFFFFF"
           android:textStyle="bold" />
 
@@ -141,7 +141,7 @@
           android:background="@drawable/default_border"
           android:ems="10"
           android:foregroundGravity="center"
-          android:hint="Titulo"
+          android:hint="@string/title"
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
@@ -160,7 +160,7 @@
           android:background="@drawable/default_border"
           android:ems="10"
           android:foregroundGravity="center"
-          android:hint="Autor"
+          android:hint="@string/author"
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
@@ -179,7 +179,7 @@
           android:background="@drawable/default_border"
           android:ems="10"
           android:foregroundGravity="center"
-          android:hint="Gênero"
+          android:hint="@string/gen"
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
@@ -198,7 +198,7 @@
           android:ems="10"
           android:foregroundGravity="center"
           android:gravity="start"
-          android:hint="Resumo"
+          android:hint="@string/resume"
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
@@ -217,7 +217,7 @@
           android:ems="10"
           android:foregroundGravity="center"
           android:gravity="start"
-          android:hint="Condições para empréstimos"
+          android:hint="@string/requirements"
           android:inputType="text|textEmailAddress"
           android:padding="10dp"
           android:shadowColor="#FFFFFF"
@@ -234,17 +234,17 @@
           android:gravity="center"
           android:orientation="horizontal">
 
-          <Switch
-              android:id="@+id/avaliability"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_horizontal"
-              android:checked="true"
-              android:enabled="true"
-              android:fontFamily="@font/rosarivo_regular"
-              android:text="Indisponível"
-              android:textColor="#FFFFFF"
-              android:textSize="20sp" />
+        <Switch
+            android:id="@+id/avaliability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:checked="true"
+            android:enabled="true"
+            android:fontFamily="@font/rosarivo_regular"
+            android:text="@string/check_"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
 
       </LinearLayout>
 
@@ -267,7 +267,7 @@
             android:layout_gravity="center"
             android:background="#FFFFFF"
             android:fontFamily="@font/rosarivo_regular"
-            android:text="Salvar"
+            android:text="@string/button_save"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -289,7 +289,7 @@
             android:layout_gravity="center"
             android:background="#FFFFFF"
             android:fontFamily="@font/rosarivo_regular"
-            android:text="Deletar Livro"
+            android:text="@string/button_delete"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -309,7 +309,7 @@
             android:layout_gravity="center"
             android:background="#FFFFFF"
             android:fontFamily="@font/rosarivo_regular"
-            android:text="Baixar QRCode"
+            android:text="@string/donwload_qr"
             android:textColor="#000000"
             android:textStyle="bold" />
 

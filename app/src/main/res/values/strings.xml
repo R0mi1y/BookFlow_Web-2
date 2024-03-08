@@ -7,8 +7,88 @@
     <string name="bio_string">BIOGRAFIA</string>
     <string name="infantil_string">Infantil</string>
     <string name="_colecao_string">•coleção•</string>
+    <string name="home_h1">Vamos\nComeçar!</string>
+    <string name="home_h2">Junte-se a nós agora e\ncomece sua jornada.</string>
+    <string name="button_acess">Logar</string>
+    <string name="button_acess2">Login com GOOGLE</string>
+    <string name="button_cadGoogle">Cadastre-se com o Google</string>
+    <string name="button_cad">CADASTRE-SE</string>
+    <string name="button_cad2">CADASTRAR</string>
+    <string name="send_message">enviar</string>
+    <string name="button_edt_profile">Editar Perfil</string>
+    <string name="button_notyf">Notificações</string>
+    <string name="button_loans">Meus Empréstimos</string>
+    <string name="button_scan">Scanear QRCode</string>
+    <string name="button_logout">Logout</string>
+    <string name="text_message">Mensagem</string>
+    <string name="button_edt_end">Editar Endereço</string>
+    <string name="button_save_alt">Salvar Alterações</string>
+    <string name="text_profile">Perfil</string>
+    <string name="name">Nome</string>
+    <string name="email">E-mail</string>
+    <string name="phone">Telefone</string>
+    <string name="biografy">Biografia</string>
+    <string name="title">Titulo</string>
+    <string name="text_input">Digite algo aqui</string>
+    <string name="gen">Gênero</string>
+    <string name="author">Autor</string>
+    <string name="confirm_pass">Confirme sua senha</string>
+    <string name="confirm_pass2">Confirme a senha</string>
+    <string name="password">Senha</string>
+    <string name="first_name">Nome</string>
+    <string name="last_name">Sobrenome</string>
+    <string name="username">Nome de usuário</string>
+    <string name="create_account">Criar Conta</string>
+    <string name="address">Endereço</string>
+    <string name="postal_code">Código Postal</string>
+    <string name="region">Estado</string>
+    <string name="city">Cidade</string>
+    <string name="street">Rua</string>
+    <string name="number_house">Número</string>
+    <string name="district">Bairro</string>
+    <string name="text_map">Abrir mapa</string>
+    <string name="button_update">Atualizar</string>
+    <string name="requirements">Condições para empréstimos</string>
+    <string name="resume">Sinopse</string>
+    <string name="text_image_regBook">INSIRA UMA IMAGEM</string>
+    <string name="chat">Chat</string>
+    <string name="whatsapp">Whatsapp:</string>
+    <string name="info_user">Contato</string>
+    <string name="location">Localização</string>
+    <string name="mybooks">MEUS LIVROS</string>
+    <string name="pendants">PENDENTES</string>
+    <string name="desired">DESEJADOS</string>
+    <string name="popular">POPULARES</string>
+    <string name="donwload_qr">BAIXAR QRCODE</string>
+    <string name="button_save">SALVAR</string>
+    <string name="button_delete">DELETAR LIVRO</string>
+    <string name="check_">Indisponível</string>
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+    <!--    <string name="resume">Sinopse</string>-->
+
+
+
+
+<!--    PERFIL DO USUÁRIO-->
+    <string name="owner_postal_code">Código Postal:</string>
+    <string name="owner_region">Estado:</string>
+    <string name="owner_city">Cidade:</string>
+    <string name="owner_district">Bairro:</string>
+    <string name="owner_email">E-mail:</string>
+    <string name="owner_street">Rua:</string>
+    <string name="owner_info">INFORMAÇÕES DO DONO</string>
+
+
+
+
+
     <string name="open_nav">Open Navigation Drawer</string>
     <string name="close_nav">Close Navigation Drawer</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="editar_endereco">Editar Endereço</string>

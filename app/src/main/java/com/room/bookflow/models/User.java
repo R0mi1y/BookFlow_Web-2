@@ -1,6 +1,7 @@
 package com.room.bookflow.models;
 
 import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 import static com.room.bookflow.helpers.Utilitary.popUp;
 import static com.room.bookflow.helpers.Utilitary.showToast;
 
@@ -35,6 +36,7 @@ import com.room.bookflow.R;
 import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.LoginActivity;
 import com.room.bookflow.BookFlowDatabase;
+import com.room.bookflow.helpers.Utilitary;
 
 import org.json.JSONArray;
 
@@ -122,7 +124,99 @@ public class User {
         return user;
     }
 
+    public void setByOtherUser(User user){
+        this.id = user.id;
+        this.refreshToken = user.refreshToken;
+        this.username = user.username;
+        this.firstName = user.firstName;
+        this.photo = user.photo;
+        this.lastName = user.lastName;
+        this.phone = user.phone;
+        this.accountType = user.accountType;
+        this.active = user.active;
+        this.email = user.email;
+        this.biography = user.biography;
+        this.dateJoined = user.dateJoined;
+        this.password = user.password;
+        this.is_autenticated = user.is_autenticated;
+        this.address_id = user.address_id;
+        this.abstract_wishlist = user.abstract_wishlist;
+        this.wishlist = user.wishlist;
+        this.address = user.address;
+    }
+
+    public boolean sendMessage(String message, int to, Context context) {
+        BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
+        Chat chat = db.chatDao().getByReciver(to);
+        long id = db.messageDao().insert(new Message(chat.getId(), message, Message.STATUS_UNSENT));
+        if(!isNetworkAvailable(context)) {
+            return false;
+        }
+
+        String url = context.getString(R.string.api_url) + "/api/user/" + to + "/sendmessage/";
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String authToken = User.getAccessToken(context);
+
+        if (authToken == null) {
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            showToast(context, "Login expirado!");
+            context.startActivity(intent);
+            return false;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+
+        BlockingQueue<Boolean> userQueue = new LinkedBlockingQueue<>();
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("message", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                response -> {
+                    if (response.has("id")) {
+                        new Thread(() -> {
+                            db.messageDao().markAsSent((int) id);
+                        }).start();
+
+                        userQueue.add(true);
+                    } else {
+                        Log.e("sending message", "Erro ao enviar mensagem!");
+                    }
+                },
+                error -> {
+                    handleErrorResponse(error, context);
+                    userQueue.add(false);
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return headers;
+            }
+        };
+        requestQueue.add(request);
+
+        try {
+            return userQueue.poll(30, TimeUnit.SECONDS); // Ajuste o tempo limite conforme necessário
+        } catch (InterruptedException e) {
+            showToast(context, "Conexão perdida!");
+            return false;
+        }
+    }
+
     public User getUserById(int id, Context context) {
+        if(!isNetworkAvailable(context)) {
+            BookFlowDatabase bd = BookFlowDatabase.getDatabase(context);
+            User u = bd.userDao().getById(id);
+            if(u != null) {
+                setByOtherUser(u);
+                return this;
+            }
+            return new User();
+        }
+
         String url = context.getString(R.string.api_url) + "/api/user/" + id + "/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -183,7 +277,7 @@ public class User {
             Intent intent = new Intent(((Activity) context), LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
-            ((Activity) context).startActivity(intent);
+            context.startActivity(intent);
             return new ArrayList<>();
         }
 

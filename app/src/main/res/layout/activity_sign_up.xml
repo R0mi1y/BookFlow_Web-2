@@ -51,7 +51,7 @@
                 android:layout_marginBottom="20sp"
                 android:fontFamily="@font/rosarivo_regular"
                 android:gravity="center_horizontal"
-                android:text="Criar conta"
+                android:text="@string/create_account"
                 android:textColor="#FFFFFF"
                 android:textSize="48sp" />
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Nome"
+                android:text="@string/name"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
@@ -75,11 +75,10 @@
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
-                android:hint="Nome de usuário"
+                android:hint="@string/username"
                 android:inputType="text"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
-                android:text="Lucimera"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
@@ -102,11 +101,10 @@
                     android:background="@drawable/default_border"
                     android:ems="10"
                     android:foregroundGravity="left"
-                    android:hint="Primeiro nome"
+                    android:hint="@string/first_name"
                     android:inputType="text|textPersonName|textCapWords"
                     android:padding="10dp"
                     android:shadowColor="#FFFFFF"
-                    android:text="ucimara"
                     android:textColor="#FFFFFF"
                     android:textColorHighlight="#FFFFFF"
                     android:textColorHint="#A3A3A3"
@@ -120,11 +118,10 @@
                     android:autoText="true"
                     android:background="@drawable/default_border"
                     android:ems="10"
-                    android:hint="Último nome"
+                    android:hint="@string/last_name"
                     android:inputType="text|textPersonName|textCapWords"
                     android:padding="10dp"
                     android:shadowColor="#FFFFFF"
-                    android:text="Caetano"
                     android:textColor="#FFFFFF"
                     android:textColorHighlight="#FFFFFF"
                     android:textColorHint="#A3A3A3"
@@ -137,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Email"
+                android:text="@string/email"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
@@ -151,11 +148,10 @@
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
-                android:hint="Nome"
+                android:hint="@string/email"
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
-                android:text="lucimara@gmail.com"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#A3A3A3"
@@ -167,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Senha"
+                android:text="@string/password"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
@@ -187,10 +183,9 @@
                     android:autoText="true"
                     android:background="@android:color/transparent"
                     android:ems="10"
-                    android:hint="Senha"
+                    android:hint="@string/password"
                     android:inputType="text|textPassword"
                     android:padding="10dp"
-                    android:text="123123123"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#FFA3A3A3" />
 
@@ -214,7 +209,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Confirme a senha"
+                android:text="@string/confirm_pass2"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
@@ -234,10 +229,9 @@
                     android:autoText="true"
                     android:background="@android:color/transparent"
                     android:ems="10"
-                    android:hint="Confirmação da senha"
+                    android:hint="@string/confirm_pass"
                     android:inputType="text|textPassword"
                     android:padding="10dp"
-                    android:text="123123123"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#FFA3A3A3" />
 
@@ -273,7 +267,7 @@
                     android:layout_gravity="center"
                     android:background="#FFFFFF"
                     android:fontFamily="@font/rosarivo_regular"
-                    android:text="Cadastrar"
+                    android:text="@string/button_cad2"
                     android:textColor="#000000"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
@@ -290,7 +284,7 @@
                 android:drawableTint="#FFFFFF"
                 android:fontFamily="@font/rosarivo_regular"
                 android:foregroundTint="#FFFBFB"
-                android:text="Cadastre-se com Google"
+                android:text="@string/button_cadGoogle"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorLink="#FFFFFF"

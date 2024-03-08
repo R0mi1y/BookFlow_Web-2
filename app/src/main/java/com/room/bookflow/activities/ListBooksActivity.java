@@ -34,8 +34,8 @@ public class ListBooksActivity extends AppCompatActivity {
         filterToButtonMap.put("PENDING", binding.pendingButton);
         filterToButtonMap.put("WISHLIST", binding.wishButton);
         filterToButtonMap.put("POPULARS", binding.popularsButton);
-        filterToButtonMap.put("REQUIRED_BY_ME", binding.requestButton);
-        filterToButtonMap.put("REQUIRED", binding.requestByMeButton);
+//        filterToButtonMap.put("REQUIRED_BY_ME", binding.requestButton);
+//        filterToButtonMap.put("REQUIRED", binding.requestByMeButton);
 
         Button[] selectedButton = {filterToButtonMap.get(initialFilter)};
         if (!initialFilter.equals("SEARCH") && selectedButton[0] != null) {

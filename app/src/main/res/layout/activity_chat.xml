@@ -4,8 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorGray_100"
+    android:background="@color/book_card_side_background"
     tools:context=".activities.NotificationsActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollIndicators="start"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+        app:reverseLayout="false"
+        app:stackFromEnd="true" />
 
     <LinearLayout
         android:id="@+id/linearLayout5"
@@ -52,29 +62,14 @@
             android:textSize="34sp" />
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/items"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-    </ScrollView>
-
     <LinearLayout
         android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:layout_marginBottom="35dp"
-        android:background="@drawable/default_border"
-        android:backgroundTint="#FFFFFF"
+        android:background="@drawable/default_border_brawn"
+        android:backgroundTint="@color/colorGray_200"
         android:orientation="horizontal"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -83,16 +78,16 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/message_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:ems="10"
-            android:hint="Mensagem"
+            android:hint="@string/text_message"
             android:inputType="text"
             android:textColor="#FFFFFF"
             android:textColorHighlight="#FFFFFF"
-            android:textColorHint="#5D5656"
+            android:textColorHint="@color/colorBlanchedalmond_100"
             android:textColorLink="#FBFBFB" />
 
         <Space
@@ -101,7 +96,7 @@
             android:layout_weight="1" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button"
+            android:id="@+id/send_message_btn"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -111,7 +106,7 @@
             android:backgroundTint="#EAE1D5"
             android:fontFamily="@font/rosarivo_regular"
             android:foregroundGravity="right"
-            android:text="Enviar"
+            android:text="@string/send_message"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textColorHighlight="#020202"

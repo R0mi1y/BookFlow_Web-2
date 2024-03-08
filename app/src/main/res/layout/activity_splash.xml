@@ -12,7 +12,7 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="122dp"
+        android:layout_width="162dp"
         android:layout_height="151dp"
         app:srcCompat="@drawable/logo" />
 </LinearLayout>

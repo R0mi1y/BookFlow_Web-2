@@ -7,19 +7,19 @@
         <item
             android:id="@+id/edit_profile"
             android:icon="@drawable/profile"
-            android:title="Editar Perfil"/>
+            android:title="@string/button_edt_profile"/>
         <item
             android:id="@+id/notifications"
             android:icon="@drawable/notifications"
-            android:title="Notificações"/>
+            android:title="@string/button_notyf"/>
         <item
             android:id="@+id/loan"
             android:icon="@drawable/lista_books"
-            android:title="Meus Empréstimos"/>
+            android:title="@string/button_loans"/>
         <item
             android:id="@+id/scannerqr"
             android:icon="@drawable/scanqrcode"
-            android:title="Scanear QRCode"/>
+            android:title="@string/button_scan"/>
 
     </group>
     <item
@@ -28,7 +28,7 @@
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/nav_logout"
-                android:title="Logout"/>
+                android:title="@string/button_logout"/>
         </menu>
     </item>
 </menu>

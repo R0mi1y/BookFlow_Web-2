@@ -9,20 +9,37 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityRegisterBookBinding;
+import com.room.bookflow.helpers.SslRemoveCertified;
 import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -34,11 +51,30 @@ public class RegisterBookActivity extends AppCompatActivity {
     private Bitmap imageBitMap;
     private Boolean hasImage = false;
     ActivityRegisterBookBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+        binding.title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().trim().length() > 3) { // Verifica se o texto tem mais de 3 caracteres para começar a busca
+                    fetchBookSuggestions(s.toString().trim(), RegisterBookActivity.this, binding.title);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         View.OnClickListener backButtonClickListener = v -> {
             finish();
@@ -93,6 +129,43 @@ public class RegisterBookActivity extends AppCompatActivity {
 
         binding.insertCover.setOnClickListener(v -> showImageSourceDialog());
     }
+
+    public void fetchBookSuggestions(String query, Context context, AutoCompleteTextView autoCompleteTextView) {
+
+        String baseUrl = "https://www.googleapis.com/books/v1/volumes";
+        String url = baseUrl + "?q=" + Uri.encode(query);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context, new SslRemoveCertified());
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    List<String> suggestions = new ArrayList<>();
+                    try {
+                        JSONArray items = response.getJSONArray("items");
+                        for (int i = 0; i < items.length(); i++) {
+                            JSONObject book = items.getJSONObject(i).getJSONObject("volumeInfo");
+                            String title = book.getString("title");
+                            suggestions.add(title);
+                        }
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, suggestions);
+                        autoCompleteTextView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                        autoCompleteTextView.showDropDown();
+                    } catch (JSONException e) {
+                        popUp("Erro ao processar sugestões de livros!", e.getMessage(), context);
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    popUp("Erro ao buscar sugestões de livros!", error.toString(), context);
+                    error.printStackTrace();
+                });
+
+        requestQueue.add(request);
+    }
+
+
 
     private void showImageSourceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -174,3 +247,4 @@ public class RegisterBookActivity extends AppCompatActivity {
         }
     }
 }
+

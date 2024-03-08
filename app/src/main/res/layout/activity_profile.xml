@@ -41,7 +41,7 @@
                     android:background="#00626262"
                     android:fontFamily="@font/rosarivo"
                     android:paddingRight="70dp"
-                    android:text="Perfil"
+                    android:text="@string/text_profile"
                     android:textColor="#FFFFFF"
                     android:textSize="42sp"
                     app:icon="@drawable/baseline_arrow_back_ios_new_24"
@@ -93,7 +93,7 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Nome"
+                android:text="@string/name"
                 android:textColor="@color/colorBlanchedalmond_100"
                 android:textSize="16sp" />
 
@@ -110,7 +110,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/edit_text"
                 android:gravity="left"
-                android:hint="Nome"
+                android:hint="@string/name"
                 android:padding="8dp"
                 android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
@@ -126,7 +126,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="0dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Email"
+                android:text="@string/email"
                 android:textColor="@color/colorBlanchedalmond_100"
                 android:textSize="16sp" />
 
@@ -142,7 +142,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/edit_text"
                 android:gravity="left"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:padding="8dp"
                 android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
@@ -158,7 +158,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="0dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Telefone"
+                android:text="@string/phone"
                 android:textColor="@color/colorBlanchedalmond_100"
                 android:textSize="16sp" />
 
@@ -174,7 +174,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/edit_text"
                 android:gravity="left"
-                android:hint="Telefone"
+                android:hint="@string/phone"
                 android:padding="8dp"
                 android:textColor="#FFFFFF"
                 android:textColorHint="@color/colorBlanchedalmond_60" />
@@ -190,7 +190,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="0dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Biografia"
+                android:text="@string/biografy"
                 android:textColor="@color/colorBlanchedalmond_100"
                 android:textSize="16sp" />
 
@@ -206,7 +206,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/edit_text"
                 android:gravity="top"
-                android:hint="Biografia"
+                android:hint="@string/biografy"
                 android:minLines="4"
                 android:padding="8dp"
                 android:textColor="#FFFFFF"
@@ -225,7 +225,7 @@
                 android:background="@drawable/button"
                 android:foregroundGravity="center"
                 android:gravity="center"
-                android:text="Editar Endereço"
+                android:text="@string/button_edt_end"
                 android:textAllCaps="false"
                 android:textColor="@color/background1"
                 android:textSize="16sp" />
@@ -244,7 +244,7 @@
                 android:fontFamily="@font/open_sans_semibold"
                 android:foregroundGravity="left"
                 android:gravity="center"
-                android:text="Salvar Alterações"
+                android:text="@string/button_save_alt"
                 android:textAllCaps="false"
                 android:textColor="@color/background1"
                 android:textSize="16sp" />
