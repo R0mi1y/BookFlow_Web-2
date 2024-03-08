@@ -72,8 +72,7 @@ public class ProfileView extends AppCompatActivity {
 
                         // Chamar o método update com o callback para lidar com o resultado da atualização
 
-                        Executor executor = Executors.newSingleThreadExecutor();
-                        executor.execute(() -> {
+                        new Thread(() -> {
                             updatedUser.update(userId, updatedUser, ProfileView.this, new User.UpdateUserCallback() {
                                 @Override
                                 public void onSuccess(User updatedUser) {
@@ -84,7 +83,7 @@ public class ProfileView extends AppCompatActivity {
                                 public void onError() {
                                 }
                             });
-                        });
+                        }).start();
                     });
                 });
             } else {
