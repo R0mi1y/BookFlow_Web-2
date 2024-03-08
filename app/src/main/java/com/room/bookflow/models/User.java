@@ -481,7 +481,6 @@ public class User {
                 },
                 error ->  {
                     handleErrorResponse(error, context);
-                    userQueue.add(null);
 
                 }) {
             @Override

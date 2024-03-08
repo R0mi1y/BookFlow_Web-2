@@ -229,7 +229,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void insertUser(final User u) {
-        User user = u.removeId();
+        User user = u;
         new Thread(() -> {
             try {
                 BookFlowDatabase database = BookFlowDatabase.getDatabase(getApplicationContext());
@@ -248,7 +248,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 runOnUiThread(() -> {
-                    Toast.makeText(LoginActivity.this, user.getFirstName() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 

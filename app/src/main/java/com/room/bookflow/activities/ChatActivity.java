@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ChatActivity extends AppCompatActivity {
     ActivityChatBinding binding;
     Chat chat;
-    BookFlowDatabase database;
+    BookFlowDatabase database = BookFlowDatabase.getDatabase(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +35,21 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         binding.backBtn3.setOnClickListener(v -> finish());
-        chat = database.chatDao().getById(chatId);
-
-        // new Thread(() -> {}).start();
-        // TODO: mudar o nome do butão e armazenar os users que tem chat, além de por uma var "autenticated" binding.perfilChat.setText();
-
-        AtomicReference<LiveData<List<Message>>> messages = new AtomicReference<>(database.messageDao().getMessageByChatId(chatId));
-        binding.items.setAdapter(new MessageAdapter(messages.get(), R.layout.message_adapter, this));
 
         new Thread(() -> {
+            // binding.perfilChat.setText(database.userDao());
+            chat = database.chatDao().getById(chatId);
+
+            AtomicReference<LiveData<List<Message>>> messages = new AtomicReference<>(database.messageDao().getMessageByChatId(chatId));
+            runOnUiThread(() -> binding.items.setAdapter(new MessageAdapter(messages.get(), R.layout.message_adapter, this)));
+
             while (true) {
                 List<Message> messagesRecived = chat.updateChat(this, chat.getId());
                 if (messagesRecived.size() > 0) {
                     messages.set(database.messageDao().getMessageByChatId(chatId));
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

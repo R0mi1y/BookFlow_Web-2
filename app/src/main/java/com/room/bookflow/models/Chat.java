@@ -97,7 +97,7 @@ public class Chat {
             return false;
         }
         this.receiver = new User();
-        this.receiver = this.receiver.getUserById(reciver_id, context).removeId();
+        this.receiver = this.receiver.getUserById(reciver_id, context);
 
         User user1 = db.userDao().getByUsername(this.receiver.getUsername());
 
