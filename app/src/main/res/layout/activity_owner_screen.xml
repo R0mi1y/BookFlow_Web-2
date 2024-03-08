@@ -87,7 +87,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Nome de usuário:"
+                android:text="@string/username"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -116,7 +116,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Nome:"
+                android:text="@string/name"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -145,7 +145,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Email:"
+                android:text="@string/email"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -174,7 +174,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Telefone:"
+                android:text="@string/phone"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -204,7 +204,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Biografia:"
+                android:text="@string/biografy"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -219,7 +219,6 @@
                 android:background="@drawable/default_border"
                 android:ems="10"
                 android:foregroundGravity="center"
-                android:hint="Condições para empréstimos"
                 android:inputType="text|textEmailAddress"
                 android:padding="10dp"
                 android:shadowColor="#FFFFFF"
@@ -235,7 +234,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Localização:"
+                android:text="@string/location"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -256,7 +255,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/rosarivo_regular"
                         android:paddingRight="7dp"
-                        android:text="Rua:"
+                        android:text="@string/owner_street"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
 
@@ -277,7 +276,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/rosarivo_regular"
                         android:paddingRight="7dp"
-                        android:text="Bairro:"
+                        android:text="@string/owner_district"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
 
@@ -299,7 +298,7 @@
                         android:fontFamily="@font/rosarivo_regular"
 
                         android:paddingRight="7dp"
-                        android:text="Cidade:"
+                        android:text="@string/owner_city"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
 
@@ -322,7 +321,7 @@
                         android:fontFamily="@font/rosarivo_regular"
 
                         android:paddingRight="7dp"
-                        android:text="Estado:"
+                        android:text="@string/owner_region"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
 
@@ -345,7 +344,7 @@
                         android:fontFamily="@font/rosarivo_regular"
 
                         android:paddingRight="7dp"
-                        android:text="Código Postal:"
+                        android:text="@string/owner_postal_code"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
 
@@ -373,7 +372,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:fontFamily="@font/rosarivo_regular"
-                android:text="Contato:"
+                android:text="@string/info_user"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -394,7 +393,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/rosarivo_regular"
                         android:paddingRight="7dp"
-                        android:text="Whatsapp:"
+                        android:text="@string/whatsapp"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
 
@@ -414,7 +413,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/rosarivo_regular"
                         android:paddingRight="7dp"
-                        android:text="Email:"
+                        android:text="@string/owner_email"
                         android:textColor="#FFFFFF"
                         android:textSize="18sp" />
 
