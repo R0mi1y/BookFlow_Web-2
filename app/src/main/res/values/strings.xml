@@ -14,6 +14,7 @@
     <string name="button_cadGoogle">Cadastre-se com o Google</string>
     <string name="button_cad">CADASTRE-SE</string>
     <string name="button_cad2">CADASTRAR</string>
+    <string name="send_message">enviar</string>
     <string name="button_edt_profile">Editar Perfil</string>
     <string name="button_notyf">Notificações</string>
     <string name="button_loans">Meus Empréstimos</string>
