@@ -49,11 +49,6 @@ public class Message {
     @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;
-
-    @Ignore
-    private int id_server;
-    @Ignore
-    private int id_chat_server;
     @NonNull
     private int chat_id;
     private String message;
@@ -69,6 +64,18 @@ public class Message {
     public static final int STATUS_UNSENT = -1;
     @Ignore
     public static final int STATUS_ERROR_SENT = 0;
+
+    public Message() {
+        this.id = -1;
+    }
+
+    public Message(int chat_id, String message, int status) {
+        this.chat_id = chat_id;
+        this.message = message;
+        this.status = status;
+        this.chat = new Chat();
+        this.chat.setId(chat_id);
+    }
 
     public int getId() {
         return id;
@@ -174,8 +181,6 @@ public class Message {
 
     private Message setByJSONObject(JSONObject response, Context context) {
         try {
-            this.id_server = response.has("id") ? response.getInt("id") : -1;
-            this.id_chat_server = response.has("id") ? response.getInt("id") : -1;
             this.status = response.has("status") ? response.getInt("status") : -1;
             this.message = response.has("message") ? response.getString("message") : null;
         } catch (JSONException e) {

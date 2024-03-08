@@ -32,7 +32,6 @@ public class OwnerScreenActivity extends AppCompatActivity {
         owner = new User();
 
         new Thread(() -> {
-            Log.e("wjkwnf", "weolfgjner");
             owner.getUserById(ownerId, this);
             if (owner.getId() > -1){
                 runOnUiThread(() -> {

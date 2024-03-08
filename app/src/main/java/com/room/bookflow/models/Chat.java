@@ -28,6 +28,7 @@ import com.room.bookflow.helpers.DateConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -171,7 +172,7 @@ public class Chat {
     public List<Message> updateChat(Context context, long chat_id) {
         if (!isNetworkAvailable(context)) {
             Log.w("CHAT", "Conexão perdida!");
-            return null;
+            return new ArrayList<>();
         }
 
         BookFlowDatabase database = BookFlowDatabase.getDatabase(context);
