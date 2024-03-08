@@ -381,11 +381,12 @@ public class User {
             if (ua != null) {
                 jsonBody.put("refresh", ua.getRefreshToken());
             } else {
-                Toast.makeText(context, "Nenhum usuário autenticado!", Toast.LENGTH_SHORT).show();
-//                popUp("Error", "Nenhum usuário autenticado!", context);
+
+                ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Nenhum usuario autenticado!", Toast.LENGTH_SHORT).show());
+//              popUp("Error", "Nenhum usuário autenticado!", context);
                 Intent intent = new Intent(context, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                showToast(context, "Login expirado!");
+                ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
                 context.startActivity(intent);
                 return null;
             }
@@ -499,7 +500,7 @@ public class User {
 
     public void update(int id, User user, Context context, UpdateUserCallback callback) {
         if (id < 0) {
-            showToast(context, "Usuário não definido!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Usuario não definido!", Toast.LENGTH_SHORT).show());
             if (callback != null) {
                 callback.onError();
             }
@@ -514,7 +515,7 @@ public class User {
         if (authToken == null) {
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            showToast(context, "Login expirado!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
             context.startActivity(intent);
             if (callback != null) {
                 callback.onError();
@@ -545,7 +546,7 @@ public class User {
                         }
                     } else {
                         // Erro ao atualizar usuário
-                        showToast(context, "Erro atualizando usuário!");
+                        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Erro atualizando usuário!", Toast.LENGTH_SHORT).show());
                         Log.e("Updating user", "Erro atualizando usuário!");
                         if (callback != null) {
                             callback.onError();
@@ -573,7 +574,7 @@ public class User {
     // Método update sem callback
     public User update(User user, Context context) {
         if (this.id < 0) {
-            showToast(context, "Usuário não definido!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Usuário não definido!", Toast.LENGTH_SHORT).show());
             return null;
         }
         // Chamando o método com callback, mas ignorando o callback aqui
@@ -584,7 +585,7 @@ public class User {
 
     public void updateLocate(int id, User user, Context context, UpdateUserLocateCallback callback) {
         if (id < 0) {
-            showToast(context, "Usuário não definido!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Usuário não definido!", Toast.LENGTH_SHORT).show());
             if (callback != null) {
                 callback.onError();
             }
@@ -599,7 +600,7 @@ public class User {
         if (authToken == null) {
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            showToast(context, "Login expirado!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
             context.startActivity(intent);
             if (callback != null) {
                 callback.onError();
@@ -631,7 +632,7 @@ public class User {
                         }
                     } else {
                         // Erro ao atualizar usuário
-                        showToast(context, "Erro atualizando usuário!");
+                        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Erro atualizando usuário!", Toast.LENGTH_SHORT).show());
                         Log.e("Updating user", "Erro atualizando usuário!");
                         if (callback != null) {
                             callback.onError();
@@ -662,7 +663,7 @@ public class User {
     // Método update sem callback
     public User updateLocate(User user, Context context) {
         if (this.id < 0) {
-            showToast(context, "Usuário não definido!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "usuario não definido!", Toast.LENGTH_SHORT).show());
             return null;
         }
         // Chamando o método com callback, mas ignorando o callback aqui
@@ -800,7 +801,7 @@ public class User {
         try {
             return userQueue.poll(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            showToast(context, "Conexão perdida!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Conexão Perdida!", Toast.LENGTH_SHORT).show());
             e.printStackTrace();
             return null;
         }

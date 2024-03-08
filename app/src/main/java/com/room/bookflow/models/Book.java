@@ -1,5 +1,6 @@
 package com.room.bookflow.models;
 
+import static android.content.ContentValues.TAG;
 import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
 import static com.room.bookflow.helpers.Utilitary.popUp;
 import static com.room.bookflow.helpers.Utilitary.showToast;
@@ -216,8 +217,8 @@ public class Book {
         if (authToken == null) {
             Intent intent = new Intent(((Activity) context), LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            showToast(context, "Login expirado!");
-            ((Activity) context).startActivity(intent);
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
+            context.startActivity(intent);
             return null;
         }
 
@@ -233,7 +234,7 @@ public class Book {
                         this.setByJSONObject(response, context);
                         bookQueue.add(book);
                     } else {
-                        showToast(context, "Erro buscando livro!");
+                        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Erro Buscando livro!", Toast.LENGTH_SHORT).show());
                         Log.e("Getting book", "Erro buscando livro!");
                     }
                 },
@@ -265,21 +266,42 @@ public class Book {
     }
 
     public static List<Book> getAllBooks(Context context, String filter, String search) {
-        String url = context.getString(R.string.api_url) + "/api/book/";
+        String apiUrl = context.getString(R.string.api_url);
+        String url = apiUrl + "/api/book/";
 
-        if ("SEARCH".equals(filter)){
+        Log.d("URL", "URLL: " + url);
+        User authenticatedUser = User.getAuthenticatedUser(context);
+
+        Log.d("AuthenticatedUser", "Before if: " + authenticatedUser);
+
+        if ("SEARCH".equals(filter)) {
             url += "?search=" + search;
         } else {
-            url += "user/" + User.getAuthenticatedUser(context).getId() + "?filter=" + (filter == null ? "ALL" : filter);
-        }
 
+            if (authenticatedUser != null) {
+                Log.d("AuthenticatedUser", "User ID: " + authenticatedUser.getId() +
+                        ", Username: " + authenticatedUser.getUsername());
+
+                url += "user/" + authenticatedUser.getId() + "?filter=" + (filter == null ? "ALL" : filter);
+
+                Log.d("URL", "Final URL: " + url);
+
+            } else {
+                Log.e("AuthenticatedUser", "User not authenticated or null.");
+                Log.e("URL", "ERRORRRR");
+
+                ((Activity) context).runOnUiThread(() -> {
+                    Toast.makeText(context, "ERRO CHEGOU NO ELSE!", Toast.LENGTH_SHORT).show();
+                });
+            }
+        }
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String authToken = User.getAccessToken(context);
 
         if (authToken == null) {
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            showToast(context, "Login expirado!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
             context.startActivity(intent);
             return new ArrayList<>();
         }
@@ -330,7 +352,7 @@ public class Book {
         if (authToken == null) {
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            showToast(context, "Login expirado!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
             ((Activity) context).startActivity(intent);
             return null;
         }
@@ -378,9 +400,15 @@ public class Book {
             this.availability = response.has("availability") && response.getBoolean("availability");
             this.ownerId = response.has("owner") ? response.getInt("owner") : -1;
 
-            User u = new User();
-            u.setId(this.ownerId);
-            this.owner = u;
+            if (response.has("owner")) {
+                this.ownerId = response.getInt("owner");
+                User u = new User();
+                u.setId(this.ownerId);
+                this.owner = u;
+            } else {
+                this.ownerId = -1;
+                this.owner = null; // or set it to a default user, depending on your logic
+            }
 
         } catch (JSONException e) {
             Log.e("error getting book", Objects.requireNonNull(e.getMessage()));
@@ -472,7 +500,7 @@ public class Book {
         try {
             return bookQueue.poll(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            showToast(context, "Conexão perdida!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Conexão perdida!", Toast.LENGTH_SHORT).show());
             e.printStackTrace();
             return null;
         }
@@ -559,7 +587,7 @@ public class Book {
         try {
             return bookQueue.poll(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            showToast(context, "Conexão perdida!");
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Conexão Perdida!", Toast.LENGTH_SHORT).show());
             e.printStackTrace();
             return null;
         }

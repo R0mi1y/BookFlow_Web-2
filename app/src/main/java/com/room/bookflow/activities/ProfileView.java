@@ -11,6 +11,7 @@ import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 
 import com.room.bookflow.databinding.ActivityProfileBinding;
+import com.room.bookflow.models.Address;
 import com.room.bookflow.models.User;
 
 import java.util.concurrent.Executor;
@@ -76,6 +77,8 @@ public class ProfileView extends AppCompatActivity {
                             updatedUser.update(userId, updatedUser, ProfileView.this, new User.UpdateUserCallback() {
                                 @Override
                                 public void onSuccess(User updatedUser) {
+                                    updatedUser.setIs_autenticated(true);
+                                    updatedUser.setAddress_id(userProfile.getAddress_id());
                                     changeUser(updatedUser);
                                 }
 
@@ -102,11 +105,9 @@ public class ProfileView extends AppCompatActivity {
             try {
                 BookFlowDatabase bookFlowDatabase = BookFlowDatabase.getDatabase(getApplicationContext());
 
-                bookFlowDatabase.userDao().delAll();
-                bookFlowDatabase.addressDao().delAll();
 
-                 bookFlowDatabase.userDao().update(user);
-                 bookFlowDatabase.addressDao().update(user.getAddress());
+                bookFlowDatabase.addressDao().update(user.getAddress());
+                bookFlowDatabase.userDao().update(user);
 
 
                 runOnUiThread(() -> {
