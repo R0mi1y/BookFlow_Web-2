@@ -13,10 +13,12 @@ from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from user.models import User, Loan
 from django.db.models import Q
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.filters import SearchFilter
 from user.serializers import UserSerializer
+from functools import reduce
+from operator import or_
 import qrcode
 import io
 
@@ -84,12 +86,26 @@ class BookView(viewsets.ModelViewSet):
         queryset = Book.objects.all()
         search_query = self.request.query_params.get('search', None)
 
-        if search_query:
-            queryset = queryset.filter(
-                Q(title__icontains=search_query) |
-                Q(author__icontains=search_query) |
-                Q(genre__icontains=search_query)
-            )
+        if search_query and any(search_query):
+            lower_search_query = search_query.lower()
+            
+            if lower_search_query == 'ficção':
+                search_query = [search_query, "fiction"]
+            elif lower_search_query == 'criminal':
+                search_query = [search_query, "crime", 'policia', 'criminalidade']
+            elif lower_search_query == 'infantil':
+                search_query = [search_query, 'crianças', 'kid', 'infância']
+            elif lower_search_query == 'aventura':
+                search_query = [search_query, "adventure", 'ação', 'viagem']
+            elif lower_search_query == 'biografia':
+                search_query = [search_query, "biography", 'vida']
+            
+            conditions = reduce(or_, [Q(title__icontains=term) | Q(author__icontains=term) | Q(genre__icontains=term) for term in search_query])
+            
+            queryset = queryset.filter(conditions)
+            
+            for i in queryset:
+                log((i.title))
 
         return queryset
     
@@ -218,6 +234,11 @@ class BookView(viewsets.ModelViewSet):
 
         # Criar a imagem QR Code
         img = qr.make_image(fill_color="black", back_color="white")
+        
+        if request.GET.get('result') == 'show':
+            img_bytes = io.BytesIO()
+            img.save(img_bytes, format='PNG')
+            return HttpResponse(img_bytes.getvalue(), content_type='image/png')
 
         # Converter a imagem em bytes
         img_bytes = io.BytesIO()

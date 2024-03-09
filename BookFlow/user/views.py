@@ -10,6 +10,9 @@ from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password, make_password
 from notification.models import Notification
 from notification.serializers import NotificationSerializer
+from chat.models import Message
+from chat.serializers import MessageSerializer
+from django.db.models import Q
 
 
 def log(msm): 
@@ -138,6 +141,43 @@ class UserView(ModelViewSet):
         queryset.update(visualized=True)
         
         return Response(notifications_data)
+    
+    
+    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated, ])
+    def messageboxes(self, request, *args, **kwargs):
+        sender = self.get_object()
+        
+        queryset = Message.objects.filter(reciever=request.user, sender=sender).exclude(status=Message.STATUS_RECIVED_BY_RECEIVER)
+        messages_data = MessageSerializer(queryset, many=True).data
+        queryset.update(status=Message.STATUS_RECIVED_BY_RECEIVER)
+        
+        return Response(messages_data)
+    
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated, ])
+    def sendmessage(self, request, *args, **kwargs):
+        to = self.get_object()
+        
+        message = Message.objects.create(
+            sender=request.user,
+            reciever=to,
+            message=request.data.get('message')
+        )
+        
+        message_data = MessageSerializer(message).data
+        
+        return Response(message_data)
+    
+    
+    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated, ])
+    def all_messages(self, request, *args, **kwargs):
+        sender = self.get_object()
+        
+        queryset = Message.objects.filter(Q(sender=request.user, reciever=sender) | Q(reciever=request.user, sender=sender))
+        messages_data = MessageSerializer(queryset, many=True).data
+        queryset.filter(status=Message.STATUS_RECIVED_BY_RECEIVER).update(status=Message.STATUS_RECIVED_BY_RECEIVER)
+        
+        return Response(messages_data)
     
     
     @action(detail=True, methods=['get'])

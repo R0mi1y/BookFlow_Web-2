@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'book',
     'user',
     'settings',
+    'chat',
     'notification',
     
     # Apps de terceiros
