@@ -123,7 +123,6 @@ public class User {
         User user = userDatabase.userDao().getAutenticated();
         return user;
     }
-
     public void setByOtherUser(User user){
         this.id = user.id;
         this.refreshToken = user.refreshToken;

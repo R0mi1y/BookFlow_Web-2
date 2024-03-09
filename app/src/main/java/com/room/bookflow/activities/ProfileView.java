@@ -1,12 +1,24 @@
 package com.room.bookflow.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 
@@ -14,11 +26,19 @@ import com.room.bookflow.databinding.ActivityProfileBinding;
 import com.room.bookflow.models.Address;
 import com.room.bookflow.models.User;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import android.graphics.drawable.Drawable;
+
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class ProfileView extends AppCompatActivity {
 
+    private ActivityResultLauncher<String> galleryLauncher;
     ActivityProfileBinding binding;
 
     @Override
@@ -28,10 +48,30 @@ public class ProfileView extends AppCompatActivity {
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //Botão de Voltar
+        binding.backBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileView.this, HomeActivity.class);
+            startActivity(intent);
+        });
+        Context context = this;
+        // PARTE DA IMAGEM
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        setPhotoFromUri(uri, context);
+                    }
+        });
+
         binding.btnEditLoc.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileView.this, RegisterLocationActivity.class);
             startActivity(intent);
         });
+
+
+        binding.cameraIcon.setOnClickListener(v -> {
+            galleryLauncher.launch("image/*");
+        });
+
 
         new Thread(() -> {
             User userProfile = User.getAuthenticatedUser(this);
@@ -108,10 +148,7 @@ public class ProfileView extends AppCompatActivity {
             try {
                 BookFlowDatabase bookFlowDatabase = BookFlowDatabase.getDatabase(getApplicationContext());
 
-
-                bookFlowDatabase.addressDao().update(user.getAddress());
                 bookFlowDatabase.userDao().update(user);
-
 
                 runOnUiThread(() -> {
                     Toast.makeText(ProfileView.this, user.getUsername() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
@@ -123,5 +160,30 @@ public class ProfileView extends AppCompatActivity {
                 e.printStackTrace(); // Trate a exceção de acordo com os requisitos do seu aplicativo
             }
         }).start();
+    }
+
+    public void setPhotoFromUri(Uri uri, Context context) {
+        // Aqui você pode realizar as operações necessárias com a URI da imagem
+        // Por exemplo, carregar a imagem para a interface do usuário ou enviá-la para o servidor
+
+        // Exemplo: Carregar a imagem usando Glide (certifique-se de adicionar a dependência no build.gradle)
+        Glide.with(context)
+                .asDrawable()
+                .load(uri).transform(new RoundedCorners(10))
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        // Atualizar a imagem na interface do usuário
+                        binding.profileImage.setImageDrawable(resource);
+
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        // Chamado quando a imagem é removida do alvo
+                    }
+                });
+        // Exemplo: Enviar a imagem para o servidor (você precisará implementar isso conforme necessário)
+        // uploadImageToServer(uri);
     }
 }
