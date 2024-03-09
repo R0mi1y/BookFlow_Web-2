@@ -8,11 +8,13 @@
     android:paddingBottom="10dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_profile_menu"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
+        app:shapeAppearanceOverlay="@style/circular_perfil"
+        android:scaleType="centerCrop"
         android:src="@drawable/ellipse2" />
 
 </LinearLayout>

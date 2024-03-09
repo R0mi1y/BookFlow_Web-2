@@ -90,11 +90,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/perfil"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
+                app:shapeAppearanceOverlay="@style/circular_perfil"
                 android:foregroundGravity="center"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/default_cover_bg" />
