@@ -3,6 +3,7 @@ package com.room.bookflow.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -21,7 +22,7 @@ public interface BookDao {
     @Query("DELETE FROM book_table WHERE 1")
     public void delAll();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public long insert(Book book);
 
     @Delete

@@ -2,6 +2,7 @@ package com.room.bookflow.models;
 
 
 import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 import static com.room.bookflow.helpers.Utilitary.showToast;
 
 import android.app.Activity;
@@ -10,10 +11,14 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 import com.room.bookflow.activities.LoginActivity;
 
@@ -28,7 +33,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+@Entity(tableName = "notification_table")
 public class Notification {
+    @PrimaryKey(autoGenerate = true)
     int id;
     int user_id;
     boolean visualized;
@@ -36,6 +43,10 @@ public class Notification {
     String title;
     String description;
     String from;
+
+    public Notification() {
+        this.id = -1;
+    }
 
     public boolean isVisualized() {
         return visualized;
@@ -94,55 +105,73 @@ public class Notification {
     }
 
     public static List<Notification> getAllNotifications(Context context) {
-        String url = context.getString(R.string.api_url) + "/api/user/" + User.getAuthenticatedUser(context).getId() + "/notifications_all/";
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-
-        String authToken = User.getAccessToken(context);
-
-        if (authToken == null) {
-            Intent intent = new Intent(context, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
-            context.startActivity(intent);
-            return new ArrayList<>();
-        }
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", "Bearer " + authToken);
-        List<Notification> list = new ArrayList<>();
+        BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
+        List<Notification> notifications = db.notificationDao().getAllNotifications();
         BlockingQueue<List<Notification>> notificationQueue = new LinkedBlockingQueue<>();
+        if(isNetworkAvailable(context)){
+            String url = context.getString(R.string.api_url) + "/api/user/" + User.getAuthenticatedUser(context).getId() + "/notifications_all/";
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                response -> {
-                    ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Requisited", Toast.LENGTH_SHORT).show());
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject jsonObject = response.getJSONObject(i);
-                            Notification notification = new Notification().setByJSONObject(jsonObject, context);
-                            if (notification != null) list.add(notification);
-                        } catch (JSONException e) {
-                            Log.e("Error getting user", e.getMessage());
+            String authToken = User.getAccessToken(context);
+
+            if (authToken == null) {
+                Intent intent = new Intent(context, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
+                context.startActivity(intent);
+                notificationQueue.add(new ArrayList<>());
+            }
+
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Authorization", "Bearer " + authToken);
+            List<Notification> list = new ArrayList<>();
+
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                    response -> {
+                        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Requisited", Toast.LENGTH_SHORT).show());
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                Notification notification = new Notification().setByJSONObject(jsonObject, context);
+                                if (notification != null) list.add(notification);
+                            } catch (JSONException e) {
+                                Log.e("Error getting user", e.getMessage());
+                            }
+                        }
+                        notificationQueue.add(list);
+                    },
+                    error -> {
+                        handleErrorResponse(error, context);
+                        notificationQueue.add(new ArrayList<>());
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    return headers;
+                }
+            };
+            requestQueue.add(request);
+            try {
+                List<Notification> notificationsByServer = notificationQueue.poll(30, TimeUnit.SECONDS);
+                for (Notification notification : notificationsByServer) {
+                    int notificationId = notification.getId();
+
+                    boolean idExistsInOtherList = false;
+                    for (Notification otherNotification : notifications) {
+                        if (otherNotification.getId() == notificationId) {
+                            idExistsInOtherList = true;
+                            break;
                         }
                     }
-                    notificationQueue.add(list);
-                },
-                error -> {
-                    handleErrorResponse(error, context);
-                    notificationQueue.add(new ArrayList<>());
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                return headers;
+                    if (!idExistsInOtherList) {
+                        db.notificationDao().insert(notification);
+                    }
+                }
+                return notificationsByServer;
+            } catch (InterruptedException e) {
+                showToast(context, "Conexão perdida!");
             }
-        };
-        requestQueue.add(request);
-        try {
-            return notificationQueue.poll(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            showToast(context, "Conexão perdida!");
-            Thread.currentThread().interrupt(); // Preserve a interrupção status
-            return new ArrayList<>();
         }
+        return notifications;
     }
 
     public Notification setByJSONObject(JSONObject response, Context context) {

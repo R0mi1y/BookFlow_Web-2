@@ -66,7 +66,6 @@ public class Message {
     public static final int STATUS_ERROR_SENT = 0;
 
     public Message() {
-        this.id = -1;
     }
 
     public Message(int chat_id, String message, int status) {

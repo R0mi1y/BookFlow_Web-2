@@ -2,6 +2,7 @@ package com.room.bookflow.models;
 
 import static android.content.ContentValues.TAG;
 import static com.room.bookflow.helpers.Utilitary.handleErrorResponse;
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 import static com.room.bookflow.helpers.Utilitary.popUp;
 import static com.room.bookflow.helpers.Utilitary.showToast;
 
@@ -25,6 +26,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 import com.room.bookflow.activities.LoginActivity;
 
@@ -266,10 +268,25 @@ public class Book {
     }
 
     public static List<Book> getAllBooks(Context context, String filter, String search) {
+        return getAllBooks(context, filter, search, true);
+    }
+
+    public static List<Book> getAllBooks(Context context, String filter, boolean redirectLogin) {
+        return getAllBooks(context, filter, null, redirectLogin);
+    }
+
+    public static List<Book> getAllBooks(Context context, String filter, String search, boolean redirectLogin) {
+        if (!isNetworkAvailable(context)) {
+            if (filter.equals("MY_BOOKS")) {
+                BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
+                return db.bookDao().getAllBooks();
+            } else return new ArrayList<>();
+        }
+
         String apiUrl = context.getString(R.string.api_url);
         String url = apiUrl + "/api/book/";
 
-        Log.d("URL", "URLL: " + url);
+        Log.d("URL", "URL: " + url);
         User authenticatedUser = User.getAuthenticatedUser(context);
 
         Log.d("AuthenticatedUser", "Before if: " + authenticatedUser);
@@ -277,7 +294,6 @@ public class Book {
         if ("SEARCH".equals(filter)) {
             url += "?search=" + search;
         } else {
-
             if (authenticatedUser != null) {
                 Log.d("AuthenticatedUser", "User ID: " + authenticatedUser.getId() +
                         ", Username: " + authenticatedUser.getUsername());
@@ -296,9 +312,9 @@ public class Book {
             }
         }
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String authToken = User.getAccessToken(context);
+        String authToken = User.getAccessToken(context, redirectLogin);
 
-        if (authToken == null) {
+        if (authToken == null && redirectLogin) {
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
@@ -596,11 +612,37 @@ public class Book {
     private static RequestBody createRequestBody(String value) {
         return RequestBody.create(MediaType.parse("text/plain"), value);
     }
+
     private String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    public static void actualizeBooksDatabase(Context context) {
+        if (isNetworkAvailable(context)){
+            BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
+            new Thread(() -> {
+                if (User.getAuthenticatedUser(context) == null) return;
+
+                List<Book> books = Book.getAllBooks(context, "MY_BOOKS", false);
+                List<Book> booksLocal = db.bookDao().getAllBooks();
+
+                for (Book book : books) {
+                    boolean is_in_db = false;
+                    for (Book book1 : booksLocal){
+                        if (book1.getId() == book.getId()){
+                            is_in_db = true;
+                            break;
+                        }
+                    }
+                    if (!is_in_db) {
+                        db.bookDao().insert(book);
+                    }
+                }
+            }).start();
+        }
     }
 }
 

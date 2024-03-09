@@ -21,6 +21,14 @@
             android:icon="@drawable/lista_books"
             android:title="@string/button_loans"/>
         <item
+            android:id="@+id/register_book_bar"
+            android:icon="@drawable/books_vetor"
+            android:title="@string/register_books"/>
+        <item
+            android:id="@+id/chats"
+            android:icon="@drawable/baseline_chat_24"
+            android:title="@string/register_books"/>
+        <item
             android:id="@+id/scannerqr"
             android:icon="@drawable/scanqrcode"
             android:title="@string/button_scan"/>
