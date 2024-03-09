@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
 
             //marca o item homeFragment como selecionado na navigationViee
-            navigationView.setCheckedItem(R.id.edit_profile);
+            navigationView.setCheckedItem(R.id.notifications);
         }
 
     }
@@ -77,9 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemSelecionado = item.getItemId();
 
-        if(itemSelecionado == R.id.edit_profile){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
-        }else if(itemSelecionado == R.id.notifications){
+        if(itemSelecionado == R.id.notifications){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NotificationsFragment()).commit();
         }else if(itemSelecionado == R.id.loan){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();

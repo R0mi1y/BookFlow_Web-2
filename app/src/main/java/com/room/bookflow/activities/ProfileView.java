@@ -84,7 +84,9 @@ public class ProfileView extends AppCompatActivity {
                 int userId = userProfile.getId();
 
                 runOnUiThread(() -> {
-                    binding.editTextName.setText(userProfile.getUsername());
+                    binding.editTextName.setText(userProfile.getFirstName());
+                    binding.editTextLastname.setText(userProfile.getLastName());
+                    binding.editTextUsername.setText(userProfile.getUsername());
                     binding.editTextEmail.setText(userProfile.getEmail());
                     binding.editTextPhone.setText(userProfile.getPhone());
                     binding.editTextBiography.setText(userProfile.getBiography());
@@ -94,18 +96,20 @@ public class ProfileView extends AppCompatActivity {
                     binding.btnSalvChanges.setOnClickListener(v -> {
                         // Obter os dados dos campos de edição
                         String updatedName = binding.editTextName.getText().toString();
+                        String updatedLastName = binding.editTextLastname.getText().toString();
+                        String updatedUserName = binding.editTextUsername.getText().toString();
                         String updatedEmail = binding.editTextEmail.getText().toString();
                         String updatedPhone = binding.editTextPhone.getText().toString();
                         String updatedBiography = binding.editTextBiography.getText().toString();
 
                         // Criar um objeto User com as alterações
                         User updatedUser = new User();
-                        updatedUser.setUsername(updatedName);
+                        updatedUser.setFirstName(updatedName);
+                        updatedUser.setLastName(updatedLastName);
+                        updatedUser.setUsername(updatedUserName);
                         updatedUser.setEmail(updatedEmail);
                         updatedUser.setPhone(updatedPhone);
                         updatedUser.setBiography(updatedBiography);
-
-                        // Chamar o método update com o callback para lidar com o resultado da atualização
 
                         new Thread(() -> {
                             File imageFile = convertBitmapToFile(this, imageBitMap, "photo.png");
@@ -148,7 +152,6 @@ public class ProfileView extends AppCompatActivity {
             }
         }).start();
     }
-
     private void showImageSourceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Escolher fonte da imagem")

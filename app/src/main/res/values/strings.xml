@@ -27,6 +27,7 @@
     <string name="text_profile">Perfil</string>
     <string name="text_profile_view">Meu perfil</string>
     <string name="name">Nome</string>
+    <string name="usernameField">Username</string>
     <string name="email">E-mail</string>
     <string name="phone">Telefone</string>
     <string name="biografy">Biografia</string>

@@ -536,6 +536,8 @@ public class User {
 
         UserApi userApi = retrofit.create(UserApi.class);
 
+        RequestBody nameBody = createRequestBody(user.firstName);
+        RequestBody lastnameBody = createRequestBody(user.lastName);
         RequestBody usernameBody = createRequestBody(user.username);
         RequestBody emailBody = createRequestBody(user.email);
         RequestBody phoneBody = createRequestBody(user.phone);
@@ -549,9 +551,9 @@ public class User {
         if(image != null) {
             imagemBody = RequestBody.create(MediaType.parse("image/*"), image);
             MultipartBody.Part imagePart = MultipartBody.Part.createFormData("photo", image.getName(), imagemBody);
-            call = userApi.updateUser("api/user/" + id + "/","Bearer " + authToken, usernameBody, emailBody, phoneBody, biographBody, imagePart);
+            call = userApi.updateUser("api/user/" + id + "/","Bearer " + authToken, nameBody, lastnameBody, usernameBody, emailBody, phoneBody, biographBody, imagePart);
         } else {
-            call = userApi.updateUser("api/user/" + id + "/", "Bearer " + authToken, usernameBody, emailBody, phoneBody, biographBody);
+            call = userApi.updateUser("api/user/" + id + "/", "Bearer " + authToken, nameBody, lastnameBody,usernameBody, emailBody, phoneBody, biographBody);
         }
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -923,6 +925,8 @@ public class User {
         Call<ResponseBody> updateUser(
                 @Url String url,
                 @Header("Authorization") String authorizationHeader,
+                @Part("first_name") RequestBody first_name,
+                @Part("last_name") RequestBody last_name,
                 @Part("username") RequestBody username,
                 @Part("email") RequestBody email,
                 @Part("phone") RequestBody phone,
@@ -934,6 +938,8 @@ public class User {
         Call<ResponseBody> updateUser(
                 @Url String url,
                 @Header("Authorization") String authorizationHeader,
+                @Part("first_name") RequestBody first_name,
+                @Part("last_name") RequestBody last_name,
                 @Part("username") RequestBody username,
                 @Part("email") RequestBody email,
                 @Part("phone") RequestBody phone,

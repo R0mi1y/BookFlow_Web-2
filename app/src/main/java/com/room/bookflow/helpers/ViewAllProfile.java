@@ -4,14 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
+
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.ProfileView;
 import com.room.bookflow.databinding.ActivityOwnerScreenBinding;
 import com.room.bookflow.databinding.ActivityViewProfileBinding;
+import com.room.bookflow.models.Address;
 import com.squareup.picasso.Picasso;
 import com.room.bookflow.models.User;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ViewAllProfile extends AppCompatActivity {
 
@@ -25,6 +32,7 @@ public class ViewAllProfile extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         new Thread(() -> {
+            BookFlowDatabase bookFlowDatabase = BookFlowDatabase.getDatabase(getApplicationContext());
             authenticatedUser = User.getAuthenticatedUser(this);
 
             if (authenticatedUser != null && authenticatedUser.getId() > -1) {
@@ -39,19 +47,30 @@ public class ViewAllProfile extends AppCompatActivity {
                     binding.name.setText(name);
                     binding.phone.setText(authenticatedUser.getPhone());
 
-                    if (authenticatedUser.getAddress() != null) {
-                        binding.city.setText(authenticatedUser.getAddress().getCity());
-                        binding.street.setText(authenticatedUser.getAddress().getStreet());
-                        binding.district.setText(authenticatedUser.getAddress().getDistrict());
-                        binding.postalCode.setText(authenticatedUser.getAddress().getPostalCode());
-                        binding.state.setText(authenticatedUser.getAddress().getState());
-                    } else {
-                        binding.city.setText("");
-                        binding.street.setText("");
-                        binding.district.setText("");
-                        binding.postalCode.setText("");
-                        binding.state.setText("");
-                    }
+
+                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+                        executorService.execute(() -> {
+                            // Buscar o endereço do usuário
+                            Address address = bookFlowDatabase.addressDao().getById(authenticatedUser.getAddress_id());
+
+                            Log.d("UserProfile", "ENDEREÇOOOOOOOOOOOOOOOOOO: " + address);
+                            runOnUiThread(() -> {
+                                if (address != null) {
+                                    // Se o endereço existir, preencher os campos na interface do usuário
+                                    binding.postalCode.setText(address.getPostalCode());
+                                    binding.state.setText(address.getState());
+                                    binding.city.setText(address.getCity());
+                                    binding.district.setText(address.getDistrict());
+                                    binding.street.setText(address.getStreet());
+                                }else {
+                                    binding.city.setText("");
+                                    binding.street.setText("");
+                                    binding.district.setText("");
+                                    binding.postalCode.setText("");
+                                    binding.state.setText("");
+                                }
+                            });
+                        });
 
                     ImageView perfil = binding.perfil;
 

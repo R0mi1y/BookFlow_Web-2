@@ -5,10 +5,6 @@
     <group
         android:checkableBehavior="single">
         <item
-            android:id="@+id/edit_profile"
-            android:icon="@drawable/profile"
-            android:title="@string/text_profile_view"/>
-        <item
             android:id="@+id/notifications"
             android:icon="@drawable/notifications"
             android:title="@string/button_notyf"/>

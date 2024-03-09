@@ -41,9 +41,12 @@
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="306dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
                     android:fontFamily="@font/rosarivo"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
                     android:text="@string/perfil"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
@@ -61,7 +64,7 @@
                     android:id="@+id/Profile_edt_view"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
                     android:fontFamily="@font/rosarivo"
@@ -71,16 +74,11 @@
                     android:textColorHint="#EDEDED"
                     android:textColorLink="#FFFFFF"
                     android:textSize="42sp"
-                    app:icon="@android:drawable/ic_menu_edit"
+                    app:icon="@drawable/baseline_edit_24"
                     app:iconGravity="start"
                     app:iconSize="40dp"
                     app:iconTint="#FFFFFF"
                     app:rippleColor="#FFFFFF" />
-
-                <Space
-                    android:layout_width="26dp"
-                    android:layout_height="34dp"
-                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -90,16 +88,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/perfil"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
-                app:shapeAppearanceOverlay="@style/circular_perfil"
                 android:foregroundGravity="center"
                 android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/circular_perfil"
                 app:srcCompat="@drawable/default_cover_bg" />
-
 
             <Space
                 android:layout_width="match_parent"
@@ -292,7 +290,7 @@
                         android:fontFamily="@font/open_sans_light"
 
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
                 </TableRow>
 
                 <TableRow>
@@ -313,7 +311,7 @@
                         android:fontFamily="@font/open_sans_light"
 
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
                 </TableRow>
 
                 <TableRow>
@@ -336,7 +334,7 @@
 
 
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
                 </TableRow>
 
                 <TableRow>
@@ -359,7 +357,7 @@
 
 
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
                 </TableRow>
 
                 <TableRow>
@@ -381,87 +379,14 @@
                         android:fontFamily="@font/open_sans_light"
 
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
                 </TableRow>
 
             </TableLayout>
 
-
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="24dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:fontFamily="@font/rosarivo_regular"
-                android:text="@string/info_user"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:background="@drawable/default_border"
-                android:gravity="center"
-                android:padding="10dp">
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/rosarivo_regular"
-                        android:paddingRight="7dp"
-                        android:text="@string/whatsapp"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/open_sans_light"
-
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/rosarivo_regular"
-                        android:paddingRight="7dp"
-                        android:text="@string/owner_email"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/open_sans_light"
-
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
-                </TableRow>
-
-
-            </TableLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="80dp" />
 
         </LinearLayout>
     </ScrollView>

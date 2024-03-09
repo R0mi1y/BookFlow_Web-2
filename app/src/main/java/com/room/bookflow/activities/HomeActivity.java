@@ -132,6 +132,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             ShapeableImageView profileImage = navView.findViewById(R.id.img_profile_menu);
             TextView profileName = navView.findViewById(R.id.profile_name);
 
+            profileImage.setOnClickListener(v -> {
+                Intent intent = new Intent(HomeActivity.this, ViewAllProfile.class);
+                startActivity(intent);
+            });
+
             User profile = User.getAuthenticatedUser(this);
             runOnUiThread(() -> {
                 profileName.setText(profile.getUsername());
@@ -143,11 +148,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemSelecionado = item.getItemId();
-
-        if(itemSelecionado == R.id.edit_profile){
-            Intent intent = new Intent(HomeActivity.this, ViewAllProfile.class);
-            startActivity(intent);
-        } else if(itemSelecionado == R.id.notifications){
+        if(itemSelecionado == R.id.notifications){
             Intent intent = new Intent(HomeActivity.this, NotificationsActivity.class);
             startActivity(intent);
         }else if(itemSelecionado == R.id.chat_list){
