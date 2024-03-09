@@ -24,6 +24,7 @@
     <string name="button_edt_end">Editar Endereço</string>
     <string name="button_save_alt">Salvar Alterações</string>
     <string name="text_profile">Perfil</string>
+    <string name="text_profile_view">Meu perfil</string>
     <string name="name">Nome</string>
     <string name="email">E-mail</string>
     <string name="phone">Telefone</string>
