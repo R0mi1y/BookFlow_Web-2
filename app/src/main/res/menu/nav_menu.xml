@@ -13,6 +13,10 @@
             android:icon="@drawable/notifications"
             android:title="@string/button_notyf"/>
         <item
+            android:id="@+id/chat_list"
+            android:icon="@drawable/chat_icon"
+            android:title="@string/button_chat_list"/>
+        <item
             android:id="@+id/loan"
             android:icon="@drawable/lista_books"
             android:title="@string/button_loans"/>
@@ -20,6 +24,7 @@
             android:id="@+id/scannerqr"
             android:icon="@drawable/scanqrcode"
             android:title="@string/button_scan"/>
+
 
     </group>
     <item

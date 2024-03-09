@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.room.bookflow.R;
 
-public class ActivityChatList extends AppCompatActivity {
+public class ChatListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

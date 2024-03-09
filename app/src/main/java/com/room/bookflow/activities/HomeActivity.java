@@ -127,6 +127,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }else if(itemSelecionado == R.id.notifications){
             Intent intent = new Intent(HomeActivity.this, NotificationsActivity.class);
             startActivity(intent);
+        }else if(itemSelecionado == R.id.chat_list){
+            Intent intent = new Intent(HomeActivity.this, ChatListActivity.class);
+            startActivity(intent);
         }else if(itemSelecionado == R.id.scannerqr){
             Intent intent = new Intent(HomeActivity.this, QRCodeScannerActivity.class);
             startActivity(intent);
