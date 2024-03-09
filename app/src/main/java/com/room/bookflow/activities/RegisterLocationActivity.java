@@ -8,7 +8,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.room.bookflow.BookFlowDatabase;
-import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityRegisterLocationBinding;
 import com.room.bookflow.models.Address;
 import com.room.bookflow.models.User;
@@ -29,7 +28,7 @@ public class RegisterLocationActivity extends AppCompatActivity {
 
         //Botão voltar
         binding.backBtn3.setOnClickListener(v ->{
-            Intent intent = new Intent(RegisterLocationActivity.this, ProfileView.class);
+            Intent intent = new Intent(RegisterLocationActivity.this, ProfileActivity.class);
             startActivity(intent);
         });
 
@@ -125,7 +124,7 @@ public class RegisterLocationActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     Toast.makeText(RegisterLocationActivity.this, user.getUsername() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegisterLocationActivity.this, ProfileView.class);
+                    Intent intent = new Intent(RegisterLocationActivity.this, ProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 });

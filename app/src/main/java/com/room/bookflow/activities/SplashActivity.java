@@ -31,54 +31,59 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        bookFlowDatabase = BookFlowDatabase.getDatabase(this);
 
-        WorkManager workManager = WorkManager.getInstance(this);
+        new Thread(() -> {
+            bookFlowDatabase = BookFlowDatabase.getDatabase(this);
 
-        workManager.cancelUniqueWork("notificationWork");
+            WorkManager workManager = WorkManager.getInstance(this);
 
-        PeriodicWorkRequest notificationWork =
-                new PeriodicWorkRequest.Builder(
-                        NotificationWorker.class,
-                        5, TimeUnit.SECONDS)
-                        .build();
+            workManager.cancelUniqueWork("notificationWork");
 
-        workManager.enqueueUniquePeriodicWork(
-                        "notificationWork",
-                        ExistingPeriodicWorkPolicy.KEEP,
-                        notificationWork);
+            PeriodicWorkRequest notificationWork =
+                    new PeriodicWorkRequest.Builder(
+                            NotificationWorker.class,
+                            5, TimeUnit.SECONDS)
+                            .build();
 
-        new Handler().postDelayed(() -> {
-            new Thread(() -> {
-                boolean is_authenticated = false;
-                if (User.getAuthenticatedUser(this) != null) {
-                    if (!isNetworkAvailable(this)) {
-                        is_authenticated = true;
-                    } else {
-                        String token = User.getAccessToken(this);
-                        if (token != null) {
-                            is_authenticated = true;
+            workManager.enqueueUniquePeriodicWork(
+                            "notificationWork",
+                            ExistingPeriodicWorkPolicy.KEEP,
+                            notificationWork);
+
+            runOnUiThread(() -> {
+                new Handler().postDelayed(() -> {
+                    new Thread(() -> {
+                        boolean is_authenticated = false;
+                        if (User.getAuthenticatedUser(this) != null) {
+                            if (!isNetworkAvailable(this)) {
+                                is_authenticated = true;
+                            } else {
+                                String token = User.getAccessToken(this);
+                                if (token != null) {
+                                    is_authenticated = true;
+                                }
+                            }
                         }
-                    }
-                }
 
-                if (is_authenticated) {
-                    Book.actualizeBooksDatabase(this);
+                        if (is_authenticated) {
+                            Book.actualizeBooksDatabase(this);
 
-                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    runOnUiThread(() -> {
-                        startActivity(intent);
-                        finish();
-                    });
-                } else {
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    runOnUiThread(() -> {
-                        startActivity(intent);
-                        finish();
-                    });
-                }
-            }).start();
-        }, 1000);
+                            Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                            runOnUiThread(() -> {
+                                startActivity(intent);
+                                finish();
+                            });
+                        } else {
+                            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                            runOnUiThread(() -> {
+                                startActivity(intent);
+                                finish();
+                            });
+                        }
+                    }).start();
+                }, 1000);
+            });
+        }).start();
     }
 
 

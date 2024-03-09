@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@color/colorGray_200"
-    tools:context=".activities.ProfileView">
+    tools:context=".activities.ProfileActivity">
 
     <ScrollView
         android:layout_width="match_parent"
