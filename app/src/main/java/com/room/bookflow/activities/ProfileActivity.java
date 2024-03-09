@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,7 +27,7 @@ import java.util.Objects;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class ProfileView extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<String> galleryLauncher;
     ActivityProfileBinding binding;
@@ -66,11 +65,11 @@ public class ProfileView extends AppCompatActivity {
 
         //Botão de Voltar
         binding.backBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileView.this, HomeActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
             startActivity(intent);
         });
         binding.btnEditLoc.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileView.this, RegisterLocationActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, RegisterLocationActivity.class);
             startActivity(intent);
         });
 
@@ -113,7 +112,7 @@ public class ProfileView extends AppCompatActivity {
 
                         new Thread(() -> {
                             File imageFile = convertBitmapToFile(this, imageBitMap, "photo.png");
-                            updatedUser.update(userId, updatedUser, imageFile, ProfileView.this);
+                            updatedUser.update(userId, updatedUser, imageFile, ProfileActivity.this);
                             updatedUser.setIs_autenticated(true);
                             updatedUser.setAddress_id(userProfile.getAddress_id());
                             changeUser(updatedUser);
@@ -131,7 +130,7 @@ public class ProfileView extends AppCompatActivity {
     }
 
     private void showToast(String message) {
-        Toast.makeText(ProfileView.this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
     public void changeUser(User user) {
@@ -142,8 +141,8 @@ public class ProfileView extends AppCompatActivity {
                 bookFlowDatabase.userDao().update(user);
 
                 runOnUiThread(() -> {
-                    Toast.makeText(ProfileView.this, user.getUsername() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ProfileView.this, HomeActivity.class);
+                    Toast.makeText(ProfileActivity.this, user.getUsername() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 });

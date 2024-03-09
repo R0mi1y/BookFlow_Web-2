@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.room.bookflow.R;
@@ -68,6 +67,8 @@ public class OwnerScreenActivity extends AppCompatActivity {
             BookFlowDatabase database = BookFlowDatabase.getDatabase(this);
             Intent intent = new Intent(OwnerScreenActivity.this, ChatActivity.class);
             try {
+                database.messageDao().delAll();
+                database.chatDao().delAll();
                 Chat chat = database.chatDao().getByReciver(owner.getId());
                 if (chat != null) {
                     intent.putExtra("chatId", chat.getId());
@@ -83,8 +84,9 @@ public class OwnerScreenActivity extends AppCompatActivity {
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 runOnUiThread(() -> {
-                    popUp("Erro", "Erro tentando abrir o chat!", this);
+                    popUp("Erro", "Falha ao tentando abrir o chat!", this);
                 });
             }
         }).start();

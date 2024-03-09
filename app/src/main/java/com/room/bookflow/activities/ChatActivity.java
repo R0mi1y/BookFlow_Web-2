@@ -31,13 +31,13 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        binding.backBtn3.setOnClickListener(v -> finish());
+
         int chatId = getIntent().getIntExtra("chatId", -1);
         if (chatId == -1) {
-            popUp("Erro", "Falha ao tentar abrir chat", this);
+            popUp("Erro", "Falha ao tentar abrir chat!", this);
             return;
         }
-
-        binding.backBtn3.setOnClickListener(v -> finish());
 
         new Thread(() -> {
             chat = database.chatDao().getById(chatId);
@@ -48,10 +48,10 @@ public class ChatActivity extends AppCompatActivity {
                 new Thread(() -> {
                     String message = binding.messageInput.getText().toString();
                     if (message != null && !message.replace(" ", "").equals("")) {
-                        reciever.sendMessage(message, chat.getReceiver_id(), this);
                         runOnUiThread(() -> {
                             binding.messageInput.setText("");
                         });
+                        reciever.sendMessage(message, chat.getReceiver_id(), this);
                     }
                 }).start();
             });

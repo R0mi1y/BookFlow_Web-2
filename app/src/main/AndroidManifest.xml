@@ -31,7 +31,7 @@
         android:theme="@style/Theme.BookFlow"
         tools:targetApi="31">
         <activity
-            android:name=".activities.ActivityChatList"
+            android:name=".activities.ChatListActivity"
             android:exported="false" />
         <activity
             android:name=".activities.ChatActivity"
@@ -40,16 +40,13 @@
             android:name=".activities.NotificationsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ProfileView"
+            android:name=".activities.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".activities.OwnerScreenActivity"
             android:exported="false" />
         <activity
             android:name=".activities.RegisterLocationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".activities.EditBookActivity"
@@ -81,12 +78,6 @@
         <activity
             android:name=".activities.QRCodeScannerActivity"
             android:screenOrientation="portrait" />
-
-        <service
-            android:name=".activities.NotificationService"
-            android:enabled="true"
-            android:exported="false" />
-
         <activity
             android:name=".activities.MainActivity"
             android:exported="false" />

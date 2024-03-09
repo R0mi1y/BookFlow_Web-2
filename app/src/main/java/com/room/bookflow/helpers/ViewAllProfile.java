@@ -1,5 +1,8 @@
 package com.room.bookflow.helpers;
 
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
+import static com.room.bookflow.helpers.Utilitary.popUp;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,8 +12,7 @@ import android.widget.ImageView;
 
 import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
-import com.room.bookflow.activities.HomeActivity;
-import com.room.bookflow.activities.ProfileView;
+import com.room.bookflow.activities.ProfileActivity;
 import com.room.bookflow.databinding.ActivityOwnerScreenBinding;
 import com.room.bookflow.databinding.ActivityViewProfileBinding;
 import com.room.bookflow.models.Address;
@@ -21,7 +23,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ViewAllProfile extends AppCompatActivity {
-
     ActivityViewProfileBinding binding;
     User authenticatedUser;
 
@@ -88,8 +89,12 @@ public class ViewAllProfile extends AppCompatActivity {
         binding.backBtn.setOnClickListener(v -> finish());
 
         binding.ProfileEdtView.setOnClickListener(v -> {
-            Intent intent = new Intent(ViewAllProfile.this, ProfileView.class);
-            startActivity(intent);
+            if (isNetworkAvailable(this)) {
+                Intent intent = new Intent(ViewAllProfile.this, ProfileActivity.class);
+                startActivity(intent);
+            } else {
+                popUp("Erro", "Voçê precisa de internet para isso!", this);
+            }
         });
 
     }
