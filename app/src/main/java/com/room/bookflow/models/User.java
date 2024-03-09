@@ -385,6 +385,10 @@ public class User {
     }
 
     public static String getAccessToken(Context context) {
+        return getAccessToken(context, true);
+    }
+
+    public static String getAccessToken(Context context, boolean redirectLogin) {
         String url = context.getString(R.string.api_url) + "/api/token/refresh/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -395,13 +399,10 @@ public class User {
             User ua = User.getAuthenticatedUser(context);
             if (ua != null) {
                 jsonBody.put("refresh", ua.getRefreshToken());
-            } else {
-
-                ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Nenhum usuario autenticado!", Toast.LENGTH_SHORT).show());
-//              popUp("Error", "Nenhum usuário autenticado!", context);
+            } else if (redirectLogin){
+                ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
                 Intent intent = new Intent(context, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
                 context.startActivity(intent);
                 return null;
             }
@@ -414,7 +415,7 @@ public class User {
                     try {
                         if (response.has("access")) {
                             tokenQueue.add(response.getString("access"));
-                        } else {
+                        } else if (redirectLogin) {
                             Intent intent = new Intent(context, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             showToast(context, "Login expirado!");

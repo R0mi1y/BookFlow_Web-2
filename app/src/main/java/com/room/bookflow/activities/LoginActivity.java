@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.room.bookflow.R;
 import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.databinding.ActivityLoginBinding;
+import com.room.bookflow.models.Book;
 import com.room.bookflow.models.User;
 
 import org.json.JSONException;
@@ -63,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             binding.password.setInputType(newInputType);
             binding.password.setSelection(binding.password.getText().length());
         });
-        doLogin();
+        /*doLogin();*/
 
         binding.loginBtn.setOnClickListener(v -> {
             binding.loginBtn.setEnabled(false);
@@ -247,6 +248,7 @@ public class LoginActivity extends AppCompatActivity {
                     long userId = database.userDao().insert(user);
                 }
 
+                Book.actualizeBooksDatabase(this);
                 runOnUiThread(() -> {
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

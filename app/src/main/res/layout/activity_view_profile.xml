@@ -30,7 +30,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="88dp"
                 android:layout_gravity="center"
                 android:foregroundGravity="center"
                 android:gravity="center"
@@ -39,12 +39,12 @@
                 <Button
                     android:id="@+id/back_btn"
                     style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="306dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
                     android:fontFamily="@font/rosarivo"
-                    android:text="Perfil"
+                    android:text="@string/perfil"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textColorHighlight="#FFFFFF"
@@ -56,6 +56,31 @@
                     app:iconSize="35dp"
                     app:iconTint="#FFFFFF"
                     app:rippleColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/Profile_edt_view"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:fontFamily="@font/rosarivo"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FFFFFF"
+                    android:textColorHint="#EDEDED"
+                    android:textColorLink="#FFFFFF"
+                    android:textSize="42sp"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    app:iconGravity="start"
+                    app:iconSize="40dp"
+                    app:iconTint="#FFFFFF"
+                    app:rippleColor="#FFFFFF" />
+
+                <Space
+                    android:layout_width="26dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -70,8 +95,8 @@
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
-                android:foregroundGravity="center"
                 app:shapeAppearanceOverlay="@style/circular_perfil"
+                android:foregroundGravity="center"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/default_cover_bg" />
 
@@ -433,21 +458,6 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/start_chat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:background="@drawable/default_border_white"
-                android:fontFamily="@font/rosarivo_regular"
-                android:text="Chat"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textColorHint="#0000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
 
             <Space
                 android:layout_width="match_parent"

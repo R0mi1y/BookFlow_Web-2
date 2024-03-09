@@ -1,5 +1,6 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityDetailBookBinding;
 import com.room.bookflow.models.Book;
@@ -27,12 +29,14 @@ public class DetailBook extends AppCompatActivity {
 
     Book book;
     ActivityDetailBookBinding binding;
+    BookFlowDatabase bookFlowDatabase;
     boolean isFavorited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDetailBookBinding.inflate(getLayoutInflater());
+        bookFlowDatabase = BookFlowDatabase.getDatabase(this);
         setContentView(binding.getRoot());
 
         binding.backBtn.setOnClickListener(v -> finish());
@@ -47,14 +51,22 @@ public class DetailBook extends AppCompatActivity {
         if (bookId != null) {
             book.setId(Integer.parseInt(bookId));
             new Thread(() -> {
-                book.getBookById(this);
-                setIsFavorited(book.isInWishlist());
-                setDetails();
-                runOnUiThread(() -> {
-                    binding.favoriteBtn.setOnClickListener(view -> {
-                        new Thread(() -> toggleFavorite(bookId)).start();
+                if (isNetworkAvailable(this)){
+                    book.getBookById(this);
+                } else {
+                    book = bookFlowDatabase.bookDao().getById(book.getId());
+                }
+                if (book != null && book.getId() > -1) {
+                    setIsFavorited(book.isInWishlist());
+                    setDetails();
+                    runOnUiThread(() -> {
+                        binding.favoriteBtn.setOnClickListener(view -> {
+                            new Thread(() -> toggleFavorite(bookId)).start();
+                        });
                     });
-                });
+                } else {
+                    popUp("Erro", "Você precisa de uma conexão com a internet para ver os detalhes desse livro!", this);
+                }
             }).start();
 
         } else

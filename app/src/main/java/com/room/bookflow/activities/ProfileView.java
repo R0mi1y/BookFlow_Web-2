@@ -139,6 +139,9 @@ public class ProfileView extends AppCompatActivity {
                 runOnUiThread(() -> showToast("Usuário não definido!"));
             }
         }).start();
+
+        binding.backBtn.setOnClickListener(v -> finish());
+
     }
 
     private void showToast(String message) {

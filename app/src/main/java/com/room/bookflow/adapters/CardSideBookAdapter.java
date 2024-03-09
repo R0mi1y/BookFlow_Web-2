@@ -1,5 +1,8 @@
 package com.room.bookflow.adapters;
 
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
+import static com.room.bookflow.helpers.Utilitary.popUp;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -50,12 +53,16 @@ public class CardSideBookAdapter extends RecyclerView.Adapter<CardSideBookAdapte
                 .load(book.getCover().contains("http") ? book.getCover() : context.getString(R.string.api_url) + book.getCover())
                 .into(holder.cover);
         holder.layoutBook.setOnClickListener(view -> {
-            Intent intent = new Intent(context, DetailBook.class);
-            intent.putExtra("bookId", String.valueOf(book.getId()));
+            if(isNetworkAvailable(context)) {
+                Intent intent = new Intent(context, DetailBook.class);
+                intent.putExtra("bookId", String.valueOf(book.getId()));
 
-            context.runOnUiThread(() -> {
-                context.startActivity(intent);
-            });
+                context.runOnUiThread(() -> {
+                    context.startActivity(intent);
+                });
+            } else {
+                popUp("Erro", "Você precisa ter conexão com a internet para acessar os detalhes desse livro!", context);
+            }
 
         });
     }

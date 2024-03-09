@@ -37,6 +37,9 @@ public interface MessageDao {
     @Query("SELECT * FROM message_table WHERE chat_id=:id and status=:status")
     public List<Message> getMessageByChatIdStatus(long id, int status);
 
+    @Query("SELECT * FROM message_table WHERE chat_id=:id")
+    public LiveData<List<Message>> getLiveDataMessageByChatId(long id);
+
     @Query("Select * FROM message_table WHERE id==:id")
     public Message getById(long id);
 

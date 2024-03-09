@@ -10,19 +10,22 @@ import com.room.bookflow.dao.AddressDao;
 import com.room.bookflow.dao.BookDao;
 import com.room.bookflow.dao.ChatDao;
 import com.room.bookflow.dao.MessageDao;
+import com.room.bookflow.dao.NotificationDao;
 import com.room.bookflow.dao.UserDao;
 import com.room.bookflow.models.Address;
 import com.room.bookflow.models.Book;
 import com.room.bookflow.models.Chat;
 import com.room.bookflow.models.Message;
+import com.room.bookflow.models.Notification;
 import com.room.bookflow.models.User;
 
-@Database(entities={Address.class, User.class, Chat.class, Message.class, Book.class}, version=2)
+@Database(entities={Address.class, User.class, Chat.class, Message.class, Book.class, Notification.class}, version=3)
 public abstract class BookFlowDatabase extends RoomDatabase {
     public abstract MessageDao messageDao();
     public abstract UserDao userDao();
     public abstract AddressDao addressDao();
     public abstract BookDao bookDao();
+    public abstract NotificationDao notificationDao();
     public abstract ChatDao chatDao();
 
     private static volatile BookFlowDatabase INSTANCE;

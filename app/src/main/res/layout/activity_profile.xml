@@ -62,11 +62,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImage"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/circular_perfil"
                     app:srcCompat="@drawable/ellipse2" />
 
 

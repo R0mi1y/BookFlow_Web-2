@@ -76,6 +76,9 @@
             android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".helpers.ViewAllProfile"
+            android:exported="false" />
+        <activity
             android:name=".activities.QRCodeScannerActivity"
             android:screenOrientation="portrait" />
 

@@ -1,72 +1,66 @@
-package com.room.bookflow.activities;
+package com.room.bookflow.workers;
+
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.IBinder;
-import android.app.Service;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import android.os.Bundle;
-import android.util.Log;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
+import com.room.bookflow.activities.SplashActivity;
+import com.room.bookflow.models.Chat;
+import com.room.bookflow.models.User;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class NotificationService extends Service {
-    private static final String TAG = "NotificationService";
-    private static final long INTERVAL = 10 * 1000; // Verificar a cada 10 segundos
-    private Handler handler = new Handler();
-
-    public NotificationService() {
+public class NotificationWorker extends Worker {
+    private BookFlowDatabase bookFlowDatabase;
+    private Context context;
+    public NotificationWorker(
+            @NonNull Context context,
+            @NonNull WorkerParameters params) {
+        super(context, params);
+        bookFlowDatabase = BookFlowDatabase.getDatabase(context);
     }
 
+    @NonNull
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        handler.postDelayed(() -> {
-            /*verificarNotificacoesDoServidor();
-            handler.postDelayed(this, INTERVAL);*/
-        }, INTERVAL);
+    public Result doWork() {
+        verificarNotificacoesDoServidor();
 
-        return START_STICKY;
+        return Result.success();
     }
 
     private void verificarNotificacoesDoServidor() {
+        if (!isNetworkAvailable(this.getApplicationContext())) return;
         try {
-            String url = getString(R.string.api_url) + "/api/user/5/notifications";
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String url = this.getApplicationContext().getString(R.string.api_url) + "/api/user/" + User.getAuthenticatedUser(getApplicationContext()).getId() + "/notifications";
+            RequestQueue requestQueue = Volley.newRequestQueue(this.getApplicationContext());
 
-            String authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA3MTg0NDUxLCJpYXQiOjE3MDcxODA4NTEsImp0aSI6IjM4N2RhNzQxOWNhNjRmNjFiYzQ3YmQzYjc0OGFiYjBiIiwidXNlcl9pZCI6NX0.GR4rFJdwkA9FB5JaBwwF0mutzSIuHbdGB8PmDiJYRgc";
+            for (Chat chat: bookFlowDatabase.chatDao().getAllChat()) {
+                chat.updateChat(this.getApplicationContext(), chat.getId());
+            }
+
+            String authToken = User.getAccessToken(getApplicationContext(), false);
 
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer " + authToken);
@@ -79,7 +73,7 @@ public class NotificationService extends Service {
                         Log.e("title", Integer.toString(notificationsArray.length()));
 
                         for (int i = 0; i < notificationsArray.length(); i++) {
-                        Log.e("title", "title");
+                            Log.e("title", "title");
                             try {
                                 JSONObject notificationObject = notificationsArray.getJSONObject(i);
 
@@ -99,7 +93,7 @@ public class NotificationService extends Service {
                     error -> Log.e("Requisição GET", "Erro: " + error.toString())
             ) {
                 @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
+                public Map<String, String> getHeaders() {
                     return headers;
                 }
             };
@@ -126,7 +120,7 @@ public class NotificationService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) this.getApplicationContext().getSystemService(this.getApplicationContext().NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel notificationChannel = notificationManager.getNotificationChannel(chanelID);
@@ -141,11 +135,5 @@ public class NotificationService extends Service {
         }
 
         notificationManager.notify(id, builder.build());
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 }

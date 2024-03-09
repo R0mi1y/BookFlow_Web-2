@@ -7,19 +7,32 @@
         <item
             android:id="@+id/edit_profile"
             android:icon="@drawable/profile"
-            android:title="@string/button_edt_profile"/>
+            android:title="@string/text_profile_view"/>
         <item
             android:id="@+id/notifications"
             android:icon="@drawable/notifications"
             android:title="@string/button_notyf"/>
         <item
+            android:id="@+id/chat_list"
+            android:icon="@drawable/chat_icon"
+            android:title="@string/button_chat_list"/>
+        <item
             android:id="@+id/loan"
             android:icon="@drawable/lista_books"
             android:title="@string/button_loans"/>
         <item
+            android:id="@+id/register_book_bar"
+            android:icon="@drawable/books_vetor"
+            android:title="@string/register_books"/>
+        <item
+            android:id="@+id/chats"
+            android:icon="@drawable/baseline_chat_24"
+            android:title="@string/register_books"/>
+        <item
             android:id="@+id/scannerqr"
             android:icon="@drawable/scanqrcode"
             android:title="@string/button_scan"/>
+
 
     </group>
     <item
