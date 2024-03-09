@@ -66,8 +66,9 @@
                     android:id="@+id/profileImage"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:background="@drawable/ellipse2"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/ellipse2" />
+
 
                 <ImageView
                     android:id="@+id/cameraIcon"

@@ -27,6 +27,12 @@ public class RegisterLocationActivity extends AppCompatActivity {
         binding = ActivityRegisterLocationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //Botão voltar
+        binding.backBtn3.setOnClickListener(v ->{
+            Intent intent = new Intent(RegisterLocationActivity.this, ProfileView.class);
+            startActivity(intent);
+        });
+
         new Thread(() -> {
             BookFlowDatabase bookFlowDatabase = BookFlowDatabase.getDatabase(getApplicationContext());
             User userProfile = User.getAuthenticatedUser(this);

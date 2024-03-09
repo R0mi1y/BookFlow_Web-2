@@ -581,6 +581,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
         android:background="@color/menu_lateral_color"
         app:itemIconTint="@color/colorBlanchedalmond_100"
         app:itemTextColor="@color/colorBlanchedalmond_100"

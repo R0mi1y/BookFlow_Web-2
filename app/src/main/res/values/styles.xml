@@ -3,4 +3,8 @@
     <style name="circular">
         <item name="cornerSize">25dp</item>
     </style>
+
+    <style name="roundedImageStyle">
+        <item name="android:background">@drawable/rounded_image_with_background</item>
+    </style>
 </resources>
