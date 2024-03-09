@@ -107,9 +107,11 @@
 
             <EditText
                 android:id="@+id/editTextName"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
                 android:background="@drawable/edit_text"
                 android:gravity="left"
                 android:hint="@string/name"
@@ -139,9 +141,11 @@
 
             <EditText
                 android:id="@+id/editTextEmail"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
                 android:background="@drawable/edit_text"
                 android:gravity="left"
                 android:hint="@string/email"
@@ -171,9 +175,11 @@
 
             <EditText
                 android:id="@+id/editTextPhone"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
                 android:background="@drawable/edit_text"
                 android:gravity="left"
                 android:hint="@string/phone"
@@ -203,9 +209,11 @@
 
             <EditText
                 android:id="@+id/editTextBiography"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
                 android:background="@drawable/edit_text"
                 android:gravity="top"
                 android:hint="@string/biografy"
@@ -222,15 +230,17 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnEditLoc"
                 android:layout_width="250dp"
-                android:layout_height="100px"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/button"
+                android:fontFamily="@font/rosarivo_regular"
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:text="@string/button_edt_end"
                 android:textAllCaps="false"
                 android:textColor="@color/background1"
-                android:textSize="16sp" />
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <Space
                 android:layout_width="match_parent"
@@ -239,17 +249,18 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSalvChanges"
                 android:layout_width="250dp"
-                android:layout_height="100px"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/button"
                 android:drawableRight="@drawable/ionbook_with_margin"
-                android:fontFamily="@font/open_sans_semibold"
+                android:fontFamily="@font/rosarivo_regular"
                 android:foregroundGravity="left"
                 android:gravity="center"
                 android:text="@string/button_save_alt"
                 android:textAllCaps="false"
                 android:textColor="@color/background1"
-                android:textSize="16sp" />
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <Space
                 android:layout_width="match_parent"

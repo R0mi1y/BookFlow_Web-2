@@ -1,7 +1,6 @@
 package com.room.bookflow.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,31 +8,24 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityProfileBinding;
 import com.room.bookflow.models.User;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class ProfileView extends AppCompatActivity {
@@ -69,7 +61,6 @@ public class ProfileView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -88,17 +79,6 @@ public class ProfileView extends AppCompatActivity {
         new Thread(() -> {
             User userProfile = User.getAuthenticatedUser(this);
 
-            if (userProfile != null) {
-                Log.d("UserProfile", "ID: " + userProfile.getId());
-                Log.d("UserProfile", "Username: " + userProfile.getUsername());
-                Log.d("UserProfile", "Email: " + userProfile.getEmail());
-                // Adicione mais logs conforme necessário para outras propriedades
-            } else {
-                Log.e("UserProfile", "UserProfile is null");
-                runOnUiThread(() -> showToast("Erro ao obter perfil do usuário!"));
-                return;
-            }
-
             // Verificar se o perfil do usuário e o ID são válidos
             if (userProfile.getId() >= 0) {
                 int userId = userProfile.getId();
@@ -108,6 +88,8 @@ public class ProfileView extends AppCompatActivity {
                     binding.editTextEmail.setText(userProfile.getEmail());
                     binding.editTextPhone.setText(userProfile.getPhone());
                     binding.editTextBiography.setText(userProfile.getBiography());
+                    ImageView profileImage = binding.profileImage;
+                    Picasso.get().load(userProfile.getPhoto()).into(profileImage);
 
                     binding.btnSalvChanges.setOnClickListener(v -> {
                         // Obter os dados dos campos de edição
@@ -127,7 +109,7 @@ public class ProfileView extends AppCompatActivity {
 
                         new Thread(() -> {
                             File imageFile = convertBitmapToFile(this, imageBitMap, "photo.png");
-                            updatedUser.update(userId, updatedUser, imageFile, ProfileView.this );
+                            updatedUser.update(userId, updatedUser, imageFile, ProfileView.this);
                             updatedUser.setIs_autenticated(true);
                             updatedUser.setAddress_id(userProfile.getAddress_id());
                             changeUser(updatedUser);

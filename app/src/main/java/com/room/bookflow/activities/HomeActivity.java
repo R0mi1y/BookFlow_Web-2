@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.google.android.material.imageview.ShapeableImageView;
 import com.room.bookflow.R;
 import com.room.bookflow.adapters.CardSideBookAdapter;
 import com.room.bookflow.helpers.Utilitary;
@@ -28,8 +29,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import android.text.Layout;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -37,6 +41,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.room.bookflow.models.User;
+import com.squareup.picasso.Picasso;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -110,7 +116,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }));
 
         // MENU LATERAL
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -121,6 +126,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        new Thread(() -> {
+            View navView = navigationView.getHeaderView(0);
+            ShapeableImageView profileImage = navView.findViewById(R.id.img_profile_menu);
+            TextView profileName = navView.findViewById(R.id.profile_name);
+
+            User profile = User.getAuthenticatedUser(this);
+            runOnUiThread(() -> {
+                profileName.setText(profile.getUsername());
+                Picasso.get().load(profile.getPhoto()).into(profileImage);
+            });
+        }).start();
     }
 
     @Override

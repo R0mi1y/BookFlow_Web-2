@@ -3,6 +3,9 @@
     <style name="circular_perfil">
         <item name="cornerSize">50%</item>
     </style>
+    <style name="circular_book_image">
+        <item name="cornerSize">25dp</item>
+    </style>
 
     <style name="roundedImageStyle">
         <item name="android:background">@drawable/rounded_image_with_background</item>

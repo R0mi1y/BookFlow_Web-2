@@ -341,7 +341,7 @@ public class User {
             this.firstName = response.has("first_name") ? response.getString("first_name") : null;
             this.active = response.has("is_active") && response.getBoolean("is_active");
             this.dateJoined = response.has("date_joined") ? response.getString("date_joined") : null;
-            this.photo = response.has("photo") ? response.getString("photo") : response.getString("photo_url");
+            this.photo = response.has("photo") ? response.getString("photo") : response.has("photo_url") ? response.getString("photo_url") : null;
             this.phone = response.has("phone") ? response.getString("phone") : null;
             this.email = response.has("email") ? response.getString("email") : null;
             this.accountType = response.has("account_type") ? response.getString("account_type") : null;
@@ -520,10 +520,6 @@ public class User {
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Usuario não definido!", Toast.LENGTH_SHORT).show());
             return user;
         }
-
-//        String url = context.getString(R.string.api_url) + "/api/user/" + id + "/";
-//        RequestQueue requestQueue = Volley.newRequestQueue(context);
-
         String authToken = getAccessToken(context);
 
         if (authToken == null) {
@@ -545,15 +541,15 @@ public class User {
         RequestBody phoneBody = createRequestBody(user.phone);
         RequestBody biographBody = createRequestBody(user.biography);
 
-        BlockingQueue<User> userQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<Boolean> userQueue = new LinkedBlockingQueue<>();
 
         RequestBody imagemBody;
         Call<ResponseBody> call;
 
         if(image != null) {
             imagemBody = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part coverPart = MultipartBody.Part.createFormData("photo", image.getName(), imagemBody);
-            call = userApi.updateUser("api/user/" + id + "/","Bearer " + authToken, usernameBody, emailBody, phoneBody, biographBody, coverPart);
+            MultipartBody.Part imagePart = MultipartBody.Part.createFormData("photo", image.getName(), imagemBody);
+            call = userApi.updateUser("api/user/" + id + "/","Bearer " + authToken, usernameBody, emailBody, phoneBody, biographBody, imagePart);
         } else {
             call = userApi.updateUser("api/user/" + id + "/", "Bearer " + authToken, usernameBody, emailBody, phoneBody, biographBody);
         }
@@ -565,7 +561,8 @@ public class User {
                     try {
                         String json = response.body().string();
 
-                        userQueue.add(new User().setByJSONObject(new JSONObject(json), context));
+                        setByJSONObject(new JSONObject(json), context);
+                        userQueue.add(true);
                     }catch (IOException e) {
                         throw new RuntimeException(e);
                     }catch (JSONException e) {
@@ -584,11 +581,15 @@ public class User {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("UpdatinUser", t.getMessage());
+                Log.e("UpdatingUser", t.getMessage());
             }
         });
         try {
-            return userQueue.poll(30, TimeUnit.SECONDS);
+            boolean isUpdated = userQueue.poll(30, TimeUnit.SECONDS);
+            if (!isUpdated) {
+                this.setId(-1);
+            }
+            return this;
         } catch (InterruptedException e) {
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Conexão Perdida!", Toast.LENGTH_SHORT).show());
             e.printStackTrace();
