@@ -2,44 +2,69 @@ package com.room.bookflow.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.room.bookflow.BookFlowDatabase;
-import com.room.bookflow.R;
-
-import com.room.bookflow.databinding.ActivityProfileBinding;
-import com.room.bookflow.models.Address;
-import com.room.bookflow.models.User;
-
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-import android.graphics.drawable.Drawable;
+import com.room.bookflow.BookFlowDatabase;
+import com.room.bookflow.R;
+import com.room.bookflow.databinding.ActivityProfileBinding;
+import com.room.bookflow.models.User;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Objects;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class ProfileView extends AppCompatActivity {
 
     private ActivityResultLauncher<String> galleryLauncher;
     ActivityProfileBinding binding;
+
+    private Uri imageUri;
+    private Bitmap imageBitMap;
+    private Boolean hasImage = false;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 123;
+
+
+    private File convertBitmapToFile(Context context, Bitmap bitmap, String fileName) {
+
+        if (bitmap == null) {
+            return null;
+        }
+        // Crie um arquivo no diretório cache da aplicação
+        File file = new File(context.getCacheDir(), fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,25 +78,12 @@ public class ProfileView extends AppCompatActivity {
             Intent intent = new Intent(ProfileView.this, HomeActivity.class);
             startActivity(intent);
         });
-        Context context = this;
-        // PARTE DA IMAGEM
-        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),
-                uri -> {
-                    if (uri != null) {
-                        setPhotoFromUri(uri, context);
-                    }
-        });
-
         binding.btnEditLoc.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileView.this, RegisterLocationActivity.class);
             startActivity(intent);
         });
 
-
-        binding.cameraIcon.setOnClickListener(v -> {
-            galleryLauncher.launch("image/*");
-        });
-
+        binding.cameraIcon.setOnClickListener(v -> showImageSourceDialog());
 
         new Thread(() -> {
             User userProfile = User.getAuthenticatedUser(this);
@@ -114,18 +126,11 @@ public class ProfileView extends AppCompatActivity {
                         // Chamar o método update com o callback para lidar com o resultado da atualização
 
                         new Thread(() -> {
-                            updatedUser.update(userId, updatedUser, ProfileView.this, new User.UpdateUserCallback() {
-                                @Override
-                                public void onSuccess(User updatedUser) {
-                                    updatedUser.setIs_autenticated(true);
-                                    updatedUser.setAddress_id(userProfile.getAddress_id());
-                                    changeUser(updatedUser);
-                                }
-
-                                @Override
-                                public void onError() {
-                                }
-                            });
+                            File imageFile = convertBitmapToFile(this, imageBitMap, "photo.png");
+                            updatedUser.update(userId, updatedUser, imageFile, ProfileView.this );
+                            updatedUser.setIs_autenticated(true);
+                            updatedUser.setAddress_id(userProfile.getAddress_id());
+                            changeUser(updatedUser);
                         }).start();
                     });
                 });
@@ -157,33 +162,79 @@ public class ProfileView extends AppCompatActivity {
                     startActivity(intent);
                 });
             } catch (Exception e) {
-                e.printStackTrace(); // Trate a exceção de acordo com os requisitos do seu aplicativo
+                e.printStackTrace();
             }
         }).start();
     }
 
-    public void setPhotoFromUri(Uri uri, Context context) {
-        // Aqui você pode realizar as operações necessárias com a URI da imagem
-        // Por exemplo, carregar a imagem para a interface do usuário ou enviá-la para o servidor
-
-        // Exemplo: Carregar a imagem usando Glide (certifique-se de adicionar a dependência no build.gradle)
-        Glide.with(context)
-                .asDrawable()
-                .load(uri).transform(new RoundedCorners(10))
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        // Atualizar a imagem na interface do usuário
-                        binding.profileImage.setImageDrawable(resource);
-
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                        // Chamado quando a imagem é removida do alvo
+    private void showImageSourceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Escolher fonte da imagem")
+                .setItems(new CharSequence[]{"Galeria", "Câmera"}, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            openGallery();
+                            break;
+                        case 1:
+                            takePhoto();
+                            break;
                     }
                 });
-        // Exemplo: Enviar a imagem para o servidor (você precisará implementar isso conforme necessário)
-        // uploadImageToServer(uri);
+
+        AlertDialog alertDialog = builder.create();
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
+        alertDialog.show();
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
+    }
+
+    private void takePhoto() {
+        String[] cameraPermission = {Manifest.permission.CAMERA};
+        if (EasyPermissions.hasPermissions(this, cameraPermission)) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            EasyPermissions.requestPermissions(this, "É necessário permissão para acessar a câmera", CAMERA_PERMISSION_REQUEST_CODE, cameraPermission);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PICK_IMAGE_REQUEST:
+                    if (data != null && data.getData() != null) {
+                        imageUri = data.getData();
+                        displaySelectedImage();
+                    }
+                    break;
+                case REQUEST_IMAGE_CAPTURE:
+                    if (data != null && data.getExtras() != null) {
+                        Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        imageBitMap = photo;
+                        binding.profileImage.setImageBitmap(photo);
+                        hasImage = true;
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void displaySelectedImage() {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            imageBitMap = bitmap;
+            binding.profileImage.setImageBitmap(bitmap);
+            hasImage = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

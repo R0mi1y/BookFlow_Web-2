@@ -78,7 +78,6 @@ public class RegisterBookActivity extends AppCompatActivity {
         binding = ActivityRegisterBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         binding.title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

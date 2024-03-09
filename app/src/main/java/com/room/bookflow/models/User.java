@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,12 +38,26 @@ import com.room.bookflow.R;
 import com.room.bookflow.activities.HomeActivity;
 import com.room.bookflow.activities.LoginActivity;
 import com.room.bookflow.BookFlowDatabase;
-import com.room.bookflow.helpers.Utilitary;
 
 import org.json.JSONArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
+import retrofit2.http.Url;
 
 @Entity(tableName = "user_table", foreignKeys = { @ForeignKey(
         entity = Address.class,
@@ -498,17 +514,15 @@ public class User {
         return this.wishlist;
     }
 
-    public void update(int id, User user, Context context, UpdateUserCallback callback) {
+
+    public User update(int id, User user, File image, Context context) {
         if (id < 0) {
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Usuario não definido!", Toast.LENGTH_SHORT).show());
-            if (callback != null) {
-                callback.onError();
-            }
-            return;
+            return user;
         }
 
-        String url = context.getString(R.string.api_url) + "/api/user/" + id + "/";
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String url = context.getString(R.string.api_url) + "/api/user/" + id + "/";
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         String authToken = getAccessToken(context);
 
@@ -517,72 +531,88 @@ public class User {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
             context.startActivity(intent);
-            if (callback != null) {
-                callback.onError();
-            }
-            return;
         }
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", "Bearer " + authToken);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://89.117.75.69:8881")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("username", user.getUsername());
-            jsonBody.put("phone", user.getPhone());
-            jsonBody.put("email", user.getEmail());
-            jsonBody.put("biography", user.getBiography());
-        } catch (JSONException e) {
-            e.printStackTrace();
+        UserApi userApi = retrofit.create(UserApi.class);
+
+        RequestBody usernameBody = createRequestBody(user.username);
+        RequestBody emailBody = createRequestBody(user.email);
+        RequestBody phoneBody = createRequestBody(user.phone);
+        RequestBody biographBody = createRequestBody(user.biography);
+
+        BlockingQueue<User> userQueue = new LinkedBlockingQueue<>();
+
+        RequestBody imagemBody;
+        Call<ResponseBody> call;
+
+        if(image != null) {
+            imagemBody = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part coverPart = MultipartBody.Part.createFormData("photo", image.getName(), imagemBody);
+            call = userApi.updateUser("api/user/" + id + "/","Bearer " + authToken, usernameBody, emailBody, phoneBody, biographBody, coverPart);
+        } else {
+            call = userApi.updateUser("api/user/" + id + "/", "Bearer " + authToken, usernameBody, emailBody, phoneBody, biographBody);
         }
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
-                response -> {
-                    if (response.has("id")) {
-                        // Atualização bem-sucedida
-                        if (callback != null) {
-                            callback.onSuccess(new User().setByJSONObject(response,context));
-
-                        }
-                    } else {
-                        // Erro ao atualizar usuário
-                        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Erro atualizando usuário!", Toast.LENGTH_SHORT).show());
-                        Log.e("Updating user", "Erro atualizando usuário!");
-                        if (callback != null) {
-                            callback.onError();
-                        }
-                    }
-                },
-                error ->  {
-                    handleErrorResponse(error, context);
-
-                }) {
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                return headers;
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String json = response.body().string();
+
+                        userQueue.add(new User().setByJSONObject(new JSONObject(json), context));
+                    }catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+//                    popUp("Sucesso!", "Usuario Atualizado com sucesso", context);
+                } else {
+                    try {
+                        String errorBody = response.errorBody().string();
+                        Log.e("UpdatingUser", errorBody);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    popUp("Falha!", "Erro no servidor, tente novamente mais tarde!", context);
+                }
             }
-        };
-        requestQueue.add(request);
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("UpdatinUser", t.getMessage());
+            }
+        });
+        try {
+            return userQueue.poll(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Conexão Perdida!", Toast.LENGTH_SHORT).show());
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     // Interface para lidar com callbacks de atualização do usuário
-    public interface UpdateUserCallback {
-        void onSuccess(User updatedUser);
-        void onError();
-    }
+//    public interface UpdateUserCallback {
+//        void onSuccess(User updatedUser);
+//        void onError();
+//    }
 
     // Método update sem callback
-    public User update(User user, Context context) {
-        if (this.id < 0) {
-            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Usuário não definido!", Toast.LENGTH_SHORT).show());
-            return null;
-        }
-        // Chamando o método com callback, mas ignorando o callback aqui
-        update(this.id, user, context, null);
-        return user;
-    }
-
-
+//    public User update(User user, Context context) {
+//        if (this.id < 0) {
+//            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Usuário não definido!", Toast.LENGTH_SHORT).show());
+//            return null;
+//        }
+//        // Chamando o método com callback, mas ignorando o callback aqui
+//        update(this.id, user,, context, null);
+//        return user;
+//    }
     public void updateLocate(int id, User user, Context context, UpdateUserLocateCallback callback) {
         if (id < 0) {
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Usuário não definido!", Toast.LENGTH_SHORT).show());
@@ -661,15 +691,15 @@ public class User {
     }
 
     // Método update sem callback
-    public User updateLocate(User user, Context context) {
-        if (this.id < 0) {
-            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "usuario não definido!", Toast.LENGTH_SHORT).show());
-            return null;
-        }
-        // Chamando o método com callback, mas ignorando o callback aqui
-        update(this.id, user, context, null);
-        return user;
-    }
+//    public User updateLocate(User user, Context context) {
+//        if (this.id < 0) {
+//            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "usuario não definido!", Toast.LENGTH_SHORT).show());
+//            return null;
+//        }
+//        // Chamando o método com callback, mas ignorando o callback aqui
+//        update(this.id, user, context, null);
+//        return user;
+//    }
 
 
 
@@ -807,6 +837,7 @@ public class User {
         }
     }
 
+
     public List<Book> getWishlist() {
         return wishlist;
     }
@@ -878,4 +909,34 @@ public class User {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+
+    private static RequestBody createRequestBody(String value) {
+        return RequestBody.create(MediaType.parse("text/plain"), value);
+    }
+
 }
+    interface UserApi{
+        @Multipart
+        @PUT
+        Call<ResponseBody> updateUser(
+                @Url String url,
+                @Header("Authorization") String authorizationHeader,
+                @Part("username") RequestBody username,
+                @Part("email") RequestBody email,
+                @Part("phone") RequestBody phone,
+                @Part("biography") RequestBody biography,
+                @Part MultipartBody.Part photo
+        );
+        @Multipart
+        @PUT
+        Call<ResponseBody> updateUser(
+                @Url String url,
+                @Header("Authorization") String authorizationHeader,
+                @Part("username") RequestBody username,
+                @Part("email") RequestBody email,
+                @Part("phone") RequestBody phone,
+                @Part("biography") RequestBody biography
+        );
+
+    }
