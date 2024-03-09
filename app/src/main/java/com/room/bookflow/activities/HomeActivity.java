@@ -1,5 +1,6 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -50,8 +52,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setBooks();
 
         binding.registerBookBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
-            registerBook.launch(intent);
+            if (isNetworkAvailable(this)){
+                Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
+                registerBook.launch(intent);
+            } else {
+                popUp("Erro", "Você precisa ter conexão com a internet para isso!", this);
+            }
         });
 
         Intent listBookIntent = new Intent(HomeActivity.this, ListBooksActivity.class);
@@ -124,7 +130,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if(itemSelecionado == R.id.edit_profile){
             Intent intent = new Intent(HomeActivity.this, ViewAllProfile.class);
             startActivity(intent);
-        }else if(itemSelecionado == R.id.notifications){
+        } else if(itemSelecionado == R.id.notifications){
             Intent intent = new Intent(HomeActivity.this, NotificationsActivity.class);
             startActivity(intent);
         }else if(itemSelecionado == R.id.chat_list){
@@ -133,12 +139,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }else if(itemSelecionado == R.id.scannerqr){
             Intent intent = new Intent(HomeActivity.this, QRCodeScannerActivity.class);
             startActivity(intent);
-        }else if(itemSelecionado == R.id.loan){
+        } else if(itemSelecionado == R.id.loan){
             Intent intent = new Intent(HomeActivity.this, ListBooksActivity.class);
             intent.putExtra("filter", "MY_BOOKS");
             startActivity(intent);
             startActivity(intent);
-        }else if(itemSelecionado == R.id.nav_logout){
+        } else if(itemSelecionado == R.id.nav_logout){
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -176,6 +182,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     );
 
     private void setBooks() {
+        if (!isNetworkAvailable(this)) {
+            binding.booksSection.setVisibility(View.GONE);
+            binding.networkFailure.setVisibility(View.VISIBLE);
+            return;
+        }
+
         List<RecyclerView> recyclerViews = new ArrayList<>();
         recyclerViews.add(binding.bookSideCards0);
         recyclerViews.add(binding.bookSideCards1);

@@ -494,83 +494,102 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txt_mi_biblioteca_0"
+                <LinearLayout
+                    android:id="@+id/books_section"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/rosarivo_regular"
-                    android:paddingLeft="30dp"
-                    android:text="Todos"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.059"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_flipper"
-                    app:layout_constraintVertical_bias="0.413" />
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/book_side_cards_0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    <TextView
+                        android:id="@+id/txt_mi_biblioteca_0"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/rosarivo_regular"
+                        android:paddingLeft="30dp"
+                        android:text="Todos"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.059"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view_flipper"
+                        app:layout_constraintVertical_bias="0.413" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/book_side_cards_0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    <TextView
+                        android:id="@+id/txt_mi_biblioteca_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/rosarivo_regular"
+                        android:paddingLeft="30dp"
+                        android:text="Pendentes"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.059"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view_flipper"
+                        app:layout_constraintVertical_bias="0.413" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/book_side_cards_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    <TextView
+                        android:id="@+id/txt_mi_biblioteca_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/rosarivo_regular"
+                        android:paddingLeft="30dp"
+                        android:text="Favoritos"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.059"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view_flipper"
+                        app:layout_constraintVertical_bias="0.413" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/book_side_cards_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/txt_mi_biblioteca_1"
+                    android:id="@+id/network_failure"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_margin="20dp"
                     android:fontFamily="@font/rosarivo_regular"
-                    android:paddingLeft="30dp"
-                    android:text="Pendentes"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.059"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_flipper"
-                    app:layout_constraintVertical_bias="0.413" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/book_side_cards_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-                <TextView
-                    android:id="@+id/txt_mi_biblioteca_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/rosarivo_regular"
-                    android:paddingLeft="30dp"
-                    android:text="Favoritos"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.059"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_flipper"
-                    app:layout_constraintVertical_bias="0.413" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/book_side_cards_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:text="Sem conexão com a internet"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </ScrollView>

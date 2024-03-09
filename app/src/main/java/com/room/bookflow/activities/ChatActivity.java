@@ -4,7 +4,9 @@ import static com.room.bookflow.helpers.Utilitary.popUp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +16,6 @@ import com.room.bookflow.R;
 import com.room.bookflow.adapters.MessageAdapter;
 import com.room.bookflow.databinding.ActivityChatBinding;
 import com.room.bookflow.models.Chat;
-import com.room.bookflow.models.Message;
 import com.room.bookflow.models.User;
 
 import java.util.List;
@@ -48,10 +49,7 @@ public class ChatActivity extends AppCompatActivity {
                     String message = binding.messageInput.getText().toString();
                     if (message != null && !message.replace(" ", "").equals("")) {
                         reciever.sendMessage(message, chat.getReceiver_id(), this);
-                        List<Message> messages = database.messageDao().getMessageByChatId(chatId);
                         runOnUiThread(() -> {
-                            binding.items.setAdapter(new MessageAdapter(messages, R.layout.message_adapter, this));
-                            binding.items.scrollToPosition(messages.size() - 1);
                             binding.messageInput.setText("");
                         });
                     }
@@ -65,24 +63,15 @@ public class ChatActivity extends AppCompatActivity {
             });
 
             binding.items.setAdapter(new MessageAdapter(database.messageDao().getMessageByChatId(chatId), R.layout.message_adapter, this));
+            int cont = 0;
+            Log.i("SEARCHING MESSAGE", "Searching for messages...");
 
-            while (true) {
-                Log.i("SEARCHING MESSAGE", "Searching for messages...");
-                List<Message> messagesRecived = chat.updateChat(this, chat.getId());
-                if (messagesRecived.size() > 0) {
-                    List<Message> messages = database.messageDao().getMessageByChatId(chatId);
-                    runOnUiThread(() -> {
-                        binding.items.setAdapter(new MessageAdapter(messages, R.layout.message_adapter, this));
-                        binding.items.scrollToPosition(messages.size() - 1);
-                    });
-
-                }
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            runOnUiThread(() -> {
+                database.messageDao().getLiveDataMessageByChatId(chatId).observe(this, messages -> runOnUiThread(() -> {
+                    binding.items.setAdapter(new MessageAdapter(messages, R.layout.message_adapter, this));
+                    binding.items.scrollToPosition(messages.size() - 1);
+                }));
+            });
         }).start();
     }
 }
