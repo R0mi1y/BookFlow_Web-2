@@ -19,6 +19,7 @@ import com.room.bookflow.adapters.CardSideBookAdapter;
 import com.room.bookflow.helpers.Utilitary;
 import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.databinding.ActivityHomeBinding;
+import com.room.bookflow.helpers.ViewAllProfile;
 import com.room.bookflow.models.Book;
 
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int itemSelecionado = item.getItemId();
 
         if(itemSelecionado == R.id.edit_profile){
-            Intent intent = new Intent(HomeActivity.this, ProfileView.class);
+            Intent intent = new Intent(HomeActivity.this, ViewAllProfile.class);
             startActivity(intent);
         }else if(itemSelecionado == R.id.notifications){
             Intent intent = new Intent(HomeActivity.this, NotificationsActivity.class);
