@@ -159,6 +159,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if(itemSelecionado == R.id.scannerqr) {
             Intent intent = new Intent(HomeActivity.this, QRCodeScannerActivity.class);
             startActivity(intent);
+        } else if(itemSelecionado == R.id.register_book_bar) {
+            Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
+            startActivity(intent);
         } else if(itemSelecionado == R.id.loan) {
             Intent intent = new Intent(HomeActivity.this, ListBooksActivity.class);
             intent.putExtra("filter", "MY_BOOKS");
