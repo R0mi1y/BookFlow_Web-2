@@ -25,6 +25,7 @@ public class ChatListActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.backBtn3.setOnClickListener(v -> finish());
+        binding.backBtn4.setOnClickListener(v -> finish());
 
         db = BookFlowDatabase.getDatabase(this);
         new Thread(() -> {
