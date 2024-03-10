@@ -70,7 +70,12 @@ public class Utilitary {
     }
 
     public static void showToast(Context context, String message) {
-        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+        try {
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void handleErrorResponse(VolleyError error, Context context) {

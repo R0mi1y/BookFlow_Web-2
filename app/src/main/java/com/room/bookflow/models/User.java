@@ -429,7 +429,11 @@ public class User {
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    tokenQueue.add(null);
+                    try {
+                        tokenQueue.add(null);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
                 }) {
         };
         requestQueue.add(request);

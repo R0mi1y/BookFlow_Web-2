@@ -161,7 +161,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(HomeActivity.this, ListBooksActivity.class);
             intent.putExtra("filter", "MY_BOOKS");
             startActivity(intent);
-            startActivity(intent);
         } else if(itemSelecionado == R.id.nav_logout){
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

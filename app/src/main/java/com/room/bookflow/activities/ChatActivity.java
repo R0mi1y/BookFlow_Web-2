@@ -16,9 +16,11 @@ import com.room.bookflow.R;
 import com.room.bookflow.adapters.MessageAdapter;
 import com.room.bookflow.databinding.ActivityChatBinding;
 import com.room.bookflow.models.Chat;
+import com.room.bookflow.models.Message;
 import com.room.bookflow.models.User;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
     ActivityChatBinding binding;
@@ -33,7 +35,9 @@ public class ChatActivity extends AppCompatActivity {
 
         binding.backBtn3.setOnClickListener(v -> finish());
 
-        int chatId = getIntent().getIntExtra("chatId", -1);
+        Intent myIntent = getIntent();
+
+        int chatId = myIntent.getIntExtra("chatId", -1);
         if (chatId == -1) {
             popUp("Erro", "Falha ao tentar abrir chat!", this);
             return;
@@ -41,8 +45,11 @@ public class ChatActivity extends AppCompatActivity {
 
         new Thread(() -> {
             chat = database.chatDao().getById(chatId);
+            chat.updateChat(this, chatId);
             User reciever = database.userDao().getById(chat.getReceiver_id());
-            binding.perfilChat.setText(reciever.getUsername());
+            runOnUiThread(() -> {
+                binding.perfilChat.setText(reciever.getUsername());
+            });
 
             binding.sendMessageBtn.setOnClickListener(v -> {
                 new Thread(() -> {
@@ -62,11 +69,13 @@ public class ChatActivity extends AppCompatActivity {
                 runOnUiThread(() -> startActivity(intent));
             });
 
-            binding.items.setAdapter(new MessageAdapter(database.messageDao().getMessageByChatId(chatId), R.layout.message_adapter, this));
-            int cont = 0;
-            Log.i("SEARCHING MESSAGE", "Searching for messages...");
+            List<Message> messages1 = database.messageDao().getMessageByChatId(chatId);
 
             runOnUiThread(() -> {
+                binding.items.setAdapter(new MessageAdapter(messages1, R.layout.message_adapter, this));
+                int cont = 0;
+                Log.i("SEARCHING MESSAGE", "Searching for messages...");
+
                 database.messageDao().getLiveDataMessageByChatId(chatId).observe(this, messages -> runOnUiThread(() -> {
                     binding.items.setAdapter(new MessageAdapter(messages, R.layout.message_adapter, this));
                     binding.items.scrollToPosition(messages.size() - 1);

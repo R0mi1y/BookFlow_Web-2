@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -45,7 +46,16 @@ public class NotificationWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        verificarNotificacoesDoServidor();
+        new Thread(() -> {
+            while (true) {
+                try {
+                    verificarNotificacoesDoServidor();
+                    Thread.sleep(5000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
         return Result.success();
     }

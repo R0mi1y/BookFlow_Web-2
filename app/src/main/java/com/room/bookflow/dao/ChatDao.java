@@ -18,6 +18,9 @@ public interface ChatDao {
     @Query("SELECT * FROM chat_table")
     public List<Chat> getAllChat();
 
+    @Query("SELECT message FROM message_table WHERE chat_id=:chat_id ORDER BY id DESC LIMIT 1")
+    public String getLastMessage(int chat_id);
+
     @Query("Select * FROM chat_table WHERE id==:id LIMIT 1")
     public Chat getById(long id);
 

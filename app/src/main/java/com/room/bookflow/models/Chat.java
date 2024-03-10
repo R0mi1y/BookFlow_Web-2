@@ -18,11 +18,13 @@ import androidx.room.TypeConverters;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.R;
 import com.room.bookflow.activities.LoginActivity;
 import com.room.bookflow.BookFlowDatabase;
+import com.room.bookflow.activities.SplashActivity;
 import com.room.bookflow.helpers.DateConverter;
 
 import org.json.JSONException;
@@ -92,17 +94,19 @@ public class Chat {
 
     public boolean startChat(Context context, int reciver_id) {
         BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
+
         if (!isNetworkAvailable(context)) {
             Log.w("CHAT", "Conexão perdida!");
             popUp("Error", "Conexão perdida!", context);
             return false;
         }
         this.receiver = new User();
-        this.receiver = this.receiver.getUserById(reciver_id, context);
+        this.receiver.setId(reciver_id);
 
-        User user1 = db.userDao().getByUsername(this.receiver.getUsername());
+        User user1 = db.userDao().getById(reciver_id);
 
         if (user1 == null){
+            this.receiver.getUserById(context);
             long addressId = db.addressDao().insert(this.receiver.getAddress());
             this.receiver.setAddress_id(addressId);
             this.receiver.setIs_autenticated(false);
@@ -208,5 +212,78 @@ public class Chat {
         return recived;
     }
 
+    public void recoveryMessages(Chat chat, Context context) {
+        new Thread(() -> {
+            List<Message> messages1 = chat.getAllMessages(context, chat.getReceiver_id());
+            BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
+
+            for (Message message : messages1) {
+                message.setChat_id(chat.getId());
+                db.messageDao().insert(message);
+            }
+        }).start();
+    }
+
+    private List<Message> getAllMessages(Context context, int receiver_id) {
+        User ua = User.getAuthenticatedUser(context);
+
+        String url = context.getString(R.string.api_url) + "/api/user/" + receiver_id + "/all_messages/";
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        String authToken = User.getAccessToken(context);
+
+        if (authToken == null) {
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            showToast(context, "Login expirado!");
+            context.startActivity(intent);
+            return new ArrayList<>();
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+
+        BlockingQueue<List<Message>> messageQueue = new LinkedBlockingQueue<>();
+
+        JSONObject jsonBody = new JSONObject();
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    if (response.length() > 0) {
+                        List<Message> messages = new ArrayList<>();
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                Message message1 = new Message().setByJSONObject(jsonObject, ua, context);
+                                if (message1 != null) messages.add(message1);
+                            } catch (JSONException e) {
+                                Log.e("Error getting user", e.getMessage());
+                            }
+                        }
+                        messageQueue.add(messages);
+                    } else {
+                        Log.e("Getting user", "Nenhuma mensagem encontrada!");
+                        messageQueue.add(new ArrayList<>());
+                    }
+                },
+                error -> {
+                    handleErrorResponse(error, context);
+                    messageQueue.add(new ArrayList<Message>());
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return headers;
+            }
+        };
+        requestQueue.add(request);
+
+        try {
+            return messageQueue.poll(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            showToast(context, "Conexão perdida!");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 }
 
