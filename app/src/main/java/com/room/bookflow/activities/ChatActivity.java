@@ -63,10 +63,12 @@ public class ChatActivity extends AppCompatActivity {
                 }).start();
             });
 
-            binding.perfilChat.setOnClickListener(v -> {
-                Intent intent = new Intent(this, OwnerScreenActivity.class);
-                intent.putExtra("ownerId", reciever.getId());
-                runOnUiThread(() -> startActivity(intent));
+            runOnUiThread(() -> {
+                binding.perfilChat.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, OwnerScreenActivity.class);
+                    intent.putExtra("ownerId", String.valueOf(chat.getReceiver_id()));
+                    startActivity(intent);
+                });
             });
 
             List<Message> messages1 = database.messageDao().getMessageByChatId(chatId);
