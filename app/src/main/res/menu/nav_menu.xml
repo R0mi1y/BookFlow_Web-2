@@ -21,10 +21,6 @@
             android:icon="@drawable/books_vetor"
             android:title="@string/register_books"/>
         <item
-            android:id="@+id/chats"
-            android:icon="@drawable/baseline_chat_24"
-            android:title="@string/register_books"/>
-        <item
             android:id="@+id/scannerqr"
             android:icon="@drawable/scanqrcode"
             android:title="@string/button_scan"/>

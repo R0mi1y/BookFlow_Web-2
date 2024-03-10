@@ -162,6 +162,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             intent.putExtra("filter", "MY_BOOKS");
             startActivity(intent);
             startActivity(intent);
+        } else if (itemSelecionado == R.id.register_book_bar) {
+            Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
+            startActivity(intent);
         } else if(itemSelecionado == R.id.nav_logout){
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -175,7 +178,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         }
-
         // Iapós o usuário selecionar um item no menu lateral, o código fecha o menu, proporcionando uma experiência de navegação mais fluida.
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
