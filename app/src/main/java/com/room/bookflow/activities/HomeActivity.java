@@ -57,14 +57,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         setBooks();
 
-        binding.registerBookBtn.setOnClickListener(v -> {
-            if (isNetworkAvailable(this)){
-                Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
-                registerBook.launch(intent);
-            } else {
-                popUp("Erro", "Você precisa ter conexão com a internet para isso!", this);
-            }
-        });
+//        binding.registerBookBtn.setOnClickListener(v -> {
+//            if (isNetworkAvailable(this)){
+//                Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
+//                registerBook.launch(intent);
+//            } else {
+//                popUp("Erro", "Você precisa ter conexão com a internet para isso!", this);
+//            }
+//        });
 
         Intent listBookIntent = new Intent(HomeActivity.this, ListBooksActivity.class);
         binding.bioSession.setOnClickListener(v -> {
@@ -93,14 +93,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(listBookIntent);
         });
 
-        binding.listBooksBtn.setOnClickListener(v -> {
-            listBookIntent.putExtra("filter", "MY_BOOKS");
-            startActivity(listBookIntent);
-        });
-        binding.mapsBtn.setOnClickListener(v -> {
-            Intent MapsActivity = new Intent(HomeActivity.this, MapsActivity.class);
-            startActivity(MapsActivity);
-        });
+//        binding.listBooksBtn.setOnClickListener(v -> {
+//            listBookIntent.putExtra("filter", "MY_BOOKS");
+//            startActivity(listBookIntent);
+//        });
+//        binding.mapsBtn.setOnClickListener(v -> {
+//            Intent MapsActivity = new Intent(HomeActivity.this, MapsActivity.class);
+//            startActivity(MapsActivity);
+//        });
 
         Intent thisIt = getIntent();
         String message = thisIt.getStringExtra("message");
