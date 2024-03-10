@@ -164,6 +164,14 @@ class UserView(ModelViewSet):
             message=request.data.get('message')
         )
         
+        Notification.objects.create(
+            user = to,
+            from_field = f"chatPage::{request.user.id}",
+            message = f"Você tem uma nova mensagem de {request.user.username}",
+            title = "Nova mensagem",
+            description = f"Você tem uma nova mensagem de {request.user.username}, ela diz: '{message}'",
+        )
+        
         message_data = MessageSerializer(message).data
         
         return Response(message_data)
@@ -175,7 +183,7 @@ class UserView(ModelViewSet):
         
         queryset = Message.objects.filter(Q(sender=request.user, reciever=sender) | Q(reciever=request.user, sender=sender))
         messages_data = MessageSerializer(queryset, many=True).data
-        queryset.filter(status=Message.STATUS_RECIVED_BY_RECEIVER).update(status=Message.STATUS_RECIVED_BY_RECEIVER)
+        queryset.filter(reciever=request.user).update(status=Message.STATUS_RECIVED_BY_RECEIVER)
         
         return Response(messages_data)
     
