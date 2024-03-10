@@ -15,6 +15,8 @@ import com.room.bookflow.models.Chat;
 import com.room.bookflow.models.User;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
 public class OwnerScreenActivity extends AppCompatActivity {
 
     ActivityOwnerScreenBinding binding;
@@ -26,7 +28,7 @@ public class OwnerScreenActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Intent localIt = getIntent();
-        int ownerId = Integer.parseInt(localIt.getStringExtra("ownerId"));
+        int ownerId = Integer.parseInt(Objects.requireNonNull(localIt.getStringExtra("ownerId")));
 
         owner = new User();
 
@@ -67,8 +69,6 @@ public class OwnerScreenActivity extends AppCompatActivity {
             BookFlowDatabase database = BookFlowDatabase.getDatabase(this);
             Intent intent = new Intent(OwnerScreenActivity.this, ChatActivity.class);
             try {
-                database.messageDao().delAll();
-                database.chatDao().delAll();
                 Chat chat = database.chatDao().getByReciver(owner.getId());
                 if (chat != null) {
                     intent.putExtra("chatId", chat.getId());
@@ -77,7 +77,8 @@ public class OwnerScreenActivity extends AppCompatActivity {
                     chat = new Chat(owner.getId());
                     if (chat.startChat(this, owner.getId())) {
                         long id = database.chatDao().insert(chat);
-                        intent.putExtra("chatId", id);
+                        chat.recoveryMessages(chat, this);
+                        intent.putExtra("chatId", (int) id);
                         runOnUiThread(() -> startActivity(intent));
                     } else {
                         popUp("Erro", "Falha ao tentar abrir chat!", this);

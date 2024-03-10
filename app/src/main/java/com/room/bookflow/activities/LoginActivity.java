@@ -34,6 +34,7 @@ import com.room.bookflow.R;
 import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.databinding.ActivityLoginBinding;
 import com.room.bookflow.models.Book;
+import com.room.bookflow.models.Chat;
 import com.room.bookflow.models.User;
 
 import org.json.JSONException;
@@ -247,6 +248,11 @@ public class LoginActivity extends AppCompatActivity {
                     user.setIs_autenticated(true);
                     long userId = database.userDao().insert(user);
                 }
+
+                database.chatDao().delAll();
+                database.messageDao().delAll();
+
+                Chat.recoveryChats(this);
 
                 Book.actualizeBooksDatabase(this);
                 runOnUiThread(() -> {

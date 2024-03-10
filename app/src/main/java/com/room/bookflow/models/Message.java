@@ -121,6 +121,7 @@ public class Message {
     }
 
     public static List<Message> getMessagesSentToMe(Context context, int reciver_id){
+        User ua = User.getAuthenticatedUser(context);
         String url = context.getString(R.string.api_url) + "/api/user/" + reciver_id + "/messageboxes/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -146,7 +147,7 @@ public class Message {
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
-                                Message message1 = new Message().setByJSONObject(jsonObject, context);
+                                Message message1 = new Message().setByJSONObject(jsonObject, ua, context);
                                 if (message1 != null) messages.add(message1);
                             } catch (JSONException e) {
                                 Log.e("Error getting user", e.getMessage());
@@ -159,8 +160,8 @@ public class Message {
                     }
                 },
                 error -> {
-                    handleErrorResponse(error, context);
-                    queue.add(new ArrayList<Message>());
+                    handleErrorResponse(error, context, false);
+                    queue.add(new ArrayList<>());
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -178,9 +179,11 @@ public class Message {
         }
     }
 
-    private Message setByJSONObject(JSONObject response, Context context) {
+    Message setByJSONObject(JSONObject response, User ua, Context context) {
         try {
-            this.status = response.has("status") ? response.getInt("status") : -1;
+            if (response.has("sender") && response.getInt("sender") != ua.getId()) {
+                this.status = Message.STATUS_RECIVED;
+            } else this.status = response.has("status") ? response.getInt("status") : -1;
             this.message = response.has("message") ? response.getString("message") : null;
         } catch (JSONException e) {
             throw new RuntimeException(e);

@@ -1,6 +1,7 @@
 package com.room.bookflow.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -18,12 +19,15 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.room.bookflow.R;
+import com.room.bookflow.dao.BookDao;
 import com.room.bookflow.databinding.ActivityEditBookBinding;
 import com.room.bookflow.models.Book;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -86,6 +90,9 @@ public class EditBookActivity extends AppCompatActivity {
 
         binding.insertCover.setOnClickListener(v -> showImageSourceDialog());
 
+        binding.deletarBook.setOnClickListener(v -> deleteBook());
+
+
         generateAndSetQRCode(String.valueOf(bookId));
 
         // Listener para o botão de download do QR Code
@@ -100,6 +107,31 @@ public class EditBookActivity extends AppCompatActivity {
                     Toast.makeText(EditBookActivity.this, "Erro ao gerar QR Code.", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+    }
+
+    private void deleteBook() {
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            Book.deleteBookById(bookId, EditBookActivity.this, new Book.ResponseCallback() {
+                @Override
+                public void onSuccess(String message) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(EditBookActivity.this, message, Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(EditBookActivity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+
+                        finish();
+                    });
+                }
+
+                @Override
+                public void onError(String error) {
+                    runOnUiThread(() -> Toast.makeText(EditBookActivity.this, error, Toast.LENGTH_SHORT).show());
+                }
+            });
         });
     }
 
@@ -205,6 +237,8 @@ public class EditBookActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
 
     private void updateBook(){
         new Thread(() -> {

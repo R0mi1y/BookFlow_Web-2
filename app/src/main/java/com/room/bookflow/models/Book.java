@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Delete;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -28,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
+import com.room.bookflow.activities.EditBookActivity;
 import com.room.bookflow.activities.LoginActivity;
 
 import org.json.JSONException;
@@ -42,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import okhttp3.MediaType;
@@ -53,11 +57,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.DELETE;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 @Entity(tableName = "book_table")
@@ -301,7 +307,6 @@ public class Book {
                 url += "user/" + authenticatedUser.getId() + "?filter=" + (filter == null ? "ALL" : filter);
 
                 Log.d("URL", "Final URL: " + url);
-
             } else {
                 Log.e("AuthenticatedUser", "User not authenticated or null.");
                 Log.e("URL", "ERRORRRR");
@@ -644,9 +649,61 @@ public class Book {
             }).start();
         }
     }
+
+    public interface ResponseCallback {
+        void onSuccess(String message);
+        void onError(String error);
+    }
+
+
+        public static void deleteBookById(int bookId, Context context, ResponseCallback callback) {
+            Executor executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                String accessToken = User.getAccessToken(context);
+                if (accessToken != null) {
+                    String authToken = User.getAccessToken(context);
+                    if (authToken == null) {
+                        Intent intent = new Intent((Activity) context, LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Login expirado!", Toast.LENGTH_SHORT).show());
+                        context.startActivity(intent);
+                        return;
+                    }
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(context.getString(R.string.api_url))
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    BookApi bookApi = retrofit.create(BookApi.class);
+                    Call<ResponseBody> call = bookApi.deleteBook(bookId, "Bearer " + authToken);
+
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                callback.onSuccess("Livro deletado com sucesso!");
+                            } else {
+                                callback.onError("Erro ao deletar livro: " + response.code());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            callback.onError("Falha na comunicação: " + t.getMessage());
+                        }
+                    });
+                }
+            });
+        }
+
+
 }
 
 interface BookApi {
+
+    @DELETE("api/book/{id}/")
+    Call<ResponseBody> deleteBook(@Path("id") int bookId, @Header("Authorization") String authorizationHeader);
     @Multipart
     @POST("api/book/")
     Call<ResponseBody> registerBook(
@@ -671,6 +728,7 @@ interface BookApi {
             @Part("requirements_loan") RequestBody requirements_loan,
             @Part("owner") RequestBody owner
     );
+
 
     @Multipart
     @PUT

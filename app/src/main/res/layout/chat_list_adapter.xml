@@ -7,7 +7,7 @@
     android:paddingTop="10dp">
 
     <LinearLayout
-        android:id="@+id/layoutCard"
+        android:id="@+id/layout_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"

@@ -57,15 +57,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         setBooks();
 
-        binding.registerBookBtn.setOnClickListener(v -> {
-            if (isNetworkAvailable(this)){
-                Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
-                registerBook.launch(intent);
-            } else {
-                popUp("Erro", "Você precisa ter conexão com a internet para isso!", this);
-            }
-        });
-
         Intent listBookIntent = new Intent(HomeActivity.this, ListBooksActivity.class);
         binding.bioSession.setOnClickListener(v -> {
             listBookIntent.putExtra("filter", "SEARCH");
@@ -91,15 +82,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             listBookIntent.putExtra("filter", "SEARCH");
             listBookIntent.putExtra("search", "infantil");
             startActivity(listBookIntent);
-        });
-
-        binding.listBooksBtn.setOnClickListener(v -> {
-            listBookIntent.putExtra("filter", "MY_BOOKS");
-            startActivity(listBookIntent);
-        });
-        binding.mapsBtn.setOnClickListener(v -> {
-            Intent MapsActivity = new Intent(HomeActivity.this, MapsActivity.class);
-            startActivity(MapsActivity);
         });
 
         Intent thisIt = getIntent();
@@ -140,7 +122,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             User profile = User.getAuthenticatedUser(this);
             runOnUiThread(() -> {
                 profileName.setText(profile.getUsername());
-                Picasso.get().load(profile.getPhoto()).into(profileImage);
+                if (profile.getPhoto() != null) {
+                    Picasso.get().load(profile.getPhoto()).into(profileImage);
+                }
             });
         }).start();
     }
@@ -157,6 +141,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if(itemSelecionado == R.id.scannerqr) {
             Intent intent = new Intent(HomeActivity.this, QRCodeScannerActivity.class);
             startActivity(intent);
+        } else if(itemSelecionado == R.id.register_book_bar) {
+            Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
+            startActivity(intent);
         } else if(itemSelecionado == R.id.loan) {
             Intent intent = new Intent(HomeActivity.this, ListBooksActivity.class);
             intent.putExtra("filter", "MY_BOOKS");
@@ -171,12 +158,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             new Thread(() -> {
                 BookFlowDatabase database = BookFlowDatabase.getDatabase(getApplicationContext());
-                database.addressDao().delAll();
-                database.userDao().delAll();
+                database.userDao().setAllUnautenticated();
             }).start();
 
             startActivity(intent);
             finish();
+        } else if (itemSelecionado == R.id.register_book_bar) {
+            if (isNetworkAvailable(this)) {
+                Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
+                startActivity(intent);
+            } else {
+                popUp("Erro", "Você precisa de internet para isso!", this);
+            }
         }
         // Iapós o usuário selecionar um item no menu lateral, o código fecha o menu, proporcionando uma experiência de navegação mais fluida.
         drawerLayout.closeDrawer(GravityCompat.START);

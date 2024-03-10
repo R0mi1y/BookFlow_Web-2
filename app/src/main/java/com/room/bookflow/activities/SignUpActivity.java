@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivitySignUpBinding;
 import com.room.bookflow.models.User;
@@ -38,6 +39,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;
     private GoogleSignInClient googleSignInClient;
+    private BookFlowDatabase database;
     private int TYPE_TEXT_VARIATION_PASSWORD = -1;
 
     @Override
@@ -45,6 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        database = BookFlowDatabase.getDatabase(this);
 
         Intent resultIntent = new Intent();
 
@@ -210,6 +213,9 @@ public class SignUpActivity extends AppCompatActivity {
         user.setPassword(binding.password.getText().toString());
 
         user.save(this);
+        user.setIs_autenticated(true);
+        user.setAddress_id(-1);
+        database.userDao().insert(user);
     }
 
 

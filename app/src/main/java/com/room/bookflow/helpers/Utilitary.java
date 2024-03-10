@@ -3,6 +3,7 @@ package com.room.bookflow.helpers;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
@@ -11,10 +12,13 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -70,14 +74,23 @@ public class Utilitary {
     }
 
     public static void showToast(Context context, String message) {
-        ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+        try {
+            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void handleErrorResponse(VolleyError error, Context context) {
+        handleErrorResponse(error, context, true);
+    }
+
+    public static void handleErrorResponse(VolleyError error, Context context, boolean showMessages) {
         if (error instanceof NoConnectionError) {
-            showToast(context, "Sem conexão de internet");
+            if(showMessages) showToast(context, "Sem conexão de internet");
         } else if (error instanceof TimeoutError) {
-            showToast(context, "Tempo de espera excedido");
+            if(showMessages) showToast(context, "Tempo de espera excedido");
         } else if (error instanceof ServerError || error instanceof AuthFailureError) {
             NetworkResponse networkResponse = error.networkResponse;
             if (networkResponse != null && networkResponse.data != null) {
@@ -86,26 +99,27 @@ public class Utilitary {
                     JSONObject data = new JSONObject(responseBody);
                     StringBuilder message = new StringBuilder();
                     Iterator<String> keys = data.keys();
+                    if (showMessages) {
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            Object value = data.get(key);
 
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        Object value = data.get(key);
+                            message.append(key).append(": ");
 
-                        message.append(key).append(": ");
-
-                        if (value instanceof String) {
-                            message.append(value);
-                        } else if (value instanceof JSONArray) {
-                            JSONArray jsonArray = (JSONArray) value;
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                message.append("\n");
-                                message.append(" - ").append(jsonArray.getString(i));
+                            if (value instanceof String) {
+                                message.append(value);
+                            } else if (value instanceof JSONArray) {
+                                JSONArray jsonArray = (JSONArray) value;
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    message.append("\n");
+                                    message.append(" - ").append(jsonArray.getString(i));
+                                }
                             }
+                            message.append("\n");
                         }
-                        message.append("\n");
-                    }
 
-                    popUp("Erro", message.toString(), context);
+                        popUp("Erro", message.toString(), context);
+                    }
                 } catch (JSONException e) {
                     showToast(context ,e.getMessage());
                     e.printStackTrace();
@@ -146,16 +160,21 @@ public class Utilitary {
     }
 
     public static void popUp(String title, String message, Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title)
-                .setMessage(message);
+        try {
+            AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+            builder.setTitle(title)
+                    .setMessage(message);
 
-        builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
+            builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
 
-        AlertDialog alertDialog = builder.create();
-        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
+            AlertDialog alertDialog = builder.create();
+            Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
 
-        alertDialog.show();
+            alertDialog.show();
+        } catch (Exception e) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public static void showInputDialog(Context context, String title, String searchCamp, Consumer<String> positiveClickListener) {
@@ -177,6 +196,14 @@ public class Utilitary {
         AlertDialog alertDialog = builder.create();
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
         alertDialog.show();
+
+        // Alterar a cor dos botões após o diálogo ser exibido
+        Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+
+        // Exemplo: Alterar a cor do texto do botão
+        negativeButton.setTextColor(context.getResources().getColor(R.color.color_begie));
+        positiveButton.setTextColor(context.getResources().getColor(R.color.color_begie));
     }
 
     public static String getTextReduced(String originalText, int size) {

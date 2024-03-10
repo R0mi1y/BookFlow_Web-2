@@ -10,75 +10,7 @@
     tools:context=".activities.HomeActivity"
     tools:openDrawer="start">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
         <!-- Toolbar -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="84dp"
-            android:orientation="horizontal">
-
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="18dp"
-                android:layout_marginTop="18dp"
-                android:layout_marginBottom="-62dp"
-                android:elevation="4dp"
-                android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#00626262"
-                android:fontFamily="@font/rosarivo_regular"
-                android:gravity="center_vertical|end"
-                android:padding="0dp"
-                android:text="Book"
-                android:textAllCaps="false"
-                android:textColor="@color/colorBlanchedalmond_100_Opaco"
-                android:textColorHint="@color/colorBlanchedalmond_100_Opaco"
-                android:textSize="42sp" />
-
-            <Button
-                android:id="@+id/back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#00626262"
-                android:fontFamily="@font/rosarivo_regular"
-                android:gravity="start|center_vertical"
-                android:padding="0dp"
-                android:text="Flow"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="42sp" />
-
-            <ImageButton
-                android:id="@+id/search_button"
-                android:layout_width="20dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="#00FFFFFF"
-                android:contentDescription="botão de pesquisa"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/baseline_search_24"
-                app:rippleColor="#FFFFFF"
-                app:tint="#FFFFFF" />
-
-        </LinearLayout>
 
         <!-- Conteúdo da Página Home -->
         <ScrollView
@@ -97,6 +29,70 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 tools:context=".activities.HomeActivity">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="84dp"
+                    android:orientation="horizontal">
+
+
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginBottom="-62dp"
+                        android:elevation="4dp"
+                        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+                    <Button
+                        android:id="@+id/button3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#00626262"
+                        android:fontFamily="@font/rosarivo_regular"
+                        android:gravity="center_vertical|end"
+                        android:padding="0dp"
+                        android:text="Book"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlanchedalmond_100_Opaco"
+                        android:textColorHint="@color/colorBlanchedalmond_100_Opaco"
+                        android:textSize="42sp" />
+
+                    <Button
+                        android:id="@+id/back_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#00626262"
+                        android:fontFamily="@font/rosarivo_regular"
+                        android:gravity="start|center_vertical"
+                        android:padding="0dp"
+                        android:text="Flow"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="42sp" />
+
+                    <ImageButton
+                        android:id="@+id/search_button"
+                        android:layout_width="20dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="#00FFFFFF"
+                        android:contentDescription="botão de pesquisa"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/baseline_search_24"
+                        app:rippleColor="#FFFFFF"
+                        app:tint="#FFFFFF" />
+
+                </LinearLayout>
 
                 <Space
                     android:layout_width="match_parent"
@@ -369,130 +365,130 @@
 
                 </ViewFlipper>
 
-                <TextView
-                    android:id="@+id/txt_mi_biblioteca2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="@font/rosarivo_regular"
-                    android:paddingLeft="30dp"
-                    android:text="Minha biblioteca"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.059"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_flipper"
-                    app:layout_constraintVertical_bias="0.413" />
+<!--                <TextView-->
+<!--                    android:id="@+id/txt_mi_biblioteca2"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_marginBottom="10dp"-->
+<!--                    android:fontFamily="@font/rosarivo_regular"-->
+<!--                    android:paddingLeft="30dp"-->
+<!--                    android:text="Minha biblioteca"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="18sp"-->
+<!--                    app:layout_constraintBottom_toTopOf="@+id/linearLayout3"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintHorizontal_bias="0.059"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/view_flipper"-->
+<!--                    app:layout_constraintVertical_bias="0.413" />-->
 
-                <LinearLayout
-                    android:id="@+id/op_books"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="20dp"
-                    android:foregroundGravity="center_horizontal"
-                    android:gravity="center">
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/op_books"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:layout_marginBottom="20dp"-->
+<!--                    android:foregroundGravity="center_horizontal"-->
+<!--                    android:gravity="center">-->
 
-                    <LinearLayout
-                        android:id="@+id/register_book_btn"
-                        android:layout_width="110dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/retangulo_shape_sessao"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:padding="5dp">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/register_book_btn"-->
+<!--                        android:layout_width="110dp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:background="@drawable/retangulo_shape_sessao"-->
+<!--                        android:gravity="center_horizontal"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:padding="5dp">-->
 
-                        <TextView
-                            android:id="@+id/txt_cadastrar_livros"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center|center_vertical"
-                            android:fontFamily="@font/rosarivo_regular"
-                            android:foregroundGravity="center"
-                            android:gravity="center"
-                            android:text="Cadastrar\nLivros"
-                            android:textColor="@color/colorBlanchedalmond_100"
-                            android:textSize="16sp" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/txt_cadastrar_livros"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center|center_vertical"-->
+<!--                            android:fontFamily="@font/rosarivo_regular"-->
+<!--                            android:foregroundGravity="center"-->
+<!--                            android:gravity="center"-->
+<!--                            android:text="Cadastrar\nLivros"-->
+<!--                            android:textColor="@color/colorBlanchedalmond_100"-->
+<!--                            android:textSize="16sp" />-->
 
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="20dp"
-                            android:src="@drawable/books_vetor" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="50dp"-->
+<!--                            android:layout_height="50dp"-->
+<!--                            android:layout_marginTop="20dp"-->
+<!--                            android:src="@drawable/books_vetor" />-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
-                    <LinearLayout
-                        android:id="@+id/list_books_btn"
-                        android:layout_width="110dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="15sp"
-                        android:background="@drawable/retangulo_shape_sessao"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:padding="5dp">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentBottom="true"
-                            android:layout_gravity="center|center_vertical"
-                            android:fontFamily="@font/rosarivo_regular"
-                            android:foregroundGravity="center"
-                            android:gravity="center"
-                            android:text="Meus\nLivros"
-                            android:textColor="@color/colorBlanchedalmond_100"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="20dp"
-                            android:src="@drawable/book_aberto" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/maps_btn"
-                        android:layout_width="110dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="15sp"
-                        android:background="@drawable/retangulo_shape_sessao"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:padding="5dp">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/list_books_btn"-->
+<!--                        android:layout_width="110dp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_marginLeft="15sp"-->
+<!--                        android:background="@drawable/retangulo_shape_sessao"-->
+<!--                        android:gravity="center_horizontal"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:padding="5dp">-->
 
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentBottom="true"
-                            android:layout_gravity="center|center_vertical"
-                            android:fontFamily="@font/rosarivo_regular"
-                            android:foregroundGravity="center"
-                            android:gravity="center"
-                            android:text="Mapa de\nLivros"
-                            android:textColor="@color/colorBlanchedalmond_100"
-                            android:textSize="16sp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_alignParentStart="true"-->
+<!--                            android:layout_alignParentTop="true"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:layout_alignParentBottom="true"-->
+<!--                            android:layout_gravity="center|center_vertical"-->
+<!--                            android:fontFamily="@font/rosarivo_regular"-->
+<!--                            android:foregroundGravity="center"-->
+<!--                            android:gravity="center"-->
+<!--                            android:text="Meus\nLivros"-->
+<!--                            android:textColor="@color/colorBlanchedalmond_100"-->
+<!--                            android:textSize="16sp" />-->
 
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="20dp"
-                            android:src="@drawable/books_vetor" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="50dp"-->
+<!--                            android:layout_height="50dp"-->
+<!--                            android:layout_marginTop="20dp"-->
+<!--                            android:src="@drawable/book_aberto" />-->
 
-                    </LinearLayout>
-                </LinearLayout>
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/maps_btn"-->
+<!--                        android:layout_width="110dp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_marginLeft="15sp"-->
+<!--                        android:background="@drawable/retangulo_shape_sessao"-->
+<!--                        android:gravity="center_horizontal"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:padding="5dp">-->
+
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_alignParentStart="true"-->
+<!--                            android:layout_alignParentTop="true"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:layout_alignParentBottom="true"-->
+<!--                            android:layout_gravity="center|center_vertical"-->
+<!--                            android:fontFamily="@font/rosarivo_regular"-->
+<!--                            android:foregroundGravity="center"-->
+<!--                            android:gravity="center"-->
+<!--                            android:text="Mapa de\nLivros"-->
+<!--                            android:textColor="@color/colorBlanchedalmond_100"-->
+<!--                            android:textSize="16sp" />-->
+
+<!--                        <ImageView-->
+<!--                            android:layout_width="50dp"-->
+<!--                            android:layout_height="50dp"-->
+<!--                            android:layout_marginTop="20dp"-->
+<!--                            android:src="@drawable/books_vetor" />-->
+
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
 
                 <LinearLayout
                     android:id="@+id/books_section"
@@ -593,7 +589,6 @@
 
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
     <!-- Menu Lateral -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

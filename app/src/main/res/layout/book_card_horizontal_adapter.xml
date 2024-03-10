@@ -23,17 +23,19 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/cover"
             android:layout_width="115dp"
             android:layout_height="115dp"
+            android:layout_marginLeft="3dp"
             android:background="@drawable/default_cover_bg"
             android:contentDescription="Capa do livro"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@+id/txt_titulo_"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circular_book_list"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,8 +98,8 @@
         android:id="@+id/favorite_icon"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_marginStart="13dp"
-        android:layout_marginBottom="-28dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="-30dp"
         app:layout_constraintBottom_toTopOf="@+id/layoutCard"
         app:layout_constraintStart_toStartOf="@+id/layoutCard" />
 </androidx.constraintlayout.widget.ConstraintLayout>

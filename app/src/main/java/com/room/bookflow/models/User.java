@@ -85,7 +85,6 @@ public class User {
     private String password;
     @ColumnInfo(defaultValue="false")
     private boolean is_autenticated;
-    @NonNull
     private long address_id;
 
     @Ignore
@@ -429,7 +428,11 @@ public class User {
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    tokenQueue.add(null);
+                    try {
+                        tokenQueue.add(null);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
                 }) {
         };
         requestQueue.add(request);

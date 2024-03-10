@@ -6,8 +6,22 @@
     <style name="circular_book_image">
         <item name="cornerSize">25dp</item>
     </style>
+    <style name="circular_book_list">
+        <item name="cornerSize">10dp</item>
+    </style>
 
     <style name="roundedImageStyle">
         <item name="android:background">@drawable/rounded_image_with_background</item>
+    </style>
+
+    <style name="Theme.NoBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>
