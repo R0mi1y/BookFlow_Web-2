@@ -39,9 +39,10 @@
                 <Button
                     android:id="@+id/back_btn"
                     style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="306dp"
+                    android:layout_width="328dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
+                    android:layout_marginRight="300dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
                     android:fontFamily="@font/rosarivo"
@@ -63,8 +64,8 @@
                 <Button
                     android:id="@+id/Profile_edt_view"
                     style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="102dp"
+                    android:layout_height="35dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
                     android:fontFamily="@font/rosarivo"

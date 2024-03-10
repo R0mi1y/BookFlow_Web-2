@@ -96,10 +96,10 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/send_message_btn"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
             android:layout_gravity="start"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="30dp"
             android:layout_weight="0"
             android:background="@drawable/default_border_white"
             android:backgroundTint="#EAE1D5"

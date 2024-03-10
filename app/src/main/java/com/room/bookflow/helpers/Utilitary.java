@@ -3,6 +3,7 @@ package com.room.bookflow.helpers;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
@@ -11,10 +12,13 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -182,6 +186,14 @@ public class Utilitary {
         AlertDialog alertDialog = builder.create();
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_border);
         alertDialog.show();
+
+        // Alterar a cor dos botões após o diálogo ser exibido
+        Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+
+        // Exemplo: Alterar a cor do texto do botão
+        negativeButton.setTextColor(context.getResources().getColor(R.color.color_begie));
+        positiveButton.setTextColor(context.getResources().getColor(R.color.color_begie));
     }
 
     public static String getTextReduced(String originalText, int size) {
