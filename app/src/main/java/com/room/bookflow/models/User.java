@@ -85,7 +85,6 @@ public class User {
     private String password;
     @ColumnInfo(defaultValue="false")
     private boolean is_autenticated;
-    @NonNull
     private long address_id;
 
     @Ignore

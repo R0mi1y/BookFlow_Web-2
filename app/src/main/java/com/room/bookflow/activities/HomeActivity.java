@@ -140,7 +140,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             User profile = User.getAuthenticatedUser(this);
             runOnUiThread(() -> {
                 profileName.setText(profile.getUsername());
-                Picasso.get().load(profile.getPhoto()).into(profileImage);
+                if (profile.getPhoto() != null) {
+                    Picasso.get().load(profile.getPhoto()).into(profileImage);
+                }
             });
         }).start();
     }
