@@ -54,7 +54,7 @@ public class SplashActivity extends AppCompatActivity {
                         chat = new Chat(reciever_id);
                         long chat_id = bookFlowDatabase.chatDao().insert(chat);
                         chat.setId((int)chat_id);
-                        if (chat.startChat(this, (int) reciever_id)) {
+                        if (chat.startChat(this, reciever_id)) {
                             chat.recoveryMessages(chat, this);
                             fromIntent.putExtra("chatId", (int) chat_id);
                             runOnUiThread(() -> {
@@ -65,6 +65,7 @@ public class SplashActivity extends AppCompatActivity {
                             popUp("Erro", "Falha ao tentar abrir chat!", this);
                         }
                     }
+
                 }).start();
             }
         } else {
@@ -73,6 +74,10 @@ public class SplashActivity extends AppCompatActivity {
                         .build();
 
                 WorkManager.getInstance(this).enqueue(notificationWork);
+
+                if (isNetworkAvailable(this)) {
+                    Chat.recoveryChats(this);
+                }
 
                 runOnUiThread(() -> {
                     new Handler().postDelayed(() -> {

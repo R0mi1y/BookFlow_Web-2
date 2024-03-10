@@ -66,6 +66,7 @@
                     android:id="@+id/profileImage"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
+                    android:background="@drawable/ellipse2"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/circular_perfil"
                     app:srcCompat="@drawable/ellipse2" />

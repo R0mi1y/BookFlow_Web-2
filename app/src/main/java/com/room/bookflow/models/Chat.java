@@ -5,6 +5,7 @@ import static com.room.bookflow.helpers.Utilitary.popUp;
 import static com.room.bookflow.helpers.Utilitary.showToast;
 import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -58,6 +59,89 @@ public class Chat {
         this.receiver_id = receiver_id;
         this.receiver = new User();
         this.receiver.setId(receiver_id);
+    }
+
+    public static boolean recoveryChats(Activity context) {
+        User ua = User.getAuthenticatedUser(context);
+        BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
+
+        String url = context.getString(R.string.api_url) + "/api/user/all_messages/";
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        String authToken = User.getAccessToken(context);
+
+        if (authToken == null) {
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            showToast(context, "Login expirado!");
+            context.startActivity(intent);
+            return false;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+
+        BlockingQueue<Boolean> messageQueue = new LinkedBlockingQueue<>();
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    if (response.length() > 0) {
+                        new Thread(() -> {
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject jsonObject = response.getJSONObject(i);
+                                    int user_id;
+                                    if (jsonObject.has("sender") && jsonObject.getInt("sender") == ua.getId()) {
+                                        user_id = jsonObject.getInt("reciever");
+                                    } else {
+                                        user_id = jsonObject.getInt("sender");
+                                    }
+
+                                    User receiver = db.userDao().getById(user_id);
+                                    if (receiver == null) {
+                                        receiver = new User().getUserById(user_id, context);
+                                        receiver.setAddress_id(db.addressDao().insert(receiver.getAddress()));
+                                        db.userDao().insert(receiver);
+                                    }
+
+                                    Chat chat = db.chatDao().getByReciver(user_id);
+
+                                    if (chat == null) {
+                                        chat = new Chat(user_id);
+                                        int chat_id = (int) db.chatDao().insert(chat);
+                                        chat.recoveryMessages(chat, context);
+                                    } else {
+                                        chat.recoveryMessages(chat, context);
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("Error getting user", e.getMessage());
+                                }
+                            }
+                        }).start();
+                        messageQueue.add(true);
+                    } else {
+                        Log.e("Getting user", "Nenhuma mensagem encontrada!");
+                        messageQueue.add(false);
+                    }
+                },
+                error -> {
+                    handleErrorResponse(error, context);
+                    messageQueue.add(false);
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return headers;
+            }
+        };
+        requestQueue.add(request);
+
+        try {
+            return messageQueue.poll(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            showToast(context, "Conexão perdida!");
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public int getId() {
@@ -182,6 +266,16 @@ public class Chat {
         BookFlowDatabase database = BookFlowDatabase.getDatabase(context);
         Chat chat = database.chatDao().getById(chat_id);
 
+        User reciver = database.userDao().getById(chat.getReceiver_id());
+        if (reciver == null) {
+            reciver = new User().getUserById(chat.getReceiver_id(), context);
+            if (reciver != null) {
+                int address_id = (int) database.addressDao().insert(reciver.getAddress());
+                reciver.setAddress_id(address_id);
+                database.userDao().insert(reciver);
+            }
+        }
+
         List<Message> unsentMessages = database.messageDao().getMessageByChatIdStatus(chat_id, Message.STATUS_ERROR_SENT);
 
         if (unsentMessages.size() > 0) {
@@ -227,7 +321,7 @@ public class Chat {
     private List<Message> getAllMessages(Context context, int receiver_id) {
         User ua = User.getAuthenticatedUser(context);
 
-        String url = context.getString(R.string.api_url) + "/api/user/" + receiver_id + "/all_messages/";
+        String url = context.getString(R.string.api_url) + "/api/user/" + receiver_id + "/messages/";
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         String authToken = User.getAccessToken(context);
@@ -268,7 +362,7 @@ public class Chat {
                 },
                 error -> {
                     handleErrorResponse(error, context);
-                    messageQueue.add(new ArrayList<Message>());
+                    messageQueue.add(new ArrayList<>());
                 }) {
             @Override
             public Map<String, String> getHeaders() {

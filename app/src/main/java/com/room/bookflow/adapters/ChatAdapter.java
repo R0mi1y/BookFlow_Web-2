@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.room.bookflow.BookFlowDatabase;
@@ -50,10 +52,19 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
             Chat chat = chatList.get(position);
             String lastMessage = db.chatDao().getLastMessage(chat.getId());
             User reciver = db.userDao().getById(chat.getReceiver_id());
+            if (reciver == null) {
+                reciver = new User().getUserById(chat.getReceiver_id(), context);
+                int address_id = (int) db.addressDao().insert(reciver.getAddress());
+                reciver.setAddress_id(address_id);
+                db.userDao().insert(reciver);
+            }
+            User finalReceiver = reciver;
+
             context.runOnUiThread(() -> {
-                //if (reciver != null) Picasso.get().load(reciver.getPhoto()).into(holder.perfil);
+                //if (finalReceiver != null) Picasso.get().load(finalReceiver.getPhoto()).into(holder.perfil);
+                if (finalReceiver != null) holder.username.setText(finalReceiver.getUsername() != null ? finalReceiver.getUsername() : "");
                 holder.message.setText(lastMessage != null ? lastMessage : "");
-                if (reciver != null) holder.username.setText(reciver.getUsername() != null ? reciver.getUsername() : "");
+
                 holder.layout_foreground.setOnClickListener(v -> {
                     Intent intent = new Intent(context, ChatActivity.class);
                     intent.putExtra("chatId", chat.getId());

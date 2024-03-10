@@ -1,6 +1,9 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.helpers.Utilitary.isNetworkAvailable;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import android.os.Bundle;
 
@@ -25,8 +28,14 @@ public class ChatListActivity extends AppCompatActivity {
 
         db = BookFlowDatabase.getDatabase(this);
         new Thread(() -> {
+            LiveData<List<Chat>> liveChatList = db.chatDao().getAllChatLiveData();
             List<Chat> chatList = db.chatDao().getAllChat();
-            runOnUiThread(() -> binding.items.setAdapter(new ChatAdapter(chatList, R.layout.chat_list_adapter, this)));
+            runOnUiThread(() -> {
+                binding.items.setAdapter(new ChatAdapter(chatList, R.layout.chat_list_adapter, this));
+                liveChatList.observe(this, list -> {
+                    binding.items.setAdapter(new ChatAdapter(list, R.layout.chat_list_adapter, this));
+                });
+            });
         }).start();
 
     }

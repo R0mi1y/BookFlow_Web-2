@@ -67,9 +67,10 @@
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
+                android:background="@drawable/default_cover_bg"
                 android:foregroundGravity="center"
-                app:shapeAppearanceOverlay="@style/circular_perfil"
                 android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/circular_perfil"
                 app:srcCompat="@drawable/default_cover_bg" />
 
 

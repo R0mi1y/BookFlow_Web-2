@@ -1,5 +1,6 @@
 package com.room.bookflow.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,6 +18,9 @@ public interface ChatDao {
 
     @Query("SELECT * FROM chat_table")
     public List<Chat> getAllChat();
+
+    @Query("SELECT * FROM chat_table")
+    public LiveData<List<Chat>> getAllChatLiveData();
 
     @Query("SELECT message FROM message_table WHERE chat_id=:chat_id ORDER BY id DESC LIMIT 1")
     public String getLastMessage(int chat_id);

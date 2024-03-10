@@ -307,7 +307,6 @@ public class Book {
                 url += "user/" + authenticatedUser.getId() + "?filter=" + (filter == null ? "ALL" : filter);
 
                 Log.d("URL", "Final URL: " + url);
-
             } else {
                 Log.e("AuthenticatedUser", "User not authenticated or null.");
                 Log.e("URL", "ERRORRRR");

@@ -160,8 +160,8 @@ public class Message {
                     }
                 },
                 error -> {
-                    handleErrorResponse(error, context);
-                    queue.add(new ArrayList<Message>());
+                    handleErrorResponse(error, context, false);
+                    queue.add(new ArrayList<>());
                 }) {
             @Override
             public Map<String, String> getHeaders() {
