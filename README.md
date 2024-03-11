@@ -1,5 +1,7 @@
 # Book Flow
 
+#DOCUMENTAÇÂO
+
 ## Descrição do Projeto
 O BookFlow é uma aplicação que permite aos usuários compartilhar e emprestar livros entre si. A plataforma oferece funcionalidades como cadastro de usuários, gerenciamento de livros, autenticação segura, e um sistema de chat integrado.
 
@@ -54,7 +56,11 @@ O BookFlow é uma aplicação que permite aos usuários compartilhar e emprestar
 ## Diagrama de Classes
 [Diagrama de Classes](https://cdn.discordapp.com/attachments/1162835019375595520/1216782412290457701/Captura_de_tela_2024-03-11_004537.png?ex=6601a3ed&is=65ef2eed&hm=b71a76cc43b09788d31bc59020047b6997b544c401d34232a7f7e6bc4aebaf4a&)
 
-##Documentação da api
+## Documentação da api
+
+### doc
 [api doc](http://89.117.75.69/doc/)
+
+### redoc
 
 [api redoc](http://89.117.75.69/redoc/)
