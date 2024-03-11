@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (error instanceof NoConnectionError) {
                         Toast.makeText(LoginActivity.this, "Sem conexão de internet", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof TimeoutError) {
-                        Toast.makeText(LoginActivity.this, "Tempo de espera excedido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "O servidor não está respondendo!", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof ServerError) {
                         Toast.makeText(LoginActivity.this, "Erro no servidor", Toast.LENGTH_SHORT).show();
                     } else {
@@ -218,7 +218,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (error instanceof NoConnectionError) {
                         Toast.makeText(LoginActivity.this, "Sem conexão de internet", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof TimeoutError) {
-                        Toast.makeText(LoginActivity.this, "Tempo de espera excedido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "O servidor não está respondendo!", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof ServerError) {
                         Toast.makeText(LoginActivity.this, "Erro no servidor", Toast.LENGTH_SHORT).show();
                     } else {

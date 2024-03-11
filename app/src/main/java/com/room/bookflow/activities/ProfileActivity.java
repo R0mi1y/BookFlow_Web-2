@@ -1,5 +1,7 @@
 package com.room.bookflow.activities;
 
+import static com.room.bookflow.helpers.Utilitary.popUp;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -90,9 +92,10 @@ public class ProfileActivity extends AppCompatActivity {
                     binding.editTextPhone.setText(userProfile.getPhone());
                     binding.editTextBiography.setText(userProfile.getBiography());
                     ImageView profileImage = binding.profileImage;
-                    Picasso.get().load(userProfile.getPhoto()).into(profileImage);
+                    Picasso.get().load(userProfile.getPhoto().contains("http") ? userProfile.getPhoto() : getString(R.string.api_url) + userProfile.getPhoto()).into(profileImage);
 
                     binding.btnSalvChanges.setOnClickListener(v -> {
+                        binding.btnSalvChanges.setEnabled(false);
                         // Obter os dados dos campos de edição
                         String updatedName = binding.editTextName.getText().toString();
                         String updatedLastName = binding.editTextLastname.getText().toString();
@@ -101,22 +104,35 @@ public class ProfileActivity extends AppCompatActivity {
                         String updatedPhone = binding.editTextPhone.getText().toString();
                         String updatedBiography = binding.editTextBiography.getText().toString();
 
-                        // Criar um objeto User com as alterações
-                        User updatedUser = new User();
-                        updatedUser.setFirstName(updatedName);
-                        updatedUser.setLastName(updatedLastName);
-                        updatedUser.setUsername(updatedUserName);
-                        updatedUser.setEmail(updatedEmail);
-                        updatedUser.setPhone(updatedPhone);
-                        updatedUser.setBiography(updatedBiography);
+                        if (
+                                updatedName.replace(" ", "").equals("") ||
+                                updatedLastName.replace(" ", "").equals("") ||
+                                updatedUserName.replace(" ", "").equals("") ||
+                                updatedEmail.replace(" ", "").equals("") ||
+                                updatedPhone.replace(" ", "").equals("") ||
+                                updatedBiography.replace(" ", "").equals("")
+                        ) popUp("Erro", "Preencha todos os campos!", this);
+                        else {
+                            // Criar um objeto User com as alterações
+                            User updatedUser = new User();
+                            updatedUser.setFirstName(updatedName);
+                            updatedUser.setLastName(updatedLastName);
+                            updatedUser.setUsername(updatedUserName);
+                            updatedUser.setEmail(updatedEmail);
+                            updatedUser.setPhone(updatedPhone);
+                            updatedUser.setBiography(updatedBiography);
 
-                        new Thread(() -> {
-                            File imageFile = convertBitmapToFile(this, imageBitMap, "photo.png");
-                            updatedUser.update(userId, updatedUser, imageFile, ProfileActivity.this);
-                            updatedUser.setIs_autenticated(true);
-                            updatedUser.setAddress_id(userProfile.getAddress_id());
-                            changeUser(updatedUser);
-                        }).start();
+                            new Thread(() -> {
+                                File imageFile = convertBitmapToFile(this, imageBitMap, "photo.png");
+                                updatedUser.update(userId, updatedUser, imageFile, ProfileActivity.this);
+                                updatedUser.setIs_autenticated(true);
+                                updatedUser.setAddress_id(userProfile.getAddress_id());
+                                changeUser(updatedUser);
+                                finish();
+                            }).start();
+                            binding.btnSalvChanges.setEnabled(true);
+                        }
+                        binding.btnSalvChanges.setEnabled(true);
                     });
                 });
             } else {
@@ -141,9 +157,10 @@ public class ProfileActivity extends AppCompatActivity {
                 bookFlowDatabase.userDao().update(user);
 
                 runOnUiThread(() -> {
-                    Toast.makeText(ProfileActivity.this, user.getUsername() + " inserida com sucesso", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("messageTitle", "Sucesso!");
+                    intent.putExtra("message", "Usuário atualizado com sucesso!");
                     startActivity(intent);
                 });
             } catch (Exception e) {

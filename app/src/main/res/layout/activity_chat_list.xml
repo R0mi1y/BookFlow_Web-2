@@ -46,6 +46,7 @@
             android:paddingRight="40dp"
             android:text="@string/button_chat_list"
             android:textAlignment="center"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="42sp"
             app:iconSize="40dp"

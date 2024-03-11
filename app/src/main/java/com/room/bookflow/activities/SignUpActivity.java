@@ -164,7 +164,7 @@ public class SignUpActivity extends AppCompatActivity {
                     if (error instanceof NoConnectionError) {
                         Toast.makeText(SignUpActivity.this, "Sem conexão de internet", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof TimeoutError) {
-                        Toast.makeText(SignUpActivity.this, "Tempo de espera excedido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, "O servidor não está respondendo!", Toast.LENGTH_SHORT).show();
                     } else if (error instanceof ServerError) {
                         Toast.makeText(SignUpActivity.this, "Erro no servidor", Toast.LENGTH_SHORT).show();
                     } else {

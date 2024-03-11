@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -92,9 +93,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
         binding.searchButton.setOnClickListener(v -> Utilitary.showInputDialog(this, "Digite um título, descrição ou gênero:", "", text -> {
-            listBookIntent.putExtra("filter", "SEARCH");
-            listBookIntent.putExtra("search", text);
-            startActivity(listBookIntent);
+            if (!text.replace(" ", "").equals("")) {
+                listBookIntent.putExtra("filter", "SEARCH");
+                listBookIntent.putExtra("search", text);
+                startActivity(listBookIntent);
+            } else {
+                Toast.makeText(getApplicationContext(), "Preencha o campo!", Toast.LENGTH_SHORT).show();
+            }
         }));
 
         // MENU LATERAL
@@ -123,7 +128,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             runOnUiThread(() -> {
                 profileName.setText(profile.getUsername());
                 if (profile.getPhoto() != null) {
-                    Picasso.get().load(profile.getPhoto()).into(profileImage);
+                    Picasso.get().load(profile.getPhoto().contains("http") ? profile.getPhoto() : getString(R.string.api_url) + profile.getPhoto()).into(profileImage);
                 }
             });
         }).start();

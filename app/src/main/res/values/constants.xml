@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="api_url">http://89.117.75.69:8881</string>>
-    <string name="certificate">http://89.117.75.69:8881</string>>
+    <string name="api_url">http://89.117.75.69</string>
+    <string name="certificate">http://89.117.75.69</string>
 </resources>

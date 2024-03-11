@@ -41,7 +41,7 @@
           android:gravity="center"
           android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/back_btn1"
             android:layout_width="40dp"
             android:layout_height="match_parent"
@@ -51,7 +51,8 @@
             android:textColorHighlight="#FFFFFF"
             android:textColorHint="#EDEDED"
             android:textColorLink="#FFFFFF"
-            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:src="@drawable/baseline_arrow_back_ios_new_24"
+            tools:src="@drawable/baseline_arrow_back_ios_new_24"
             app:iconGravity="start"
             app:iconSize="35dp"
             app:iconTint="#FFFFFF"
@@ -66,6 +67,7 @@
             android:lineSpacingExtra="-25sp"
             android:padding="0dp"
             android:text="Editar"
+            android:textAllCaps="false"
             android:textColor="@color/colorBlanchedalmond_100_Opaco"
             android:textSize="42sp"
             app:iconGravity="start"
@@ -82,6 +84,7 @@
             android:gravity="start|center_vertical"
             android:padding="0dp"
             android:text="Livro"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="42sp" />
       </LinearLayout>

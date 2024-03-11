@@ -214,15 +214,6 @@ public class EditBookActivity extends AppCompatActivity {
                         hasImage = true;
                     }
                     break;
-//                case REQUEST_CODE_PICK_DIRECTORY:
-//                    if (data != null && data.getData() != null) {
-//                        Uri treeUri = data.getData();
-//
-//                        ImageDownloader imageDownloader = new ImageDownloader(getApplicationContext(), treeUri);
-//
-//                        imageDownloader.execute(getString(R.string.api_url) + "/api/book/" + bookId + "/get_qr?result=show");
-//                    }
-//                    break;
             }
         }
     }

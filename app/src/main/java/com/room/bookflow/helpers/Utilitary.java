@@ -90,7 +90,7 @@ public class Utilitary {
         if (error instanceof NoConnectionError) {
             if(showMessages) showToast(context, "Sem conexão de internet");
         } else if (error instanceof TimeoutError) {
-            if(showMessages) showToast(context, "Tempo de espera excedido");
+            if(showMessages) showToast(context, "O servidor não está respondendo!");
         } else if (error instanceof ServerError || error instanceof AuthFailureError) {
             NetworkResponse networkResponse = error.networkResponse;
             if (networkResponse != null && networkResponse.data != null) {

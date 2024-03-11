@@ -15,7 +15,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/back_btn"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
@@ -26,7 +26,8 @@
             android:textColorHighlight="#FFFFFF"
             android:textColorHint="#EDEDED"
             android:textColorLink="#FFFFFF"
-            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            tools:src="@drawable/baseline_arrow_back_ios_new_24"
+            android:src="@drawable/baseline_arrow_back_ios_new_24"
             app:iconGravity="start"
             app:iconSize="35dp"
             app:iconTint="#FFFFFF"
@@ -42,6 +43,7 @@
             android:gravity="center_vertical|end"
             android:padding="0dp"
             android:text="Book"
+            android:textAllCaps="false"
             android:textColor="@color/colorBlanchedalmond_100_Opaco"
             android:textColorHint="@color/colorBlanchedalmond_100_Opaco"
             android:textSize="39sp" />
@@ -56,6 +58,7 @@
             android:gravity="start|center_vertical"
             android:padding="0dp"
             android:text="Flow"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="39sp" />
 

@@ -35,6 +35,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.room.bookflow.BookFlowDatabase;
 import com.room.bookflow.R;
 import com.room.bookflow.databinding.ActivityRegisterBookBinding;
 import com.room.bookflow.helpers.BookSuggestion;
@@ -58,6 +59,7 @@ public class RegisterBookActivity extends AppCompatActivity {
     private Bitmap imageBitMap;
     private Boolean hasImage = false;
     ActivityRegisterBookBinding binding;
+    BookFlowDatabase database;
 
     private File convertBitmapToFile(Context context, Bitmap bitmap, String fileName) {
         // Crie um arquivo no diretório cache da aplicação
@@ -77,7 +79,7 @@ public class RegisterBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        database = BookFlowDatabase.getDatabase(this);
         binding.title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -145,6 +147,7 @@ public class RegisterBookActivity extends AppCompatActivity {
                     try {
                         File imageFile = convertBitmapToFile(this, imageBitMap, "cover.png");
                         book = book.registerBook(imageFile, this);
+                        database.bookDao().insert(book);
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> popUp("Erro", "Falha ao processar a imagem!", RegisterBookActivity.this));
@@ -152,12 +155,13 @@ public class RegisterBookActivity extends AppCompatActivity {
                     }
                 } else {
                     book = book.registerBook(this);
+                    database.bookDao().insert(book);
                 }
 
                 try {
                     if (book.getId() > -1) {
                         runOnUiThread(() -> {
-                            Intent resultIntent = new Intent();
+                            Intent resultIntent = new Intent(RegisterBookActivity.this, HomeActivity.class);
                             resultIntent.putExtra("message", "O livro foi cadastrado com sucesso!");
                             resultIntent.putExtra("title", "Sucesso");
                             setResult(Activity.RESULT_OK, resultIntent);

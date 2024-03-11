@@ -109,10 +109,8 @@ public class Chat {
                                     if (chat == null) {
                                         chat = new Chat(user_id);
                                         int chat_id = (int) db.chatDao().insert(chat);
-                                        chat.recoveryMessages(chat, context);
-                                    } else {
-                                        chat.recoveryMessages(chat, context);
                                     }
+                                    chat.recoveryMessages(chat, context);
                                 } catch (Exception e) {
                                     Log.e("Error getting user", e.getMessage());
                                 }
@@ -312,8 +310,12 @@ public class Chat {
             BookFlowDatabase db = BookFlowDatabase.getDatabase(context);
 
             for (Message message : messages1) {
-                message.setChat_id(chat.getId());
-                db.messageDao().insert(message);
+                try {
+                    message.setChat_id(chat.getId());
+                    db.messageDao().insert(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }

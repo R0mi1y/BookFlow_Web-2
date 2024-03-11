@@ -28,6 +28,7 @@
             android:paddingRight="40dp"
             android:text="@string/button_notyf"
             android:textAlignment="center"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="42sp"
             app:icon="@drawable/baseline_arrow_back_ios_new_24"

@@ -533,7 +533,7 @@ public class User {
         }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://89.117.75.69:8881")
+                .baseUrl(context.getString(R.string.api_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -546,7 +546,7 @@ public class User {
         RequestBody phoneBody = createRequestBody(user.phone);
         RequestBody biographBody = createRequestBody(user.biography);
 
-        BlockingQueue<Boolean> userQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<User> userQueue = new LinkedBlockingQueue<>();
 
         RequestBody imagemBody;
         Call<ResponseBody> call;
@@ -567,13 +567,13 @@ public class User {
                         String json = response.body().string();
 
                         setByJSONObject(new JSONObject(json), context);
-                        userQueue.add(true);
+                        userQueue.add(new User().setByJSONObject(new JSONObject(json), context));
                     }catch (IOException e) {
                         throw new RuntimeException(e);
                     }catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
-//                    popUp("Sucesso!", "Usuario Atualizado com sucesso", context);
+                    userQueue.add(new User());
                 } else {
                     try {
                         String errorBody = response.errorBody().string();
@@ -582,23 +582,21 @@ public class User {
                         throw new RuntimeException(e);
                     }
                     popUp("Falha!", "Erro no servidor, tente novamente mais tarde!", context);
+                    userQueue.add(new User());
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("UpdatingUser", t.getMessage());
+                userQueue.add(new User());
             }
         });
         try {
-            boolean isUpdated = userQueue.poll(30, TimeUnit.SECONDS);
-            if (!isUpdated) {
-                this.setId(-1);
-            }
-            return this;
+            return userQueue.poll(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, "Conexão Perdida!", Toast.LENGTH_SHORT).show());
             e.printStackTrace();
-            return null;
+            return new User();
         }
 
     }
