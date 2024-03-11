@@ -29,6 +29,7 @@
     <string name="name">Nome</string>
     <string name="usernameField">Username</string>
     <string name="email">E-mail</string>
+    <string name="emailanduser">E-mail/Usuário</string>
     <string name="phone">Telefone</string>
     <string name="biografy">Biografia</string>
     <string name="title">Titulo</string>
