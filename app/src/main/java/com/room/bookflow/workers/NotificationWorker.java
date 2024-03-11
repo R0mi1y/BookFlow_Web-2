@@ -63,6 +63,9 @@ public class NotificationWorker extends Worker {
     private void verificarNotificacoesDoServidor() {
         if (!isNetworkAvailable(this.getApplicationContext())) return;
         try {
+            User ua = User.getAuthenticatedUser(getApplicationContext());
+            if (ua == null || ua.getId() == -1) return;
+
             String url = this.getApplicationContext().getString(R.string.api_url) + "/api/user/" + User.getAuthenticatedUser(getApplicationContext()).getId() + "/notifications";
             RequestQueue requestQueue = Volley.newRequestQueue(this.getApplicationContext());
 
