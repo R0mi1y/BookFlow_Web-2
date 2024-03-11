@@ -48,7 +48,8 @@ O Book Sharing App é uma aplicação que permite aos usuários compartilhar e e
 - Permite que os usuários salvem livros desejados para empréstimo futuro, facilitando o planejamento de leituras.
 
 # Diagramas
-- ## Diagrama de Caso de Uso
+
+## Diagrama de Caso de Uso
 [Diagrama de Caso de Uso](https://cdn.discordapp.com/attachments/1162835019375595520/1216781061175119882/Captura_de_tela_2024-03-11_004449.png?ex=6601a2ab&is=65ef2dab&hm=57afc837f9ae5acb42cbb79ad5e51209acf6e5e16f7b0e1a4480bc645acadb72&)
 ## Diagrama de Classes
 [Diagrama de Classes](https://cdn.discordapp.com/attachments/1162835019375595520/1216782412290457701/Captura_de_tela_2024-03-11_004537.png?ex=6601a3ed&is=65ef2eed&hm=b71a76cc43b09788d31bc59020047b6997b544c401d34232a7f7e6bc4aebaf4a&)
