@@ -73,7 +73,6 @@ public class Chat {
         if (authToken == null) {
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            showToast(context, "Login expirado!");
             context.startActivity(intent);
             return false;
         }
