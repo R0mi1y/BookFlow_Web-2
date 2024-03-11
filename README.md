@@ -1,6 +1,6 @@
 # Book Flow
 
-#DOCUMENTAÇÂO
+# DOCUMENTAÇÂO
 
 ## Descrição do Projeto
 O BookFlow é uma aplicação que permite aos usuários compartilhar e emprestar livros entre si. A plataforma oferece funcionalidades como cadastro de usuários, gerenciamento de livros, autenticação segura, e um sistema de chat integrado.
