@@ -181,22 +181,22 @@
                 android:textColorLink="#FFFFFF" />
 
 
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/localizacao" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView4"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:srcCompat="@drawable/localizacao" />-->
 
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12sp"
-                android:layout_marginBottom="15sp"
-                android:fontFamily="@font/rosarivo_regular"
-                android:gravity="center"
-                android:text="@string/text_map"
-                android:textSize="18sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView10"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="12sp"-->
+<!--                android:layout_marginBottom="15sp"-->
+<!--                android:fontFamily="@font/rosarivo_regular"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/text_map"-->
+<!--                android:textSize="18sp" />-->
 
             <Space
                 android:layout_width="match_parent"
