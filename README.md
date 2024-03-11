@@ -1,7 +1,7 @@
 # Book Flow
 
 ## Descrição do Projeto
-O Book Sharing App é uma aplicação que permite aos usuários compartilhar e emprestar livros entre si. A plataforma oferece funcionalidades como cadastro de usuários, gerenciamento de livros, autenticação segura, e um sistema de chat integrado.
+O BookFlow é uma aplicação que permite aos usuários compartilhar e emprestar livros entre si. A plataforma oferece funcionalidades como cadastro de usuários, gerenciamento de livros, autenticação segura, e um sistema de chat integrado.
 
 # Requisitos
 
