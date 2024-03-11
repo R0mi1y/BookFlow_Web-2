@@ -1,6 +1,9 @@
-# Documentação
+# Book Flow
 
-# Lista de Requisitos
+## Descrição do Projeto
+O Book Sharing App é uma aplicação que permite aos usuários compartilhar e emprestar livros entre si. A plataforma oferece funcionalidades como cadastro de usuários, gerenciamento de livros, autenticação segura, e um sistema de chat integrado.
+
+# Requisitos
 
 ## 1. Cadastro de Usuários
 - Permite que novos usuários se registrem no sistema, fornecendo informações básicas para a criação da conta.
@@ -43,4 +46,11 @@
 
 ## 14. Lista de Desejos
 - Permite que os usuários salvem livros desejados para empréstimo futuro, facilitando o planejamento de leituras.
+
+# Diagramas
+- ## Diagrama de Caso de Uso
+[https://cdn.discordapp.com/attachments/1162835019375595520/1216781061175119882/Captura_de_tela_2024-03-11_004449.png?ex=6601a2ab&is=65ef2dab&hm=57afc837f9ae5acb42cbb79ad5e51209acf6e5e16f7b0e1a4480bc645acadb72&]
+
+## Diagrama de Classes
+[]
 
