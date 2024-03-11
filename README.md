@@ -59,7 +59,8 @@ O BookFlow é uma aplicação que permite aos usuários compartilhar e emprestar
 ## Documentação da api
 
 ### doc
-[api doc](http://89.117.75.69/doc/)
+[api doc](http://89.117.75.69/doc)
+<a href="http://89.117.75.69/doc" target="_blank"></a>
 
 ### redoc
 
