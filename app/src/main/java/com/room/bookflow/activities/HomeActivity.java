@@ -147,15 +147,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(HomeActivity.this, QRCodeScannerActivity.class);
             startActivity(intent);
         } else if(itemSelecionado == R.id.register_book_bar) {
-            Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
-            startActivity(intent);
+            if (isNetworkAvailable(this)) {
+                Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
+                startActivity(intent);
+            } else {
+                popUp("Erro", "Você precisa de internet para isso!", this);
+            }
         } else if(itemSelecionado == R.id.loan) {
             Intent intent = new Intent(HomeActivity.this, ListBooksActivity.class);
             intent.putExtra("filter", "MY_BOOKS");
             startActivity(intent);
-            startActivity(intent);
-        } else if (itemSelecionado == R.id.register_book_bar) {
-            Intent intent = new Intent(HomeActivity.this, RegisterBookActivity.class);
             startActivity(intent);
         } else if(itemSelecionado == R.id.nav_logout){
             Intent intent = new Intent(this, LoginActivity.class);
