@@ -54,15 +54,14 @@ public class ViewAllProfile extends AppCompatActivity {
                             // Buscar o endereço do usuário
                             Address address = bookFlowDatabase.addressDao().getById(authenticatedUser.getAddress_id());
 
-                            Log.d("UserProfile", "ENDEREÇOOOOOOOOOOOOOOOOOO: " + address);
                             runOnUiThread(() -> {
                                 if (address != null) {
                                     // Se o endereço existir, preencher os campos na interface do usuário
-                                    binding.postalCode.setText(address.getPostalCode());
-                                    binding.state.setText(address.getState());
-                                    binding.city.setText(address.getCity());
-                                    binding.district.setText(address.getDistrict());
-                                    binding.street.setText(address.getStreet());
+                                    binding.postalCode.setText(address.getPostalCode() == null ?  "" : address.getPostalCode());
+                                    binding.state.setText(address.getState() == null ?  "" : address.getState());
+                                    binding.city.setText(address.getCity() == null ?  "" : address.getCity());
+                                    binding.district.setText(address.getDistrict() == null ?  "" : address.getDistrict());
+                                    binding.street.setText(address.getStreet() == null ?  "" : address.getStreet());
                                 }else {
                                     binding.city.setText("");
                                     binding.street.setText("");
