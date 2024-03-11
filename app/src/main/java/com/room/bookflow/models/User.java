@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -575,12 +576,38 @@ public class User {
                     userQueue.add(new User());
                 } else {
                     try {
-                        String errorBody = response.errorBody().string();
-                        Log.e("UpdatingUser", errorBody);
+                        String responseBody = response.errorBody().string();
+                        try {
+                            JSONObject data = new JSONObject(responseBody);
+                            StringBuilder message = new StringBuilder();
+                            Iterator<String> keys = data.keys();
+                            while (keys.hasNext()) {
+                                String key = keys.next();
+                                Object value = data.get(key);
+
+                                message.append(key).append(": ");
+
+                                if (value instanceof String) {
+                                    message.append(value);
+                                } else if (value instanceof JSONArray) {
+                                    JSONArray jsonArray = (JSONArray) value;
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        message.append("\n");
+                                        message.append(" - ").append(jsonArray.getString(i));
+                                    }
+                                }
+                                message.append("\n");
+                            }
+
+                            popUp("Erro", message.toString(), context);
+                        } catch (JSONException e) {
+                            showToast(context ,e.getMessage());
+                            e.printStackTrace();
+                        }
+                        Log.e("UpdatingUser", responseBody);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    popUp("Falha!", "Erro no servidor, tente novamente mais tarde!", context);
                     userQueue.add(new User());
                 }
             }

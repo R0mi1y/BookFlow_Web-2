@@ -124,11 +124,13 @@ public class ProfileActivity extends AppCompatActivity {
 
                             new Thread(() -> {
                                 File imageFile = convertBitmapToFile(this, imageBitMap, "photo.png");
-                                updatedUser.update(userId, updatedUser, imageFile, ProfileActivity.this);
-                                updatedUser.setIs_autenticated(true);
-                                updatedUser.setAddress_id(userProfile.getAddress_id());
-                                changeUser(updatedUser);
-                                finish();
+                                User up = updatedUser.update(userId, updatedUser, imageFile, ProfileActivity.this);
+                                if (up != null && up.getId() > -1) {
+                                    updatedUser.setIs_autenticated(true);
+                                    updatedUser.setAddress_id(userProfile.getAddress_id());
+                                    changeUser(updatedUser);
+                                    finish();
+                                }
                             }).start();
                             binding.btnSalvChanges.setEnabled(true);
                         }
