@@ -28,8 +28,7 @@ public class RegisterLocationActivity extends AppCompatActivity {
 
         //Botão voltar
         binding.backBtn3.setOnClickListener(v ->{
-            Intent intent = new Intent(RegisterLocationActivity.this, ProfileActivity.class);
-            startActivity(intent);
+            finish();
         });
 
         new Thread(() -> {
